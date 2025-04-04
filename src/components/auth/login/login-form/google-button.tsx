@@ -9,7 +9,7 @@ export default function GoogleButton() {
   return (
     <Button
       fullWidth
-      className="mb-10 bg-default-100 my-4"
+      className="my-3 bg-default-100"
       endContent={<Icon icon="flat-color-icons:google" fontSize={24} />}
     >
       {t("auth.loginWithGoogle")}

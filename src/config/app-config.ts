@@ -5,7 +5,11 @@ export default function useAppConfig() {
     },
 
     get apiServerUrl(): string {
-      return `${this.protocol}${import.meta.env.VITE_APP_API_SERVER || "cipapi-test.asanbime.app"}/api`;
+      return `${this.protocol}${import.meta.env.VITE_APP_API_SERVER || "localhost:8000"}/api`;
+    },
+
+    get authenticationServerUrl(): string {
+      return `${this.protocol}${import.meta.env.VITE_APP_AUTHENTICATION_API_SERVER || "localhost:8080"}/api`;
     },
   };
 }

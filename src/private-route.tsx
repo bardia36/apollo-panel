@@ -1,7 +1,8 @@
 import { Navigate, Outlet } from "react-router-dom";
+import useAuthStore from "./stores/authStore";
 
 export default function PrivateRoutes() {
-  let auth = { token: true };
+  const { auth } = useAuthStore();
 
-  return auth.token ? <Outlet /> : <Navigate to="/login" />;
+  return auth ? <Outlet /> : <Navigate to="/login" />;
 }

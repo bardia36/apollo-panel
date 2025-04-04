@@ -1,4 +1,7 @@
-import type { LoginEntity } from "@/types/auth";
+import type { ActhDto, LoginEntity } from "@/types/auth";
+type CookieValues = {
+  AUTH?: ActhDto;
+};
 type Props = {
   setCurrentComponent: (component: "userName" | "password" | "otp") => void;
   setUserName: (userName: string) => void;
@@ -23,16 +26,19 @@ import { Divider } from "@heroui/divider";
 import { Form } from "@heroui/form";
 import { Button } from "@heroui/button";
 import { Checkbox } from "@heroui/checkbox";
-import { AppInput } from "@/components/shared/app-components/app-input/app-input";
+import { AppInput } from "@/components/shared/app-components/app-input";
 import GoogleButton from "./google-button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { accountApi } from "@/services/api";
+import { useCookies } from "react-cookie";
 
 export default function Password({ userName, setCurrentComponent }: Props) {
   const { t } = useTranslation();
   const { setAuth } = useAuthStore();
+  const [_, setCookie] = useCookies<"AUTH", CookieValues>(["AUTH"]);
   const navigate = useNavigate();
   const [progressing, setProgressing] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const validationSchema = object({
     userName: string().required(
@@ -49,7 +55,6 @@ export default function Password({ userName, setCurrentComponent }: Props) {
       userName: userName,
       password: "",
       uniqueId: v4(),
-      rememberMe: false,
     },
     resolver: yupResolver(validationSchema),
   });
@@ -58,22 +63,19 @@ export default function Password({ userName, setCurrentComponent }: Props) {
     try {
       setProgressing(true);
 
-      await accountApi.login(data);
+      const auth = await accountApi.login(data);
+      setAuth(auth);
+      navigate("/dashboard");
 
-      await getAccount();
-      toast({ title: "test", color: "success" });
+      toast({ title: t("auth.youLoginSuccessfully"), color: "success" });
+
+      if (rememberMe)
+        setCookie("AUTH", auth, { path: "/", maxAge: auth.tokenExpireTime });
     } catch (err) {
       exceptionHandler(err);
     } finally {
       setProgressing(false);
     }
-  }
-
-  async function getAccount() {
-    const auth = await accountApi.getAccount();
-
-    setAuth(auth);
-    navigate("/dashboard");
   }
 
   function setComponent() {
@@ -97,22 +99,14 @@ export default function Password({ userName, setCurrentComponent }: Props) {
         )}
       />
 
-      <div className="flex w-full items-center justify-between px-1">
-        <Controller
-          name="rememberMe"
-          key="rememberMe"
-          control={control}
-          render={({ field: { value, onChange, ...rest } }) => (
-            <Checkbox
-              size="sm"
-              isSelected={value}
-              onValueChange={onChange}
-              {...rest}
-            >
-              {t("auth.rememberMe")}
-            </Checkbox>
-          )}
-        />
+      <div className="flex items-center justify-between w-full px-1">
+        <Checkbox
+          size="sm"
+          isSelected={rememberMe}
+          onValueChange={setRememberMe}
+        >
+          {t("auth.rememberMe")}
+        </Checkbox>
 
         <Link className="text-default-500" to="/forget-password">
           {t("auth.forgetPassword")}
@@ -124,7 +118,7 @@ export default function Password({ userName, setCurrentComponent }: Props) {
         color="primary"
         type="submit"
         isLoading={progressing}
-        className="mb-10 mt-4"
+        className="mt-4 mb-5"
       >
         {t("auth.login")}
       </Button>
@@ -134,16 +128,20 @@ export default function Password({ userName, setCurrentComponent }: Props) {
         variant="light"
         type="submit"
         isLoading={progressing}
-        className="my-4"
-        endContent={
-          <Icon icon="solar:chat-line-broken" className="text-default-400" />
+        startContent={
+          <Icon
+            icon="solar:chat-round-line-outline"
+            className="text-foreground"
+            width="20"
+            height="20"
+          />
         }
         onPress={setComponent}
       >
         {t("auth.enterWithOtp")}
       </Button>
 
-      <div className="flex items-center gap-4 py-2 w-full">
+      <div className="flex items-center w-full gap-4 py-2">
         <Divider className="flex-1" />
 
         <p className="shrink-0 text-tiny text-default-500">{t("shared.or")}</p>
@@ -153,10 +151,10 @@ export default function Password({ userName, setCurrentComponent }: Props) {
 
       <GoogleButton />
 
-      <p className="text-center text-small w-full">
+      <p className="w-full text-center text-small">
         {t("auth.needToCreateAnAccount")}
-        <Link to="/auth/signup" className="text-primary ms-1">
-          {t("auth.signUp")}
+        <Link to="/signup" className="text-primary ms-1">
+          {t("auth.register")}
         </Link>
       </p>
     </Form>

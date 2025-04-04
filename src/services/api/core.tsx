@@ -1,4 +1,4 @@
-import type { ErrorExceptions, RequestOption } from "@/types/api";
+import type { ErrorExceptions, RequestOption, ServerType } from "@/types/api";
 
 import { stringify } from "qs";
 import axios, { AxiosError, type AxiosRequestConfig } from "axios";
@@ -19,9 +19,8 @@ function requestConfig(
     .filter((item) => !!item)
     .join("/");
 
-  console.log(useAppConfig());
   const axiosRequestConfig: AxiosRequestConfig = {
-    baseURL: useAppConfig().apiServerUrl,
+    baseURL: getBaseUrl(options.serverType),
     url: restUrl,
     method: options.method,
     params: options.params,
@@ -56,6 +55,13 @@ export async function axiosHandler<T>(
       );
     else throw [] as ErrorExceptions;
   }
+}
+
+function getBaseUrl(serverType?: ServerType) {
+  if (serverType === "AUTHENTICATION_SERVER")
+    return useAppConfig().authenticationServerUrl;
+
+  return useAppConfig().apiServerUrl;
 }
 
 async function errorHandler(

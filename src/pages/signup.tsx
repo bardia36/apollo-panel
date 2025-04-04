@@ -1,7 +1,9 @@
-export default function Signup() {
+import SignupCmp from "@/components/auth/signup/index";
+
+export default function Login() {
   return (
-    <div>
-      <h1>Signup</h1>
+    <div className="flex items-center justify-center w-full h-full">
+      <SignupCmp />
     </div>
   );
 }

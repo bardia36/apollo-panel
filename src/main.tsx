@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import ReactQueryProviders from "./react-query-providers.tsx";
@@ -14,13 +13,11 @@ import "@/assets/fonts/index.css";
 import "@/styles/globals.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <ReactQueryProviders>
-      <BrowserRouter>
-        <Provider>
-          <App />
-        </Provider>
-      </BrowserRouter>
-    </ReactQueryProviders>
-  </React.StrictMode>
+  <ReactQueryProviders>
+    <BrowserRouter>
+      <Provider>
+        <App />
+      </Provider>
+    </BrowserRouter>
+  </ReactQueryProviders>
 );

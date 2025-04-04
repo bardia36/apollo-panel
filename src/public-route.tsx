@@ -1,7 +1,8 @@
 import { Navigate, Outlet } from "react-router-dom";
+import useAuthStore from "./stores/authStore";
 
 export default function PublicRoutes() {
-  let auth = { token: false };
+  const { auth } = useAuthStore();
 
-  return auth.token ? <Navigate to="/dashboard" /> : <Outlet />;
+  return auth ? <Navigate to="/dashboard" /> : <Outlet />;
 }

@@ -1,11 +1,11 @@
-import type { GenericAbortSignal, Method } from 'axios';
+import type { GenericAbortSignal, Method } from "axios";
 
 export enum RequestMethod {
-  POST = 'POST',
-  DELETE = 'DELETE',
-  GET = 'GET',
-  PUT = 'PUT',
-  PATCH = 'PATCH',
+  POST = "POST",
+  DELETE = "DELETE",
+  GET = "GET",
+  PUT = "PUT",
+  PATCH = "PATCH",
 }
 
 export type Response = {
@@ -17,6 +17,8 @@ export type ApiBody = {
   [key: string]: unknown;
 };
 
+export type ServerType = "AUTHENTICATION_SERVER" | "BASE_SERVER";
+
 export type RequestOption = {
   url?: string;
   adminApi?: boolean;
@@ -27,6 +29,7 @@ export type RequestOption = {
   body?: unknown;
   token?: string;
   signal?: GenericAbortSignal;
+  serverType?: ServerType;
 };
 
 export interface RequestError {
@@ -34,17 +37,17 @@ export interface RequestError {
 }
 
 export enum EXCEPTION_CODE {
-  BAD_REQUEST = 'BAD_REQUEST',
-  UNAUTHORIZED = 'UNAUTHORIZED',
-  CONFLICT = 'CONFLICT',
-  EXPECTATION_FAILED = 'EXPECTATION_FAILED',
-  INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
-  OBJECT_ID_IS_FALSE = 'OBJECT_ID_IS_FALSE',
-  USER_WITH_THIS_PHONE_NUMBER_ALREADY_EXIST = 'USER_WITH_THIS_PHONE_NUMBER_ALREADY_EXIST',
-  USER_NOT_FOUND = 'USER_NOT_FOUND',
-  USER_IS_SUSPENDED = 'USER_IS_SUSPENDED',
-  PASSWORD_IS_WRONG = 'PASSWORD_IS_WRONG',
-  CLIENT_ERROR = 'CLIENT_ERROR',
+  BAD_REQUEST = "BAD_REQUEST",
+  UNAUTHORIZED = "UNAUTHORIZED",
+  CONFLICT = "CONFLICT",
+  EXPECTATION_FAILED = "EXPECTATION_FAILED",
+  INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR",
+  OBJECT_ID_IS_FALSE = "OBJECT_ID_IS_FALSE",
+  USER_WITH_THIS_PHONE_NUMBER_ALREADY_EXIST = "USER_WITH_THIS_PHONE_NUMBER_ALREADY_EXIST",
+  USER_NOT_FOUND = "USER_NOT_FOUND",
+  USER_IS_SUSPENDED = "USER_IS_SUSPENDED",
+  PASSWORD_IS_WRONG = "PASSWORD_IS_WRONG",
+  CLIENT_ERROR = "CLIENT_ERROR",
 }
 
 export class ErrorException {

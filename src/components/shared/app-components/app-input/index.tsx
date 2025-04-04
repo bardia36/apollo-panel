@@ -14,7 +14,6 @@ export const AppInput = forwardRef<HTMLInputElement, Props>(
         ref={ref}
         {...props}
         radius="md"
-        size="lg"
         isInvalid={!!error}
         errorMessage={error?.message}
         classNames={{

@@ -7,6 +7,8 @@ type Props = {
 };
 
 import { object, string } from "yup";
+import { useState } from "react";
+import { toast } from "@/utils/toast";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
 import { formOptions } from "@/utils/validations";
@@ -14,19 +16,20 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useValidationMessages } from "@/utils/rules";
 import { accountApi } from "@/services/api";
 import { exceptionHandler } from "@/services/api/exception";
-import { useState } from "react";
 
 // Components
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Icon } from "@iconify/react/dist/iconify.js";
 import { Button } from "@heroui/button";
 import { Divider } from "@heroui/divider";
 import { Form } from "@heroui/form";
-import { AppInput } from "@/components/shared/app-components/app-input/app-input";
+import { AppInput } from "@/components/shared/app-components/app-input";
 import GoogleButton from "./google-button";
 
 export default function Username(props: Props) {
   const { t } = useTranslation();
   const [progressing, setProgressing] = useState(false);
+  const navigate = useNavigate();
 
   const validationSchema = object({
     userName: string().required(
@@ -52,7 +55,25 @@ export default function Username(props: Props) {
 
       if (havePass) props.setCurrentComponent("password");
       else props.setCurrentComponent("otp");
-    } else props.setCurrentComponent("otp");
+    } else {
+      toast({
+        title: t("auth.authToastTitle"),
+        message: t("auth.authToastDescription"),
+        color: "foreground",
+        variant: "solid",
+        classNames: {
+          base: "max-h-[64px] min-w-[558px] min-h-[64px] bg-default-100 text-foreground",
+          title: "text-foreground",
+          description: "text-foreground",
+        },
+        endContent: (
+          <Button size="sm" onPress={() => navigate("/login")}>
+            {t("shared.back")}
+          </Button>
+        ),
+      });
+      navigate("/signup");
+    }
 
     setProgressing(false);
   }
@@ -93,8 +114,15 @@ export default function Username(props: Props) {
             {...field}
             error={error}
             variant="flat"
-            autoFocus
             className="my-4"
+            endContent={
+              <Icon
+                icon="solar:letter-outline"
+                width="20"
+                height="20"
+                className="mb-2 text-default-400"
+              />
+            }
           />
         )}
       />
@@ -106,10 +134,10 @@ export default function Username(props: Props) {
         isLoading={progressing}
         className="mb-10"
       >
-        {t("auth.login")}
+        {t("shared.continue")}
       </Button>
 
-      <div className="flex items-center gap-4 py-2 w-full">
+      <div className="flex items-center w-full gap-4 py-2">
         <Divider className="flex-1" />
 
         <p className="shrink-0 text-tiny text-default-500">{t("shared.or")}</p>
@@ -119,12 +147,14 @@ export default function Username(props: Props) {
 
       <GoogleButton />
 
-      <p className="text-center text-small">
-        {t("auth.needToCreateAnAccount")}
-        <Link to="/auth/signup" className="text-primary ms-1">
-          {t("auth.signUp")}
-        </Link>
-      </p>
+      <div className="w-full text-center">
+        <p className="text-small">
+          {t("auth.needToCreateAnAccount")}
+          <Link to="/signup" className="text-primary ms-1">
+            {t("auth.register")}
+          </Link>
+        </p>
+      </div>
     </Form>
   );
 }

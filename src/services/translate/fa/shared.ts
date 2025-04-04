@@ -1,3 +1,5 @@
 export default {
-  or: 'یا',
-}
+  or: "یا",
+  back: "بازگشت",
+  continue: "ادامه",
+};

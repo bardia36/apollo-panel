@@ -28,12 +28,23 @@ export type Auth = {
 };
 
 export type RegisterEntity = {
-  firstName: string;
-  lastName: string;
+  userName: string;
   email: string;
+  phoneNumber: string;
   password: string;
+  confirmPassword: string;
   uniqueId?: string | null;
 };
+
+export type ForgetPasswordEntity = {
+  email: string
+}
+
+export type ResetPasswordEntity = {
+  email: string
+  password: string
+  confirmPassword: string
+}
 
 export type ConfirmEmail = {
   email?: string;
@@ -45,11 +56,23 @@ export type LoginEntity = {
   userName: string;
   password: string;
   uniqueId?: string;
-  rememberMe?: boolean;
+};
+
+export type LoginByOtpEntity = {
+  userName: string;
+  code: string;
+  uniqueId?: string;
 };
 
 export type ActhDto = {
-  workspace: string;
+  profile: Pick<
+    Auth,
+    "firstName" | "lastName" | "phoneNumber" | "email" | "userName"
+  >;
+  token: string;
+  refreshToken: string;
+  tokenExpireTime: number;
+  refreshTokenExpireTime: number;
 };
 
 export type UserExist = Pick<Auth, "userName">;

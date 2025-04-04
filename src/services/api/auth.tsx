@@ -1,91 +1,118 @@
 import {
   ActhDto,
   Auth,
-  ConfirmEmail,
+  ForgetPasswordEntity,
+  LoginByOtpEntity,
   LoginEntity,
   RegisterEntity,
 } from "@/types/auth";
 import { axiosHandler } from "./core";
-import { RequestMethod } from "@/types/api";
+import { RequestMethod, ServerType } from "@/types/api";
 
 const BASE_URL = "auth";
 
 export const accountApi = {
-  register(body: RegisterEntity) {
-    return axiosHandler<string>(BASE_URL, {
+  register(
+    body: RegisterEntity,
+    serverType: ServerType = "AUTHENTICATION_SERVER"
+  ) {
+    return axiosHandler<ActhDto>(BASE_URL, {
       action: "register",
       method: RequestMethod.POST,
       body,
+      serverType,
     });
   },
 
-  login(body: LoginEntity) {
+  login(body: LoginEntity, serverType: ServerType = "AUTHENTICATION_SERVER") {
     return axiosHandler<ActhDto>(BASE_URL, {
       action: "login",
       method: RequestMethod.POST,
       body,
+      serverType,
     });
   },
 
-  getAccount() {
+  forgetPassword(
+    body: ForgetPasswordEntity,
+    serverType: ServerType = "AUTHENTICATION_SERVER"
+  ) {
+    return axiosHandler<string>(BASE_URL, {
+      action: "forget-password/send",
+      method: RequestMethod.POST,
+      body,
+      serverType,
+    });
+  },
+
+  loginByOtp(
+    body: LoginByOtpEntity,
+    serverType: ServerType = "AUTHENTICATION_SERVER"
+  ) {
+    return axiosHandler<ActhDto>(BASE_URL, {
+      action: "otp-login",
+      method: RequestMethod.POST,
+      body,
+      serverType,
+    });
+  },
+
+  getAccount(serverType: ServerType = "AUTHENTICATION_SERVER") {
     return axiosHandler<Auth>(BASE_URL, {
       action: "my",
       method: RequestMethod.GET,
+      serverType,
     });
   },
 
-  userExist(body: Pick<Auth, "userName">) {
-    return axiosHandler<{ exist: boolean }>(BASE_URL, {
+  sendConfirmEmail(
+    body: Pick<Auth, "email">,
+    serverType: ServerType = "AUTHENTICATION_SERVER"
+  ) {
+    return axiosHandler<Auth>(BASE_URL, {
+      action: "confirm-email/send",
+      body,
+      method: RequestMethod.POST,
+      serverType,
+    });
+  },
+
+  userExist(
+    body: Pick<Auth, "userName">,
+    serverType: ServerType = "AUTHENTICATION_SERVER"
+  ) {
+    return axiosHandler<{
+      exist: boolean;
+      profile: Pick<Auth, "userName" | "image">;
+    }>(BASE_URL, {
       action: "user-exist",
       method: RequestMethod.POST,
       body,
+      serverType,
     });
   },
 
-  havePassword(body: Pick<Auth, "userName">) {
+  sendCode(
+    body: Pick<Auth, "userName">,
+    serverType: ServerType = "AUTHENTICATION_SERVER"
+  ) {
+    return axiosHandler<{ exist: boolean }>(BASE_URL, {
+      action: "send-code",
+      method: RequestMethod.POST,
+      body,
+      serverType,
+    });
+  },
+
+  havePassword(
+    body: Pick<Auth, "userName">,
+    serverType: ServerType = "AUTHENTICATION_SERVER"
+  ) {
     return axiosHandler<{ exist: boolean }>(BASE_URL, {
       action: "have-password",
       method: RequestMethod.POST,
       body,
-    });
-  },
-
-  sendConfirmEmail(body: Pick<ConfirmEmail, "email">) {
-    return axiosHandler<string>(BASE_URL, {
-      action: "confirm-email/send",
-      method: RequestMethod.POST,
-      body,
-    });
-  },
-
-  verifyConfirmEmail(body: ConfirmEmail) {
-    return axiosHandler<ActhDto>(BASE_URL, {
-      action: "confirm-email/verify",
-      method: RequestMethod.POST,
-      body,
-    });
-  },
-
-  githubAuthentication() {
-    return axiosHandler<string>(BASE_URL, {
-      action: "github",
-      method: RequestMethod.GET,
-    });
-  },
-
-  updateProfileInfo(body: Pick<Auth, "firstName" | "lastName" | "userName">) {
-    return axiosHandler<string>(BASE_URL, {
-      action: "profile/info",
-      method: RequestMethod.PATCH,
-      body,
-    });
-  },
-
-  updateProfileEmail(body: Pick<Auth, "email">) {
-    return axiosHandler<string>(BASE_URL, {
-      action: "profile/email",
-      method: RequestMethod.PATCH,
-      body,
+      serverType,
     });
   },
 };
