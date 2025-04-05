@@ -162,18 +162,20 @@ export default function SignupForm({ email }: Props) {
               fullWidth
               shadow="none"
               radius="lg"
-              className="border-0 mb-10"
+              className="mb-10 border-0"
             >
               <CardBody className="p-3 bg-default-100">
                 <div className="flex items-center justify-start">
-                  <Icon
-                    icon="solar:info-circle-bold"
-                    width="24"
-                    height="24"
-                    className="me-4"
-                  />
+                  <div>
+                    <Icon
+                      icon="solar:info-circle-bold"
+                      width="24"
+                      height="24"
+                      className="me-4"
+                    />
+                  </div>
 
-                  <p className="text-small text-start text-foreground font-normal">
+                  <p className="font-normal text-small text-start text-foreground">
                     {t("auth.resetPasswordDescription")}
                   </p>
                 </div>

@@ -11,8 +11,8 @@ export default function NewRelease() {
   const { isMobile } = useIsMobile();
 
   return (
-    <div className="mt-4 md:mt-0 md:absolute z-50 md:left-8 md:bottom-6 md:right-8 mb-4">
-      <Accordion className="bg-content1 rounded-large text-small mb-4">
+    <div className="z-50 mt-4 mb-4 md:mt-0 md:absolute md:left-8 md:bottom-6 md:right-8">
+      <Accordion className="mb-4 bg-content1 rounded-large text-small">
         <AccordionItem
           classNames={{
             indicator: "text-foreground-500",
@@ -29,10 +29,10 @@ export default function NewRelease() {
               width={115}
               height={115}
               removeWrapper
-              className="col-span-4"
+              className="md:col-span-12 xl:col-span-4"
             />
 
-            <div className="col-span-8">
+            <div className="md:col-span-12 xl:col-span-8">
               <div className="flex items-center justify-between">
                 <p className="text-small text-foreground-600">نگارش ۲٫۱٫۴</p>
 
@@ -64,13 +64,13 @@ export default function NewRelease() {
       </Accordion>
 
       {!isMobile && (
-        <div className="flex justify-center items-center w-full">
+        <div className="flex items-center justify-center w-full">
           <Image
             src="/images/auth/corporate.svg"
             alt={t("auth.releaseCopyRight")}
             width={18}
             height={12}
-            className="pe-1 mb-1"
+            className="mb-1 pe-1"
           />
 
           <p className="text-xs text-foreground-500">

@@ -21,6 +21,7 @@ import { Button } from "@heroui/button";
 import { Link } from "react-router-dom";
 import { Divider } from "@heroui/divider";
 import GoogleButton from "@/components/auth/login/login-form/google-button";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
   const { t } = useTranslation();
@@ -57,7 +58,7 @@ export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
   }
 
   return (
-    <Form onSubmit={handleSubmit(submit)}>
+    <Form className="gap-0" onSubmit={handleSubmit(submit)}>
       <Controller
         name="email"
         key="email"
@@ -67,9 +68,17 @@ export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
             label={t("auth.email")}
             {...field}
             error={error}
-            dir="ltr"
+            size="lg"
             variant="flat"
-            className="my-1"
+            className="my-4"
+            endContent={
+              <Icon
+                icon="solar:letter-outline"
+                width="20"
+                height="20"
+                className="mb-2 text-default-400"
+              />
+            }
           />
         )}
       />

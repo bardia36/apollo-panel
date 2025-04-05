@@ -13,7 +13,7 @@ export default function AuthLayout() {
 
   return (
     <div className="overflow-auto h-dvh">
-      <div className="grid h-full grid-cols-11">
+      <div className="grid h-full grid-cols-12">
         {!isMobile && (
           <div className="col-span-3">
             <div className="relative p-4 h-dvh">
@@ -34,7 +34,7 @@ export default function AuthLayout() {
         )}
 
         <div
-          className={`col-span-11 px-4 md:col-span-8 md:px-0 h-full ${(isMobile && "flex flex-col justify-center") || ""}`}
+          className={`col-span-12 px-4 md:col-span-9 md:px-0 h-full ${(isMobile && "flex flex-col justify-center") || ""}`}
         >
           <Outlet />
 

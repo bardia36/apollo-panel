@@ -108,7 +108,7 @@ export default function Password({ userName, setCurrentComponent }: Props) {
           {t("auth.rememberMe")}
         </Checkbox>
 
-        <Link className="text-default-500" to="/forget-password">
+        <Link className="font-light text-default-500 text-small" to="/forget-password">
           {t("auth.forgetPassword")}
         </Link>
       </div>

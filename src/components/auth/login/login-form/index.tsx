@@ -45,10 +45,10 @@ export default function LoginForm() {
           >
             <div className="col-span-2"></div>
 
-            <div className="flex items-center w-full justify-end col-span-8">
+            <div className="flex items-center w-full col-span-8">
               <p
-                dir="ltr"
-                className="overflow-hidden text-lg text-ellipsis whitespace-nowrap align-middle"
+                dir="auto"
+                className="overflow-hidden text-lg align-middle text-ellipsis whitespace-nowrap"
               >
                 {accountUserName}
               </p>
@@ -67,14 +67,12 @@ export default function LoginForm() {
           </div>
         ) : null}
 
-        <div className="">
-          <Component
-            userName={userName}
-            setUserName={setUserName}
-            setAccountUserName={setAccountUserName}
-            setCurrentComponent={setCurrentComponent}
-          />
-        </div>
+        <Component
+          userName={userName}
+          setUserName={setUserName}
+          setAccountUserName={setAccountUserName}
+          setCurrentComponent={setCurrentComponent}
+        />
       </CardBody>
     </Card>
   );

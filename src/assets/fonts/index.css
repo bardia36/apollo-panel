@@ -1,13 +1,34 @@
 @font-face {
   font-family: "Yekan Bakh";
-  src: url("YekanBakhEN-Bold.ttf") format("truetype");
+  src: url("YekanBakh-Bold.woff2") format("woff2");
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Yekan Bakh";
-  src: url("YekanBakhEN-Regular.ttf") format("truetype");
+  src: url("YekanBakh-Black.woff2") format("woff2");
+  font-weight: black;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Yekan Bakh";
+  src: url("YekanBakh-Light.woff2") format("woff2");
+  font-weight: light;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Yekan Bakh";
+  src: url("YekanBakh-Regular.woff2") format("woff2");
   font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Yekan Bakh";
+  src: url("YekanBakh-SemiBold.woff2") format("woff2");
+  font-weight: semibold;
   font-style: normal;
 }

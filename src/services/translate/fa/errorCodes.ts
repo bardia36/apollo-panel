@@ -4,10 +4,9 @@ export default {
 
   PASSWORD_IS_WRONG: "رمز عبور اشتباه است !",
   CODE_IS_NOT_CORRECT: "کد وارد شده صحیح نمی باشد !",
-  PACKAGE_ID_IS_REQUIRED: "سبد تحویل الزامی است",
-  ARTICLE_ID_IS_REQUIRED: "عرضه الزامی است",
-  YOU_CAN_NOT_LIKE_OR_DISLIKE_YOUR_OWN_COMMENT:
-    "شما نمی توانید کامنت خود را لایک یا دیس لایک کنید !",
+  ACCOUNT_NOT_FOUND: "این حساب کاربری پیدا نشد !",
+  THIS_EMAIL_IS_ALREADY_USED: "این ایمیل قبلاً استفاده شده است !",
+  THIS_PHONE_NUMBER_IS_ALREADY_USED: "این شماره تلفن قبلاً استفاده شده است !",
 
   unhandled: "خطای ناشناخته رخ داده است !",
 } as const;
