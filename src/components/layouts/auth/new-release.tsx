@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { useIsMobile } from "@/hook/useIsMobile";
 
 // components
 import { Accordion, AccordionItem } from "@heroui/accordion";
@@ -7,9 +8,11 @@ import { Link } from "@heroui/link";
 
 export default function NewRelease() {
   const { t } = useTranslation();
+  const { isMobile } = useIsMobile();
+
   return (
-    <div className="mt-2 md:mt-0 md:absolute z-50 md:left-8 md:bottom-12 md:right-8">
-      <Accordion className="md:bg-white md:rounded-large text-small">
+    <div className="mt-4 md:mt-0 md:absolute z-50 md:left-8 md:bottom-6 md:right-8 mb-4">
+      <Accordion className="bg-content1 rounded-large text-small mb-4">
         <AccordionItem
           classNames={{
             indicator: "text-foreground-500",
@@ -59,6 +62,22 @@ export default function NewRelease() {
           </div>
         </AccordionItem>
       </Accordion>
+
+      {!isMobile && (
+        <div className="flex justify-center items-center w-full">
+          <Image
+            src="/images/auth/corporate.svg"
+            alt={t("auth.releaseCopyRight")}
+            width={18}
+            height={12}
+            className="pe-1 mb-1"
+          />
+
+          <p className="text-xs text-foreground-500">
+            {t("auth.releaseCopyRight")}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

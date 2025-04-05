@@ -6,6 +6,7 @@ type CookieValues = {
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { Navigate, Route, Routes } from "react-router-dom";
+import { useTheme } from "@heroui/use-theme";
 import useAuthStore from "@/stores/authStore";
 
 // Layouts
@@ -31,6 +32,7 @@ import Loading from "@/components/shared/loading";
 function App() {
   const [cookie] = useCookies<"AUTH", CookieValues>(["AUTH"]);
   const [initializing, setInitializing] = useState(true);
+  const { setTheme } = useTheme();
   const { setAuth } = useAuthStore();
 
   useEffect(() => {
@@ -38,8 +40,18 @@ function App() {
   }, []);
 
   async function setAccount() {
+    detectBrowserTheme();
     setAuth(cookie.AUTH);
     setInitializing(false);
+  }
+
+  function detectBrowserTheme() {
+    if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    )
+      setTheme("dark");
+    else setTheme("light");
   }
 
   return (
@@ -47,28 +59,33 @@ function App() {
       {initializing ? (
         <Loading />
       ) : (
-        <Routes>
-          <Route element={<PublicRoutes />}>
-            <Route element={<AuthLayout />}>
-              <Route element={<LoginPage />} path="/login" />
-              <Route element={<SignupPage />} path="/signup" />
-              <Route element={<ForgetPasswordPage />} path="/forget-password" />
-              <Route element={<ResetPasswordPage />} path="/reset-password" />
+        <div className="text-foreground bg-background">
+          <Routes>
+            <Route element={<PublicRoutes />}>
+              <Route element={<AuthLayout />}>
+                <Route element={<LoginPage />} path="/login" />
+                <Route element={<SignupPage />} path="/signup" />
+                <Route
+                  element={<ForgetPasswordPage />}
+                  path="/forget-password"
+                />
+                <Route element={<ResetPasswordPage />} path="/reset-password" />
+              </Route>
             </Route>
-          </Route>
 
-          <Route element={<PrivateRoutes />}>
-            <Route element={<DefaultLayout />}>
-              <Route element={<DashboardPage />} path="/dashboard" />
+            <Route element={<PrivateRoutes />}>
+              <Route element={<DefaultLayout />}>
+                <Route element={<DashboardPage />} path="/dashboard" />
+              </Route>
             </Route>
-          </Route>
 
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-          <Route element={<EmptyLayout />}>
-            <Route path="*" element={<Page404 />} />
-          </Route>
-        </Routes>
+            <Route element={<EmptyLayout />}>
+              <Route path="*" element={<Page404 />} />
+            </Route>
+          </Routes>
+        </div>
       )}
     </>
   );

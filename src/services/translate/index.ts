@@ -15,3 +15,5 @@ i18n.use(initReactI18next).init({
   lng: "fa",
   fallbackLng: "en",
 });
+
+export default i18n;

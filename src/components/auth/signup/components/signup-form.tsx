@@ -40,10 +40,6 @@ export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
       .email(useValidationMessages().email(t("auth.email")))
       .required(useValidationMessages().required(t("auth.email"))),
     phoneNumber: string()
-      .matches(
-        /^\+?[0-9]{10}$/,
-        useValidationMessages().phoneNumber(t("auth.mobile"))
-      )
       .required(useValidationMessages().required(t("auth.mobile"))),
     password: string()
       .min(6, useValidationMessages().min(t("auth.password"), 6))

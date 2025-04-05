@@ -3,17 +3,19 @@ type Props = {
   email?: string;
 };
 
-import { object, ref, string } from "yup";
 import { useState } from "react";
+import { object, ref, string } from "yup";
+import { useTheme } from "@heroui/use-theme";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { Controller, useForm } from "react-hook-form";
+
+import { toast } from "@/utils/toast";
+import { accountApi } from "@/services/api";
+import { exceptionHandler } from "@/services/api/exception";
 import { useValidationMessages } from "@/utils/rules";
 import { formOptions } from "@/utils/validations";
-import { Controller, useForm } from "react-hook-form";
-import { exceptionHandler } from "@/services/api/exception";
-import { accountApi } from "@/services/api";
-import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { toast } from "@/utils/toast";
 
 // components
 import { Form } from "@heroui/form";
@@ -26,10 +28,12 @@ import { AppInput } from "@/components/shared/app-components/app-input";
 
 export default function SignupForm({ email }: Props) {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const navigate = useNavigate();
+
   const [isPassword, setIsPassword] = useState(true);
-  const [isConfirmPassword, setIsConfirmPassword] = useState(true);
   const [progressing, setProgressing] = useState(false);
+  const [isConfirmPassword, setIsConfirmPassword] = useState(true);
 
   const validationSchema = object({
     email: string()
@@ -73,14 +77,14 @@ export default function SignupForm({ email }: Props) {
   return (
     <div className="flex flex-col items-center justify-center w-full">
       <Image
-        src="/images/logo.svg"
+        src={theme === "dark" ? "/images/logo-dark.png" : "/images/logo.svg"}
         alt="Logo"
         classNames={{ wrapper: "mb-6 mt-6 mt-md-0" }}
       />
 
       <Card
         fullWidth
-        className="w-full max-w-sm mb-6 border border-default-100 rounded-large shadow-small mb-md-0"
+        className="w-full max-w-sm border border-default-100 rounded-large shadow-small mb-md-0"
       >
         <CardBody className="px-8 py-0">
           <h1 className="pb-2 mt-6 mb-2 text-xl text-content3-foreground text-start">

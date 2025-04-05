@@ -10,8 +10,8 @@ import UsernameComponent from "./username";
 import PasswordComponent from "./password";
 
 const components = {
-  userName: UsernameComponent,
   otp: OtpComponent,
+  userName: UsernameComponent,
   password: PasswordComponent,
 };
 
@@ -58,7 +58,7 @@ export default function LoginForm() {
               <div className="flex items-center h-5 p-1 rounded-lg max-w-5 min-w-min bg-default-50 justify-normal">
                 <Icon
                   icon="solar:undo-right-round-linear"
-                  className="text-black"
+                  className="text-content1-foreground"
                   width="16"
                   height="16"
                 />

@@ -19,6 +19,8 @@ export default {
   email: "Email",
   releaseTitle: "Apollo updates 🚀",
   resetPassword: "Reset password",
+  releaseCopyRight:
+    "All material and intellectual property rights are reserved for Raintech Company.",
   registerANewPassword: "Register a new password",
   resetPasswordSuccessfully: "Password successfully updated",
   resetPasswordDescription:

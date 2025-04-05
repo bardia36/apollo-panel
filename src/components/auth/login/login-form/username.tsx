@@ -63,7 +63,7 @@ export default function Username(props: Props) {
         color: "foreground",
         variant: "solid",
         classNames: {
-          base: "max-h-[64px] md:min-w-[558px] min-h-[64px] bg-default-100 text-foreground",
+          base: "md:max-h-[64px] md:min-w-[558px] min-h-[64px] bg-default-100 text-foreground",
           title: "text-foreground",
           description: "text-foreground",
         },
@@ -85,7 +85,7 @@ export default function Username(props: Props) {
 
       const { exist, profile } = await accountApi.userExist({ userName });
 
-      props.setAccountUserName(profile.userName);
+      if (exist) props.setAccountUserName(profile.userName);
 
       return exist;
     } catch (err) {

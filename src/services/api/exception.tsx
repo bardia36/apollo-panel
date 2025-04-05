@@ -1,6 +1,6 @@
 import { ErrorException } from "@/types/api";
 import { toast } from "@/utils/toast";
-import errors from "./errors";
+import i18n from "@/services/translate/index";
 
 export function isError(error: unknown) {
   return typeof error === "object";
@@ -16,7 +16,15 @@ export function exceptionHandler(error: unknown) {
 }
 
 export function exceptionMessage(exception: ErrorException) {
-  if (errors[exception.errorCode as keyof typeof errors])
-    return errors[exception.errorCode as keyof typeof errors];
-  else return "unhandled error";
+  if (i18n.exists(`errorCodes.${exception.errorCode}`)) {
+    return i18n.t(`errorCodes.${exception.errorCode}`);
+  }
+
+  if (i18n.exists(`errorCodes.${exception.data}`)) {
+    return i18n.t(`errorCodes.${exception.data}`);
+  }
+
+  if (i18n.exists(`errorCodes.${exception.code}`))
+    return i18n.t(`errorCodes.${exception.code}`);
+  else return i18n.t("errorCodes.unhandled");
 }
