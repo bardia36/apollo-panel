@@ -3,13 +3,13 @@ import { useTranslation } from "react-i18next";
 // components
 import { Accordion, AccordionItem } from "@heroui/accordion";
 import { Image } from "@heroui/image";
-import {Link} from '@heroui/link'
+import { Link } from "@heroui/link";
 
 export default function NewRelease() {
   const { t } = useTranslation();
   return (
-    <div className="absolute z-50 left-8 bottom-12 right-8">
-      <Accordion className="bg-white rounded-large text-small">
+    <div className="mt-2 md:mt-0 md:absolute z-50 md:left-8 md:bottom-12 md:right-8">
+      <Accordion className="md:bg-white md:rounded-large text-small">
         <AccordionItem
           classNames={{
             indicator: "text-foreground-500",

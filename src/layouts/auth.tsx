@@ -25,8 +25,12 @@ export default function AuthLayout() {
           </div>
         )}
 
-        <div className="col-span-11 px-4 md:col-span-8 md:px-0">
+        <div
+          className={`col-span-11 px-4 md:col-span-8 md:px-0 h-full ${(isMobile && "flex flex-col justify-center") || ""}`}
+        >
           <Outlet />
+
+          {isMobile && <NewRelease />}
         </div>
       </div>
     </div>

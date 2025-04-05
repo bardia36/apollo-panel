@@ -95,10 +95,9 @@ export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
       <GoogleButton />
 
       <p className="w-full text-center text-small">
-        {t("auth.haveYouAlreadyRegistered")}
-
-        <Link to="/login" className="text-primary ms-1">
-          {t("auth.login")}
+        {t("auth.needToCreateAnAccount")}
+        <Link to="/signup" className="text-primary ms-1">
+          {t("auth.register")}
         </Link>
       </p>
     </Form>

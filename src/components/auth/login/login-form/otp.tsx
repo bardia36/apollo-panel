@@ -3,9 +3,9 @@ type CookieValues = {
   auth?: ActhDto;
 };
 type Props = {
-  setCurrentComponent: (component: "userName" | "password" | "otp") => void;
-  setUserName: (userName: string) => void;
   userName: string;
+  setUserName: (userName: string) => void;
+  setCurrentComponent: (component: "userName" | "password" | "otp") => void;
 };
 
 import { v4 } from "uuid";
@@ -19,17 +19,18 @@ import { toast } from "@/utils/toast";
 import { accountApi } from "@/services/api";
 import { useCookies } from "react-cookie";
 import useAuthStore from "@/stores/authStore";
+import { useValidationMessages } from "@/utils/rules";
+import { exceptionHandler } from "@/services/api/exception";
 
 // components
 import { Form } from "@heroui/form";
 import { InputOtp } from "@heroui/input-otp";
-import { useValidationMessages } from "@/utils/rules";
 import { Button } from "@heroui/button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Divider } from "@heroui/divider";
 import { Link, useNavigate } from "react-router-dom";
+
 import GoogleButton from "./google-button";
-import { exceptionHandler } from "@/services/api/exception";
 
 export default function Otp({ userName, setCurrentComponent }: Props) {
   const { t } = useTranslation();
@@ -99,7 +100,7 @@ export default function Otp({ userName, setCurrentComponent }: Props) {
   }
 
   return (
-    <Form className="items-center" onSubmit={handleSubmit(submit)}>
+    <Form className="items-center gap-0" onSubmit={handleSubmit(submit)}>
       <Controller
         control={control}
         name="code"

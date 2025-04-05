@@ -3,9 +3,9 @@ type CookieValues = {
   AUTH?: ActhDto;
 };
 type Props = {
-  setCurrentComponent: (component: "userName" | "password" | "otp") => void;
-  setUserName: (userName: string) => void;
   userName: string;
+  setUserName: (userName: string) => void;
+  setCurrentComponent: (component: "userName" | "password" | "otp") => void;
 };
 
 import { useState } from "react";
@@ -83,7 +83,7 @@ export default function Password({ userName, setCurrentComponent }: Props) {
   }
 
   return (
-    <Form onSubmit={handleSubmit(submit)}>
+    <Form className="gap-0" onSubmit={handleSubmit(submit)}>
       <Controller
         name="password"
         key="password"
@@ -118,7 +118,7 @@ export default function Password({ userName, setCurrentComponent }: Props) {
         color="primary"
         type="submit"
         isLoading={progressing}
-        className="mt-4 mb-5"
+        className="mt-4 mb-10"
       >
         {t("auth.login")}
       </Button>

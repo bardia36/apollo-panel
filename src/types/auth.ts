@@ -37,14 +37,14 @@ export type RegisterEntity = {
 };
 
 export type ForgetPasswordEntity = {
-  email: string
-}
+  email: string;
+};
 
 export type ResetPasswordEntity = {
-  email: string
-  password: string
-  confirmPassword: string
-}
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
 
 export type ConfirmEmail = {
   email?: string;

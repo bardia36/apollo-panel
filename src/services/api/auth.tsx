@@ -5,6 +5,7 @@ import {
   LoginByOtpEntity,
   LoginEntity,
   RegisterEntity,
+  ResetPasswordEntity,
 } from "@/types/auth";
 import { axiosHandler } from "./core";
 import { RequestMethod, ServerType } from "@/types/api";
@@ -39,6 +40,18 @@ export const accountApi = {
   ) {
     return axiosHandler<string>(BASE_URL, {
       action: "forget-password/send",
+      method: RequestMethod.POST,
+      body,
+      serverType,
+    });
+  },
+
+  resetPassword(
+    body: ResetPasswordEntity,
+    serverType: ServerType = "AUTHENTICATION_SERVER"
+  ) {
+    return axiosHandler<string>(BASE_URL, {
+      action: "reset-password",
       method: RequestMethod.POST,
       body,
       serverType,
@@ -112,6 +125,14 @@ export const accountApi = {
       action: "have-password",
       method: RequestMethod.POST,
       body,
+      serverType,
+    });
+  },
+
+  loginByGoogle(serverType: ServerType = "AUTHENTICATION_SERVER") {
+    return axiosHandler<string>(BASE_URL, {
+      action: "google",
+      method: RequestMethod.GET,
       serverType,
     });
   },

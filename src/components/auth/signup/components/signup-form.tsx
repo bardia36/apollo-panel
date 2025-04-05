@@ -37,12 +37,14 @@ export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
       useValidationMessages().required(t("auth.name"))
     ),
     email: string()
-      .required(useValidationMessages().required(t("auth.email")))
-      .email(useValidationMessages().email(t("auth.email"))),
+      .email(useValidationMessages().email(t("auth.email")))
+      .required(useValidationMessages().required(t("auth.email"))),
     phoneNumber: string()
-      .required(useValidationMessages().required(t("auth.mobile")))
-      .min(11, useValidationMessages().min(t("auth.mobile"), 11))
-      .max(11, useValidationMessages().max(t("auth.mobile"), 11)),
+      .matches(
+        /^\+?[0-9]{10}$/,
+        useValidationMessages().phoneNumber(t("auth.mobile"))
+      )
+      .required(useValidationMessages().required(t("auth.mobile"))),
     password: string()
       .min(6, useValidationMessages().min(t("auth.password"), 6))
       .required(useValidationMessages().required(t("auth.password"))),
@@ -84,7 +86,7 @@ export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
   }
 
   return (
-    <Form onSubmit={handleSubmit(submit)}>
+    <Form className="gap-0" onSubmit={handleSubmit(submit)}>
       <Controller
         name="userName"
         key="username"
@@ -96,7 +98,7 @@ export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
             error={error}
             variant="flat"
             size="sm"
-            className="my-1"
+            className="my-4"
           />
         )}
       />
@@ -113,7 +115,7 @@ export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
             size="sm"
             dir="ltr"
             variant="flat"
-            className="my-1"
+            className="mb-4"
           />
         )}
       />
@@ -128,7 +130,7 @@ export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
             {...field}
             error={error}
             variant="flat"
-            className="my-1"
+            className="mb-4"
             size="sm"
             minLength={11}
             maxLength={11}
@@ -146,7 +148,7 @@ export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
             {...field}
             error={error}
             type={isPassword ? "password" : "text"}
-            className="my-1"
+            className="mb-4"
             size="sm"
             minLength={6}
             endContent={
@@ -175,7 +177,7 @@ export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
             {...field}
             error={error}
             type={isConfirmPassword ? "password" : "text"}
-            className="my-1"
+            className="mb-4"
             size="sm"
             minLength={6}
             endContent={
@@ -196,11 +198,11 @@ export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
 
       <Checkbox
         size="sm"
-        className="my-1"
+        className="mb-2"
         isSelected={acceptPolicy}
         onValueChange={setAcceptPolicy}
       >
-        <p className="text-medium">
+        <p className="text-medium text-start">
           <Link to="#" className="text-primary">
             {t("auth.termsAndConditions")}
           </Link>
@@ -215,7 +217,7 @@ export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
         type="submit"
         isDisabled={!acceptPolicy}
         isLoading={progressing}
-        className="mb-5"
+        className="mb-10"
       >
         {t("auth.signUp")}
       </Button>

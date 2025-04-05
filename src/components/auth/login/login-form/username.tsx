@@ -1,13 +1,14 @@
 import type { UserExist } from "@/types/auth";
 
 type Props = {
-  setCurrentComponent: (component: "userName" | "password" | "otp") => void;
-  setUserName: (userName: string) => void;
   userName: string;
+  setUserName: (userName: string) => void;
+  setAccountUserName: Dispatch<SetStateAction<string>>;
+  setCurrentComponent: (component: "userName" | "password" | "otp") => void;
 };
 
 import { object, string } from "yup";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "@/utils/toast";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
@@ -62,7 +63,7 @@ export default function Username(props: Props) {
         color: "foreground",
         variant: "solid",
         classNames: {
-          base: "max-h-[64px] min-w-[558px] min-h-[64px] bg-default-100 text-foreground",
+          base: "max-h-[64px] md:min-w-[558px] min-h-[64px] bg-default-100 text-foreground",
           title: "text-foreground",
           description: "text-foreground",
         },
@@ -82,7 +83,9 @@ export default function Username(props: Props) {
     try {
       const { userName } = data;
 
-      const { exist } = await accountApi.userExist({ userName });
+      const { exist, profile } = await accountApi.userExist({ userName });
+
+      props.setAccountUserName(profile.userName);
 
       return exist;
     } catch (err) {
@@ -103,7 +106,7 @@ export default function Username(props: Props) {
   }
 
   return (
-    <Form onSubmit={handleSubmit(submit)}>
+    <Form className="gap-0" onSubmit={handleSubmit(submit)}>
       <Controller
         name="userName"
         key="username"

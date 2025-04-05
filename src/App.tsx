@@ -16,8 +16,9 @@ import EmptyLayout from "@/layouts/empty";
 // Pages
 import DashboardPage from "@/pages/dashboard";
 import LoginPage from "@/pages/login";
-import SignupPage from '@/pages/signup'
-import ForgetPasswordPage from '@/pages/forget-password'
+import SignupPage from "@/pages/signup";
+import ForgetPasswordPage from "@/pages/forget-password";
+import ResetPasswordPage from "@/pages/reset-password";
 
 // Navigation
 import PrivateRoutes from "./private-route";
@@ -52,6 +53,7 @@ function App() {
               <Route element={<LoginPage />} path="/login" />
               <Route element={<SignupPage />} path="/signup" />
               <Route element={<ForgetPasswordPage />} path="/forget-password" />
+              <Route element={<ResetPasswordPage />} path="/reset-password" />
             </Route>
           </Route>
 

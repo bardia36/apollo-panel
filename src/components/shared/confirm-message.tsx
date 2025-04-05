@@ -1,5 +1,6 @@
 type Props = {
   progressing: boolean;
+  isRegister?: boolean;
   retrieveRequest: () => {};
   changeComponent: Dispatch<SetStateAction<"confirmEmail" | "form">>;
 };
@@ -17,8 +18,9 @@ import GoogleButton from "../auth/login/login-form/google-button";
 import { Link } from "react-router-dom";
 
 export default function ConfirmMessage({
-  changeComponent,
   progressing,
+  isRegister = false,
+  changeComponent,
   retrieveRequest,
 }: Props) {
   const { t } = useTranslation();
@@ -59,7 +61,9 @@ export default function ConfirmMessage({
       </div>
 
       <p className="text-center text-small">
-        {t("auth.AMessageContainingAnActivationLinkWasSent")}
+        {isRegister
+          ? t("auth.AMessageContainingAnActivationLinkWasSent")
+          : t("auth.aMessageContainingAPasswordResetLinkWasSent")}
       </p>
 
       <p className="mb-10 text-center text-small">
@@ -102,10 +106,12 @@ export default function ConfirmMessage({
       <GoogleButton />
 
       <p className="w-full text-center text-small">
-        {t("auth.haveYouAlreadyRegistered")}
+        {isRegister
+          ? t("auth.needToCreateAnAccount")
+          : t("auth.haveYouAlreadyRegistered")}
 
         <Link to="/login" className="text-primary ms-1">
-          {t("auth.login")}
+          {isRegister ? t("auth.register") : t("auth.login")}
         </Link>
       </p>
     </div>

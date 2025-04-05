@@ -36,7 +36,7 @@ export default function Signup() {
         className="w-full max-w-sm mb-6 border border-default-100 rounded-large shadow-small mb-md-0"
       >
         <CardBody className="px-8 py-6">
-          <h1 className="pb-2 mb-2 text-xl text-content3-foreground text-start">
+          <h1 className="mb-2 text-xl text-content3-foreground text-start">
             {t("auth.signUp")}
           </h1>
 

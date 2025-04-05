@@ -23,12 +23,11 @@ export default function ConfirmEmail({ setCurrentComponent, email }: Props) {
   }
 
   return (
-    <div>
-      <ConfirmMessage
-        progressing={progressing}
-        retrieveRequest={sendConfirmEmail}
-        changeComponent={setCurrentComponent}
-      />
-    </div>
+    <ConfirmMessage
+      isRegister
+      progressing={progressing}
+      retrieveRequest={sendConfirmEmail}
+      changeComponent={setCurrentComponent}
+    />
   );
 }
