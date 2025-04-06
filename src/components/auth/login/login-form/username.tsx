@@ -153,6 +153,7 @@ export default function Username(props: Props) {
       <div className="w-full text-center">
         <p className="text-small">
           {t("auth.needToCreateAnAccount")}
+
           <Link to="/signup" className="text-primary ms-1">
             {t("auth.register")}
           </Link>

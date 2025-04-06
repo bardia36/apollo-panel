@@ -28,7 +28,7 @@ export default function GoogleButton() {
   return (
     <Button
       fullWidth
-      className="my-3 bg-default-100"
+      className="mt-3 mb-4 bg-default-100"
       endContent={<Icon icon="flat-color-icons:google" fontSize={24} />}
       isLoading={progressing}
       onPress={submit}
