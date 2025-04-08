@@ -4,6 +4,7 @@ import { create } from "zustand";
 type AuthStore = {
   auth: ActhDto | null;
   setAuth: (value?: ActhDto) => void;
+  removeAuth: () => void;
 };
 
 const useAuthStore = create<AuthStore>((set) => ({

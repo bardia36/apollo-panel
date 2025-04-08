@@ -12,11 +12,13 @@ export default {
   youLoginSuccessfully: "You Login Successfully!",
   otpCode: "OTP Code",
   sendRecoveryLink: "Send recovery link",
+  logout: "Logout from account",
   otp: "OTP",
   enterWithPassword: "Enter with password",
   mobile: "Mobile",
   name: "Name",
   email: "Email",
+  logoutSuccessfully: "Logout was successfully",
   releaseTitle: "Apollo updates 🚀",
   resetPassword: "Reset password",
   releaseCopyRight:

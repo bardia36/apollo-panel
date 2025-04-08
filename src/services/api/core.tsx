@@ -2,6 +2,7 @@ import type { ErrorExceptions, RequestOption, ServerType } from "@/types/api";
 
 import { stringify } from "qs";
 import axios, { AxiosError, type AxiosRequestConfig } from "axios";
+import useAuthStore from "@/stores/authStore";
 import { ErrorException } from "@/types/api";
 import useAppConfig from "@/config/app-config";
 const tryWithoutToken = [425];
@@ -27,12 +28,15 @@ function requestConfig(
     signal: options.signal,
     withCredentials: true,
     data: options.body,
-    headers: {
-      cookie: options?.token ? options.token : null,
-    },
     paramsSerializer: (params: any) =>
       stringify(params, { arrayFormat: "repeat" }),
   };
+
+  if (useAuthStore.getState()?.auth?.token && !options.tokenLess)
+    axiosRequestConfig.headers = {
+      ...axiosRequestConfig.headers,
+      Authorization: `${useAuthStore.getState()?.auth?.token}`,
+    };
 
   return axiosRequestConfig;
 }

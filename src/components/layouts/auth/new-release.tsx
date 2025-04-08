@@ -27,7 +27,6 @@ export default function NewRelease() {
               src="/images/auth/new-release.png"
               alt={t("auth.releaseTitle")}
               width={115}
-              height={115}
               removeWrapper
               className="md:col-span-12 lg:col-span-4"
             />

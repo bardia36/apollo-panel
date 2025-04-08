@@ -7,6 +7,32 @@ export type User = {
   role: string;
 };
 
+export type Permissions = {
+  _id: string;
+  name: string;
+};
+
+export type Role = {
+  name: string;
+  type:
+    | "UNDEFINED"
+    | "BROKERAGE"
+    | "COUNTER"
+    | "EMPLOYEE"
+    | "AGENCY"
+    | "BRANCH"
+    | "SUPERVISOR"
+    | "REGION"
+    | "ACCOUNTANT"
+    | "SUPPORT"
+    | "ADMIN"
+    | "BOSS"
+    | "DEVELOPER"
+    | "SUPER_USER";
+  description: string;
+  permissions: Permissions[];
+};
+
 export type Auth = {
   _id: string;
   firstName: string;
@@ -24,7 +50,7 @@ export type Auth = {
   confirmEmail: string;
   phoneNumber: string;
   suspended: boolean;
-  role: string[];
+  role: Role;
 };
 
 export type RegisterEntity = {
@@ -67,7 +93,7 @@ export type LoginByOtpEntity = {
 export type ActhDto = {
   profile: Pick<
     Auth,
-    "firstName" | "lastName" | "phoneNumber" | "email" | "userName"
+    "firstName" | "lastName" | "phoneNumber" | "email" | "userName" | 'role'
   >;
   token: string;
   refreshToken: string;

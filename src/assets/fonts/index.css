@@ -4,8 +4,8 @@
   font-weight: 100;
   font-stretch: extra-condensed;
   src:
-    url("woff/YekanBakhFaNum-Thin.woff") format("woff"),
-    url("woff2/YekanBakhFaNum-Thin.woff2") format("woff2");
+    url("woff/YekanBakh-Thin.woff") format("woff"),
+    url("woff2/YekanBakh-Thin.woff2") format("woff2");
 }
 
 @font-face {
@@ -14,8 +14,8 @@
   font-weight: 300;
   font-stretch: extra-condensed;
   src:
-    url("woff/YekanBakhFaNum-Light.woff") format("woff"),
-    url("woff2/YekanBakhFaNum-Light.woff2") format("woff2");
+    url("woff/YekanBakh-Light.woff") format("woff"),
+    url("woff2/YekanBakh-Light.woff2") format("woff2");
 }
 
 @font-face {
@@ -24,8 +24,8 @@
   font-weight: normal;
   font-stretch: extra-condensed;
   src:
-    url("woff/YekanBakhFaNum-Regular.woff") format("woff"),
-    url("woff2/YekanBakhFaNum-Regular.woff2") format("woff2");
+    url("woff/YekanBakh-Regular.woff") format("woff"),
+    url("woff2/YekanBakh-Regular.woff2") format("woff2");
 }
 
 @font-face {
@@ -34,8 +34,8 @@
   font-weight: 600;
   font-stretch: extra-condensed;
   src:
-    url("woff/YekanBakhFaNum-SemiBold.woff") format("woff"),
-    url("woff2/YekanBakhFaNum-SemiBold.woff2") format("woff2");
+    url("woff/YekanBakh-SemiBold.woff") format("woff"),
+    url("woff2/YekanBakh-SemiBold.woff2") format("woff2");
 }
 
 @font-face {
@@ -44,8 +44,8 @@
   font-weight: bold;
   font-stretch: extra-condensed;
   src:
-    url("woff/YekanBakhFaNum-Bold.woff") format("woff"),
-    url("woff2/YekanBakhFaNum-Bold.woff2") format("woff2");
+    url("woff/YekanBakh-Bold.woff") format("woff"),
+    url("woff2/YekanBakh-Bold.woff2") format("woff2");
 }
 
 @font-face {
@@ -54,8 +54,8 @@
   font-weight: 800;
   font-stretch: extra-condensed;
   src:
-    url("woff/YekanBakhFaNum-ExtraBold.woff") format("woff"),
-    url("woff2/YekanBakhFaNum-ExtraBold.woff2") format("woff2");
+    url("woff/YekanBakh-ExtraBold.woff") format("woff"),
+    url("woff2/YekanBakh-ExtraBold.woff2") format("woff2");
 }
 
 @font-face {
@@ -64,8 +64,8 @@
   font-weight: 900;
   font-stretch: extra-condensed;
   src:
-    url("woff/YekanBakhFaNum-Black.woff") format("woff"),
-    url("woff2/YekanBakhFaNum-Black.woff2") format("woff2");
+    url("woff/YekanBakh-Black.woff") format("woff"),
+    url("woff2/YekanBakh-Black.woff2") format("woff2");
 }
 
 @font-face {
@@ -74,6 +74,6 @@
   font-weight: 950;
   font-stretch: extra-condensed;
   src:
-    url("woff/YekanBakhFaNum-ExtraBlack.woff") format("woff"),
-    url("woff2/YekanBakhFaNum-ExtraBlack.woff2") format("woff2");
+    url("woff/YekanBakh-ExtraBlack.woff") format("woff"),
+    url("woff2/YekanBakh-ExtraBlack.woff2") format("woff2");
 }
