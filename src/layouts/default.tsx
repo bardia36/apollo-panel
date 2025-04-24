@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
-import Sidebar from "@/components/layouts/default/sidebar";
+import { Sidebar } from "@/components/layouts/default/sidebar/index";
+import LayoutHeader from "@/components/layouts/default/layout-header";
 
 export default function DefaultLayout() {
   return (
@@ -7,7 +8,8 @@ export default function DefaultLayout() {
       <div className="flex h-screen w-full gap-4 overflow-hidden">
         <Sidebar />
 
-        <main className="w-full max-w-2xl flex-1 p-4">
+        <main className="w-full flex-1 p-4">
+          <LayoutHeader />
           <Outlet />
         </main>
       </div>

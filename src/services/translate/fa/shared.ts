@@ -1,5 +1,6 @@
 export default {
-  or: "یا",
+  apolloLogo: "لوگوی آپولو",
   back: "بازگشت",
   continue: "ادامه",
+  or: "یا",
 };
