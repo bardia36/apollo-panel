@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useIsMobile } from "@/hook/useIsMobile";
+import useIsMobile from "@/hook/useIsMobile";
 
 // components
 import { Accordion, AccordionItem } from "@heroui/accordion";
@@ -8,7 +8,7 @@ import { Link } from "@heroui/link";
 
 export default function NewRelease() {
   const { t } = useTranslation();
-  const { isMobile } = useIsMobile();
+  const isMobile = useIsMobile();
 
   return (
     <div className="z-50 mt-4 mb-4 md:mt-0 md:absolute md:left-8 md:bottom-6 md:right-8">

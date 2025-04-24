@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { useTheme } from "@heroui/use-theme";
-import { useIsMobile } from "@/hook/useIsMobile";
+import useIsMobile from "@/hook/useIsMobile";
 
 // components
 import { Image } from "@heroui/image";
@@ -8,7 +8,7 @@ import { Image } from "@heroui/image";
 import NewRelease from "@/components/layouts/auth/new-release";
 
 export default function AuthLayout() {
-  const { isMobile } = useIsMobile();
+  const isMobile = useIsMobile();
   const { theme } = useTheme();
 
   return (
