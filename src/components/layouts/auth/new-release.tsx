@@ -28,10 +28,10 @@ export default function NewRelease() {
               alt={t("auth.releaseTitle")}
               width={115}
               removeWrapper
-              className="md:col-span-12 lg:col-span-4"
+              className="col-span-2 md:col-span-4 lg:col-span-4"
             />
 
-            <div className="md:col-span-12 lg:col-span-8">
+            <div className="col-span-10 md:col-span-12 lg:col-span-8">
               <div className="flex items-center justify-between">
                 <p className="text-small text-foreground-600">نگارش ۲٫۱٫۴</p>
 
