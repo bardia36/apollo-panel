@@ -14,6 +14,7 @@ import {
 } from "@heroui/dropdown";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { toast } from "@/utils/toast";
+import UserImage from "@/components/shared/user-image";
 
 export default function Account() {
   const { t } = useTranslation();
@@ -37,6 +38,8 @@ export default function Account() {
   return (
     <div className="mt-6 flex justify-between items-center">
       <div>
+        <UserImage imgClass="w-10 h-10" />
+
         <p className="text-small text-foreground">{auth?.profile.userName}</p>
 
         <p className="text-tiny font-bold text-foreground-500">

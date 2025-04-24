@@ -5,7 +5,6 @@ type Props = {
 
 import { useState } from "react";
 import { object, ref, string } from "yup";
-import { useTheme } from "@heroui/use-theme";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
@@ -21,14 +20,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Form } from "@heroui/form";
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
-import { Image } from "@heroui/image";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
 import { AppInput } from "@/components/shared/app-components/app-input";
+import { FullLogo } from "@/components/shared/logo";
 
 export default function SignupForm({ email }: Props) {
   const { t } = useTranslation();
-  const { theme } = useTheme();
   const navigate = useNavigate();
 
   const [isPassword, setIsPassword] = useState(true);
@@ -76,11 +74,7 @@ export default function SignupForm({ email }: Props) {
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
-      <Image
-        src={theme === "dark" ? "/images/logo-dark.png" : "/images/logo.svg"}
-        alt="Logo"
-        classNames={{ wrapper: "mb-6 mt-6 mt-md-0" }}
-      />
+      <FullLogo classNames={{ wrapper: "mb-6 mt-6 mt-md-0" }} />
 
       <Card
         fullWidth
