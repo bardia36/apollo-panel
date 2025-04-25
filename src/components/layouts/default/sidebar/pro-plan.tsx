@@ -1,9 +1,6 @@
 import { Image } from "@heroui/image";
+import proPlanImg from "@/assets/images/layout/pro-plan.png";
 
 export default function Workspace() {
-  return (
-    <div>
-      <Image src="/images/layout/pro-plan.png" />
-    </div>
-  );
+  return <Image src={proPlanImg} alt="pro plan image" />;
 }

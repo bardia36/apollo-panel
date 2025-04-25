@@ -1,12 +1,13 @@
 import { Image } from "@heroui/image";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import asiaInsuranceImg from "@/assets/images/layout/asia-insurance.svg";
 
 export default function Workspace() {
   return (
     <div className="mb-6 border border-default-100 rounded-[18px] shadow-sm p-3 flex items-center justify-between">
       <div className="flex items-center">
         <Image
-          src="/images/layout/asia-insurance.svg"
+          src={asiaInsuranceImg}
           alt="Asia Insurance"
           className="p-1 mx-[7px]"
         />
