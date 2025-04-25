@@ -22,15 +22,6 @@ export default function MobileHeader() {
             className={theme === "dark" ? "text-zinc-400" : "text-zinc-500"}
           />
         </div>
-
-        <div className="p-2">
-          <Icon
-            icon={theme === "dark" ? "solar:sun-outline" : "solar:moon-outline"}
-            width="24"
-            height="24"
-            className={theme === "dark" ? "text-zinc-400" : "text-zinc-500"}
-          />
-        </div>
       </div>
 
       <div className="flex items-center">
