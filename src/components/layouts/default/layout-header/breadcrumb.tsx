@@ -2,17 +2,11 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
+import { useBreadcrumb } from "@/context/breadcrumbContext";
 
-type BreadcrumbLink = {
-  name: string;
-  url: string;
-};
+export default function Breadcrumb() {
+  const { links } = useBreadcrumb();
 
-type BreadcrumbProps = {
-  links: BreadcrumbLink[];
-};
-
-export default function Breadcrumb({ links }: BreadcrumbProps) {
   return (
     <nav
       aria-label="Breadcrumb"
