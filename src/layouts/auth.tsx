@@ -1,11 +1,10 @@
 import { Outlet } from "react-router-dom";
 import { useTheme } from "@heroui/use-theme";
 import useIsMobile from "@/hook/useIsMobile";
-
-// components
 import { Image } from "@heroui/image";
-
 import NewRelease from "@/components/layouts/auth/new-release";
+import authLightImg from "@/assets/images/auth/auth-light.png";
+import authDarkImg from "@/assets/images/auth/auth-dark.png";
 
 export default function AuthLayout() {
   const isMobile = useIsMobile();
@@ -18,12 +17,8 @@ export default function AuthLayout() {
           <div className="col-span-4 xl:col-span-3">
             <div className="relative p-4 h-dvh">
               <Image
-                src={
-                  theme === "dark"
-                    ? "/images/auth/auth-dark.png"
-                    : "/images/auth/auth-light.png"
-                }
-                alt="Auth Light"
+                src={theme === "dark" ? authDarkImg : authLightImg}
+                alt="Auth side background"
                 removeWrapper
                 classNames={{ img: "h-full object-cover w-full rounded-large" }}
               />

@@ -16,6 +16,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { Divider } from "@heroui/divider";
 import GoogleButton from "../auth/login/login-form/google-button";
 import { Link } from "react-router-dom";
+import confirmMessageImg from "@/assets/images/auth/confirm-message.svg";
 
 export default function ConfirmMessage({
   progressing,
@@ -53,7 +54,7 @@ export default function ConfirmMessage({
     <div>
       <div className="bg-[#0074FF] bg-opacity-5 flex justify-center items-center p-4 mb-4 rounded-[14px]">
         <Image
-          src="/images/auth/confirm-message.svg"
+          src={confirmMessageImg}
           alt={t("auth.confirmMessage")}
           width={84}
           height={62}
