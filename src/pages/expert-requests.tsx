@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import { useBreadcrumb } from "@/context/breadcrumbContext";
 import { t } from "i18next";
+import { useBreadcrumb } from "@/context/breadcrumbContext";
+import ExpertRequests from "@/components/expert-requests";
 
 export default function ExpertRequestsPage() {
   const { setLinks } = useBreadcrumb();
@@ -9,5 +10,5 @@ export default function ExpertRequestsPage() {
     setLinks([{ name: t("title.expertRequests"), url: "/expert-requests" }]);
   }, [setLinks]);
 
-  return <div>ExpertRequests</div>;
+  return <ExpertRequests />;
 }

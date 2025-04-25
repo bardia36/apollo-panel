@@ -8,7 +8,7 @@ export default function DefaultLayout() {
       <div className="flex h-screen w-full overflow-hidden">
         <Sidebar />
 
-        <main className="w-full flex-1 py-4 pe-4">
+        <main className="w-full flex-1 py-4 px-4 lg:ps-0">
           <LayoutHeader />
           <Outlet />
         </main>
