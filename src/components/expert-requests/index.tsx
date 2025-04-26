@@ -1,6 +1,7 @@
 import TitleActions from "./title-actions";
 import TableTypeTabs from "./table-type-tabs";
 import { useState } from "react";
+import RequestsTable from "./requests-table";
 
 export default function ExpertRequests() {
   const [activeTab, setActiveTab] = useState("current");
@@ -10,9 +11,11 @@ export default function ExpertRequests() {
   }
 
   return (
-    <>
+    <div className="lg:px-4">
       <TitleActions />
       <TableTypeTabs activeTab={activeTab} onChange={onTabChange} />
-    </>
+      Filters
+      <RequestsTable />
+    </div>
   );
 }

@@ -12,7 +12,7 @@ export default ({
   const isArchiveTab = activeTab === "archive";
 
   return (
-    <div className="py-4">
+    <div className="mb-4">
       <Button
         variant={isArchiveTab ? "light" : "solid"}
         radius="full"

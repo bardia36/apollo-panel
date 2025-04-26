@@ -11,7 +11,7 @@ export default () => {
   const { theme } = useTheme();
 
   return (
-    <div className="pt-3 lg:px-4 mb-4 flex justify-between">
+    <div className="pt-3 mb-4 flex justify-between">
       <div className="flex items-center w-full xl:py-[0.375rem]">
         <Image
           src={theme === "dark" ? requestsHeaderIconDark : requestsHeaderIcon}

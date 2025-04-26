@@ -73,7 +73,7 @@ function App() {
         <div className="text-foreground bg-background">
           <BreadcrumbProvider>
             <Routes>
-              <Route element={<PublicRoutes />}>
+              {/* <Route element={<PublicRoutes />}>
                 <Route element={<AuthLayout />}>
                   <Route element={<LoginPage />} path="/login" />
                   <Route element={<SignupPage />} path="/signup" />
@@ -86,7 +86,7 @@ function App() {
                     path="/reset-password"
                   />
                 </Route>
-              </Route>
+              </Route> */}
 
               <Route element={<PrivateRoutes />}>
                 <Route element={<DefaultLayout />}>
