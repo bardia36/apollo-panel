@@ -5,9 +5,11 @@ export default {
   currentCases: "پرونده‌های جاری",
   management: "مدیریت",
   orderNumber: "شماره سفارش",
+  request: "درخواست‌",
   requests: "درخواست‌ها",
   requestsManagement: "مدیریت درخواست‌ها",
   requestsPageDescription: "مشاهده و مدیریت لیست درخواست‌های بازدید آنلاین",
+  sendToArchive: "ارسال به بایگانی",
   templates: "تمپلیت‌ها",
   vehicleModel: "مدل خودرو",
 };

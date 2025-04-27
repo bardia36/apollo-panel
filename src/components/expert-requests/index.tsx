@@ -14,7 +14,6 @@ export default function ExpertRequests() {
     <div className="lg:px-4">
       <TitleActions />
       <TableTypeTabs activeTab={activeTab} onChange={onTabChange} />
-      Filters
       <RequestsTable />
     </div>
   );

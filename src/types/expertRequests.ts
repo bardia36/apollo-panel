@@ -5,8 +5,18 @@ export type Request = {
   status: RequestStatus;
   created: string;
   branch: string;
-  createdAt: string;
-  updatedAt: string;
 };
 
-export type RequestStatus = "active" | "paused" | "vacation";
+export type RequestStatus =
+  | "DRAFT"
+  | "PENDING"
+  | "OPENED"
+  | "IN_PROGRESS"
+  | "COMPLETED"
+  | "REVIEWED"
+  | "ACCEPTED"
+  | "REJECTED"
+  | "EXPIRED"
+  | "FAILED"
+  | "ARCHIVED"
+  | "CANCELED";
