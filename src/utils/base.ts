@@ -31,3 +31,26 @@ export function fancyTimeFormat(duration: number) {
 export type AddOrReplaceKey<T, K extends string, V> = Omit<T, K> & {
   [P in K]: V;
 };
+
+/**
+ * Splits a number into groups of three digits, separated by a specified splitter.
+ * @param num The number to be split
+ * @param splitter The character used to separate groups of digits
+ * @returns A string with the number split into groups of three digits
+ * @example
+ * numberSplitter(1234567, ',') // returns "1,234,567"
+ */
+export function numberSplitter(
+  num: number | string,
+  splitter: string = "."
+): string {
+  const numStr = typeof num === "number" ? num.toString() : num;
+  const parts = [];
+
+  for (let i = numStr.length; i > 0; i -= 3) {
+    const start = Math.max(i - 3, 0);
+    parts.unshift(numStr.slice(start, i));
+  }
+
+  return parts.join(splitter);
+}
