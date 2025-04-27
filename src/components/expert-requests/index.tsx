@@ -11,10 +11,12 @@ export default function ExpertRequests() {
   }
 
   return (
-    <div className="lg:px-4">
-      <TitleActions />
-      <TableTypeTabs activeTab={activeTab} onChange={onTabChange} />
+    <>
+      <div className="lg:px-4">
+        <TitleActions />
+        <TableTypeTabs activeTab={activeTab} onChange={onTabChange} />
+      </div>
       <RequestsTable />
-    </div>
+    </>
   );
 }
