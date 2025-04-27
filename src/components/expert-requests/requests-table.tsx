@@ -1,4 +1,8 @@
+// modules
 import { useCallback, useMemo, useState } from "react";
+import { t } from "i18next";
+import { Icon } from "@iconify/react/dist/iconify.js";
+// components
 import {
   Table,
   TableHeader,
@@ -19,10 +23,12 @@ import {
 import { Chip } from "@heroui/chip";
 import { User } from "@heroui/user";
 import { Pagination } from "@heroui/pagination";
-import { t } from "i18next";
+import DateDisplay from "../shared/date-display";
+// other
 import { Request } from "@/types/expertRequests";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import { AddOrReplaceKey } from "@/utils/base";
+import { AddOrReplaceKey, numberSplitter } from "@/utils/base";
+
+const perPageNumbers = [5, 10, 15, 20];
 
 export const columns = [
   {
@@ -54,7 +60,7 @@ export const columns = [
   { name: "actions", uid: "actions" },
 ];
 
-// TODO: make it from statusesMap
+// TODO: make it  from statusesMap
 export const statusOptions = [
   { uid: "accepted", label: t("shared.accepted") },
   { uid: "canceled", label: t("shared.canceled") },
@@ -62,7 +68,7 @@ export const statusOptions = [
   { uid: "pending", label: t("shared.pending") },
 ];
 
-// * it is not completed yet, need to add more options from backend
+// TODO: it is not completed yet, need to add more options from backend
 const statusesMap = {
   ACCEPTED: {
     bg: "success bg-opacity-20",
@@ -110,8 +116,6 @@ const statusesMap = {
     label: t("shared.rejected"),
   },
 };
-
-const perPageNumbers = [5, 10, 15, 20];
 
 const users: Request[] = [
   {
@@ -165,6 +169,7 @@ const users: Request[] = [
 ];
 
 export default function RequestsTable() {
+  // states -
   const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<Set<string> | string>(
     new Set([])
@@ -177,7 +182,9 @@ export default function RequestsTable() {
     direction: "ascending",
   });
   const [page, setPage] = useState(1);
+  // - states
 
+  // variables -
   const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = useMemo(() => {
@@ -208,7 +215,7 @@ export default function RequestsTable() {
     return filteredUsers;
   }, [users, filterValue, statusFilter]);
 
-  const pages = Math.ceil(filteredItems.length / rowsPerPage);
+  const totalPagesCount = Math.ceil(filteredItems.length / rowsPerPage);
 
   const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -226,122 +233,9 @@ export default function RequestsTable() {
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
   }, [sortDescriptor, items]);
+  // - variables
 
-  const renderCell = useCallback(
-    (
-      user: Request,
-      columnKey: keyof AddOrReplaceKey<Request, "actions", string>
-    ) => {
-      let cellValue;
-      if (columnKey === "actions") cellValue = "actions";
-      else cellValue = user[columnKey];
-
-      // ID;
-      // model;
-      // status;
-      // user;
-      // created;
-      // branch;
-      // actions;
-      switch (columnKey) {
-        case "id":
-          return <span className="text-default-500">{user.id}</span>;
-        case "model":
-          return (
-            <>
-              <div className="text-default-foreground mb-1">
-                {user.model.name}
-              </div>
-              <div className="text-default-500">{user.model.brand}</div>
-            </>
-          );
-        case "user":
-          return (
-            <User
-              avatarProps={{ radius: "md", src: user.user.image }}
-              description={
-                <div className="text-content4-foreground">
-                  {user.user.mobile}
-                </div>
-              }
-              name={
-                <div className="text-default-500 mb-1">{user.user.name}</div>
-              }
-            />
-          );
-        case "status":
-          return (
-            <Chip
-              className={`bg-${statusesMap[user.status].bg} text-${statusesMap[user.status].text}`}
-              size="sm"
-              variant="flat"
-            >
-              {statusesMap[user.status].label}
-            </Chip>
-          );
-        case "branch":
-          return (
-            <div className="flex gap-1 text-default-foreground">
-              <Icon
-                icon="solar:users-group-rounded-bold"
-                width={20}
-                height={20}
-                className="text-default-200"
-              />
-              {user.branch}
-            </div>
-          );
-        case "actions":
-          return (
-            <div className="relative flex justify-end items-center gap-2">
-              <Dropdown>
-                <DropdownTrigger>
-                  <Button isIconOnly size="sm" variant="light">
-                    <Icon
-                      icon="mdi:dots-vertical"
-                      width={20}
-                      height={20}
-                      className="text-default-500"
-                    />
-                  </Button>
-                </DropdownTrigger>
-
-                <DropdownMenu>
-                  <DropdownItem key="edit">{t("shared.edit")}</DropdownItem>
-                  <DropdownItem key="delete">{t("shared.delete")}</DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-
-              <Button
-                isIconOnly
-                size="sm"
-                variant="solid"
-                radius="full"
-                className="bg-default"
-              >
-                <Icon icon="tabler:eye-filled" width={20} height={20} />
-              </Button>
-            </div>
-          );
-        default:
-          return cellValue;
-      }
-    },
-    []
-  );
-
-  const onNextPage = useCallback(() => {
-    if (page < pages) {
-      setPage(page + 1);
-    }
-  }, [page, pages]);
-
-  const onPreviousPage = useCallback(() => {
-    if (page > 1) {
-      setPage(page - 1);
-    }
-  }, [page]);
-
+  // top content -
   const onRowsPerPageChange = useCallback((perPage: number) => {
     setRowsPerPage(perPage);
     setPage(1);
@@ -359,7 +253,7 @@ export default function RequestsTable() {
   //   setPage(1);
   // }, []);
 
-  const sendToArchive = () => {
+  const onSendToArchive = () => {
     console.log(selectedKeys);
   };
 
@@ -510,7 +404,7 @@ export default function RequestsTable() {
                     />
                   }
                   className="hover:bg-default-200 text-default-foreground"
-                  onPress={() => sendToArchive()}
+                  onPress={() => onSendToArchive()}
                 >
                   {t("expertRequests.sendToArchive")}
                 </DropdownItem>
@@ -530,8 +424,8 @@ export default function RequestsTable() {
 
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            {/* // TODO: add splitter by / */}
-            {t("shared.total")} {users.length} {t("expertRequests.request")}
+            {t("shared.total")} {numberSplitter(users.length, "/")}
+            {t("expertRequests.request")}
           </span>
 
           <div className="flex items-center">
@@ -586,6 +480,16 @@ export default function RequestsTable() {
     onSearchChange,
     hasSearchFilter,
   ]);
+  // - top content
+
+  // bottom content -
+  const onNextPage = useCallback(() => {
+    if (page < totalPagesCount) setPage(page + 1);
+  }, [page, totalPagesCount]);
+
+  const onPreviousPage = useCallback(() => {
+    if (page > 1) setPage(page - 1);
+  }, [page]);
 
   const bottomContent = useMemo(() => {
     return (
@@ -593,58 +497,168 @@ export default function RequestsTable() {
         <span className="w-[30%] text-small text-default-400">
           {selectedKeys === "all"
             ? t("shared.allItemsSelected")
-            : `${selectedKeys.size} of ${filteredItems.length} selected`}
+            : t("shared.selectedItemsCount", {
+                selectedItems: selectedKeys.size,
+                allItems: filteredItems.length,
+              })}
         </span>
 
         <Pagination
           isCompact
           showControls
-          showShadow
-          color="primary"
           page={page}
-          total={pages}
+          total={totalPagesCount}
+          classNames={{
+            cursor: "bg-content1-foreground text-content1",
+            prev: "rotate-180 rounded-s-none !rounded-e-lg",
+            chevronNext: "rotate-0",
+          }}
           onChange={setPage}
         />
 
-        <div className="hidden sm:flex w-[30%] justify-end gap-2">
+        <div className="hidden md:flex w-[30%] justify-end gap-[0.625rem]">
           <Button
-            isDisabled={pages === 1}
+            isDisabled={totalPagesCount === 1 || page === 1}
             size="sm"
+            isIconOnly
             variant="flat"
             onPress={onPreviousPage}
           >
-            Previous
+            <Icon icon="mynaui:chevron-right" />
           </Button>
 
           <Button
-            isDisabled={pages === 1}
+            isDisabled={totalPagesCount === 1 || page === totalPagesCount}
             size="sm"
             variant="flat"
+            endContent={<Icon icon="mynaui:chevron-left" />}
             onPress={onNextPage}
           >
-            Next
+            {t("shared.nextPage")}
           </Button>
         </div>
       </div>
     );
-  }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
+  }, [selectedKeys, items.length, page, totalPagesCount, hasSearchFilter]);
+  // - bottom content
 
+  // table data -
+  const renderCell = useCallback(
+    (
+      user: Request,
+      columnKey: keyof AddOrReplaceKey<Request, "actions", string>
+    ) => {
+      let cellValue;
+      if (columnKey === "actions") cellValue = "actions";
+      else cellValue = user[columnKey];
+
+      switch (columnKey) {
+        case "id":
+          return <span className="text-default-500">{user.id}</span>;
+
+        case "model":
+          return (
+            <>
+              <div className="text-default-foreground mb-1">
+                {user.model.name}
+              </div>
+              <div className="text-default-500">{user.model.brand}</div>
+            </>
+          );
+
+        case "status":
+          return (
+            <Chip
+              className={`bg-${statusesMap[user.status].bg} text-${statusesMap[user.status].text}`}
+              size="sm"
+              variant="flat"
+            >
+              {statusesMap[user.status].label}
+            </Chip>
+          );
+
+        case "user":
+          return (
+            <User
+              avatarProps={{ radius: "md", src: user.user.image }}
+              description={
+                <div className="text-content4-foreground">
+                  {user.user.mobile}
+                </div>
+              }
+              name={
+                <div className="text-default-500 mb-1">{user.user.name}</div>
+              }
+            />
+          );
+
+        case "branch":
+          return (
+            <div className="flex gap-1 text-default-foreground">
+              <Icon
+                icon="solar:users-group-rounded-bold"
+                width={20}
+                height={20}
+                className="text-default-200"
+              />
+              {user.branch}
+            </div>
+          );
+
+        case "created":
+          return <DateDisplay isoDate={user.created} />;
+
+        case "actions":
+          return (
+            <div className="relative flex justify-end items-center gap-2">
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button isIconOnly size="sm" variant="light">
+                    <Icon
+                      icon="mdi:dots-vertical"
+                      width={20}
+                      height={20}
+                      className="text-default-500"
+                    />
+                  </Button>
+                </DropdownTrigger>
+
+                <DropdownMenu>
+                  <DropdownItem key="edit">{t("shared.edit")}</DropdownItem>
+                  <DropdownItem key="delete">{t("shared.delete")}</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+
+              <Button
+                isIconOnly
+                size="sm"
+                variant="solid"
+                radius="full"
+                className="bg-default bg-opacity-40"
+              >
+                <Icon icon="tabler:eye-filled" width={20} height={20} />
+              </Button>
+            </div>
+          );
+        default:
+          return cellValue;
+      }
+    },
+    []
+  );
+
+  // TODO: change english numbers to persian in table
   return (
     <Table
       isHeaderSticky
       aria-label="Expert Requests Table"
       bottomContent={bottomContent}
-      bottomContentPlacement="outside"
-      classNames={{
-        wrapper: "max-h-[382px]",
-      }}
       selectedKeys={selectedKeys}
       selectionMode="multiple"
       sortDescriptor={sortDescriptor}
       topContent={topContent}
-      topContentPlacement="outside"
-      onSelectionChange={() => setSelectedKeys}
-      onSortChange={() => setSortDescriptor}
+      onSelectionChange={setSelectedKeys}
+      onSortChange={setSortDescriptor}
     >
       <TableHeader columns={headerColumns}>
         {(column) => (
@@ -672,4 +686,5 @@ export default function RequestsTable() {
       </TableBody>
     </Table>
   );
+  // - table data
 }
