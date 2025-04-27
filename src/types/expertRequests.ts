@@ -1,6 +1,6 @@
 export type Request = {
   id: string;
-  model: string;
+  model: { name: string; brand: string };
   user: { name: string; mobile?: string; image?: string };
   status: RequestStatus;
   created: string;

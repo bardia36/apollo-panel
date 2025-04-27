@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -6,6 +6,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  SortDescriptor,
 } from "@heroui/table";
 import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
@@ -21,6 +22,7 @@ import { Pagination } from "@heroui/pagination";
 import { t } from "i18next";
 import { Request } from "@/types/expertRequests";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { AddOrReplaceKey } from "@/utils/base";
 
 export const columns = [
   {
@@ -31,18 +33,28 @@ export const columns = [
   },
   {
     name: "model",
-    uid: "name",
+    uid: "model",
     sortable: true,
     label: t("expertRequests.vehicleModel"),
   },
-  { name: "status", uid: "age", sortable: true, label: t("shared.status") },
-  { name: "user", uid: "role", sortable: true, label: t("shared.user") },
-  { name: "created", uid: "team", label: t("shared.created") },
-  { name: "branch", uid: "email", label: t("expertRequests.branch") },
+  { name: "status", uid: "status", sortable: true, label: t("shared.status") },
+  { name: "user", uid: "user", sortable: true, label: t("shared.user") },
+  {
+    name: "created",
+    uid: "created",
+    sortable: true,
+    label: t("shared.created"),
+  },
+  {
+    name: "branch",
+    uid: "branch",
+    sortable: true,
+    label: t("expertRequests.branch"),
+  },
   { name: "actions", uid: "actions" },
 ];
 
-// TODO: add types for statusOptions, add all options
+// TODO: make it from statusesMap
 export const statusOptions = [
   { uid: "accepted", label: t("shared.accepted") },
   { uid: "canceled", label: t("shared.canceled") },
@@ -50,222 +62,61 @@ export const statusOptions = [
   { uid: "pending", label: t("shared.pending") },
 ];
 
-const statusColorMap = {
-  accepted: "success",
-  canceled: "danger",
-  inProgress: "warning",
-  pending: "warning",
+// * it is not completed yet, need to add more options from backend
+const statusesMap = {
+  ACCEPTED: {
+    bg: "success bg-opacity-20",
+    text: "success",
+    label: t("shared.accepted"),
+  },
+  ARCHIVED: {
+    bg: "default bg-opacity-40",
+    text: "foreground-500",
+    label: t("shared.archived"),
+  },
+  CANCELED: {
+    bg: "default bg-opacity-40",
+    text: "foreground-500",
+    label: t("shared.canceled"),
+  },
+  EXPIRED: {
+    bg: "default bg-opacity-40",
+    text: "foreground-500",
+    label: t("shared.expired"),
+  },
+  FAILED: {
+    bg: "danger bg-opacity-20",
+    text: "danger",
+    label: t("shared.failed"),
+  },
+  IN_PROGRESS: {
+    bg: "warning bg-opacity-20",
+    text: "warning",
+    label: t("shared.inProgress"),
+  },
+  OPENED: {
+    bg: "warning bg-opacity-20",
+    text: "warning",
+    label: t("shared.opened"),
+  },
+  PENDING: {
+    bg: "warning bg-opacity-20",
+    text: "warning",
+    label: t("shared.pending"),
+  },
+  REJECTED: {
+    bg: "danger bg-opacity-20",
+    text: "danger",
+    label: t("shared.rejected"),
+  },
 };
 
 const perPageNumbers = [5, 10, 15, 20];
 
-// export const users = [
-//   {
-//     id: 1,
-//     name: "Tony Reichert",
-//     role: "CEO",
-//     team: "Management",
-//     status: "active",
-//     age: "29",
-//     avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-//     email: "tony.reichert@example.com",
-//   },
-//   {
-//     id: 2,
-//     name: "Zoey Lang",
-//     role: "Tech Lead",
-//     team: "Development",
-//     status: "paused",
-//     age: "25",
-//     avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
-//     email: "zoey.lang@example.com",
-//   },
-//   {
-//     id: 3,
-//     name: "Jane Fisher",
-//     role: "Sr. Dev",
-//     team: "Development",
-//     status: "active",
-//     age: "22",
-//     avatar: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-//     email: "jane.fisher@example.com",
-//   },
-//   {
-//     id: 4,
-//     name: "William Howard",
-//     role: "C.M.",
-//     team: "Marketing",
-//     status: "vacation",
-//     age: "28",
-//     avatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
-//     email: "william.howard@example.com",
-//   },
-//   {
-//     id: 5,
-//     name: "Kristen Copper",
-//     role: "S. Manager",
-//     team: "Sales",
-//     status: "active",
-//     age: "24",
-//     avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-//     email: "kristen.cooper@example.com",
-//   },
-//   {
-//     id: 6,
-//     name: "Brian Kim",
-//     role: "P. Manager",
-//     team: "Management",
-//     age: "29",
-//     avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-//     email: "brian.kim@example.com",
-//     status: "Active",
-//   },
-//   {
-//     id: 7,
-//     name: "Michael Hunt",
-//     role: "Designer",
-//     team: "Design",
-//     status: "paused",
-//     age: "27",
-//     avatar: "https://i.pravatar.cc/150?u=a042581f4e29027007d",
-//     email: "michael.hunt@example.com",
-//   },
-//   {
-//     id: 8,
-//     name: "Samantha Brooks",
-//     role: "HR Manager",
-//     team: "HR",
-//     status: "active",
-//     age: "31",
-//     avatar: "https://i.pravatar.cc/150?u=a042581f4e27027008d",
-//     email: "samantha.brooks@example.com",
-//   },
-//   {
-//     id: 9,
-//     name: "Frank Harrison",
-//     role: "F. Manager",
-//     team: "Finance",
-//     status: "vacation",
-//     age: "33",
-//     avatar: "https://i.pravatar.cc/150?img=4",
-//     email: "frank.harrison@example.com",
-//   },
-//   {
-//     id: 10,
-//     name: "Emma Adams",
-//     role: "Ops Manager",
-//     team: "Operations",
-//     status: "active",
-//     age: "35",
-//     avatar: "https://i.pravatar.cc/150?img=5",
-//     email: "emma.adams@example.com",
-//   },
-//   {
-//     id: 11,
-//     name: "Brandon Stevens",
-//     role: "Jr. Dev",
-//     team: "Development",
-//     status: "active",
-//     age: "22",
-//     avatar: "https://i.pravatar.cc/150?img=8",
-//     email: "brandon.stevens@example.com",
-//   },
-//   {
-//     id: 12,
-//     name: "Megan Richards",
-//     role: "P. Manager",
-//     team: "Product",
-//     status: "paused",
-//     age: "28",
-//     avatar: "https://i.pravatar.cc/150?img=10",
-//     email: "megan.richards@example.com",
-//   },
-//   {
-//     id: 13,
-//     name: "Oliver Scott",
-//     role: "S. Manager",
-//     team: "Security",
-//     status: "active",
-//     age: "37",
-//     avatar: "https://i.pravatar.cc/150?img=12",
-//     email: "oliver.scott@example.com",
-//   },
-//   {
-//     id: 14,
-//     name: "Grace Allen",
-//     role: "M. Specialist",
-//     team: "Marketing",
-//     status: "active",
-//     age: "30",
-//     avatar: "https://i.pravatar.cc/150?img=16",
-//     email: "grace.allen@example.com",
-//   },
-//   {
-//     id: 15,
-//     name: "Noah Carter",
-//     role: "IT Specialist",
-//     team: "I. Technology",
-//     status: "paused",
-//     age: "31",
-//     avatar: "https://i.pravatar.cc/150?img=15",
-//     email: "noah.carter@example.com",
-//   },
-//   {
-//     id: 16,
-//     name: "Ava Perez",
-//     role: "Manager",
-//     team: "Sales",
-//     status: "active",
-//     age: "29",
-//     avatar: "https://i.pravatar.cc/150?img=20",
-//     email: "ava.perez@example.com",
-//   },
-//   {
-//     id: 17,
-//     name: "Liam Johnson",
-//     role: "Data Analyst",
-//     team: "Analysis",
-//     status: "active",
-//     age: "28",
-//     avatar: "https://i.pravatar.cc/150?img=33",
-//     email: "liam.johnson@example.com",
-//   },
-//   {
-//     id: 18,
-//     name: "Sophia Taylor",
-//     role: "QA Analyst",
-//     team: "Testing",
-//     status: "active",
-//     age: "27",
-//     avatar: "https://i.pravatar.cc/150?img=29",
-//     email: "sophia.taylor@example.com",
-//   },
-//   {
-//     id: 19,
-//     name: "Lucas Harris",
-//     role: "Administrator",
-//     team: "Information Technology",
-//     status: "paused",
-//     age: "32",
-//     avatar: "https://i.pravatar.cc/150?img=50",
-//     email: "lucas.harris@example.com",
-//   },
-//   {
-//     id: 20,
-//     name: "Mia Robinson",
-//     role: "Coordinator",
-//     team: "Operations",
-//     status: "active",
-//     age: "26",
-//     avatar: "https://i.pravatar.cc/150?img=45",
-//     email: "mia.robinson@example.com",
-//   },
-// ];
-
 const users: Request[] = [
   {
     id: "EX_694843",
-    model: "Tony Reichert",
+    model: { name: "207 SD", brand: "پژو" },
     user: {
       name: "متین شمسایی",
       image: "/public/favicon.svg",
@@ -277,7 +128,7 @@ const users: Request[] = [
   },
   {
     id: "EX_694844",
-    model: "Zoey Lang",
+    model: { name: "207 SD", brand: "پژو" },
     user: {
       name: "متین شمسایی",
       image: "/public/favicon.svg",
@@ -289,19 +140,19 @@ const users: Request[] = [
   },
   {
     id: "EX_694845",
-    model: "Jane Fisher",
+    model: { name: "207 SD", brand: "پژو" },
     user: {
       name: "متین شمسایی",
       image: "/public/favicon.svg",
       mobile: "09303061379",
     },
-    status: "IN_PROGRESS",
+    status: "REJECTED",
     created: "2025-04-19T12:32:33.540504",
     branch: "علیرضا امینی منفرد",
   },
   {
     id: "EX_694846",
-    model: "William Howard",
+    model: { name: "207 SD", brand: "پژو" },
     user: {
       name: "متین شمسایی",
       image: "/public/favicon.svg",
@@ -321,8 +172,8 @@ export default function RequestsTable() {
   const [visibleColumns, setVisibleColumns] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [sortDescriptor, setSortDescriptor] = useState({
-    column: "age",
+  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
+    column: "id",
     direction: "ascending",
   });
   const [page, setPage] = useState(1);
@@ -342,7 +193,7 @@ export default function RequestsTable() {
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
-        user.model.toLowerCase().includes(filterValue.toLowerCase())
+        user.model.name.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
     if (
@@ -376,62 +227,108 @@ export default function RequestsTable() {
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = useCallback((user, columnKey) => {
-    const cellValue = user[columnKey];
+  const renderCell = useCallback(
+    (
+      user: Request,
+      columnKey: keyof AddOrReplaceKey<Request, "actions", string>
+    ) => {
+      let cellValue;
+      if (columnKey === "actions") cellValue = "actions";
+      else cellValue = user[columnKey];
 
-    // ID;
-    // model;
-    // status;
-    // user;
-    // created;
-    // branch;
-    // actions;
-    switch (columnKey) {
-      case "name":
-        return (
-          <User
-            avatarProps={{ radius: "lg", src: user.avatar }}
-            description={user.email}
-            name={cellValue}
-          >
-            {user.email}
-          </User>
-        );
-      case "role":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small">{cellValue}</p>
-            <p className="text-bold text-tiny text-default-400">{user.team}</p>
-          </div>
-        );
-      case "status":
-        return (
-          <Chip color={statusColorMap[user.status]} size="sm" variant="flat">
-            {cellValue}
-          </Chip>
-        );
-      case "actions":
-        return (
-          <div className="relative flex justify-end items-center gap-2">
-            <Dropdown>
-              <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light">
-                  <Icon icon="mdi:dots-vertical" />
-                </Button>
-              </DropdownTrigger>
+      // ID;
+      // model;
+      // status;
+      // user;
+      // created;
+      // branch;
+      // actions;
+      switch (columnKey) {
+        case "id":
+          return <span className="text-default-500">{user.id}</span>;
+        case "model":
+          return (
+            <>
+              <div className="text-default-foreground mb-1">
+                {user.model.name}
+              </div>
+              <div className="text-default-500">{user.model.brand}</div>
+            </>
+          );
+        case "user":
+          return (
+            <User
+              avatarProps={{ radius: "md", src: user.user.image }}
+              description={
+                <div className="text-content4-foreground">
+                  {user.user.mobile}
+                </div>
+              }
+              name={
+                <div className="text-default-500 mb-1">{user.user.name}</div>
+              }
+            />
+          );
+        case "status":
+          return (
+            <Chip
+              className={`bg-${statusesMap[user.status].bg} text-${statusesMap[user.status].text}`}
+              size="sm"
+              variant="flat"
+            >
+              {statusesMap[user.status].label}
+            </Chip>
+          );
+        case "branch":
+          return (
+            <div className="flex gap-1 text-default-foreground">
+              <Icon
+                icon="solar:users-group-rounded-bold"
+                width={20}
+                height={20}
+                className="text-default-200"
+              />
+              {user.branch}
+            </div>
+          );
+        case "actions":
+          return (
+            <div className="relative flex justify-end items-center gap-2">
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button isIconOnly size="sm" variant="light">
+                    <Icon
+                      icon="mdi:dots-vertical"
+                      width={20}
+                      height={20}
+                      className="text-default-500"
+                    />
+                  </Button>
+                </DropdownTrigger>
 
-              <DropdownMenu>
-                <DropdownItem key="view">View</DropdownItem>
-                <DropdownItem key="edit">Edit</DropdownItem>
-                <DropdownItem key="delete">Delete</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+                <DropdownMenu>
+                  <DropdownItem key="edit">{t("shared.edit")}</DropdownItem>
+                  <DropdownItem key="delete">{t("shared.delete")}</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+
+              <Button
+                isIconOnly
+                size="sm"
+                variant="solid"
+                radius="full"
+                className="bg-default"
+              >
+                <Icon icon="tabler:eye-filled" width={20} height={20} />
+              </Button>
+            </div>
+          );
+        default:
+          return cellValue;
+      }
+    },
+    []
+  );
 
   const onNextPage = useCallback(() => {
     if (page < pages) {
@@ -735,7 +632,7 @@ export default function RequestsTable() {
   return (
     <Table
       isHeaderSticky
-      aria-label="Example table with custom cells, pagination and sorting"
+      aria-label="Expert Requests Table"
       bottomContent={bottomContent}
       bottomContentPlacement="outside"
       classNames={{
@@ -746,8 +643,8 @@ export default function RequestsTable() {
       sortDescriptor={sortDescriptor}
       topContent={topContent}
       topContentPlacement="outside"
-      onSelectionChange={setSelectedKeys}
-      onSortChange={setSortDescriptor}
+      onSelectionChange={() => setSelectedKeys}
+      onSortChange={() => setSortDescriptor}
     >
       <TableHeader columns={headerColumns}>
         {(column) => (
@@ -756,12 +653,15 @@ export default function RequestsTable() {
             align={column.uid === "actions" ? "center" : "start"}
             allowsSorting={column.sortable}
           >
-            {column.name}
+            {column.label}
           </TableColumn>
         )}
       </TableHeader>
 
-      <TableBody emptyContent={"No users found"} items={sortedItems}>
+      <TableBody
+        emptyContent={t("expertRequests.noRequestFound")}
+        items={sortedItems}
+      >
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
