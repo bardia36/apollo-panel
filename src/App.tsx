@@ -28,7 +28,7 @@ import PrivateRoutes from "./private-route";
 import PublicRoutes from "./public-route";
 
 // Stores
-import useAuthStore from "@/stores/authStore";
+import useAuthStore from "@/stores/auth-store";
 
 // Contexts
 import { BreadcrumbProvider } from "@/context/breadcrumbContext";

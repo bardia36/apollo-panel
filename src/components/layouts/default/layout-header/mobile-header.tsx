@@ -11,7 +11,7 @@ export default function MobileHeader() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
-    <div className="flex items-center justify-between w-full h-12">
+    <div className="flex lg:hidden items-center justify-between w-full h-12 mb-4">
       <div className="flex items-center">
         <UserImage imgClass="w-8 h-8" />
         <div className="p-2">

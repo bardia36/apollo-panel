@@ -1,0 +1,16 @@
+export default {
+  archive: "بایگانی",
+  branch: "نمایندگی",
+  createRequest: "ایجاد درخواست",
+  currentCases: "پرونده‌های جاری",
+  management: "مدیریت",
+  noRequestFound: "هیچ درخواستی پیدا نشد.",
+  orderNumber: "شماره سفارش",
+  request: "درخواست‌",
+  requests: "درخواست‌ها",
+  requestsManagement: "مدیریت درخواست‌ها",
+  requestsPageDescription: "مشاهده و مدیریت لیست درخواست‌های بازدید آنلاین",
+  sendToArchive: "ارسال به بایگانی",
+  templates: "تمپلیت‌ها",
+  vehicleModel: "مدل خودرو",
+};
