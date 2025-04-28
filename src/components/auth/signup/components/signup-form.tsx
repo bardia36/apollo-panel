@@ -94,6 +94,7 @@ export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
         render={({ field, fieldState: { error } }) => (
           <AppInput
             label={t("auth.name")}
+            autoFocus
             {...field}
             error={error}
             variant="flat"
