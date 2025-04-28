@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import useIsMobile from "@/hook/useIsMobile";
+import {useBreakpoint} from "@/hook/useBreakpoint";
 import { Accordion, AccordionItem } from "@heroui/accordion";
 import { Image } from "@heroui/image";
 import { Link } from "@heroui/link";
@@ -8,7 +8,7 @@ import corporateImg from "@/assets/images/auth/corporate.svg";
 
 export default function NewRelease() {
   const { t } = useTranslation();
-  const isMobile = useIsMobile();
+  const {isMdAndDown} = useBreakpoint();
 
   return (
     <div className="z-50 mt-4 mb-4 md:mt-0 md:absolute md:left-8 md:bottom-6 md:right-8">
@@ -62,7 +62,7 @@ export default function NewRelease() {
         </AccordionItem>
       </Accordion>
 
-      {!isMobile && (
+      {!isMdAndDown && (
         <div className="flex items-center justify-center w-full">
           <Image
             src={corporateImg}
