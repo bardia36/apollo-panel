@@ -6,6 +6,12 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import requestsHeaderIcon from "@/assets/images/expert-requests/requests-header-icon.svg";
 import requestsHeaderIconDark from "@/assets/images/expert-requests/requests-header-icon-dark.svg";
 import { useTheme } from "@heroui/use-theme";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@heroui/dropdown";
 
 export default () => {
   const { theme } = useTheme();
@@ -41,14 +47,52 @@ export default () => {
         </div>
 
         <div className="xl:hidden ms-auto">
-          <Button variant="light" isIconOnly size="sm" className="me-2">
-            <Icon
-              icon="solar:menu-dots-bold"
-              width={20}
-              height={20}
-              className="text-default-500"
-            />
-          </Button>
+          <Dropdown>
+            <DropdownTrigger>
+              <Button variant="light" isIconOnly size="sm" className="me-2">
+                <Icon
+                  icon="solar:menu-dots-bold"
+                  width={20}
+                  height={20}
+                  className="text-default-500"
+                />
+              </Button>
+            </DropdownTrigger>
+
+            <DropdownMenu aria-label="Secondary Actions menu">
+              <DropdownItem
+                key="templates"
+                classNames={{
+                  title: "text-default-foreground flex items-center",
+                }}
+              >
+                <Icon
+                  icon="solar:widget-bold"
+                  width={18}
+                  height={18}
+                  className="text-default-600 me-3"
+                />
+
+                {t("expertRequests.templates")}
+              </DropdownItem>
+
+              <DropdownItem
+                key="settings"
+                classNames={{
+                  title: "text-default-foreground flex items-center",
+                }}
+              >
+                <Icon
+                  icon="lineicons:gear-1"
+                  width={18}
+                  height={18}
+                  className="text-default-600 me-3"
+                />
+
+                {t("shared.settings")}
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
 
           <Button
             variant="shadow"
@@ -61,10 +105,7 @@ export default () => {
       </div>
 
       <div className="hidden xl:flex items-end">
-        <Button
-          variant="light"
-          className="text-default-foreground me-2.5"
-        >
+        <Button variant="light" className="text-default-foreground me-2.5">
           <Icon
             icon="lineicons:gear-1"
             width={20}
@@ -75,10 +116,7 @@ export default () => {
           {t("shared.settings")}
         </Button>
 
-        <Button
-          variant="flat"
-          className="text-default-foreground me-2.5"
-        >
+        <Button variant="flat" className="text-default-foreground me-2.5">
           <Icon
             icon="bx:sort"
             width={20}
