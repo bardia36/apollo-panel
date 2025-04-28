@@ -35,7 +35,7 @@ function requestConfig(
   if (useAuthStore.getState()?.auth?.token && !options.tokenLess)
     axiosRequestConfig.headers = {
       ...axiosRequestConfig.headers,
-      Authorization: `${useAuthStore.getState()?.auth?.token}`,
+      Authorization: `Bearer ${useAuthStore.getState()?.auth?.token}`,
     };
 
   return axiosRequestConfig;
