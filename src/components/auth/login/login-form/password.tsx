@@ -93,6 +93,7 @@ export default function Password({ userName, setCurrentComponent }: Props) {
             label={t("auth.password")}
             {...field}
             error={error}
+            autoFocus
             type="password"
             className="my-4"
           />
