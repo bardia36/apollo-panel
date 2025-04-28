@@ -1,7 +1,7 @@
-import TitleActions from "./title-actions";
-import TableTypeTabs from "./table-type-tabs";
 import { useState } from "react";
-import RequestsTable from "./requests-table";
+import TitleActions from "./title-actions";
+import TableTypeTabs from "./table-components/table-type-tabs";
+import RequestsTable from "./table-components/requests-table";
 
 export default function ExpertRequests() {
   const [activeTab, setActiveTab] = useState("current");
