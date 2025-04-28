@@ -7,7 +7,7 @@ import ProPlan from "./pro-plan";
 export function Sidebar() {
   return (
     <div className="hidden lg:flex h-full max-w-[321px] min-w-[288px] overflow-x-hidden overflow-y-auto rounded-lg">
-      <div className="w-72 p-6 transition-width bg-content1 rounded-large">
+      <div className="flex flex-col w-72 p-6 transition-width bg-content1 rounded-large">
         <SidebarContent />
       </div>
     </div>

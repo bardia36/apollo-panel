@@ -23,7 +23,7 @@ export default {
   pending: "در انتظار بررسی",
   rejected: "رد شده",
   search: "جستجو",
-  selectedItemsCount: "{{selectedItems}} مورد از {{allItems}} مورد انتخاب شده‌",
+  selectedItemsCount: "{{selectedItems}} مورد انتخاب شده‌",
   settings: "تنظیمات",
   status: "وضعیت",
   total: "در کل",

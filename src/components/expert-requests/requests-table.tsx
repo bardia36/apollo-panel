@@ -27,6 +27,7 @@ import DateDisplay from "../shared/date-display";
 // other
 import { Request } from "@/types/expertRequests";
 import { AddOrReplaceKey, numberSplitter } from "@/utils/base";
+import { useBreakpoint } from "@/hook/useBreakpoint";
 
 const perPageNumbers = [5, 10, 15, 20];
 
@@ -185,6 +186,7 @@ export default function RequestsTable() {
   // - states
 
   // variables -
+  const { isSm } = useBreakpoint();
   const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = useMemo(() => {
@@ -260,16 +262,15 @@ export default function RequestsTable() {
   const topContent = useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-4">
           <div className="flex gap-4">
             <Input
-              className="w-full sm:max-w-[44%] lg:max-w-[100%] lg:min-w-[272px]"
               classNames={{
                 input:
                   "bg-transparent text-default-500 dark:text-default-500 placeholder:text-default-500 dark:placeholder:text-default-500",
                 innerWrapper: "bg-transparent",
                 inputWrapper:
-                  "bg-default-100 dark:bg-default-100 text-default-500",
+                  "w-[85px] sm:w-full lg:min-w-[272px] bg-default-100 dark:bg-default-100 text-default-500",
               }}
               placeholder={t("shared.search")}
               endContent={
@@ -284,10 +285,11 @@ export default function RequestsTable() {
 
             <div className="flex items-center gap-4">
               <Dropdown>
-                <DropdownTrigger className="hidden sm:flex">
+                <DropdownTrigger className="flex">
                   <Button
                     variant="flat"
                     className="px-3 gap-3 text-default-800 bg-default-100"
+                    isIconOnly={isSm}
                     startContent={
                       <Icon
                         icon="mdi:chevron-down"
@@ -297,7 +299,9 @@ export default function RequestsTable() {
                       />
                     }
                   >
-                    {t("shared.status")}
+                    <span className="hidden sm:inline">
+                      {t("shared.status")}
+                    </span>
                   </Button>
                 </DropdownTrigger>
 
@@ -316,10 +320,11 @@ export default function RequestsTable() {
               </Dropdown>
 
               <Dropdown>
-                <DropdownTrigger className="hidden sm:flex">
+                <DropdownTrigger className="flex">
                   <Button
                     variant="flat"
                     className="px-3 gap-3 text-default-800 bg-default-100"
+                    isIconOnly={isSm}
                     startContent={
                       <Icon
                         icon="solar:sort-horizontal-linear"
@@ -329,7 +334,9 @@ export default function RequestsTable() {
                       />
                     }
                   >
-                    {t("shared.columns")}
+                    <span className="hidden sm:inline">
+                      {t("shared.columns")}
+                    </span>
                   </Button>
                 </DropdownTrigger>
 
@@ -424,8 +431,8 @@ export default function RequestsTable() {
 
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            {t("shared.total")} {numberSplitter(users.length, "/")}
-            {t("expertRequests.request")}
+            {`${t("shared.total")} ${numberSplitter(users.length, "/")}
+            ${t("expertRequests.request")}`}
           </span>
 
           <div className="flex items-center">
@@ -499,7 +506,6 @@ export default function RequestsTable() {
             ? t("shared.allItemsSelected")
             : t("shared.selectedItemsCount", {
                 selectedItems: selectedKeys.size,
-                allItems: filteredItems.length,
               })}
         </span>
 
@@ -508,6 +514,7 @@ export default function RequestsTable() {
           showControls
           page={page}
           total={totalPagesCount}
+          className="p-0 sm:p-2.5"
           classNames={{
             cursor: "bg-content1-foreground text-content1",
             prev: "rotate-180 rounded-s-none !rounded-e-lg",
@@ -516,7 +523,7 @@ export default function RequestsTable() {
           onChange={setPage}
         />
 
-        <div className="hidden md:flex w-[30%] justify-end gap-[0.625rem]">
+        <div className="hidden md:flex w-[30%] justify-end gap-2.5">
           <Button
             isDisabled={totalPagesCount === 1 || page === 1}
             size="sm"
@@ -652,11 +659,11 @@ export default function RequestsTable() {
     <Table
       isHeaderSticky
       aria-label="Expert Requests Table"
+      selectionMode="multiple"
+      topContent={topContent}
       bottomContent={bottomContent}
       selectedKeys={selectedKeys}
-      selectionMode="multiple"
       sortDescriptor={sortDescriptor}
-      topContent={topContent}
       onSelectionChange={setSelectedKeys}
       onSortChange={setSortDescriptor}
     >

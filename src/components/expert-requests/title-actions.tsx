@@ -12,7 +12,7 @@ export default () => {
 
   return (
     <div className="pt-3 mb-4 flex justify-between">
-      <div className="flex items-center w-full xl:py-[0.375rem]">
+      <div className="flex flex-wrap items-center w-full xl:py-1.5">
         <Image
           src={theme === "dark" ? requestsHeaderIconDark : requestsHeaderIcon}
           alt={t("expertRequests.requestsManagement")}
@@ -21,7 +21,7 @@ export default () => {
 
         <div>
           <div className="flex items-center">
-            <h1 className="text-3xl text-foreground-900">
+            <h1 className="text-3xl text-foreground-900 me-4">
               <bdi className="me-2 hidden lg:inline-block">
                 {t("expertRequests.management")}
               </bdi>
@@ -31,11 +31,11 @@ export default () => {
             <Badge
               content="0"
               children
-              className="ms-4 bg-default-foreground text-background"
+              className="bg-default-foreground text-background"
             />
           </div>
 
-          <p className="hidden lg:block text-foreground-500 mt-[0.625rem]">
+          <p className="hidden lg:block text-foreground-500 mt-2.5">
             {t("expertRequests.requestsPageDescription")}
           </p>
         </div>
@@ -63,7 +63,7 @@ export default () => {
       <div className="hidden xl:flex items-end">
         <Button
           variant="light"
-          className="text-default-foreground me-[0.625rem]"
+          className="text-default-foreground me-2.5"
         >
           <Icon
             icon="lineicons:gear-1"
@@ -77,7 +77,7 @@ export default () => {
 
         <Button
           variant="flat"
-          className="text-default-foreground me-[0.625rem]"
+          className="text-default-foreground me-2.5"
         >
           <Icon
             icon="bx:sort"
