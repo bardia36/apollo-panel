@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react";
+import { cloneElement, FC, isValidElement, MouseEvent, ReactNode } from "react";
 import {
   Modal,
   ModalContent,
@@ -8,23 +8,59 @@ import {
   useDisclosure,
 } from "@heroui/modal";
 import { Button } from "@heroui/button";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import { t } from "i18next";
 
 interface TemplatesProps {
   activator: ReactNode;
 }
 
-export const Templates: FC<TemplatesProps> = ({ activator }) => {
+export const TemplatesModal: FC<TemplatesProps> = ({ activator }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  // Create a wrapper function to handle the click event
+  const handleActivatorClick = (e: MouseEvent<HTMLElement>) => {
+    // If the activator already has an onClick, call it
+    if (isValidElement(activator) && activator.props.onClick) {
+      activator.props.onClick(e);
+    }
+    // Then open the modal
+    onOpen();
+  };
+
+  // Clone the activator element with proper typing
+  const activatorWithProps = isValidElement(activator) ? (
+    cloneElement(activator, {
+      // Use the proper event handler name based on the element type
+      ...(typeof activator.type === "string" &&
+      activator.type.toLowerCase() === "button"
+        ? { onPress: handleActivatorClick }
+        : { onClick: handleActivatorClick }),
+    })
+  ) : (
+    <span onClick={onOpen}>{activator}</span>
+  );
   return (
     <>
-      <div onClick={onOpen} className="cursor-pointer">
-        {activator}
-      </div>
+      {activatorWithProps}
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal
+        isOpen={isOpen}
+        backdrop="blur"
+        classNames={{ closeButton: "top-[1rem] left-[1.5rem]" }}
+        onClose={onClose}
+      >
         <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">Templates</ModalHeader>
+          <ModalHeader className="flex items-center text-default-foreground">
+            <Icon
+              icon="solar:widget-bold"
+              width={24}
+              height={24}
+              className="me-2"
+            />
+
+            {t("expertRequests.templates")}
+          </ModalHeader>
 
           <ModalBody>
             <p>Select a template to use for your expert request.</p>
@@ -42,12 +78,7 @@ export const Templates: FC<TemplatesProps> = ({ activator }) => {
           </ModalBody>
 
           <ModalFooter>
-            <Button color="danger" variant="light" onPress={onClose}>
-              Cancel
-            </Button>
-            <Button color="primary" onPress={onClose}>
-              Apply Template
-            </Button>
+            <Button onPress={onClose}>{t("shared.saveAndSubmit")}</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

@@ -12,6 +12,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from "@heroui/dropdown";
+import { TemplatesModal } from "./templates";
 
 export default () => {
   const { theme } = useTheme();
@@ -66,14 +67,20 @@ export default () => {
                   title: "text-default-foreground flex items-center",
                 }}
               >
-                <Icon
-                  icon="solar:widget-bold"
-                  width={18}
-                  height={18}
-                  className="text-default-600 me-3"
-                />
+                <TemplatesModal
+                  activator={
+                    <div>
+                      <Icon
+                        icon="solar:widget-bold"
+                        width={18}
+                        height={18}
+                        className="text-default-600 me-3"
+                      />
 
-                {t("expertRequests.templates")}
+                      {t("expertRequests.templates")}
+                    </div>
+                  }
+                />
               </DropdownItem>
 
               <DropdownItem
@@ -127,16 +134,20 @@ export default () => {
           {t("shared.changeStatus")}
         </Button>
 
-        <Button variant="flat" className="text-default-foreground me-4">
-          <Icon
-            icon="solar:widget-bold"
-            width={20}
-            height={20}
-            className="text-default-500"
-          />
+        <TemplatesModal
+          activator={
+            <Button variant="flat" className="text-default-foreground me-4">
+              <Icon
+                icon="solar:widget-bold"
+                width={20}
+                height={20}
+                className="text-default-500"
+              />
 
-          {t("expertRequests.templates")}
-        </Button>
+              {t("expertRequests.templates")}
+            </Button>
+          }
+        />
 
         <Button
           variant="shadow"
