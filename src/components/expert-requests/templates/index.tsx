@@ -2,8 +2,10 @@ import {
   cloneElement,
   FC,
   isValidElement,
+  lazy,
   MouseEvent,
   ReactNode,
+  Suspense,
   useState,
 } from "react";
 import {
@@ -15,17 +17,18 @@ import {
   useDisclosure,
 } from "@heroui/modal";
 import { Button } from "@heroui/button";
+import { Avatar } from "@heroui/avatar";
+import { Skeleton } from "@heroui/skeleton";
+import { cn } from "@heroui/theme";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { templatesApi } from "@/services/api";
 import { exceptionHandler } from "@/services/api/exception";
 import { Template, Templates } from "@/types/templates";
 // components
-import { NewTemplateDetails } from "./NewTemplateDetails";
 import { AvailableTemplates } from "./AvailableTemplates";
-import { Avatar } from "@heroui/avatar";
-import { cn } from "@heroui/theme";
 import { ExistedTemplateDetails } from "./ExistedTemplateDetails";
+const NewTemplateDetails = lazy(() => import("./NewTemplateDetails.tsx"));
 
 type Props = {
   activator: ReactNode;
@@ -36,9 +39,6 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
   const [templates, setTemplates] = useState<Templates>();
   const [activeTemplate, setActiveTemplate] = useState<Template>();
   const [isOnAddingTemplate, setIsOnAddingTemplate] = useState<boolean>(false);
-  const [activeDetailsComponent, setActiveDetailsComponent] = useState<
-    "NEW" | "EXISTED"
-  >("EXISTED");
 
   async function getTemplates() {
     try {
@@ -74,13 +74,10 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
   function showExistedTemplateDetail(template: Template) {
     setIsOnAddingTemplate(false);
     setActiveTemplate(template);
-    setActiveDetailsComponent("EXISTED");
   }
 
   function addTemplate() {
-    console.log("add template");
     setIsOnAddingTemplate(true);
-    setActiveDetailsComponent("NEW");
   }
 
   // Create a wrapper function to handle the click event
@@ -116,7 +113,7 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
           classNames={{ closeButton: "top-[1rem] left-[1.5rem]" }}
           className="w-[615px]"
           size="2xl"
-          onClose={onClose}
+          onClose={onClose} // TODO: Handle onClose (reset)
         >
           <ModalContent>
             <ModalHeader className="flex items-center text-default-foreground">
@@ -140,41 +137,33 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
                 />
               )}
 
-              <Button
-                variant="bordered"
-                className={cn(
-                  "mt-2 bg-default-50 text-primary border-default-200 h-14 justify-start",
-                  isOnAddingTemplate ? "border-primary" : "border-dashed"
+              <AddTemplateButton
+                isOnAddingTemplate={isOnAddingTemplate}
+                addTemplate={addTemplate}
+              />
+
+              <TemplateDetailsHeader />
+
+              <div className="p-4 flex flex-col gap-4 bg-default-50 text-default-600 border-dashed shadow-lg rounded-[20px] border-default-200 border-2">
+                {!!isOnAddingTemplate ? (
+                  <Suspense
+                    fallback={
+                      <Skeleton className="rounded-lg">
+                        <div className="h-12 rounded-lg bg-default-300" />
+                      </Skeleton>
+                    }
+                  >
+                    <NewTemplateDetails />
+                  </Suspense>
+                ) : (
+                  activeTemplate && (
+                    <ExistedTemplateDetails template={activeTemplate} />
+                  )
                 )}
-                onPress={addTemplate}
-              >
-                <Avatar
-                  className="bg-primary-100 w-9 h-9"
-                  fallback={
-                    <Icon
-                      icon="solar:widget-add-bold"
-                      width={24}
-                      height={24}
-                      className="text-primary"
-                    />
-                  }
-                />
-
-                <label className="font-semibold">
-                  {t("expertRequests.newTemplate")}
-                </label>
-              </Button>
-
-              {activeDetailsComponent === "NEW" ? (
-                <NewTemplateDetails />
-              ) : (
-                activeTemplate && (
-                  <ExistedTemplateDetails template={activeTemplate} />
-                )
-              )}
+              </div>
             </ModalBody>
 
-            <ModalFooter>
+            <ModalFooter className="md:pb-6">
               <Button onPress={onClose}>{t("shared.saveAndSubmit")}</Button>
             </ModalFooter>
           </ModalContent>
@@ -182,4 +171,42 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
       )}
     </>
   );
+};
+
+type AddTemplateButtonProps = {
+  isOnAddingTemplate: boolean;
+  addTemplate: () => void;
+};
+const AddTemplateButton = ({
+  isOnAddingTemplate,
+  addTemplate,
+}: AddTemplateButtonProps) => {
+  return (
+    <Button
+      variant="bordered"
+      className={cn(
+        "mt-2 mb-6 bg-default-50 text-primary border-default-200 h-14 justify-start",
+        isOnAddingTemplate ? "border-primary" : "border-dashed"
+      )}
+      onPress={addTemplate}
+    >
+      <Avatar
+        className="bg-primary-100 w-9 h-9"
+        fallback={
+          <Icon
+            icon="solar:widget-add-bold"
+            width={24}
+            height={24}
+            className="text-primary"
+          />
+        }
+      />
+
+      <span className="font-semibold">{t("expertRequests.newTemplate")}</span>
+    </Button>
+  );
+};
+
+const TemplateDetailsHeader = () => {
+  return <div className="px-2 md:px-4 mb-4">header</div>;
 };

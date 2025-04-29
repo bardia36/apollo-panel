@@ -19,9 +19,9 @@ export const AvailableTemplates = ({
 }: Props) => {
   return (
     <>
-      <p className="text-default-600 mb-2 text-xs">
+      <h6 className="text-default-600 mb-2 text-xs">
         {t("expertRequests.availableTemplates")}
-      </p>
+      </h6>
 
       <div className="grid grid-cols-2 gap-2 md:gap-x-4">
         {templates?.docs.map((template) => (
@@ -44,9 +44,9 @@ export const AvailableTemplates = ({
             <Avatar src="/favicon.svg" className="p-1.5 w-9 h-9" />
             {/* <Image src={template.logo} alt={template.name} /> */}
 
-            <label className="text-default-800 font-semibold">
+            <span className="text-default-800 font-semibold">
               {template.name}
-            </label>
+            </span>
           </Button>
         ))}
       </div>

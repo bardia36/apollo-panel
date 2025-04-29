@@ -22,6 +22,7 @@ export default {
   or: "یا",
   pending: "در انتظار بررسی",
   rejected: "رد شده",
+  saveAndSubmit: "ثبت و ذخیره",
   search: "جستجو",
   selectedItemsCount: "{{selectedItems}} مورد انتخاب شده‌",
   settings: "تنظیمات",
