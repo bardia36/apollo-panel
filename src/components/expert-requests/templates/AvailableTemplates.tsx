@@ -1,0 +1,55 @@
+import { Template, Templates } from "@/types/templates";
+import { Avatar } from "@heroui/avatar";
+import { Button } from "@heroui/button";
+import { cn } from "@heroui/theme";
+import { t } from "i18next";
+
+type Props = {
+  templates: Templates;
+  activeTemplateId: string;
+  isOnAddingTemplate: boolean;
+  showTemplateDetail: (template: Template) => void;
+};
+
+export const AvailableTemplates = ({
+  templates,
+  activeTemplateId,
+  isOnAddingTemplate,
+  showTemplateDetail,
+}: Props) => {
+  return (
+    <>
+      <p className="text-default-600 mb-2 text-xs">
+        {t("expertRequests.availableTemplates")}
+      </p>
+
+      <div className="grid grid-cols-2 gap-2 md:gap-x-4">
+        {templates?.docs.map((template) => (
+          <Button
+            key={template._id}
+            variant={
+              activeTemplateId === template._id && !isOnAddingTemplate
+                ? "bordered"
+                : "light"
+            }
+            className={cn(
+              "flex items-center px-[18px] h-14 text-default-800 justify-start",
+              activeTemplateId === template._id
+                ? "border-primary bg-default-50"
+                : "bg-default-100"
+            )}
+            onPress={() => showTemplateDetail(template)}
+          >
+            {/* // TODO: replace favicon with image with correct src (AppImage or sth) */}
+            <Avatar src="/favicon.svg" className="p-1.5 w-9 h-9" />
+            {/* <Image src={template.logo} alt={template.name} /> */}
+
+            <label className="text-default-800 font-semibold">
+              {template.name}
+            </label>
+          </Button>
+        ))}
+      </div>
+    </>
+  );
+};

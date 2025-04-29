@@ -5,6 +5,7 @@ export default {
   createRequest: "ایجاد درخواست",
   currentCases: "پرونده‌های جاری",
   management: "مدیریت",
+  newTemplate: "تمپلیت جدید",
   noRequestFound: "هیچ درخواستی پیدا نشد.",
   orderNumber: "شماره سفارش",
   request: "درخواست‌",
