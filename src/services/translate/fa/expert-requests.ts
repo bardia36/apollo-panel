@@ -1,5 +1,6 @@
 export default {
   archive: "بایگانی",
+  availableTemplates: "تمپلیت‌های موجود",
   branch: "نمایندگی",
   createRequest: "ایجاد درخواست",
   currentCases: "پرونده‌های جاری",

@@ -21,9 +21,8 @@ export const TemplatesModal: FC<TemplatesProps> = ({ activator }) => {
   // Create a wrapper function to handle the click event
   const handleActivatorClick = (e: MouseEvent<HTMLElement>) => {
     // If the activator already has an onClick, call it
-    if (isValidElement(activator) && activator.props.onClick) {
+    if (isValidElement(activator) && activator.props.onClick)
       activator.props.onClick(e);
-    }
     // Then open the modal
     onOpen();
   };
@@ -63,7 +62,7 @@ export const TemplatesModal: FC<TemplatesProps> = ({ activator }) => {
           </ModalHeader>
 
           <ModalBody>
-            <p>Select a template to use for your expert request.</p>
+            <p className="text-default-600 mb-2">{ t('expertRequests.availableTemplates')}</p>
             <div className="grid grid-cols-1 gap-4 mt-4">
               <div className="border border-default-200 rounded-lg p-4 hover:bg-default-100 cursor-pointer">
                 Template 1
