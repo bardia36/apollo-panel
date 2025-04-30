@@ -17,6 +17,7 @@ export default {
   expired: "منقضی شده",
   failed: "لغو شده",
   inProgress: "در حال تکمیل",
+  item: 'مورد',
   nextPage: "صفحه بعد",
   opened: "باز شده",
   or: "یا",

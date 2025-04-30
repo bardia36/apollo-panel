@@ -4,6 +4,7 @@ export default {
   branch: "نمایندگی",
   createRequest: "ایجاد درخواست",
   currentCases: "پرونده‌های جاری",
+  deleteTemplate: "حذف تمپلیت",
   management: "مدیریت",
   newTemplate: "تمپلیت جدید",
   noRequestFound: "هیچ درخواستی پیدا نشد.",
@@ -13,6 +14,8 @@ export default {
   requestsManagement: "مدیریت درخواست‌ها",
   requestsPageDescription: "مشاهده و مدیریت لیست درخواست‌های بازدید آنلاین",
   sendToArchive: "ارسال به بایگانی",
+  templateDetails: "محتویات تمپلیت",
+  templateName: "عنوان تمپلیت",
   templates: "تمپلیت‌ها",
   vehicleModel: "مدل خودرو",
 };

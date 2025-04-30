@@ -26,8 +26,12 @@ import { templatesApi } from "@/services/api";
 import { exceptionHandler } from "@/services/api/exception";
 import { Template, Templates } from "@/types/templates";
 // components
-import { AvailableTemplates } from "./AvailableTemplates";
-import { ExistedTemplateDetails } from "./ExistedTemplateDetails";
+import { AvailableTemplates } from "./AvailableTemplates.tsx";
+import {
+  ExistedTemplateDetails,
+  ExistedTemplateDetailsHeader,
+} from "./ExistedTemplateDetails";
+import { NewTemplateDetailsHeader } from "./NewTemplateDetails.tsx";
 const NewTemplateDetails = lazy(() => import("./NewTemplateDetails.tsx"));
 
 type Props = {
@@ -45,14 +49,12 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
       const templatesRes = await templatesApi.getTemplates();
       templatesRes.docs.push({
         _id: "680f7aadf8479238ec28f3d1",
-        active: false,
         name: "پیش‌testفرض‌",
         logo: "/temp/template/car.svg",
         fields: [],
       });
       templatesRes.docs.push({
         _id: "680f7aad22479238ec28f3d1",
-        active: false,
         name: "پیش‌tes22tفرض‌",
         logo: "/temp/template/car.svg",
         fields: [
@@ -78,6 +80,31 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
 
   function addTemplate() {
     setIsOnAddingTemplate(true);
+  }
+
+  function deleteTemplate() {
+    console.log(activeTemplate?.name);
+
+    const filteredTemplates = templates?.docs.filter(
+      (template) => template._id !== activeTemplate?._id
+    );
+    setTemplates({
+      ...templates,
+      docs: filteredTemplates as Template[],
+    } as Templates);
+
+    console.log(templates?.docs.length);
+
+    if (templates?.docs.length) {
+      console.log("in if");
+
+      setActiveTemplate(filteredTemplates?.[0]);
+    } else {
+      setActiveTemplate(undefined);
+      setIsOnAddingTemplate(true);
+    }
+
+    console.log(activeTemplate?.name);
   }
 
   // Create a wrapper function to handle the click event
@@ -128,7 +155,7 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
             </ModalHeader>
 
             <ModalBody className="gap-0">
-              {templates && activeTemplate && (
+              {!!templates?.docs.length && activeTemplate && (
                 <AvailableTemplates
                   templates={templates}
                   isOnAddingTemplate={isOnAddingTemplate}
@@ -136,13 +163,16 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
                   showTemplateDetail={showExistedTemplateDetail}
                 />
               )}
-
               <AddTemplateButton
                 isOnAddingTemplate={isOnAddingTemplate}
                 addTemplate={addTemplate}
               />
 
-              <TemplateDetailsHeader />
+              <TemplateDetailsHeader
+                isOnAddingTemplate={isOnAddingTemplate}
+                templateName={activeTemplate?.name}
+                onDeleteTemplate={deleteTemplate}
+              />
 
               <div className="p-4 flex flex-col gap-4 bg-default-50 text-default-600 border-dashed shadow-lg rounded-[20px] border-default-200 border-2">
                 {!!isOnAddingTemplate ? (
@@ -156,9 +186,13 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
                     <NewTemplateDetails />
                   </Suspense>
                 ) : (
-                  activeTemplate && (
-                    <ExistedTemplateDetails template={activeTemplate} />
-                  )
+                  <>
+                    {activeTemplate && (
+                      <ExistedTemplateDetails
+                        templateFields={activeTemplate.fields}
+                      />
+                    )}
+                  </>
                 )}
               </div>
             </ModalBody>
@@ -207,6 +241,30 @@ const AddTemplateButton = ({
   );
 };
 
-const TemplateDetailsHeader = () => {
-  return <div className="px-2 md:px-4 mb-4">header</div>;
+type TemplateDetailsHeaderProps = {
+  isOnAddingTemplate: boolean;
+  templateName?: Template["name"];
+  onDeleteTemplate: () => void;
+};
+const TemplateDetailsHeader = ({
+  isOnAddingTemplate,
+  templateName,
+  onDeleteTemplate,
+}: TemplateDetailsHeaderProps) => {
+  return (
+    <div className="mb-2">
+      {isOnAddingTemplate ? (
+        <NewTemplateDetailsHeader />
+      ) : (
+        <>
+          {!!templateName && (
+            <ExistedTemplateDetailsHeader
+              templateName={templateName}
+              onDeleteTemplate={onDeleteTemplate}
+            />
+          )}
+        </>
+      )}
+    </div>
+  );
 };

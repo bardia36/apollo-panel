@@ -2,7 +2,6 @@ export type Template = {
   _id: string;
   name: string;
   logo: string;
-  active: boolean;
   fields: TemplateField[];
 };
 
