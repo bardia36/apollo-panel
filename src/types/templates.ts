@@ -9,6 +9,7 @@ export type TemplateField = {
   type: TemplateFieldType;
   title: string;
   _id: string;
+  active?: boolean; // front-end usage only
 };
 
 export type TemplateFieldType = "IMAGE" | "FILE";

@@ -1,10 +1,14 @@
 import { Avatar } from "@heroui/avatar";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import DetailFieldsCountChip from "./components/detail-fields-count-chip";
 import { Input } from "@heroui/input";
 import { t } from "i18next";
+import FieldsCountChip from "./components/fields-count-chip";
 
-export const NewTemplateDetailsHeader = () => {
+type Props = {
+  activeFieldsCount: number;
+};
+
+export default ({ activeFieldsCount }: Props) => {
   return (
     <div className="flex items-center gap-4">
       <Avatar
@@ -17,11 +21,7 @@ export const NewTemplateDetailsHeader = () => {
       {/* // TODO: handle input onChange */}
       <Input label={t("expertRequests.templateName")} />
 
-      <DetailFieldsCountChip selectedFieldsCount={0} />
+      <FieldsCountChip activeFieldsCount={activeFieldsCount} />
     </div>
   );
-};
-
-export default () => {
-  return <div>New new</div>;
 };

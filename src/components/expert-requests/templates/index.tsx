@@ -26,13 +26,10 @@ import { templatesApi } from "@/services/api";
 import { exceptionHandler } from "@/services/api/exception";
 import { Template, Templates } from "@/types/templates";
 // components
-import { AvailableTemplates } from "./AvailableTemplates.tsx";
-import {
-  ExistedTemplateDetails,
-  ExistedTemplateDetailsHeader,
-} from "./ExistedTemplateDetails";
-import { NewTemplateDetailsHeader } from "./NewTemplateDetails.tsx";
-const NewTemplateDetails = lazy(() => import("./NewTemplateDetails.tsx"));
+import { AvailableTemplates } from "./available-templates.tsx";
+import { TemplateFields } from "./components/template-fields.tsx";
+import { ExistedTemplateHeader } from "./existed-template-header.tsx";
+const NewTemplateHeader = lazy(() => import("./new-template-header.tsx"));
 
 type Props = {
   activator: ReactNode;
@@ -43,6 +40,7 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
   const [templates, setTemplates] = useState<Templates>();
   const [activeTemplate, setActiveTemplate] = useState<Template>();
   const [isOnAddingTemplate, setIsOnAddingTemplate] = useState<boolean>(false);
+  const [activeFieldsCount, setActiveFieldsCount] = useState<number>(0);
 
   async function getTemplates() {
     try {
@@ -83,8 +81,6 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
   }
 
   function deleteTemplate() {
-    console.log(activeTemplate?.name);
-
     const filteredTemplates = templates?.docs.filter(
       (template) => template._id !== activeTemplate?._id
     );
@@ -93,18 +89,11 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
       docs: filteredTemplates as Template[],
     } as Templates);
 
-    console.log(templates?.docs.length);
-
-    if (templates?.docs.length) {
-      console.log("in if");
-
-      setActiveTemplate(filteredTemplates?.[0]);
-    } else {
+    if (templates?.docs.length) setActiveTemplate(filteredTemplates?.[0]);
+    else {
       setActiveTemplate(undefined);
       setIsOnAddingTemplate(true);
     }
-
-    console.log(activeTemplate?.name);
   }
 
   // Create a wrapper function to handle the click event
@@ -171,6 +160,7 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
               <TemplateDetailsHeader
                 isOnAddingTemplate={isOnAddingTemplate}
                 templateName={activeTemplate?.name}
+                activeFieldsCount={activeFieldsCount}
                 onDeleteTemplate={deleteTemplate}
               />
 
@@ -183,13 +173,21 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
                       </Skeleton>
                     }
                   >
-                    <NewTemplateDetails />
+                    <TemplateFields
+                      templateFields={[]}
+                      onFieldsActiveCountChange={(newCount: number) =>
+                        setActiveFieldsCount(newCount)
+                      }
+                    />
                   </Suspense>
                 ) : (
                   <>
                     {activeTemplate && (
-                      <ExistedTemplateDetails
+                      <TemplateFields
                         templateFields={activeTemplate.fields}
+                        onFieldsActiveCountChange={(newCount: number) =>
+                          setActiveFieldsCount(newCount)
+                        }
                       />
                     )}
                   </>
@@ -244,22 +242,25 @@ const AddTemplateButton = ({
 type TemplateDetailsHeaderProps = {
   isOnAddingTemplate: boolean;
   templateName?: Template["name"];
+  activeFieldsCount: number;
   onDeleteTemplate: () => void;
 };
 const TemplateDetailsHeader = ({
   isOnAddingTemplate,
   templateName,
+  activeFieldsCount,
   onDeleteTemplate,
 }: TemplateDetailsHeaderProps) => {
   return (
     <div className="mb-2">
       {isOnAddingTemplate ? (
-        <NewTemplateDetailsHeader />
+        <NewTemplateHeader activeFieldsCount={activeFieldsCount} />
       ) : (
         <>
           {!!templateName && (
-            <ExistedTemplateDetailsHeader
+            <ExistedTemplateHeader
               templateName={templateName}
+              activeFieldsCount={activeFieldsCount}
               onDeleteTemplate={onDeleteTemplate}
             />
           )}

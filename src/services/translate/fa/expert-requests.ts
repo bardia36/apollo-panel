@@ -18,4 +18,5 @@ export default {
   templateName: "عنوان تمپلیت",
   templates: "تمپلیت‌ها",
   vehicleModel: "مدل خودرو",
+  wantedItemTitle: "عنوان مورد درخواستی",
 };

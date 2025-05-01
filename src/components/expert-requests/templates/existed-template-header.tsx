@@ -2,14 +2,16 @@ import { Button } from "@heroui/button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { Template } from "@/types/templates";
-import DetailFieldsCountChip from "./components/detail-fields-count-chip";
+import FieldsCountChip from "./components/fields-count-chip";
 
 type ExistedTemplateDetailsHeaderProps = {
   templateName: Template["name"];
+  activeFieldsCount: number;
   onDeleteTemplate: () => void;
 };
-export const ExistedTemplateDetailsHeader = ({
+export const ExistedTemplateHeader = ({
   templateName,
+  activeFieldsCount,
   onDeleteTemplate,
 }: ExistedTemplateDetailsHeaderProps) => {
   return (
@@ -22,12 +24,12 @@ export const ExistedTemplateDetailsHeader = ({
         {templateName}
       </h5>
 
-      <DetailFieldsCountChip selectedFieldsCount={0} />
+      <FieldsCountChip activeFieldsCount={activeFieldsCount} />
 
       <Button
         variant="light"
         color="danger"
-        className="px-2 h-8"
+        className="px-2 h-8 text-xs"
         onPress={onDeleteTemplate}
       >
         <Icon icon="solar:trash-bin-trash-bold" width={20} height={20} />
@@ -35,13 +37,4 @@ export const ExistedTemplateDetailsHeader = ({
       </Button>
     </div>
   );
-};
-
-type ExistedTemplateDetailsProps = {
-  templateFields: Template["fields"];
-};
-export const ExistedTemplateDetails = ({
-  templateFields,
-}: ExistedTemplateDetailsProps) => {
-  return <div>{templateFields.length}</div>;
 };
