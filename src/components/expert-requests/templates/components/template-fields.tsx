@@ -27,7 +27,11 @@ export const TemplateFields = ({
   const [addedFields, setAddedFields] = useState<TemplateField[]>([]);
   const [newFieldTitle, setNewFieldTitle] = useState<string>("");
 
-  useEffect(() => handleActiveFieldsCount(), []);
+  useEffect(() => {
+    const allFields = [...imageFields, ...fileFields, ...addedFields];
+    const activeFields = allFields.filter((field) => field.active);
+    onFieldsActiveCountChange(activeFields.length);
+  }, [imageFields, fileFields, addedFields, onFieldsActiveCountChange]);
 
   function checkChipTitleOverflows(title: string) {
     return title.length > 30;
@@ -48,7 +52,6 @@ export const TemplateFields = ({
     };
     setAddedFields((prev) => [...prev, field]);
     setNewFieldTitle("");
-    handleActiveFieldsCount();
   }
 
   function toggleFieldActive(
@@ -64,15 +67,6 @@ export const TemplateFields = ({
     stateSetters[fieldType]((prev) =>
       prev.map((f) => (f._id === field._id ? { ...f, active: !f.active } : f))
     );
-
-    handleActiveFieldsCount();
-  }
-
-  function handleActiveFieldsCount() {
-    // TODO: IT HAS A BUG
-    const allFields = [...imageFields, ...fileFields, ...addedFields];
-    const activeFields = allFields.filter((field) => field.active);
-    onFieldsActiveCountChange(activeFields.length);
   }
 
   return (

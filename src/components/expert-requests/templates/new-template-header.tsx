@@ -10,7 +10,7 @@ type Props = {
 
 export default ({ activeFieldsCount }: Props) => {
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-4 mb-2 px-2 md:px-4">
       <Avatar
         className="bg-default-100 min-w-11 min-h-11"
         fallback={

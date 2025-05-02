@@ -10,7 +10,6 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  SortDescriptor,
 } from "@heroui/table";
 import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
@@ -25,7 +24,7 @@ import { User } from "@heroui/user";
 import { Pagination } from "@heroui/pagination";
 import DateDisplay from "../../shared/date-display";
 // other
-import { Request } from "@/types/expertRequests";
+import { Request, RequestStatus } from "@/types/expertRequests";
 import { AddOrReplaceKey, numberSplitter } from "@/utils/base";
 
 const perPageNumbers = [5, 10, 15, 20];
@@ -63,13 +62,24 @@ export const columns = [
 // TODO: make it  from statusesMap
 export const statusOptions = [
   { uid: "accepted", label: t("shared.accepted") },
+  { uid: "archived", label: t("shared.archived") },
   { uid: "canceled", label: t("shared.canceled") },
+  { uid: "expired", label: t("shared.expired") },
+  { uid: "failed", label: t("shared.failed") },
   { uid: "inProgress", label: t("shared.inProgress") },
+  { uid: "opened", label: t("shared.opened") },
   { uid: "pending", label: t("shared.pending") },
+  { uid: "rejected", label: t("shared.rejected") },
 ];
 
 // TODO: it is not completed yet, need to add more options from backend
-const statusesMap = {
+const statusesMap: {
+  [key in RequestStatus]: {
+    bg: string;
+    text: string;
+    label: string;
+  };
+} = {
   ACCEPTED: {
     bg: "success bg-opacity-20",
     text: "success",
@@ -115,9 +125,24 @@ const statusesMap = {
     text: "danger",
     label: t("shared.rejected"),
   },
+  DRAFT: {
+    bg: "success bg-opacity-20",
+    text: "success",
+    label: t("shared.draft"),
+  },
+  COMPLETED: {
+    bg: "success bg-opacity-20",
+    text: "success",
+    label: t("shared.completed"),
+  },
+  REVIEWED: {
+    bg: "success bg-opacity-20",
+    text: "success",
+    label: t("shared.reviewed"),
+  },
 };
 
-const users: Request[] = [
+const requests: Request[] = [
   {
     id: "EX_694843",
     model: { name: "207 SD", brand: "پژو" },
@@ -177,7 +202,10 @@ export default function RequestsTable() {
   const [visibleColumns, setVisibleColumns] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
+  const [sortDescriptor, setSortDescriptor] = useState<{
+    column: keyof Request;
+    direction: string;
+  }>({
     column: "id",
     direction: "ascending",
   });
@@ -196,24 +224,25 @@ export default function RequestsTable() {
   }, [visibleColumns]);
 
   const filteredItems = useMemo(() => {
-    let filteredUsers = [...users];
+    let filteredRequests = [...requests];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) =>
-        user.model.name.toLowerCase().includes(filterValue.toLowerCase())
+      filteredRequests = filteredRequests.filter((request) =>
+        request.model.name.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
+
     if (
       statusFilter !== "all" &&
       Array.from(statusFilter).length !== statusOptions.length
     ) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.status)
+      filteredRequests = filteredRequests.filter((request) =>
+        Array.from(statusFilter).includes(request.status.toLowerCase())
       );
     }
 
-    return filteredUsers;
-  }, [users, filterValue, statusFilter]);
+    return filteredRequests;
+  }, [requests, filterValue, statusFilter]);
 
   const totalPagesCount = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -424,7 +453,9 @@ export default function RequestsTable() {
 
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            {t("shared.total")} {numberSplitter(users.length, "/")}
+            <span className="me-1">
+              {t("shared.total")} {numberSplitter(requests.length, "/")}
+            </span>
             {t("expertRequests.request")}
           </span>
 
@@ -476,7 +507,7 @@ export default function RequestsTable() {
     statusFilter,
     visibleColumns,
     onRowsPerPageChange,
-    users.length,
+    requests.length,
     onSearchChange,
     hasSearchFilter,
   ]);
@@ -498,7 +529,8 @@ export default function RequestsTable() {
           {selectedKeys === "all"
             ? t("shared.allItemsSelected")
             : t("shared.selectedItemsCount", {
-                selectedItems: selectedKeys.size,
+                selectedItems:
+                  selectedKeys instanceof Set ? selectedKeys.size : 0,
                 allItems: filteredItems.length,
               })}
         </span>
@@ -539,55 +571,54 @@ export default function RequestsTable() {
         </div>
       </div>
     );
-  }, [selectedKeys, items.length, page, totalPagesCount, hasSearchFilter]);
-  // - bottom content
+  }, [selectedKeys, items.length, page, totalPagesCount, hasSearchFilter]); // - bottom content
 
   // table data -
   const renderCell = useCallback(
     (
-      user: Request,
+      request: Request,
       columnKey: keyof AddOrReplaceKey<Request, "actions", string>
     ) => {
       let cellValue;
       if (columnKey === "actions") cellValue = "actions";
-      else cellValue = user[columnKey];
+      else cellValue = request[columnKey];
 
       switch (columnKey) {
         case "id":
-          return <span className="text-default-500">{user.id}</span>;
+          return <span className="text-default-500">{request.id}</span>;
 
         case "model":
           return (
             <>
               <div className="text-default-foreground mb-1">
-                {user.model.name}
+                {request.model.name}
               </div>
-              <div className="text-default-500">{user.model.brand}</div>
+              <div className="text-default-500">{request.model.brand}</div>
             </>
           );
 
         case "status":
           return (
             <Chip
-              className={`bg-${statusesMap[user.status].bg} text-${statusesMap[user.status].text}`}
+              className={`bg-${statusesMap[request.status].bg} text-${statusesMap[request.status].text}`}
               size="sm"
               variant="flat"
             >
-              {statusesMap[user.status].label}
+              {statusesMap[request.status].label}
             </Chip>
           );
 
         case "user":
           return (
             <User
-              avatarProps={{ radius: "md", src: user.user.image }}
+              avatarProps={{ radius: "md", src: request.user.image }}
               description={
                 <div className="text-content4-foreground">
-                  {user.user.mobile}
+                  {request.user.mobile}
                 </div>
               }
               name={
-                <div className="text-default-500 mb-1">{user.user.name}</div>
+                <div className="text-default-500 mb-1">{request.user.name}</div>
               }
             />
           );
@@ -601,12 +632,12 @@ export default function RequestsTable() {
                 height={20}
                 className="text-default-200"
               />
-              {user.branch}
+              {request.branch}
             </div>
           );
 
         case "created":
-          return <DateDisplay isoDate={user.created} />;
+          return <DateDisplay isoDate={request.created} />;
 
         case "actions":
           return (
@@ -647,7 +678,6 @@ export default function RequestsTable() {
     []
   );
 
-  // TODO: change english numbers to persian in table
   return (
     <Table
       isHeaderSticky

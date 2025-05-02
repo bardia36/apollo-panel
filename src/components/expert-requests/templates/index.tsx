@@ -144,6 +144,7 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
             </ModalHeader>
 
             <ModalBody className="gap-0">
+              {/* // TODO: add a skeleton loading */}
               {!!templates?.docs.length && activeTemplate && (
                 <AvailableTemplates
                   templates={templates}
@@ -166,28 +167,16 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
 
               <div className="p-4 flex flex-col gap-4 bg-default-50 text-default-600 border-dashed shadow-lg rounded-[20px] border-default-200 border-2">
                 {!!isOnAddingTemplate ? (
-                  <Suspense
-                    fallback={
-                      <Skeleton className="rounded-lg">
-                        <div className="h-12 rounded-lg bg-default-300" />
-                      </Skeleton>
-                    }
-                  >
-                    <TemplateFields
-                      templateFields={[]}
-                      onFieldsActiveCountChange={(newCount: number) =>
-                        setActiveFieldsCount(newCount)
-                      }
-                    />
-                  </Suspense>
+                  <TemplateFields
+                    templateFields={[]}
+                    onFieldsActiveCountChange={setActiveFieldsCount}
+                  />
                 ) : (
                   <>
                     {activeTemplate && (
                       <TemplateFields
                         templateFields={activeTemplate.fields}
-                        onFieldsActiveCountChange={(newCount: number) =>
-                          setActiveFieldsCount(newCount)
-                        }
+                        onFieldsActiveCountChange={setActiveFieldsCount}
                       />
                     )}
                   </>
@@ -254,7 +243,15 @@ const TemplateDetailsHeader = ({
   return (
     <div className="mb-2">
       {isOnAddingTemplate ? (
-        <NewTemplateHeader activeFieldsCount={activeFieldsCount} />
+        <Suspense
+          fallback={
+            <Skeleton className="rounded-lg">
+              <div className="h-12 rounded-lg bg-default-300" />
+            </Skeleton>
+          }
+        >
+          <NewTemplateHeader activeFieldsCount={activeFieldsCount} />
+        </Suspense>
       ) : (
         <>
           {!!templateName && (
