@@ -7,6 +7,7 @@ import {
   ReactNode,
   Suspense,
   useCallback,
+  useRef,
   useState,
 } from "react";
 import {
@@ -30,6 +31,7 @@ import { Template, TemplateField, Templates } from "@/types/templates";
 import { AvailableTemplates } from "./available-templates.tsx";
 import { TemplateFields } from "./components/template-fields.tsx";
 import { ExistedTemplateHeader } from "./existed-template-header.tsx";
+import { v4 } from "uuid";
 const NewTemplateHeader = lazy(() => import("./new-template-header.tsx"));
 
 type Props = {
@@ -38,6 +40,7 @@ type Props = {
 
 export const TemplatesModal: FC<Props> = ({ activator }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [loading, setLoading] = useState<boolean>(false);
   const [templates, setTemplates] = useState<Templates>();
   const [activeTemplate, setActiveTemplate] = useState<Template>();
   const [isOnAddingTemplate, setIsOnAddingTemplate] = useState<boolean>(false);
@@ -46,29 +49,15 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
   const [modifiedTemplateFields, setModifiedTemplateFields] = useState<
     Record<string, TemplateField[]>
   >({});
+  // Reference to the new template header component to access its name and logo
+  const newTemplateRef = useRef<{ name: string; logo: string }>({
+    name: "",
+    logo: "",
+  });
 
   async function getTemplates() {
     try {
       const templatesRes = await templatesApi.getTemplates();
-      templatesRes.docs.push({
-        _id: "680f7aadf8479238ec28f3d1",
-        name: "پیش‌testفرض‌",
-        logo: "/temp/template/car.svg",
-        fields: [],
-      });
-      templatesRes.docs.push({
-        _id: "680f7aad22479238ec28f3d1",
-        name: "پیش‌tes22tفرض‌",
-        logo: "/temp/template/car.svg",
-        fields: [
-          {
-            type: "IMAGE",
-            title:
-              "مجموعه تصاویر اطراف خودرو، ۸ تصویر از زوایای مختلف نمای بیرونی خودرو",
-            _id: "680f746df8479238ec28f3d2",
-          },
-        ],
-      });
 
       // add active property to the each field for the ui usages
       templatesRes.docs.forEach((template) =>
@@ -126,6 +115,64 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
     },
     [modifiedTemplateFields, activeTemplate]
   );
+
+  // Replace the separate handler functions with a single function that updates the appropriate property
+  const handleNewTemplateProperty = (
+    property: "name" | "logo",
+    value: string
+  ) => {
+    newTemplateRef.current[property] = value;
+  };
+
+  async function onSubmit() {
+    setLoading(true);
+    try {
+      if (!templates) return;
+
+      const updatedDocs = [...templates.docs];
+      // Update existing templates with modified fields
+      updatedDocs.forEach((template, index) => {
+        if (modifiedTemplateFields[template._id]) {
+          updatedDocs[index] = {
+            ...template,
+            fields: modifiedTemplateFields[template._id],
+          };
+        }
+      });
+
+      if (!!newTemplateRef.current.name?.length) {
+        const newTemplate: Template = {
+          _id: `-${v4()}`,
+          name: newTemplateRef.current.name,
+          logo: newTemplateRef.current.logo,
+          fields: modifiedTemplateFields["new_template"],
+        };
+
+        updatedDocs.push(newTemplate);
+      }
+
+      const finalTemplates: Template[] = updatedDocs.map((template) => ({
+        _id: template._id,
+        name: template.name,
+        logo: template.logo,
+        fields: template.fields
+          .filter((field) => field.active) // Filter out inactive fields
+          .map((field) => ({
+            _id: field._id,
+            type: field.type === "OTHER" ? "IMAGE" : field.type, // OTHER was frontend usage only
+            title: field.title,
+            // active property was frontend usage only
+          })),
+      }));
+
+      await templatesApi.updateTemplates(finalTemplates);
+      onClose();
+    } catch (err) {
+      exceptionHandler(err);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   // Create a wrapper function to handle the click event
   const handleActivatorClick = (e: MouseEvent<HTMLElement>) => {
@@ -195,6 +242,7 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
                 templateName={activeTemplate?.name}
                 activeFieldsCount={activeFieldsCount}
                 onDeleteTemplate={deleteTemplate}
+                onNewTemplatePropertyChange={handleNewTemplateProperty}
               />
 
               <div className="p-4 flex flex-col gap-4 bg-default-50 text-default-600 border-dashed shadow-lg rounded-[20px] border-default-200 border-2">
@@ -230,7 +278,9 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
             </ModalBody>
 
             <ModalFooter className="md:pb-6">
-              <Button onPress={onClose}>{t("shared.saveAndSubmit")}</Button>
+              <Button isLoading={loading} onPress={onSubmit}>
+                {t("shared.saveAndSubmit")}
+              </Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
@@ -278,12 +328,17 @@ type TemplateDetailsHeaderProps = {
   templateName?: Template["name"];
   activeFieldsCount: number;
   onDeleteTemplate: () => void;
+  onNewTemplatePropertyChange?: (
+    property: "name" | "logo",
+    value: string
+  ) => void;
 };
 const TemplateDetailsHeader = ({
   isOnAddingTemplate,
   templateName,
   activeFieldsCount,
   onDeleteTemplate,
+  onNewTemplatePropertyChange,
 }: TemplateDetailsHeaderProps) => {
   return (
     <div className="mb-2">
@@ -295,7 +350,10 @@ const TemplateDetailsHeader = ({
             </Skeleton>
           }
         >
-          <NewTemplateHeader activeFieldsCount={activeFieldsCount} />
+          <NewTemplateHeader
+            activeFieldsCount={activeFieldsCount}
+            onPropertyChange={onNewTemplatePropertyChange}
+          />
         </Suspense>
       ) : (
         <>
