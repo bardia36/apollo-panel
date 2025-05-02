@@ -2,10 +2,8 @@ import {
   cloneElement,
   FC,
   isValidElement,
-  lazy,
   MouseEvent,
   ReactNode,
-  Suspense,
   useCallback,
   useRef,
   useState,
@@ -19,9 +17,6 @@ import {
   useDisclosure,
 } from "@heroui/modal";
 import { Button } from "@heroui/button";
-import { Avatar } from "@heroui/avatar";
-import { Skeleton } from "@heroui/skeleton";
-import { cn } from "@heroui/theme";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { templatesApi } from "@/services/api";
@@ -30,9 +25,10 @@ import { Template, TemplateField, Templates } from "@/types/templates";
 // components
 import { AvailableTemplates } from "./available-templates.tsx";
 import { TemplateFields } from "./components/template-fields.tsx";
-import { ExistedTemplateHeader } from "./existed-template-header.tsx";
 import { v4 } from "uuid";
-const NewTemplateHeader = lazy(() => import("./new-template-header.tsx"));
+import { TemplatesLoadingSkeleton } from "./components/loading-component.tsx";
+import { AddTemplateButton } from "./components/add-template-button.tsx";
+import { TemplateDetailsHeader } from "./components/template-details-header.tsx";
 
 type Props = {
   activator: ReactNode;
@@ -40,6 +36,7 @@ type Props = {
 
 export const TemplatesModal: FC<Props> = ({ activator }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [initializing, setInitializing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [templates, setTemplates] = useState<Templates>();
   const [activeTemplate, setActiveTemplate] = useState<Template>();
@@ -56,6 +53,7 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
   });
 
   async function getTemplates() {
+    setInitializing(true);
     try {
       const templatesRes = await templatesApi.getTemplates();
 
@@ -68,6 +66,8 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
       setActiveTemplate(templatesRes?.docs[0]);
     } catch (err) {
       exceptionHandler(err);
+    } finally {
+      setInitializing(false);
     }
   }
 
@@ -140,12 +140,13 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
         }
       });
 
+      // Handle new template if name exists
       if (!!newTemplateRef.current.name?.length) {
         const newTemplate: Template = {
           _id: `-${v4()}`,
           name: newTemplateRef.current.name,
           logo: newTemplateRef.current.logo,
-          fields: modifiedTemplateFields["new_template"],
+          fields: modifiedTemplateFields["new_template"] || [],
         };
 
         updatedDocs.push(newTemplate);
@@ -155,24 +156,39 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
         _id: template._id,
         name: template.name,
         logo: template.logo,
-        fields: template.fields
+        fields: (template.fields || [])
           .filter((field) => field.active) // Filter out inactive fields
           .map((field) => ({
             _id: field._id,
-            type: field.type === "OTHER" ? "IMAGE" : field.type, // OTHER was frontend usage only
+            type: field.type === "OTHER" ? "IMAGE" : field.type,
             title: field.title,
             // active property was frontend usage only
           })),
       }));
 
       await templatesApi.updateTemplates(finalTemplates);
-      onClose();
+      handleModalClose();
     } catch (err) {
       exceptionHandler(err);
     } finally {
       setLoading(false);
     }
   }
+
+  const handleModalClose = useCallback(() => {
+    // First close the modal
+    onClose();
+
+    // Then reset all states
+    setTimeout(() => {
+      setTemplates(undefined);
+      setActiveTemplate(undefined);
+      setIsOnAddingTemplate(false);
+      setActiveFieldsCount(0);
+      setModifiedTemplateFields({});
+      newTemplateRef.current = { name: "", logo: "" };
+    }, 300); // Small delay to ensure modal animation completes
+  }, [onClose]);
 
   // Create a wrapper function to handle the click event
   const handleActivatorClick = (e: MouseEvent<HTMLElement>) => {
@@ -208,7 +224,7 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
           classNames={{ closeButton: "top-[1rem] left-[1.5rem]" }}
           className="w-[615px]"
           size="2xl"
-          onClose={onClose} // TODO: Handle onClose (reset)
+          onClose={handleModalClose}
         >
           <ModalContent>
             <ModalHeader className="flex items-center text-default-foreground">
@@ -223,62 +239,75 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
             </ModalHeader>
 
             <ModalBody className="gap-0">
-              {/* // TODO: add a skeleton loading */}
-              {!!templates?.docs.length && activeTemplate && (
-                <AvailableTemplates
-                  templates={templates}
-                  isOnAddingTemplate={isOnAddingTemplate}
-                  activeTemplateId={activeTemplate._id}
-                  showTemplateDetail={showExistedTemplateDetail}
-                />
-              )}
-              <AddTemplateButton
-                isOnAddingTemplate={isOnAddingTemplate}
-                addTemplate={addTemplate}
-              />
+              {initializing ? (
+                <TemplatesLoadingSkeleton />
+              ) : (
+                <>
+                  {!!templates?.docs.length && activeTemplate && (
+                    <AvailableTemplates
+                      templates={templates}
+                      isOnAddingTemplate={isOnAddingTemplate}
+                      activeTemplateId={activeTemplate._id}
+                      showTemplateDetail={showExistedTemplateDetail}
+                    />
+                  )}
 
-              <TemplateDetailsHeader
-                isOnAddingTemplate={isOnAddingTemplate}
-                templateName={activeTemplate?.name}
-                activeFieldsCount={activeFieldsCount}
-                onDeleteTemplate={deleteTemplate}
-                onNewTemplatePropertyChange={handleNewTemplateProperty}
-              />
-
-              <div className="p-4 flex flex-col gap-4 bg-default-50 text-default-600 border-dashed shadow-lg rounded-[20px] border-default-200 border-2">
-                {isOnAddingTemplate ? (
-                  <TemplateFields
-                    key="new_template"
-                    templateFields={
-                      modifiedTemplateFields["new_template"] || []
-                    }
-                    onFieldsActiveCountChange={setActiveFieldsCount}
-                    onFieldsChange={(updatedFields) =>
-                      handleFieldsChange("new_template", updatedFields)
-                    }
+                  <AddTemplateButton
+                    isOnAddingTemplate={isOnAddingTemplate}
+                    addTemplate={addTemplate}
                   />
-                ) : (
-                  <>
-                    {activeTemplate && (
+
+                  <TemplateDetailsHeader
+                    isOnAddingTemplate={isOnAddingTemplate}
+                    templateName={activeTemplate?.name}
+                    activeFieldsCount={activeFieldsCount}
+                    onDeleteTemplate={deleteTemplate}
+                    onNewTemplatePropertyChange={handleNewTemplateProperty}
+                  />
+
+                  <div className="p-4 flex flex-col gap-4 bg-default-50 text-default-600 border-dashed shadow-lg rounded-[20px] border-default-200 border-2">
+                    {isOnAddingTemplate ? (
                       <TemplateFields
-                        key={activeTemplate._id}
+                        key="new_template"
                         templateFields={
-                          modifiedTemplateFields[activeTemplate._id] ||
-                          activeTemplate.fields
+                          modifiedTemplateFields["new_template"] || []
                         }
                         onFieldsActiveCountChange={setActiveFieldsCount}
                         onFieldsChange={(updatedFields) =>
-                          handleFieldsChange(activeTemplate._id, updatedFields)
+                          handleFieldsChange("new_template", updatedFields)
                         }
                       />
+                    ) : (
+                      <>
+                        {activeTemplate && (
+                          <TemplateFields
+                            key={activeTemplate._id}
+                            templateFields={
+                              modifiedTemplateFields[activeTemplate._id] ||
+                              activeTemplate.fields
+                            }
+                            onFieldsActiveCountChange={setActiveFieldsCount}
+                            onFieldsChange={(updatedFields) =>
+                              handleFieldsChange(
+                                activeTemplate._id,
+                                updatedFields
+                              )
+                            }
+                          />
+                        )}
+                      </>
                     )}
-                  </>
-                )}
-              </div>
+                  </div>
+                </>
+              )}
             </ModalBody>
 
-            <ModalFooter className="md:pb-6">
-              <Button isLoading={loading} onPress={onSubmit}>
+            <ModalFooter className="mt-4 md:pb-6">
+              <Button
+                isDisabled={initializing}
+                isLoading={loading}
+                onPress={onSubmit}
+              >
                 {t("shared.saveAndSubmit")}
               </Button>
             </ModalFooter>
@@ -286,86 +315,5 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
         </Modal>
       )}
     </>
-  );
-};
-
-type AddTemplateButtonProps = {
-  isOnAddingTemplate: boolean;
-  addTemplate: () => void;
-};
-const AddTemplateButton = ({
-  isOnAddingTemplate,
-  addTemplate,
-}: AddTemplateButtonProps) => {
-  return (
-    <Button
-      variant="bordered"
-      className={cn(
-        "mt-2 mb-6 bg-default-50 text-primary border-default-200 h-14 justify-start",
-        isOnAddingTemplate ? "border-primary" : "border-dashed"
-      )}
-      onPress={addTemplate}
-    >
-      <Avatar
-        className="bg-primary-100 w-9 h-9"
-        fallback={
-          <Icon
-            icon="solar:widget-add-bold"
-            width={24}
-            height={24}
-            className="text-primary"
-          />
-        }
-      />
-
-      <span className="font-semibold">{t("expertRequests.newTemplate")}</span>
-    </Button>
-  );
-};
-
-type TemplateDetailsHeaderProps = {
-  isOnAddingTemplate: boolean;
-  templateName?: Template["name"];
-  activeFieldsCount: number;
-  onDeleteTemplate: () => void;
-  onNewTemplatePropertyChange?: (
-    property: "name" | "logo",
-    value: string
-  ) => void;
-};
-const TemplateDetailsHeader = ({
-  isOnAddingTemplate,
-  templateName,
-  activeFieldsCount,
-  onDeleteTemplate,
-  onNewTemplatePropertyChange,
-}: TemplateDetailsHeaderProps) => {
-  return (
-    <div className="mb-2">
-      {isOnAddingTemplate ? (
-        <Suspense
-          fallback={
-            <Skeleton className="rounded-lg">
-              <div className="h-12 rounded-lg bg-default-300" />
-            </Skeleton>
-          }
-        >
-          <NewTemplateHeader
-            activeFieldsCount={activeFieldsCount}
-            onPropertyChange={onNewTemplatePropertyChange}
-          />
-        </Suspense>
-      ) : (
-        <>
-          {!!templateName && (
-            <ExistedTemplateHeader
-              templateName={templateName}
-              activeFieldsCount={activeFieldsCount}
-              onDeleteTemplate={onDeleteTemplate}
-            />
-          )}
-        </>
-      )}
-    </div>
   );
 };

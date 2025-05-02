@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect, FC, ChangeEvent } from "react";
 import { Avatar } from "@heroui/avatar";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import imageThumbnail from "@/assets/images/base/image-thumbnail.svg";
@@ -9,7 +9,7 @@ type ImageUploaderProps = {
   onChange: (url: string | null) => void;
 };
 
-export const ImageUploader: React.FC<ImageUploaderProps> = ({
+export const ImageUploader: FC<ImageUploaderProps> = ({
   value,
   onChange,
 }) => {
@@ -23,7 +23,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     };
   }, []);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
     // Clean up previous object URL if it exists
