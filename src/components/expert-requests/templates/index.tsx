@@ -6,6 +6,7 @@ import {
   MouseEvent,
   ReactNode,
   Suspense,
+  useCallback,
   useState,
 } from "react";
 import {
@@ -24,7 +25,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { templatesApi } from "@/services/api";
 import { exceptionHandler } from "@/services/api/exception";
-import { Template, Templates } from "@/types/templates";
+import { Template, TemplateField, Templates } from "@/types/templates";
 // components
 import { AvailableTemplates } from "./available-templates.tsx";
 import { TemplateFields } from "./components/template-fields.tsx";
@@ -41,6 +42,10 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
   const [activeTemplate, setActiveTemplate] = useState<Template>();
   const [isOnAddingTemplate, setIsOnAddingTemplate] = useState<boolean>(false);
   const [activeFieldsCount, setActiveFieldsCount] = useState<number>(0);
+  // This state tracks modified fields for each template
+  const [modifiedTemplateFields, setModifiedTemplateFields] = useState<
+    Record<string, TemplateField[]>
+  >({});
 
   async function getTemplates() {
     try {
@@ -64,6 +69,12 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
           },
         ],
       });
+
+      // add active property to the each field for the ui usages
+      templatesRes.docs.forEach((template) =>
+        template.fields.forEach((field) => (field.active = true))
+      );
+
       setTemplates(templatesRes);
       setActiveTemplate(templatesRes?.docs[0]);
     } catch (err) {
@@ -96,6 +107,26 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
     }
   }
 
+  // Reusable function to handle field changes
+  const handleFieldsChange = useCallback(
+    (templateId: string, updatedFields: TemplateField[]) => {
+      const currentFields =
+        modifiedTemplateFields[templateId] ||
+        (templateId !== "new_template" && activeTemplate?._id === templateId
+          ? activeTemplate.fields
+          : []);
+
+      // Only update if fields have actually changed
+      if (JSON.stringify(currentFields) !== JSON.stringify(updatedFields)) {
+        setModifiedTemplateFields((prev) => ({
+          ...prev,
+          [templateId]: updatedFields,
+        }));
+      }
+    },
+    [modifiedTemplateFields, activeTemplate]
+  );
+
   // Create a wrapper function to handle the click event
   const handleActivatorClick = (e: MouseEvent<HTMLElement>) => {
     // If the activator already has an onClick, call it
@@ -126,6 +157,7 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
         <Modal
           isOpen={isOpen}
           backdrop="blur"
+          isDismissable={false}
           classNames={{ closeButton: "top-[1rem] left-[1.5rem]" }}
           className="w-[615px]"
           size="2xl"
@@ -166,17 +198,30 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
               />
 
               <div className="p-4 flex flex-col gap-4 bg-default-50 text-default-600 border-dashed shadow-lg rounded-[20px] border-default-200 border-2">
-                {!!isOnAddingTemplate ? (
+                {isOnAddingTemplate ? (
                   <TemplateFields
-                    templateFields={[]}
+                    key="new_template"
+                    templateFields={
+                      modifiedTemplateFields["new_template"] || []
+                    }
                     onFieldsActiveCountChange={setActiveFieldsCount}
+                    onFieldsChange={(updatedFields) =>
+                      handleFieldsChange("new_template", updatedFields)
+                    }
                   />
                 ) : (
                   <>
                     {activeTemplate && (
                       <TemplateFields
-                        templateFields={activeTemplate.fields}
+                        key={activeTemplate._id}
+                        templateFields={
+                          modifiedTemplateFields[activeTemplate._id] ||
+                          activeTemplate.fields
+                        }
                         onFieldsActiveCountChange={setActiveFieldsCount}
+                        onFieldsChange={(updatedFields) =>
+                          handleFieldsChange(activeTemplate._id, updatedFields)
+                        }
                       />
                     )}
                   </>

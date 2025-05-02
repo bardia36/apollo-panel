@@ -5,33 +5,49 @@ import { Input } from "@heroui/input";
 import { cn } from "@heroui/theme";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { v4 } from "uuid";
 
 type Props = {
   templateFields: TemplateField[];
   onFieldsActiveCountChange: (count: number) => void;
+  onFieldsChange: (fields: TemplateField[]) => void;
 };
 
 export const TemplateFields = ({
   templateFields,
   onFieldsActiveCountChange,
+  onFieldsChange,
 }: Props) => {
-  templateFields.forEach((field) => (field.active = true));
   const [imageFields, setImageFields] = useState<TemplateField[]>(
-    templateFields.filter((field) => field.type === "IMAGE")
+    templateFields.filter((field) => field.type === "IMAGE") || []
   );
   const [fileFields, setFileFields] = useState<TemplateField[]>(
-    templateFields.filter((field) => field.type === "FILE")
+    templateFields.filter((field) => field.type === "FILE") || []
   );
-  const [addedFields, setAddedFields] = useState<TemplateField[]>([]);
+  const [addedFields, setAddedFields] = useState<TemplateField[]>(
+    templateFields.filter((field) => field.type === "OTHER") || []
+  );
   const [newFieldTitle, setNewFieldTitle] = useState<string>("");
 
+  // Separate useEffect for counting active fields
   useEffect(() => {
     const allFields = [...imageFields, ...fileFields, ...addedFields];
     const activeFields = allFields.filter((field) => field.active);
     onFieldsActiveCountChange(activeFields.length);
   }, [imageFields, fileFields, addedFields, onFieldsActiveCountChange]);
+
+  // Separate useEffect for notifying parent of changes, with a ref to prevent initial call
+  const isInitialRender = useRef(true);
+  useEffect(() => {
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
+      return;
+    }
+
+    const allFields = [...imageFields, ...fileFields, ...addedFields];
+    onFieldsChange(allFields);
+  }, [imageFields, fileFields, addedFields, onFieldsChange]);
 
   function checkChipTitleOverflows(title: string) {
     return title.length > 30;
@@ -47,7 +63,7 @@ export const TemplateFields = ({
     const field: TemplateField = {
       _id: `-${v4()}`,
       title: newFieldTitle,
-      type: "IMAGE",
+      type: "OTHER",
       active: true,
     };
     setAddedFields((prev) => [...prev, field]);

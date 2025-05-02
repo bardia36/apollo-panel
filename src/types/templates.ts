@@ -12,7 +12,7 @@ export type TemplateField = {
   active?: boolean; // front-end usage only
 };
 
-export type TemplateFieldType = "IMAGE" | "FILE";
+export type TemplateFieldType = "IMAGE" | "FILE" | "OTHER"; // OTHER is for ui usages
 
 export type Templates = {
   docs: Template[];
