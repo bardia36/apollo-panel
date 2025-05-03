@@ -10,7 +10,7 @@ export const templatesApi = {
   },
 
   updateTemplates(body: Template[]) {
-    return axiosHandler<boolean>(BASE_URL, {
+    return axiosHandler(BASE_URL, {
       method: RequestMethod.PATCH,
       body,
     });

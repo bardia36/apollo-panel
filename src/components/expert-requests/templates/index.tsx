@@ -25,7 +25,6 @@ import { Template, TemplateField, Templates } from "@/types/templates";
 // components
 import { AvailableTemplates } from "./available-templates.tsx";
 import { TemplateFields } from "./components/template-fields.tsx";
-import { v4 } from "uuid";
 import { TemplatesLoadingSkeleton } from "./components/loading-component.tsx";
 import { AddTemplateButton } from "./components/add-template-button.tsx";
 import { TemplateDetailsHeader } from "./components/template-details-header.tsx";
@@ -143,7 +142,7 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
       // Handle new template if name exists
       if (!!newTemplateRef.current.name?.length) {
         const newTemplate: Template = {
-          _id: `-${v4()}`,
+          _id: `-1`,
           name: newTemplateRef.current.name,
           logo: newTemplateRef.current.logo,
           fields: modifiedTemplateFields["new_template"] || [],

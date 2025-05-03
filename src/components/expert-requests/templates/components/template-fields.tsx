@@ -6,7 +6,6 @@ import { cn } from "@heroui/theme";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { useEffect, useRef, useState } from "react";
-import { v4 } from "uuid";
 
 type Props = {
   templateFields: TemplateField[];
@@ -61,7 +60,7 @@ export const TemplateFields = ({
     }
 
     const field: TemplateField = {
-      _id: `-${v4()}`,
+      _id: `-1`,
       title: newFieldTitle,
       type: "OTHER",
       active: true,
@@ -151,6 +150,7 @@ export const TemplateFields = ({
         <h6 className="text-xs text-default-600 mb-2 ps-2 ">
           {t("shared.addNewItem")}
         </h6>
+
         <Input
           value={newFieldTitle}
           variant="bordered"
