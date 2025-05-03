@@ -1,8 +1,8 @@
 import { Template, Templates } from "@/types/templates";
-import { Avatar } from "@heroui/avatar";
 import { Button } from "@heroui/button";
 import { cn } from "@heroui/theme";
 import { t } from "i18next";
+import { LazyImage } from "@/components/shared/lazy-image";
 
 type Props = {
   templates: Templates;
@@ -40,9 +40,12 @@ export const AvailableTemplates = ({
             )}
             onPress={() => showTemplateDetail(template)}
           >
-            {/* // TODO: replace favicon with image with correct src (AppImage or sth) */}
-            <Avatar src="/favicon.svg" className="p-1.5 w-9 h-9" />
-            {/* <Image src={template.logo} alt={template.name} /> */}
+            <LazyImage
+              src={template.logo}
+              alt={template.name}
+              width={36}
+              height={36}
+            />
 
             <span className="text-default-800 font-semibold">
               {template.name}
