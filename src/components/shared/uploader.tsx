@@ -3,16 +3,15 @@ import { Avatar } from "@heroui/avatar";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import imageThumbnail from "@/assets/images/base/image-thumbnail.svg";
 import { Image } from "@heroui/image";
+import { filesApi } from "@/services/api/files";
+import { exceptionHandler } from "@/services/api/exception";
 
 type ImageUploaderProps = {
   value?: string | null;
   onChange: (url: string | null) => void;
 };
 
-export const ImageUploader: FC<ImageUploaderProps> = ({
-  value,
-  onChange,
-}) => {
+export const ImageUploader: FC<ImageUploaderProps> = ({ value, onChange }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const objectUrlRef = useRef<string | null>(null);
 
@@ -32,14 +31,20 @@ export const ImageUploader: FC<ImageUploaderProps> = ({
       objectUrlRef.current = null;
     }
 
+    console.log(file);
+
     if (file) {
       const url = URL.createObjectURL(file);
       objectUrlRef.current = url;
-      onChange(url);
+      // onChange(url);
 
-      // uploadFileToServer(file).then(serverUrl => {
-      //   onChange(serverUrl);
-      // });
+      const formData = new FormData();
+      formData.append("image", file, file.name);
+
+      filesApi
+        .upload(formData, { path: "inspection_request/template" })
+        .then((serverUrl: string) => onChange(serverUrl))
+        .catch((error) => exceptionHandler(error));
     }
   };
 
