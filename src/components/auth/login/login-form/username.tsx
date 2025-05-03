@@ -117,6 +117,7 @@ export default function Username(props: Props) {
             {...field}
             error={error}
             variant="flat"
+            autoFocus
             className="my-4"
             endContent={
               <Icon

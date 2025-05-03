@@ -1,5 +1,6 @@
 export default {
-  or: "Or",
+  apolloLogo: "Apollo Logo",
   back: "Back",
   continue: "Continue",
+  or: "Or",
 };
