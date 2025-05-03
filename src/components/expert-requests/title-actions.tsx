@@ -6,13 +6,20 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import requestsHeaderIcon from "@/assets/images/expert-requests/requests-header-icon.svg";
 import requestsHeaderIconDark from "@/assets/images/expert-requests/requests-header-icon-dark.svg";
 import { useTheme } from "@heroui/use-theme";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@heroui/dropdown";
+import { TemplatesModal } from "./templates";
 
 export default () => {
   const { theme } = useTheme();
 
   return (
     <div className="pt-3 mb-4 flex justify-between">
-      <div className="flex items-center w-full xl:py-[0.375rem]">
+      <div className="flex flex-wrap items-center w-full xl:py-1.5">
         <Image
           src={theme === "dark" ? requestsHeaderIconDark : requestsHeaderIcon}
           alt={t("expertRequests.requestsManagement")}
@@ -21,7 +28,7 @@ export default () => {
 
         <div>
           <div className="flex items-center">
-            <h1 className="text-3xl text-foreground-900">
+            <h1 className="text-3xl text-foreground-900 me-4">
               <bdi className="me-2 hidden lg:inline-block">
                 {t("expertRequests.management")}
               </bdi>
@@ -31,24 +38,68 @@ export default () => {
             <Badge
               content="0"
               children
-              className="ms-4 bg-default-foreground text-background"
+              className="bg-default-foreground text-background"
             />
           </div>
 
-          <p className="hidden lg:block text-foreground-500 mt-[0.625rem]">
+          <p className="hidden lg:block text-foreground-500 mt-2.5">
             {t("expertRequests.requestsPageDescription")}
           </p>
         </div>
 
         <div className="xl:hidden ms-auto">
-          <Button variant="light" isIconOnly size="sm" className="me-2">
-            <Icon
-              icon="solar:menu-dots-bold"
-              width={20}
-              height={20}
-              className="text-default-500"
-            />
-          </Button>
+          <Dropdown>
+            <DropdownTrigger>
+              <Button variant="light" isIconOnly size="sm" className="me-2">
+                <Icon
+                  icon="solar:menu-dots-bold"
+                  width={20}
+                  height={20}
+                  className="text-default-500"
+                />
+              </Button>
+            </DropdownTrigger>
+
+            <DropdownMenu aria-label="Secondary Actions menu">
+              <DropdownItem
+                key="templates"
+                classNames={{
+                  title: "text-default-foreground flex items-center",
+                }}
+              >
+                <TemplatesModal
+                  activator={
+                    <div>
+                      <Icon
+                        icon="solar:widget-bold"
+                        width={18}
+                        height={18}
+                        className="text-default-600 me-3"
+                      />
+
+                      {t("expertRequests.templates")}
+                    </div>
+                  }
+                />
+              </DropdownItem>
+
+              <DropdownItem
+                key="settings"
+                classNames={{
+                  title: "text-default-foreground flex items-center",
+                }}
+              >
+                <Icon
+                  icon="lineicons:gear-1"
+                  width={18}
+                  height={18}
+                  className="text-default-600 me-3"
+                />
+
+                {t("shared.settings")}
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
 
           <Button
             variant="shadow"
@@ -61,10 +112,7 @@ export default () => {
       </div>
 
       <div className="hidden xl:flex items-end">
-        <Button
-          variant="light"
-          className="text-default-foreground me-[0.625rem]"
-        >
+        <Button variant="light" className="text-default-foreground me-2.5">
           <Icon
             icon="lineicons:gear-1"
             width={20}
@@ -75,10 +123,7 @@ export default () => {
           {t("shared.settings")}
         </Button>
 
-        <Button
-          variant="flat"
-          className="text-default-foreground me-[0.625rem]"
-        >
+        <Button variant="flat" className="text-default-foreground me-2.5">
           <Icon
             icon="bx:sort"
             width={20}
@@ -89,16 +134,20 @@ export default () => {
           {t("shared.changeStatus")}
         </Button>
 
-        <Button variant="flat" className="text-default-foreground me-4">
-          <Icon
-            icon="solar:widget-bold"
-            width={20}
-            height={20}
-            className="text-default-500"
-          />
+        <TemplatesModal
+          activator={
+            <Button variant="flat" className="text-default-foreground me-4">
+              <Icon
+                icon="solar:widget-bold"
+                width={20}
+                height={20}
+                className="text-default-500"
+              />
 
-          {t("expertRequests.templates")}
-        </Button>
+              {t("expertRequests.templates")}
+            </Button>
+          }
+        />
 
         <Button
           variant="shadow"

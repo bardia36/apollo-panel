@@ -1,9 +1,12 @@
 export default {
   archive: "بایگانی",
+  availableTemplates: "تمپلیت‌های موجود",
   branch: "نمایندگی",
   createRequest: "ایجاد درخواست",
   currentCases: "پرونده‌های جاری",
+  deleteTemplate: "حذف تمپلیت",
   management: "مدیریت",
+  newTemplate: "تمپلیت جدید",
   noRequestFound: "هیچ درخواستی پیدا نشد.",
   orderNumber: "شماره سفارش",
   request: "درخواست‌",
@@ -11,6 +14,9 @@ export default {
   requestsManagement: "مدیریت درخواست‌ها",
   requestsPageDescription: "مشاهده و مدیریت لیست درخواست‌های بازدید آنلاین",
   sendToArchive: "ارسال به بایگانی",
+  templateDetails: "محتویات تمپلیت",
+  templateName: "عنوان تمپلیت",
   templates: "تمپلیت‌ها",
   vehicleModel: "مدل خودرو",
+  wantedItemTitle: "عنوان مورد درخواستی",
 };

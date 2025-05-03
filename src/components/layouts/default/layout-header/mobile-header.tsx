@@ -28,7 +28,7 @@ export default function MobileHeader() {
         <LogoIcon classNames={{ img: "h-[2.625rem]" }} />
 
         <button
-          className="p-[0.625rem] ms-2"
+          className="p-2.5 ms-2"
           aria-label="menu toggle"
           aria-haspopup="true"
           aria-expanded="false"

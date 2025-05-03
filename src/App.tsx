@@ -57,12 +57,14 @@ function App() {
   }
 
   function detectBrowserTheme() {
-    if (
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-    )
-      setTheme("dark");
-    else setTheme("light");
+    // TODO: Uncomment this when we have a theme changer btn
+    // if (
+    //   window.matchMedia &&
+    //   window.matchMedia("(prefers-color-scheme: dark)").matches
+    // )
+    //   setTheme("dark");
+    // else setTheme("light");
+    setTheme("light");
   }
 
   return (
