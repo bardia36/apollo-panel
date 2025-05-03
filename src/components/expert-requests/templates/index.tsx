@@ -220,7 +220,11 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
           isOpen={isOpen}
           backdrop="blur"
           isDismissable={false}
-          classNames={{ closeButton: "top-[1rem] left-[1.5rem]" }}
+          classNames={{
+            closeButton: "top-[1rem] left-[1.5rem]",
+            backdrop: "z-[100000]",
+            wrapper: "z-[100001]",
+          }}
           className="w-[615px]"
           size="2xl"
           onClose={handleModalClose}
