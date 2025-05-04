@@ -6,16 +6,9 @@ import {
   ReactNode,
   useCallback,
 } from "react";
-import {
-  Modal,
-  ModalContent,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
-} from "@heroui/modal";
-import { Button } from "@heroui/button";
-import { t } from "i18next";
-import CreateRequestStepper from "./create-request-stepper";
+import { Modal, ModalContent, ModalBody, useDisclosure } from "@heroui/modal";
+import CreateSteps from "./create-steps.tsx";
+import { useBreakpoint } from "@/hook/useBreakpoint";
 
 type Props = {
   activator: ReactNode;
@@ -23,6 +16,7 @@ type Props = {
 
 export const CreateRequestModal: FC<Props> = ({ activator }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isMdAndUp } = useBreakpoint();
 
   const handleModalClose = useCallback(() => {
     onClose();
@@ -56,18 +50,14 @@ export const CreateRequestModal: FC<Props> = ({ activator }) => {
           backdrop="blur"
           hideCloseButton={true}
           isDismissable={false}
-          className="w-[1200px]"
-          size="2xl"
+          className="xl:min-w-[1140px] 2xl:min-w-fit md:max-h-[80vh] my-auto"
+          size={isMdAndUp ? "5xl" : "full"}
           onClose={handleModalClose}
         >
           <ModalContent>
-            <ModalBody>
-              <CreateRequestStepper />
+            <ModalBody className="p-4 overflow-y-auto">
+              <CreateSteps onCloseModal={handleModalClose} />
             </ModalBody>
-
-            <ModalFooter className="mt-4 md:pb-6">
-              <Button onPress={handleModalClose}>{t("shared.close")}</Button>
-            </ModalFooter>
           </ModalContent>
         </Modal>
       )}
