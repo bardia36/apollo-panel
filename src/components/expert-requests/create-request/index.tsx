@@ -15,6 +15,7 @@ import {
 } from "@heroui/modal";
 import { Button } from "@heroui/button";
 import { t } from "i18next";
+import CreateRequestStepper from "./create-request-stepper";
 
 type Props = {
   activator: ReactNode;
@@ -60,7 +61,9 @@ export const CreateRequestModal: FC<Props> = ({ activator }) => {
           onClose={handleModalClose}
         >
           <ModalContent>
-            <ModalBody>body</ModalBody>
+            <ModalBody>
+              <CreateRequestStepper />
+            </ModalBody>
 
             <ModalFooter className="mt-4 md:pb-6">
               <Button onPress={handleModalClose}>{t("shared.close")}</Button>

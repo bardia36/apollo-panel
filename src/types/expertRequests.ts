@@ -1,3 +1,5 @@
+import { NameEnFa } from "./common";
+
 export type ExpertRequestResponse = {
   docs: ExpertRequest[];
   hasNextPage: boolean;
@@ -9,13 +11,43 @@ export type ExpertRequestResponse = {
 };
 
 export type ExpertRequest = {
-  id: string;
-  model: { name: string; brand: string };
-  user: { name: string; mobile?: string; image?: string };
+  _id: string;
+  order_number: string;
+  inspection_type: {
+    name: string;
+    logo: string;
+    type: InspectionType;
+    description: string;
+  };
+  owner: {
+    image?: string;
+    userName: string;
+    phoneNumber?: string;
+    email?: string;
+  };
+  tags?: [string];
+  createdAt: string;
+  inspection_data: {
+    vehicle_brand?: NameEnFa;
+    vehicle_model?: NameEnFa;
+    vehicle_compony?: NameEnFa;
+  };
+  unit: {
+    level: string;
+    title: string;
+    _id: string;
+  };
   status: ExpertRequestStatus;
-  created: string;
-  branch: string;
 };
+
+export type InspectionType =
+  | "VEHICLE"
+  | "PROPERTY"
+  | "PERSONAL"
+  | "LIABILITY"
+  | "COMMERCIAL"
+  | "SPECIALIZED"
+  | "CYBER";
 
 export type ExpertRequestStatus =
   | "DRAFT"
@@ -26,10 +58,10 @@ export type ExpertRequestStatus =
   | "REVIEWED"
   | "ACCEPTED"
   | "REJECTED"
-  | "EXPIRED"
   | "FAILED"
-  | "ARCHIVED"
-  | "CANCELED";
+  | "EXPIRED"
+  | "CANCELED"
+  | "ARCHIVED";
 
 export type TableColumns = {
   name: string;
@@ -45,5 +77,6 @@ export type StatusesMap = {
     bg: string;
     text: string;
     label: string;
+    icon: string;
   };
 };

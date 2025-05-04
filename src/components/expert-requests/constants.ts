@@ -1,30 +1,34 @@
-import { StatusesMap, StatusOptions, TableColumns } from "@/types/expertRequests";
+import {
+  StatusesMap,
+  StatusOptions,
+  TableColumns,
+} from "@/types/expertRequests";
 import { t } from "i18next";
 
 export const columns: TableColumns = [
   {
-    name: "ID",
-    uid: "id",
+    name: "order_number",
+    uid: "order_number",
     sortable: true,
     label: t("expertRequests.orderNumber"),
   },
   {
-    name: "model",
-    uid: "model",
+    name: "inspection_data",
+    uid: "inspection_data",
     sortable: true,
     label: t("expertRequests.vehicleModel"),
   },
   { name: "status", uid: "status", sortable: true, label: t("shared.status") },
-  { name: "user", uid: "user", sortable: true, label: t("shared.user") },
+  { name: "owner", uid: "owner", sortable: true, label: t("shared.user") },
   {
-    name: "created",
-    uid: "created",
+    name: "createdAt",
+    uid: "createdAt",
     sortable: true,
     label: t("shared.created"),
   },
   {
-    name: "branch",
-    uid: "branch",
+    name: "unit",
+    uid: "unit",
     sortable: true,
     label: t("expertRequests.branch"),
   },
@@ -46,64 +50,76 @@ export const statusOptions: StatusOptions = [
 
 // TODO: it is not completed yet, need to add more options from backend
 export const statusesMap: StatusesMap = {
-  ACCEPTED: {
-    bg: "success bg-opacity-20",
-    text: "success",
-    label: t("shared.accepted"),
-  },
-  ARCHIVED: {
-    bg: "default bg-opacity-40",
-    text: "foreground-500",
-    label: t("shared.archived"),
-  },
-  CANCELED: {
-    bg: "default bg-opacity-40",
-    text: "foreground-500",
-    label: t("shared.canceled"),
-  },
-  EXPIRED: {
-    bg: "default bg-opacity-40",
-    text: "foreground-500",
-    label: t("shared.expired"),
-  },
-  FAILED: {
-    bg: "danger bg-opacity-20",
-    text: "danger",
-    label: t("shared.failed"),
-  },
-  IN_PROGRESS: {
-    bg: "warning bg-opacity-20",
-    text: "warning",
-    label: t("shared.inProgress"),
-  },
-  OPENED: {
-    bg: "warning bg-opacity-20",
-    text: "warning",
-    label: t("shared.opened"),
+  DRAFT: {
+    bg: "foreground-50 border border-foreground-200 border-dashed",
+    text: "default-500",
+    label: t("shared.draft"),
+    icon: "solar:pen-2-bold",
   },
   PENDING: {
     bg: "warning bg-opacity-20",
     text: "warning",
     label: t("shared.pending"),
+    icon: "tabler:clock-filled",
+  },
+  OPENED: {
+    bg: "warning bg-opacity-20",
+    text: "warning",
+    label: t("shared.opened"),
+    icon: "solar:eye-bold",
+  },
+  IN_PROGRESS: {
+    bg: "warning bg-opacity-20",
+    text: "warning",
+    label: t("shared.inProgress"),
+    icon: "tabler:clock-filled",
+  },
+  COMPLETED: {
+    bg: "primary bg-opacity-20",
+    text: "primary",
+    label: t("shared.completed"),
+    icon: "eva:flash-fill",
+  },
+  REVIEWED: {
+    bg: "primary bg-opacity-20 border border-primary-200 border-dashed",
+    text: "primary",
+    label: t("shared.reviewed"),
+    icon: "eva:flash-fill",
+  },
+  ACCEPTED: {
+    bg: "success bg-opacity-20",
+    text: "success",
+    label: t("shared.accepted"),
+    icon: "material-symbols:check-circle-rounded",
   },
   REJECTED: {
     bg: "danger bg-opacity-20",
     text: "danger",
     label: t("shared.rejected"),
+    icon: "mingcute:minus-circle-fill",
   },
-  DRAFT: {
-    bg: "success bg-opacity-20",
-    text: "success",
-    label: t("shared.draft"),
+  FAILED: {
+    bg: "danger bg-opacity-20",
+    text: "danger",
+    label: t("shared.failed"),
+    icon: "flowbite:exclamation-circle-solid",
   },
-  COMPLETED: {
-    bg: "success bg-opacity-20",
-    text: "success",
-    label: t("shared.completed"),
+  EXPIRED: {
+    bg: "default bg-opacity-40",
+    text: "foreground-500",
+    label: t("shared.expired"),
+    icon: "mage:exclamation-hexagon-fill",
   },
-  REVIEWED: {
-    bg: "success bg-opacity-20",
-    text: "success",
-    label: t("shared.reviewed"),
+  CANCELED: {
+    bg: "default bg-opacity-40",
+    text: "foreground-500",
+    label: t("shared.canceled"),
+    icon: "mynaui:x-square-solid",
+  },
+  ARCHIVED: {
+    bg: "default bg-opacity-40",
+    text: "foreground-500",
+    label: t("shared.archived"),
+    icon: "solar:bookmark-circle-bold",
   },
 };

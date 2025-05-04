@@ -11,12 +11,12 @@ import {
   TableCell,
 } from "@heroui/table";
 import {
-  RenderIdCell,
-  RenderModelCell,
+  RenderOrderNumberCell,
+  RenderInspectionDataCell,
   RenderStatusCell,
-  RenderUserCell,
-  RenderBranchCell,
-  RenderCreatedCell,
+  RenderOwnerCell,
+  RenderUnitCell,
+  RenderCreatedAtCell,
   RenderActionsCell,
 } from "./render-cell";
 
@@ -57,7 +57,7 @@ export default function RequestsTable() {
     column: keyof ExpertRequest;
     direction: string;
   }>({
-    column: "id",
+    column: "order_number",
     direction: "ascending",
   });
   // - states
@@ -96,7 +96,9 @@ export default function RequestsTable() {
 
     if (hasSearchFilter) {
       filteredRequests = filteredRequests.filter((request) =>
-        request.model.name.toLowerCase().includes(filterValue.toLowerCase())
+        request.inspection_data.vehicle_model?.name_en
+          .toLowerCase()
+          .includes(filterValue.toLowerCase())
       );
     }
 
@@ -124,7 +126,8 @@ export default function RequestsTable() {
       return [...items].sort((a, b) => {
         const first = a[sortDescriptor.column];
         const second = b[sortDescriptor.column];
-        const cmp = first < second ? -1 : first > second ? 1 : 0;
+        const cmp =
+          first && second ? (first < second ? -1 : first > second ? 1 : 0) : 0;
 
         return sortDescriptor.direction === "descending" ? -cmp : cmp;
       });
@@ -187,7 +190,6 @@ export default function RequestsTable() {
   // - top content
 
   // bottom content -
-
   const bottomContentWrapper = useMemo(() => {
     return (
       <>
@@ -200,7 +202,8 @@ export default function RequestsTable() {
         />
       </>
     );
-  }, [selectedKeys, items.length, page, requests.totalPage, hasSearchFilter]); // - bottom content
+  }, [selectedKeys, items.length, page, requests.totalPage, hasSearchFilter]);
+  // - bottom content
 
   // table data -
   const renderCell = useCallback(
@@ -213,23 +216,27 @@ export default function RequestsTable() {
       else cellValue = request[columnKey];
 
       switch (columnKey) {
-        case "id":
-          return <RenderIdCell id={request.id} />;
+        case "order_number":
+          return <RenderOrderNumberCell orderNumber={request.order_number} />;
 
-        case "model":
-          return <RenderModelCell model={request.model} />;
+        case "inspection_data":
+          return (
+            <RenderInspectionDataCell
+              inspectionData={request.inspection_data}
+            />
+          );
 
         case "status":
           return <RenderStatusCell status={request.status} />;
 
-        case "user":
-          return <RenderUserCell user={request.user} />;
+        case "owner":
+          return <RenderOwnerCell owner={request.owner} />;
 
-        case "branch":
-          return <RenderBranchCell branch={request.branch} />;
+        case "unit":
+          return <RenderUnitCell unit={request.unit} />;
 
-        case "created":
-          return <RenderCreatedCell created={request.created} />;
+        case "createdAt":
+          return <RenderCreatedAtCell createdAt={request.createdAt} />;
 
         case "actions":
           return <RenderActionsCell />;
@@ -271,7 +278,7 @@ export default function RequestsTable() {
         items={sortedItems}
       >
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow key={item._id}>
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}

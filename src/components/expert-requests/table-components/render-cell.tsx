@@ -13,18 +13,25 @@ import { t } from "i18next";
 import { ExpertRequest } from "@/types/expertRequests";
 import { statusesMap } from "../constants";
 
-export const RenderIdCell = ({ id }: { id: ExpertRequest["id"] }) => (
-  <span className="text-default-500">{id}</span>
-);
-
-export const RenderModelCell = ({
-  model,
+// TODO: add copy to clipboard icon */
+export const RenderOrderNumberCell = ({
+  orderNumber,
 }: {
-  model: ExpertRequest["model"];
+  orderNumber: ExpertRequest["order_number"];
+}) => <span className="text-default-500">{orderNumber}</span>;
+
+export const RenderInspectionDataCell = ({
+  inspectionData,
+}: {
+  inspectionData: ExpertRequest["inspection_data"];
 }) => (
   <>
-    <div className="text-default-foreground mb-1">{model.name}</div>
-    <div className="text-default-500">{model.brand}</div>
+    <div className="text-default-foreground mb-1">
+      {inspectionData.vehicle_model?.name_fa}
+    </div>
+    <div className="text-default-500">
+      {inspectionData.vehicle_brand?.name_fa}
+    </div>
   </>
 );
 
@@ -34,27 +41,36 @@ export const RenderStatusCell = ({
   status: ExpertRequest["status"];
 }) => (
   <Chip
-    className={`bg-${statusesMap[status].bg} text-${statusesMap[status].text}`}
+    className={`bg-${statusesMap[status].bg} text-${statusesMap[status].text} h-8 gap-1`}
     size="sm"
     variant="flat"
+    startContent={
+      <Icon icon={statusesMap[status].icon} width={20} height={20} />
+    }
   >
-    {statusesMap[status].label}
+    <span className="font-semibold text-sm">{statusesMap[status].label}</span>
   </Chip>
 );
 
-export const RenderUserCell = ({ user }: { user: ExpertRequest["user"] }) => (
+export const RenderOwnerCell = ({
+  owner,
+}: {
+  owner: ExpertRequest["owner"];
+}) => (
   <User
-    avatarProps={{ radius: "md", src: user.image }}
-    description={<div className="text-content4-foreground">{user.mobile}</div>}
-    name={<div className="text-default-500 mb-1">{user.name}</div>}
+    avatarProps={{
+      radius: "md",
+      src: owner.image,
+      className: "bg-default-100 text-default-200",
+    }}
+    description={
+      <div className="text-content4-foreground">{owner.phoneNumber}</div>
+    }
+    name={<div className="text-default-500 mb-1">{owner.userName}</div>}
   />
 );
 
-export const RenderBranchCell = ({
-  branch,
-}: {
-  branch: ExpertRequest["branch"];
-}) => (
+export const RenderUnitCell = ({ unit }: { unit: ExpertRequest["unit"] }) => (
   <div className="flex gap-1 text-default-foreground">
     <Icon
       icon="solar:users-group-rounded-bold"
@@ -62,15 +78,15 @@ export const RenderBranchCell = ({
       height={20}
       className="text-default-200"
     />
-    {branch}
+    {unit.title}
   </div>
 );
 
-export const RenderCreatedCell = ({
-  created,
+export const RenderCreatedAtCell = ({
+  createdAt,
 }: {
-  created: ExpertRequest["created"];
-}) => <DateDisplay isoDate={created} />;
+  createdAt: ExpertRequest["createdAt"];
+}) => <DateDisplay isoDate={createdAt} />;
 
 export const RenderActionsCell = () => (
   <div className="relative flex justify-end items-center gap-2">
