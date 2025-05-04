@@ -12,13 +12,26 @@ import DateDisplay from "../../shared/date-display";
 import { t } from "i18next";
 import { ExpertRequest } from "@/types/expertRequests";
 import { statusesMap } from "../constants";
+import { copyToClipboard } from "@/utils/base";
 
 // TODO: add copy to clipboard icon */
 export const RenderOrderNumberCell = ({
   orderNumber,
 }: {
   orderNumber: ExpertRequest["order_number"];
-}) => <span className="text-default-500">{orderNumber}</span>;
+}) => (
+  <div className="flex items-center gap-2">
+    <span className="text-default-500">{orderNumber}</span>
+    <Button
+      isIconOnly
+      variant="light"
+      className="min-w-6 w-6 h-6"
+      onPress={copyToClipboard(orderNumber)}
+    >
+      <Icon icon="solar:copy-linear" width={20} height={20} className="text-default-400" />
+    </Button>
+  </div>
+);
 
 export const RenderInspectionDataCell = ({
   inspectionData,
