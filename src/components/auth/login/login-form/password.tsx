@@ -29,7 +29,7 @@ import { Checkbox } from "@heroui/checkbox";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import GoogleButton from "./google-button";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { accountApi } from "@/services/api";
+import { accountApi } from "@/services/api/auth";
 import { useCookies } from "react-cookie";
 
 export default function Password({ userName, setCurrentComponent }: Props) {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { accountApi } from "@/services/api";
+import { accountApi } from "@/services/api/auth";
 import { exceptionHandler } from "@/services/api/exception";
 
 // Components
