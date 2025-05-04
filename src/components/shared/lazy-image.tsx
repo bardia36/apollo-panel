@@ -25,21 +25,15 @@ export const LazyImage = ({
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-        }
+        if (entries[0].isIntersecting) setIsVisible(true);
       },
       { threshold: 0.1 }
     );
 
-    if (imageRef.current) {
-      observer.observe(imageRef.current);
-    }
+    if (imageRef.current) observer.observe(imageRef.current);
 
     return () => {
-      if (imageRef.current) {
-        observer.unobserve(imageRef.current);
-      }
+      if (imageRef.current) observer.unobserve(imageRef.current);
     };
   }, []);
 

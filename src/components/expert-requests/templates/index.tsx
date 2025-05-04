@@ -19,7 +19,7 @@ import {
 import { Button } from "@heroui/button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
-import { templatesApi } from "@/services/api";
+import { templatesApi } from "@/services/api/templates.ts";
 import { exceptionHandler } from "@/services/api/exception";
 import { Template, TemplateField, Templates } from "@/types/templates";
 // components
@@ -220,8 +220,12 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
           isOpen={isOpen}
           backdrop="blur"
           isDismissable={false}
-          classNames={{ closeButton: "top-[1rem] left-[1.5rem]" }}
-          className="w-[615px]"
+          classNames={{
+            closeButton: "top-[1rem] left-[1.5rem]",
+            backdrop: "z-[100000]",
+            wrapper: "z-[100001]",
+          }}
+          className="w-[615px] max-h-[90vh] my-auto"
           size="2xl"
           onClose={handleModalClose}
         >
@@ -237,7 +241,7 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
               {t("expertRequests.templates")}
             </ModalHeader>
 
-            <ModalBody className="gap-0">
+            <ModalBody className="gap-0 overflow-y-auto pb-6">
               {initializing ? (
                 <TemplatesLoadingSkeleton />
               ) : (
@@ -301,7 +305,7 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
               )}
             </ModalBody>
 
-            <ModalFooter className="mt-4 md:pb-6">
+            <ModalFooter className="md:pb-6">
               <Button
                 isDisabled={initializing}
                 isLoading={loading}

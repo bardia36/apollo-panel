@@ -13,6 +13,7 @@ import {
   DropdownTrigger,
 } from "@heroui/dropdown";
 import { TemplatesModal } from "./templates";
+import { CreateRequestModal } from "./create-request";
 
 export default () => {
   const { theme } = useTheme();
@@ -60,7 +61,10 @@ export default () => {
               </Button>
             </DropdownTrigger>
 
-            <DropdownMenu aria-label="Secondary Actions menu">
+            <DropdownMenu
+              closeOnSelect={false}
+              aria-label="Secondary Actions menu"
+            >
               <DropdownItem
                 key="templates"
                 classNames={{
@@ -69,7 +73,7 @@ export default () => {
               >
                 <TemplatesModal
                   activator={
-                    <div>
+                    <div className="flex items-center">
                       <Icon
                         icon="solar:widget-bold"
                         width={18}
@@ -101,13 +105,17 @@ export default () => {
             </DropdownMenu>
           </Dropdown>
 
-          <Button
-            variant="shadow"
-            className="bg-foreground-900 text-foreground-50"
-          >
-            <Icon icon="mdi:plus-circle" width={20} height={20} />
-            {t("shared.create")}
-          </Button>
+          <CreateRequestModal
+            activator={
+              <Button
+                variant="shadow"
+                className="bg-foreground-900 text-foreground-50"
+              >
+                <Icon icon="mdi:plus-circle" width={20} height={20} />
+                {t("shared.create")}
+              </Button>
+            }
+          />
         </div>
       </div>
 
@@ -149,19 +157,22 @@ export default () => {
           }
         />
 
-        <Button
-          variant="shadow"
-          className="bg-foreground-900 text-foreground-50"
-        >
-          <Icon
-            icon="mdi:plus-circle"
-            width={20}
-            height={20}
-            className="text-foreground-50"
-          />
-
-          {t("expertRequests.createRequest")}
-        </Button>
+        <CreateRequestModal
+          activator={
+            <Button
+              variant="shadow"
+              className="bg-foreground-900 text-foreground-50"
+            >
+              <Icon
+                icon="mdi:plus-circle"
+                width={20}
+                height={20}
+                className="text-foreground-50"
+              />
+              {t("expertRequests.createRequest")}
+            </Button>
+          }
+        />
       </div>
     </div>
   );

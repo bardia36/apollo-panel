@@ -17,7 +17,7 @@ export const AddTemplateButton = ({
     <Button
       variant="bordered"
       className={cn(
-        "mt-2 mb-6 bg-default-50 text-primary border-default-200 h-14 justify-start",
+        "mt-2 mb-6 bg-default-50 text-primary border-default-200 min-h-14 justify-start",
         isOnAddingTemplate ? "border-primary" : "border-dashed"
       )}
       onPress={addTemplate}

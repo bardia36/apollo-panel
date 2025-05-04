@@ -34,6 +34,7 @@
     "@heroui/switch": "^2.2.14",
     "@heroui/system": "2.4.12",
     "@heroui/table": "^2.2.16",
+    "@heroui/tabs": "^2.2.16",
     "@heroui/theme": "2.4.12",
     "@heroui/toast": "^2.0.6",
     "@heroui/tooltip": "^2.2.14",
