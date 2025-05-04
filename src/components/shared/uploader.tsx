@@ -87,7 +87,7 @@ export const ImageUploader: FC<ImageUploaderProps> = ({ value, onChange }) => {
       </div>
 
       <div
-        className="absolute bottom-0 right-0 text-default-foreground cursor-pointer"
+        className="absolute bottom-0 start-0 text-default-foreground cursor-pointer"
         onClick={triggerUpload}
         style={{ zIndex: 10 }}
       >
