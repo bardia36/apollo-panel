@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  frontend-apollo:
+    container_name: frontend-apollo
+    restart: on-failure
+    image: api-apollo:latest
+    ports:
+      - "8090:8090"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1g
