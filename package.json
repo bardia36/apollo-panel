@@ -64,6 +64,7 @@
   },
   "devDependencies": {
     "@iconify/react": "^5.2.0",
+    "@types/jalaali-js": "^1.2.0",
     "@types/node": "20.5.7",
     "@types/qs": "^6.9.18",
     "@types/react": "18.3.3",
