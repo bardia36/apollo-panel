@@ -77,9 +77,10 @@ export default function CreateSteps({ onCloseModal }: Props) {
 
         <div className="flex justify-center md:justify-end pt-8 gap-4 xl:w-3/4 mx-auto">
           <Button
-            onPress={prevStep}
-            disabled={currentStep === 0}
             variant="light"
+            disabled={currentStep === 0}
+            onPress={prevStep}
+            className="cursor-pointer"
           >
             صفحه قبل
           </Button>
