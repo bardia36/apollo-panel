@@ -1,4 +1,4 @@
-FROM node:20.12.0-alpine3.19
+FROM node:20.12.0-alpine3.19 as buildEnv
 RUN addgroup app && adduser -S -G app app
 WORKDIR /app
 RUN chmod 777 /app
