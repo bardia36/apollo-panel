@@ -6,5 +6,8 @@ USER app
 COPY package*.json ./
 RUN npm install
 COPY . .
-EXPOSE 8090
-CMD ["npm", "start"]
+RUN npm run build
+
+FROM nginx:1.25.2-alpine-slim
+COPY --from=buildEnv /app/build /usr/share/nginx/html
+COPY /nginx.conf /etc/nginx/conf.d/default.conf

@@ -6,7 +6,7 @@ services:
     restart: on-failure
     image: apollo-panel:latest
     ports:
-      - "8090:8090"
+      - "80:3000"
     deploy:
       resources:
         limits:
