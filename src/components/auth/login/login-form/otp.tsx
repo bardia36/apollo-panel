@@ -1,7 +1,5 @@
-import type { ActhDto, LoginByOtpEntity } from "@/types/auth";
-type CookieValues = {
-  auth?: ActhDto;
-};
+import type { CookieValues, LoginByOtpEntity } from "@/types/auth";
+
 type Props = {
   userName: string;
   setUserName: (userName: string) => void;
