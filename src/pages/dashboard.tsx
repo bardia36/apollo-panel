@@ -1,3 +1,10 @@
+import { useEffect } from "react";
+import { useBreadcrumb } from "@/context/breadcrumbContext";
+
 export default function IndexPage() {
-  return <div>test</div>;
+  const { setLinks } = useBreadcrumb();
+
+  useEffect(() => setLinks([]), [setLinks]);
+
+  return <div>Dashboard</div>;
 }

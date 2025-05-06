@@ -1,14 +1,14 @@
 import { useTranslation } from "react-i18next";
-import { useIsMobile } from "@/hook/useIsMobile";
-
-// components
+import {useBreakpoint} from "@/hook/useBreakpoint";
 import { Accordion, AccordionItem } from "@heroui/accordion";
 import { Image } from "@heroui/image";
 import { Link } from "@heroui/link";
+import newReleaseImg from "@/assets/images/auth/new-release.png";
+import corporateImg from "@/assets/images/auth/corporate.svg";
 
 export default function NewRelease() {
   const { t } = useTranslation();
-  const { isMobile } = useIsMobile();
+  const {isMdAndDown} = useBreakpoint();
 
   return (
     <div className="z-50 mt-4 mb-4 md:mt-0 md:absolute md:left-8 md:bottom-6 md:right-8">
@@ -24,7 +24,7 @@ export default function NewRelease() {
         >
           <div className="grid grid-cols-12 gap-3">
             <Image
-              src="/images/auth/new-release.png"
+              src={newReleaseImg}
               alt={t("auth.releaseTitle")}
               width={115}
               removeWrapper
@@ -40,7 +40,7 @@ export default function NewRelease() {
 
               <ul className="mb-2 ms-3">
                 <li className="text-xs list-disc text-foreground-600">
-                  بهبود تجربه‌کابری در بخش ایجاد درخواست
+                  بهبود تجربه‌کاربری در بخش ایجاد درخواست
                 </li>
 
                 <li className="text-xs list-disc text-foreground-600">
@@ -62,10 +62,10 @@ export default function NewRelease() {
         </AccordionItem>
       </Accordion>
 
-      {!isMobile && (
+      {!isMdAndDown && (
         <div className="flex items-center justify-center w-full">
           <Image
-            src="/images/auth/corporate.svg"
+            src={corporateImg}
             alt={t("auth.releaseCopyRight")}
             width={18}
             height={12}

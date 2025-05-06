@@ -16,9 +16,9 @@ import { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { formOptions } from "@/utils/validations";
 import { toast } from "@/utils/toast";
-import { accountApi } from "@/services/api";
+import { accountApi } from "@/services/api/auth";
 import { useCookies } from "react-cookie";
-import useAuthStore from "@/stores/authStore";
+import useAuthStore from "@/stores/auth-store";
 import { useValidationMessages } from "@/utils/rules";
 import { exceptionHandler } from "@/services/api/exception";
 

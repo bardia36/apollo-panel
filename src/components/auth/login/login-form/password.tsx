@@ -18,7 +18,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useValidationMessages } from "@/utils/rules";
 import { toast } from "@/utils/toast";
 import { yupResolver } from "@hookform/resolvers/yup";
-import useAuthStore from "@/stores/authStore";
+import useAuthStore from "@/stores/auth-store";
 
 // components
 import { Link, useNavigate } from "react-router-dom";
@@ -29,7 +29,7 @@ import { Checkbox } from "@heroui/checkbox";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import GoogleButton from "./google-button";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { accountApi } from "@/services/api";
+import { accountApi } from "@/services/api/auth";
 import { useCookies } from "react-cookie";
 
 export default function Password({ userName, setCurrentComponent }: Props) {
@@ -93,6 +93,7 @@ export default function Password({ userName, setCurrentComponent }: Props) {
             label={t("auth.password")}
             {...field}
             error={error}
+            autoFocus
             type="password"
             className="my-4"
           />
@@ -108,7 +109,10 @@ export default function Password({ userName, setCurrentComponent }: Props) {
           {t("auth.rememberMe")}
         </Checkbox>
 
-        <Link className="font-light text-default-500 text-small" to="/forget-password">
+        <Link
+          className="font-light text-default-500 text-small"
+          to="/forget-password"
+        >
           {t("auth.forgetPassword")}
         </Link>
       </div>

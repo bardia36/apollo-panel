@@ -12,7 +12,7 @@ export default function ResetPassword() {
     "AUTH_EMAIL",
   ]);
 
-  const [forgetPassCookies, setCookie, removeForgetPassCookie] = useCookies<
+  const [forgetPassCookies, __, removeForgetPassCookie] = useCookies<
     "FORGET_PASS_TOKEN",
     CookieValues
   >(["FORGET_PASS_TOKEN"]);

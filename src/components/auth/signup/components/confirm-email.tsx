@@ -1,5 +1,5 @@
 import ConfirmMessage from "@/components/shared/confirm-message";
-import { accountApi } from "@/services/api";
+import { accountApi } from "@/services/api/auth";
 import { exceptionHandler } from "@/services/api/exception";
 import { Dispatch, SetStateAction, useState } from "react";
 

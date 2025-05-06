@@ -11,7 +11,7 @@ import { useValidationMessages } from "@/utils/rules";
 import { formOptions } from "@/utils/validations";
 import { Controller, useForm } from "react-hook-form";
 import { exceptionHandler } from "@/services/api/exception";
-import { accountApi } from "@/services/api";
+import { accountApi } from "@/services/api/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 // components

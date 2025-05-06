@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-import useAuthStore from "@/stores/authStore";
-import { accountApi } from "@/services/api";
+import useAuthStore from "@/stores/auth-store";
+import { accountApi } from "@/services/api/auth";
 import { exceptionHandler } from "@/services/api/exception";
 
 // components
@@ -14,6 +14,8 @@ import {
 } from "@heroui/dropdown";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { toast } from "@/utils/toast";
+import UserImage from "@/components/shared/user-image";
+import { truncateString } from "@/utils/base";
 
 export default function Account() {
   const { t } = useTranslation();
@@ -35,13 +37,22 @@ export default function Account() {
   }
 
   return (
-    <div className="mt-6 flex justify-between items-center">
-      <div>
-        <p className="text-small text-foreground">{auth?.profile.userName}</p>
+    <div className="mt-6 flex flex-wrap justify-between items-center gap-4">
+      <div className="flex items-center">
+        <UserImage imgClass="min-w-10 w-10 min-h-10 h-10" />
 
-        <p className="text-tiny font-bold text-foreground-500">
-          {auth?.profile.role.name}
-        </p>
+        <div>
+          {auth?.profile.userName && (
+            <p className="text-small text-foreground">
+              {truncateString(auth?.profile.userName, 15)}
+            </p>
+          )}
+          {auth?.profile?.role?.name && (
+            <p className="text-tiny font-bold text-foreground-400">
+              {auth?.profile?.role?.name}
+            </p>
+          )}
+        </div>
       </div>
 
       <Dropdown placement="top-end">

@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { useTheme } from "@heroui/use-theme";
 import { useTranslation } from "react-i18next";
 
 // components
 import { Card, CardBody } from "@heroui/card";
-import { Image } from "@heroui/image";
 
 import SignupForm from "./components/signup-form";
 import ConfirmEmail from "./components/confirm-email";
+import { FullLogo } from "@/components/shared/logo";
 
 const components = {
   form: SignupForm,
@@ -15,7 +14,6 @@ const components = {
 };
 
 export default function Signup() {
-  const { theme } = useTheme();
   const { t } = useTranslation();
 
   const [email, setEmail] = useState("");
@@ -28,11 +26,7 @@ export default function Signup() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
-      <Image
-        src={theme === "dark" ? "/images/logo-dark.png" : "/images/logo.svg"}
-        alt="Logo"
-        classNames={{ wrapper: "mb-6 mt-6 mt-md-0" }}
-      />
+      <FullLogo classNames={{ wrapper: "mb-6 mt-6 mt-md-0" }} />
 
       <Card
         fullWidth

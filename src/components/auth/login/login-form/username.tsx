@@ -15,7 +15,7 @@ import { Controller, useForm } from "react-hook-form";
 import { formOptions } from "@/utils/validations";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useValidationMessages } from "@/utils/rules";
-import { accountApi } from "@/services/api";
+import { accountApi } from "@/services/api/auth";
 import { exceptionHandler } from "@/services/api/exception";
 
 // Components
@@ -117,6 +117,7 @@ export default function Username(props: Props) {
             {...field}
             error={error}
             variant="flat"
+            autoFocus
             className="my-4"
             endContent={
               <Icon
