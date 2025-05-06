@@ -4,7 +4,7 @@ services:
   frontend-apollo:
     container_name: frontend-apollo
     restart: on-failure
-    image: api-apollo:latest
+    image: apollo-panel:latest
     ports:
       - "8090:8090"
     deploy:
