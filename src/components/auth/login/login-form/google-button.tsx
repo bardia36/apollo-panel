@@ -4,7 +4,7 @@ import { accountApi } from "@/services/api/auth";
 import { exceptionHandler } from "@/services/api/exception";
 
 // Components
-import { Button } from "@heroui/button";
+import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
 export default function GoogleButton() {

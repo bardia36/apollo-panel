@@ -1,4 +1,4 @@
-import { Input } from "@heroui/input";
+import { Input } from "@heroui/react";
 import { t } from "i18next";
 import { ChangeEvent, useEffect, useState } from "react";
 import FieldsCountChip from "./components/fields-count-chip";

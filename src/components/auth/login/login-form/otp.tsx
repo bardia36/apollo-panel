@@ -1,7 +1,5 @@
-import type { ActhDto, LoginByOtpEntity } from "@/types/auth";
-type CookieValues = {
-  auth?: ActhDto;
-};
+import type { CookieValues, LoginByOtpEntity } from "@/types/auth";
+
 type Props = {
   userName: string;
   setUserName: (userName: string) => void;
@@ -23,11 +21,11 @@ import { useValidationMessages } from "@/utils/rules";
 import { exceptionHandler } from "@/services/api/exception";
 
 // components
-import { Form } from "@heroui/form";
-import { InputOtp } from "@heroui/input-otp";
-import { Button } from "@heroui/button";
+import { Form } from "@heroui/react";
+import { InputOtp } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { Divider } from "@heroui/divider";
+import { Divider } from "@heroui/react";
 import { Link, useNavigate } from "react-router-dom";
 
 import GoogleButton from "./google-button";

@@ -6,7 +6,7 @@ import {
   ReactNode,
   useCallback,
 } from "react";
-import { Modal, ModalContent, ModalBody, useDisclosure } from "@heroui/modal";
+import { Modal, ModalContent, ModalBody, useDisclosure } from "@heroui/react";
 import CreateSteps from "./create-steps.tsx";
 import { useBreakpoint } from "@/hook/useBreakpoint";
 

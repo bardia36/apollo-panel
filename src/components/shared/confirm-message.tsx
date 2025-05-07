@@ -9,11 +9,11 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 // Components
-import { Image } from "@heroui/image";
-import { Button } from "@heroui/button";
+import { Image } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { fancyTimeFormat } from "@/utils/base";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { Divider } from "@heroui/divider";
+import { Divider } from "@heroui/react";
 import GoogleButton from "../auth/login/login-form/google-button";
 import { Link } from "react-router-dom";
 import confirmMessageImg from "@/assets/images/auth/confirm-message.svg";

@@ -1,6 +1,6 @@
 import { Template, Templates } from "@/types/templates";
-import { Button } from "@heroui/button";
-import { cn } from "@heroui/theme";
+import { Button } from "@heroui/react";
+import { cn } from "@heroui/react";
 import { t } from "i18next";
 import { LazyImage } from "@/components/shared/lazy-image";
 

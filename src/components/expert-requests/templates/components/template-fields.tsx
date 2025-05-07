@@ -1,8 +1,8 @@
 import { TemplateField } from "@/types/templates";
-import { Button } from "@heroui/button";
-import { Chip } from "@heroui/chip";
-import { Input } from "@heroui/input";
-import { cn } from "@heroui/theme";
+import { Button } from "@heroui/react";
+import { Chip } from "@heroui/react";
+import { Input } from "@heroui/react";
+import { cn } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { useEffect, useRef, useState } from "react";
