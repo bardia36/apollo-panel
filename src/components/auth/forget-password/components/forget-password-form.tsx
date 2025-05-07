@@ -15,11 +15,11 @@ import { accountApi } from "@/services/api/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 // components
-import { Form } from "@heroui/form";
+import { Form } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
-import { Button } from "@heroui/button";
+import { Button } from "@heroui/react";
 import { Link } from "react-router-dom";
-import { Divider } from "@heroui/divider";
+import { Divider } from "@heroui/react";
 import GoogleButton from "@/components/auth/login/login-form/google-button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 

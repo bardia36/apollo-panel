@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 
 // Components
-import { Card, CardBody } from "@heroui/card";
+import { Card, CardBody } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
 import OtpComponent from "./otp";

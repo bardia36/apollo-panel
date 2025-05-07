@@ -1,4 +1,4 @@
-import { Image } from "@heroui/image";
+import { Image } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import asiaInsuranceImg from "@/assets/images/layout/asia-insurance.svg";
 

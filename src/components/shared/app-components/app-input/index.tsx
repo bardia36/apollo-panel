@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { Input, InputProps } from "@heroui/input";
+import { Input, InputProps } from "@heroui/react";
 import { FieldError } from "react-hook-form";
 
 export interface Props extends InputProps {
