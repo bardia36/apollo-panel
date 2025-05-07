@@ -1,42 +1,43 @@
 import { object, string } from "yup";
 import { Controller, useForm } from "react-hook-form";
-// import { useTranslation } from "react-i18next";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { formOptions } from "@/utils/validations";
 import { useValidationMessages } from "@/utils/rules";
 import { Icon } from "@iconify/react/dist/iconify.js";
-// import { useState } from "react";
+import { useState } from "react";
 
 // components
-// import { Select, SelectItem } from "@heroui/react";
+import { Select, SelectItem } from "@heroui/react";
 import { Form } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
+import { t } from "i18next";
 
 type StepOneFormValues = {
   fullName: string;
   phoneNumber: string;
   email: string;
   orderNumber: string;
-  insuranceType: string; // New field
+  insuranceType: string;
 };
 
 export default function StepOne() {
-  //   const { t } = useTranslation();
-  // const [showInsuranceCard, setShowInsuranceCard] = useState(false);
+  const [showInsuranceCard, setShowInsuranceCard] = useState(false);
 
   const validationSchema = object({
-    fullName: string().required(useValidationMessages().required("نام کاربر")),
+    fullName: string().required(
+      useValidationMessages().required(t("shared.userName"))
+    ),
     phoneNumber: string().required(
-      useValidationMessages().required("تلفن همراه")
+      useValidationMessages().required(t("shared.phoneNumber"))
     ),
     email: string()
-      .email(useValidationMessages().email(""))
-      .required(useValidationMessages().required("ایمیل")),
+      .email(useValidationMessages().email(".."))
+      .required(useValidationMessages().required(t("shared.email"))),
     orderNumber: string().required(
-      useValidationMessages().required("شماره سفارش")
+      useValidationMessages().required(t("expertRequests.orderNumber"))
     ),
     insuranceType: string().required(
-      useValidationMessages().required("نوع بیمه")
+      useValidationMessages().required(t("expertRequests.reviewType"))
     ),
   }).required();
 
@@ -47,21 +48,21 @@ export default function StepOne() {
       phoneNumber: "",
       email: "",
       orderNumber: "",
-      insuranceType: "", // New default value
+      insuranceType: "",
     },
     resolver: yupResolver(validationSchema),
   });
 
-  // const handleInsuranceChange = (value: string) => {
-  //   if (value) {
-  //     // Simulate API request
-  //     setTimeout(() => {
-  //       setShowInsuranceCard(true);
-  //     }, 500);
-  //   } else {
-  //     setShowInsuranceCard(false);
-  //   }
-  // };
+  const handleInsuranceChange = (value: string) => {
+    if (value) {
+      // Simulate API request
+      setTimeout(() => {
+        setShowInsuranceCard(true);
+      }, 500);
+    } else {
+      setShowInsuranceCard(false);
+    }
+  };
 
   const onSubmit = (data: StepOneFormValues) => {
     console.log(data);
@@ -72,10 +73,10 @@ export default function StepOne() {
     <>
       <div className="text-center mb-6">
         <h2 className="text-default-foreground text-3xl font-black mb-2">
-          ایجاد درخواست کارشناسی
+          {t("expertRequests.createReviewRequest")}
         </h2>
         <p className="text-default-500">
-          یا فرم لینک ارسال اطلاعات برای بازدید آنلاین
+          {t("expertRequests.createReviewRequestDescription")}
         </p>
       </div>
 
@@ -87,14 +88,14 @@ export default function StepOne() {
             render={({ field, fieldState: { error } }) => (
               <AppInput
                 {...field}
-                label="نام کاربر"
+                label={t("shared.userName")}
                 labelPlacement="outside"
-                placeholder="نام کامل، مثل بردیا جوادی"
+                placeholder={t("expertRequests.userNamePlaceholder")}
                 errorMessage={error?.message}
                 isInvalid={!!error}
                 classNames={{
                   input: "bg-default-100 text-foreground-500",
-                  label: "text-xs text-default-600 mb-3",
+                  label: "text-xs !text-default-600",
                 }}
                 endContent={
                   <Icon
@@ -114,14 +115,14 @@ export default function StepOne() {
             render={({ field, fieldState: { error } }) => (
               <AppInput
                 {...field}
-                label="تلفن همراه"
+                label={t("shared.phoneNumber")}
                 labelPlacement="outside"
-                placeholder="۰۹۱۲ ۱۲۳ ۴۵ ۶۷۸"
+                placeholder="0912 123 45 678"
                 errorMessage={error?.message}
                 isInvalid={!!error}
                 classNames={{
                   input: "bg-default-100 text-foreground-500",
-                  label: "text-xs text-default-600 mb-3",
+                  label: "text-xs !text-default-600",
                 }}
                 endContent={
                   <Icon
@@ -141,14 +142,14 @@ export default function StepOne() {
             render={({ field, fieldState: { error } }) => (
               <AppInput
                 {...field}
-                label="ایمیل"
+                label={t("shared.email")}
                 labelPlacement="outside"
                 placeholder="test@customer.com"
                 errorMessage={error?.message}
                 isInvalid={!!error}
                 classNames={{
                   input: "bg-default-100 text-foreground-500",
-                  label: "text-xs text-default-600 mb-3",
+                  label: "text-xs !text-default-600",
                 }}
                 endContent={
                   <Icon
@@ -168,14 +169,14 @@ export default function StepOne() {
             render={({ field, fieldState: { error } }) => (
               <AppInput
                 {...field}
-                label="شماره سفارش"
+                label={t("expertRequests.orderNumber")}
                 labelPlacement="outside"
-                placeholder="کد یا شماره سفارش مرجع"
+                placeholder={t("expertRequests.orderNumberPlaceholder")}
                 errorMessage={error?.message}
                 isInvalid={!!error}
                 classNames={{
                   input: "bg-default-100 text-foreground-500",
-                  label: "text-xs text-default-600 mb-3",
+                  label: "text-xs !text-default-600",
                 }}
                 endContent={
                   <Icon
@@ -189,41 +190,39 @@ export default function StepOne() {
             )}
           />
 
-          {/* <Controller
+          <Controller
             control={control}
             name="insuranceType"
             render={({ field, fieldState: { error } }) => (
               <Select
                 {...field}
-                label="قالب کارشناسی"
+                label={t("expertRequests.reviewType")}
                 labelPlacement="outside"
-                placeholder="انتخاب کنید"
+                placeholder={t("shared.choose")}
                 errorMessage={error?.message}
                 isInvalid={!!error}
                 className="col-span-1 md:col-span-2"
                 classNames={{
                   trigger: "bg-default-100 text-foreground-500",
-                  label: "text-xs text-default-600 mb-3",
+                  label: "text-xs !text-default-600",
                 }}
-                onChange={(value: string) => {
+                onSelectionChange={(value) => {
                   field.onChange(value);
-                  handleInsuranceChange(value);
+                  handleInsuranceChange(value as string);
                 }}
               >
                 <SelectItem key="1">بیمه‌های خودرو</SelectItem>
               </Select>
             )}
-          /> */}
+          />
         </div>
       </Form>
+
+      {showInsuranceCard && (
+        <div className="w-full bg-default-50 rounded-lg p-4 mt-4 mb-4 min-h-[100px]">
+          {/* Content will be added later */}
+        </div>
+      )}
     </>
   );
 }
-
-// {
-//   showInsuranceCard && (
-//     <div className="w-full bg-default-50 rounded-lg p-4 mt-4 mb-4 min-h-[100px]">
-//       {/* Content will be added later */}
-//     </div>
-//   );
-// }

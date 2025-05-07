@@ -17,6 +17,7 @@ export const AppInput = forwardRef<HTMLInputElement, Props>(
         isInvalid={!!error}
         errorMessage={error?.message}
         classNames={{
+          ...props.classNames,
           input: "disabled:text-neutral-7",
           errorMessage: "text-start",
         }}

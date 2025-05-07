@@ -2,6 +2,7 @@ import { useState, lazy, Suspense } from "react";
 import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Stepper from "./components/stepper";
+import { t } from "i18next";
 const StepOne = lazy(() => import("./components/step-one"));
 const StepTwo = lazy(() =>
   Promise.resolve({ default: () => <div className="p-4">مرحله دوم</div> })
@@ -15,9 +16,15 @@ export type Step = {
   description: string;
 };
 const steps: Step[] = [
-  { title: "مشخصات درخواست", description: "اطلاعات کاربر و مورد کارشناسی" },
-  { title: "محتویات لینک", description: "جزئیات موارد درخواستی" },
-  { title: "بررسی نهایی", description: "انتخاب نحوه ارسال" },
+  {
+    title: t("expertRequests.requestDetail"),
+    description: t("expertRequests.userAndExpertCaseInformation"),
+  },
+  {
+    title: t("expertRequests.linkData"),
+    description: t("expertRequests.casesDetail"),
+  },
+  { title: t("expertRequests.finalCheck"), description: "chooseWayToSend" },
 ];
 
 type Props = {
@@ -55,14 +62,15 @@ export default function CreateSteps({ onCloseModal }: Props) {
           onPress={onCloseModal}
         >
           <Icon icon="material-symbols:arrow-back-ios-new-rounded" hFlip />
-          بازگشت
+          {t("shared.return")}
         </Button>
 
         <div>
-          <h2 className="text-xl mb-1">مراحل ایجاد لینک کارشناسی</h2>
+          <h2 className="text-xl mb-1">
+            {t("expertRequests.stepsToCreateReviewLink")}
+          </h2>
           <p className="text-default-500">
-            اطلاعات کاربر، مورد کارشناسی و جزئیات موارد درخواستی را وارد کنید.
-            در انتها لینک درخواست ایجاد شده و برای کاربر ارسال می‌شود.
+            {t("expertRequests.addReqStepperDescription")}
           </p>
         </div>
 
@@ -76,19 +84,20 @@ export default function CreateSteps({ onCloseModal }: Props) {
         </Suspense>
 
         <div className="flex justify-center md:justify-end pt-8 gap-4 xl:w-3/4 mx-auto">
-          <Button
-            variant="light"
-            disabled={currentStep === 0}
-            onPress={prevStep}
-            className="cursor-pointer"
-          >
-            صفحه قبل
-          </Button>
-
+          {currentStep > 0 && (
+            <Button
+              variant="light"
+              disabled={currentStep === 0}
+              onPress={prevStep}
+              className="cursor-pointer"
+            >
+              {t("shared.previousPage")}
+            </Button>
+          )}
           {currentStep < steps.length - 1 ? (
-            <Button onPress={nextStep}>ادامه</Button>
+            <Button onPress={nextStep}>{t("shared.continue")}</Button>
           ) : (
-            <Button>ایجاد کن</Button>
+            <Button>{t("shared.createIt")}</Button>
           )}
         </div>
       </div>
