@@ -5,10 +5,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { formOptions } from "@/utils/validations";
 import { useValidationMessages } from "@/utils/rules";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useState } from "react";
+// import { useState } from "react";
 
 // components
-import { Select, SelectItem } from "@heroui/react";
+// import { Select, SelectItem } from "@heroui/react";
 import { Form } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
 
@@ -22,7 +22,7 @@ type StepOneFormValues = {
 
 export default function StepOne() {
   //   const { t } = useTranslation();
-  const [showInsuranceCard, setShowInsuranceCard] = useState(false);
+  // const [showInsuranceCard, setShowInsuranceCard] = useState(false);
 
   const validationSchema = object({
     fullName: string().required(useValidationMessages().required("نام کاربر")),
@@ -52,16 +52,16 @@ export default function StepOne() {
     resolver: yupResolver(validationSchema),
   });
 
-  const handleInsuranceChange = (value: string) => {
-    if (value) {
-      // Simulate API request
-      setTimeout(() => {
-        setShowInsuranceCard(true);
-      }, 500);
-    } else {
-      setShowInsuranceCard(false);
-    }
-  };
+  // const handleInsuranceChange = (value: string) => {
+  //   if (value) {
+  //     // Simulate API request
+  //     setTimeout(() => {
+  //       setShowInsuranceCard(true);
+  //     }, 500);
+  //   } else {
+  //     setShowInsuranceCard(false);
+  //   }
+  // };
 
   const onSubmit = (data: StepOneFormValues) => {
     console.log(data);
@@ -215,13 +215,15 @@ export default function StepOne() {
             )}
           /> */}
         </div>
-
-        {showInsuranceCard && (
-          <div className="w-full bg-default-50 rounded-lg p-4 mt-4 mb-4 min-h-[100px]">
-            {/* Content will be added later */}
-          </div>
-        )}
       </Form>
     </>
   );
 }
+
+// {
+//   showInsuranceCard && (
+//     <div className="w-full bg-default-50 rounded-lg p-4 mt-4 mb-4 min-h-[100px]">
+//       {/* Content will be added later */}
+//     </div>
+//   );
+// }

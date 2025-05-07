@@ -15,18 +15,19 @@ import {
   StatusOptions,
   TableColumns,
 } from "@/types/expertRequests";
+import { Key } from "@react-types/shared";
 
 type TopContentProps = {
   filterValue: string;
-  statusFilter: string;
+  statusFilter: string | Key[];
+  visibleColumns: string | Key[];
   statusOptions: StatusOptions;
-  visibleColumns: string;
   columns: TableColumns;
   requestDocs: ExpertRequest[];
   rowsPerPage: number;
   onSearchChange: (value: string) => void;
-  setStatusFilter: (value: SetStateAction<string>) => void;
-  setVisibleColumns: (value: SetStateAction<string>) => void;
+  setStatusFilter: (value: SetStateAction<string | Key[]>) => void;
+  setVisibleColumns: (value: SetStateAction<string | Key[]>) => void;
   onRowsPerPageChange: (value: number) => void;
   setSelectedKeys: (value: Set<string>) => void;
   onSendToArchive: () => void;
@@ -95,7 +96,7 @@ export const TopContent = ({
                 closeOnSelect={false}
                 selectedKeys={statusFilter}
                 selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
+                onSelectionChange={(keys) => setStatusFilter(Array.from(keys))}
               >
                 {statusOptions.map((status) => (
                   <DropdownItem key={status.uid}>{status.label}</DropdownItem>
@@ -127,7 +128,9 @@ export const TopContent = ({
                 closeOnSelect={false}
                 selectedKeys={visibleColumns}
                 selectionMode="multiple"
-                onSelectionChange={setVisibleColumns}
+                onSelectionChange={(keys) =>
+                  setVisibleColumns(Array.from(keys))
+                }
               >
                 {columns
                   .filter((column) => column.uid != "actions")
