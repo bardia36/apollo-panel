@@ -1,8 +1,8 @@
-import type { SlotsToClasses } from "@heroui/theme";
+import type { SlotsToClasses } from "@heroui/react";
 
 import { ReactNode } from "react";
 
-import { addToast } from "@heroui/toast";
+import { addToast } from "@heroui/react";
 
 type Color =
   | "default"

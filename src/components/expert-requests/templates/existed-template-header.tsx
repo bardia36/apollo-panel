@@ -1,4 +1,4 @@
-import { Button } from "@heroui/button";
+import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { Template } from "@/types/templates";

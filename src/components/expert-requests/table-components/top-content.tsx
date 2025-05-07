@@ -1,11 +1,11 @@
-import { Input } from "@heroui/input";
+import { Input } from "@heroui/react";
 import {
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-} from "@heroui/dropdown";
-import { Button } from "@heroui/button";
+} from "@heroui/react";
+import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { t } from "i18next";
 import { numberSplitter } from "@/utils/base";

@@ -1,5 +1,5 @@
 import { useState, lazy, Suspense } from "react";
-import { Button } from "@heroui/button";
+import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Stepper from "./components/stepper";
 const StepOne = lazy(() => import("./components/step-one"));

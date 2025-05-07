@@ -8,8 +8,8 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useState } from "react";
 
 // components
-import { Select, SelectItem } from "@heroui/select";
-import { Form } from "@heroui/form";
+import { Select, SelectItem } from "@heroui/react";
+import { Form } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
 
 type StepOneFormValues = {
@@ -189,13 +189,13 @@ export default function StepOne() {
             )}
           />
 
-          <Controller
+          {/* <Controller
             control={control}
             name="insuranceType"
             render={({ field, fieldState: { error } }) => (
               <Select
                 {...field}
-                label="نوع بیمه"
+                label="قالب کارشناسی"
                 labelPlacement="outside"
                 placeholder="انتخاب کنید"
                 errorMessage={error?.message}
@@ -213,7 +213,7 @@ export default function StepOne() {
                 <SelectItem key="1">بیمه‌های خودرو</SelectItem>
               </Select>
             )}
-          />
+          /> */}
         </div>
 
         {showInsuranceCard && (

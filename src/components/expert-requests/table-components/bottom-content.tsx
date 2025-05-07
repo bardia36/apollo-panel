@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import { Pagination } from "@heroui/pagination";
-import { Button } from "@heroui/button";
+import { Pagination } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { t } from "i18next";
 import { ExpertRequest } from "@/types/expertRequests";

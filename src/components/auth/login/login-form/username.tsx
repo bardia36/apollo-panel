@@ -21,9 +21,9 @@ import { exceptionHandler } from "@/services/api/exception";
 // Components
 import { Link, useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { Button } from "@heroui/button";
-import { Divider } from "@heroui/divider";
-import { Form } from "@heroui/form";
+import { Button } from "@heroui/react";
+import { Divider } from "@heroui/react";
+import { Form } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import GoogleButton from "./google-button";
 

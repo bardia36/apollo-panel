@@ -1,8 +1,8 @@
 import { useRef, useEffect, FC, ChangeEvent } from "react";
-import { Avatar } from "@heroui/avatar";
+import { Avatar } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import imageThumbnail from "@/assets/images/base/image-thumbnail.svg";
-import { Image } from "@heroui/image";
+import { Image } from "@heroui/react";
 import { filesApi } from "@/services/api/files";
 import { exceptionHandler } from "@/services/api/exception";
 
