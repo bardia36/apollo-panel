@@ -1,4 +1,5 @@
 export default {
+  activateAndUseOtherTemplates: "فعال‌سازی و استفاده از سایر قالب‌ها",
   addReqStepperDescription:
     "اطلاعات کاربر، مورد کارشناسی و جزئیات موارد درخواستی را وارد کنید. در انتها لینک درخواست ایجاد شده و برای کاربر ارسال می‌شود.",
   archive: "بایگانی",
@@ -34,4 +35,5 @@ export default {
   userNamePlaceholder: "نام کامل، مثل بردیا جوادی",
   vehicleModel: "مدل خودرو",
   wantedItemTitle: "عنوان مورد درخواستی",
+  wantedRequests: "درخواستی‌ها",
 };

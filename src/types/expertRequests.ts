@@ -80,3 +80,35 @@ export type StatusesMap = {
     icon: string;
   };
 };
+
+export type InspectionFormatParams = {
+  inspection_category_id?: string;
+};
+
+export type InspectionFormatInfo = {
+  items: InspectionDataItem[];
+  count: number;
+};
+
+export type InspectionDataItem = {
+  key: string;
+  label: string;
+  logo: string;
+  description: string;
+};
+
+export type CreateRequestBody = {
+  username: string;
+  mobile: string;
+  email: string;
+  order_number: string;
+  inspection_format: string;
+  inspection_data: {
+    // TODO: inspection_data hard coded for now for handling vehicle data, in the future it will be dynamic based on the inspection format
+    vehicle_brand: string;
+    vehicle_model: string;
+    vehicle_compony: string;
+    vin: string;
+    color: string;
+  };
+};
