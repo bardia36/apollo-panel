@@ -2,14 +2,14 @@ import { useEffect, useState, useCallback } from "react";
 import { Select, SelectItem } from "@heroui/react";
 import { useInfiniteScroll } from "@heroui/use-infinite-scroll";
 
-interface AppSelectProps {
+interface AppSelectProps<T> {
   label: string;
   placeholder: string;
   errorMessage?: string;
   isInvalid?: boolean;
   value?: string;
-  itemKey: string;
-  itemLabel: string;
+  itemKey?: keyof T & string;
+  itemLabel?: keyof T & string;
   limit?: number;
   classNames?: {
     trigger?: string;
@@ -17,10 +17,14 @@ interface AppSelectProps {
   };
   labelPlacement?: "inside" | "outside";
   onChange: (value: string) => void;
-  fetchData: (params: { page: number; limit: number }) => Promise<any>;
+  onItemSelect?: (item: T) => void;
+  fetchData: (params: {
+    page: number;
+    limit: number;
+  }) => Promise<{ items: T[] }>;
 }
 
-export const AppSelect = ({
+export function AppSelect<T>({
   label,
   placeholder,
   errorMessage,
@@ -32,9 +36,10 @@ export const AppSelect = ({
   classNames,
   labelPlacement = "outside",
   onChange,
+  onItemSelect,
   fetchData,
-}: AppSelectProps) => {
-  const [items, setItems] = useState<any[]>([]);
+}: AppSelectProps<T>) {
+  const [items, setItems] = useState<T[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
@@ -90,6 +95,21 @@ export const AppSelect = ({
 
   const handleSelectionChange = (selectedValue: string) => {
     onChange(selectedValue);
+
+    if (onItemSelect) {
+      // Extract the actual value from the Set-like structure if needed
+      const actualValue =
+        typeof selectedValue === "object" && selectedValue !== null
+          ? Array.from(selectedValue as any)[0] // Extract first value from Set-like object
+          : selectedValue;
+
+      const selectedItem = items.find(
+        (item) =>
+          item && itemKey && String(item[itemKey as keyof T]) === actualValue
+      );
+
+      if (selectedItem) onItemSelect(selectedItem);
+    }
   };
 
   return (
@@ -107,8 +127,10 @@ export const AppSelect = ({
       isLoading={isLoading}
     >
       {items.map((item) => (
-        <SelectItem key={item[itemKey]}>{item[itemLabel]}</SelectItem>
+        <SelectItem key={String(item[itemKey as keyof T])}>
+          {String(item[itemLabel as keyof T])}
+        </SelectItem>
       ))}
     </Select>
   );
-};
+}

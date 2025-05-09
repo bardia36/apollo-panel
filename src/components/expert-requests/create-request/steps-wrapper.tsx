@@ -85,9 +85,11 @@ export default function StepsWrapper({ onCloseModal }: Props) {
         <Stepper steps={steps} currentStep={currentStep} />
       </aside>
 
-      <div className="md:w-2/3 md:py-4 flex flex-col">
+      <div className="md:w-2/3 md:py-4">
         <Suspense fallback={<div>در حال بارگذاری...</div>}>
-          <div className="lg:w-3/4 lg:mx-auto">{renderStep()}</div>
+          <div className="xl:w-3/4 xl:mx-auto flex flex-col h-full">
+            {renderStep()}
+          </div>
         </Suspense>
       </div>
     </div>

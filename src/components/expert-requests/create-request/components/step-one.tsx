@@ -9,11 +9,15 @@ import { t } from "i18next";
 import { inspectionFormatApi } from "@/services/api/inspection-format";
 
 // components
-import { Button } from "@heroui/react";
+import { Avatar, Button } from "@heroui/react";
 import { Form } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import { AppSelect } from "@/components/shared/app-components/app-select";
 import { StepperButtons } from "./stepper-buttons";
+import { InspectionDataItem } from "@/types/expertRequests";
+import { LazyImage } from "@/components/shared/lazy-image";
+import { truncateString } from "@/utils/base";
+import { useBreakpoint } from "@/hook/useBreakpoint";
 
 type StepOneProps = {
   onStepComplete: () => void;
@@ -31,6 +35,8 @@ type StepOneFormValues = {
 export default function StepOne({ onStepComplete, onStepBack }: StepOneProps) {
   const [showInspectionFormatDetailCard, setShowInspectionFormatDetailCard] =
     useState(false);
+  const [activeFormat, setActiveFormat] = useState<InspectionDataItem>();
+  const { isMdAndUp } = useBreakpoint();
 
   const validationSchema = object({
     username: string().required(
@@ -57,13 +63,10 @@ export default function StepOne({ onStepComplete, onStepBack }: StepOneProps) {
 
   const handleInspectionFormatChange = (value: string) => {
     if (value) {
-      // Simulate API request
       setTimeout(() => {
         setShowInspectionFormatDetailCard(true);
-      }, 500);
-    } else {
-      setShowInspectionFormatDetailCard(false);
-    }
+      }, 200);
+    } else setShowInspectionFormatDetailCard(false);
   };
 
   const submit = () => {
@@ -199,7 +202,6 @@ export default function StepOne({ onStepComplete, onStepBack }: StepOneProps) {
             render={({ field, fieldState: { error } }) => (
               <AppSelect
                 label={t("expertRequests.reviewType")}
-                fetchData={inspectionFormatApi.getFormats}
                 labelPlacement="outside"
                 placeholder={t("shared.choose")}
                 errorMessage={error?.message}
@@ -215,6 +217,10 @@ export default function StepOne({ onStepComplete, onStepBack }: StepOneProps) {
                   field.onChange(value);
                   handleInspectionFormatChange(value);
                 }}
+                onItemSelect={(value) => {
+                  setActiveFormat(value);
+                }}
+                fetchData={inspectionFormatApi.getFormats}
               />
             )}
           />
@@ -233,9 +239,181 @@ export default function StepOne({ onStepComplete, onStepBack }: StepOneProps) {
         </div>
       </Form>
 
-      {showInspectionFormatDetailCard && (
-        <div className="w-full bg-default-50 rounded-lg p-4 mt-4 mb-4 min-h-[100px]">
-          {/* Content will be added later */}
+      {showInspectionFormatDetailCard && activeFormat && (
+        <div className="bg-default-50 rounded-lg p-4 mt-4 shadow-lg">
+          <div className="flex items-center gap-2 mb-8">
+            <Avatar
+              showFallback
+              className="w-12 h-12 rounded-large bg-default-100"
+              fallback={
+                <LazyImage
+                  src={activeFormat.logo}
+                  alt={activeFormat.label}
+                  width={24}
+                  height={24}
+                  className="min-w-[24px] min-h-[24px]"
+                />
+              }
+            />
+
+            <div>
+              <h6 className="font-semibold text-foreground-700">
+                {activeFormat.label}
+              </h6>
+              <p className="text-sm text-foreground-500">
+                {truncateString(activeFormat.description, isMdAndUp ? 60 : 20)}
+              </p>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-x-3 gap-y-4 mb-4">
+            <Controller
+              control={control}
+              name="inspection_format"
+              render={({ field, fieldState: { error } }) => (
+                <AppSelect
+                  label={t("expertRequests.carGroup")}
+                  labelPlacement="outside"
+                  placeholder={t("shared.choose")}
+                  errorMessage={error?.message}
+                  isInvalid={!!error}
+                  value={field.value}
+                  itemKey="key"
+                  itemLabel="label"
+                  classNames={{
+                    trigger: "bg-default-100 text-foreground-500",
+                    label: "text-xs !text-default-600",
+                  }}
+                  onChange={(value) => {
+                    field.onChange(value);
+                    handleInspectionFormatChange(value);
+                  }}
+                  onItemSelect={(value) => {
+                    setActiveFormat(value);
+                  }}
+                  fetchData={inspectionFormatApi.getFormats}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="inspection_format"
+              render={({ field, fieldState: { error } }) => (
+                <AppSelect
+                  label={t("shared.producer")}
+                  labelPlacement="outside"
+                  placeholder={t("shared.choose")}
+                  errorMessage={error?.message}
+                  isInvalid={!!error}
+                  value={field.value}
+                  itemKey="key"
+                  itemLabel="label"
+                  classNames={{
+                    trigger: "bg-default-100 text-foreground-500",
+                    label: "text-xs !text-default-600",
+                  }}
+                  onChange={(value) => {
+                    field.onChange(value);
+                    handleInspectionFormatChange(value);
+                  }}
+                  onItemSelect={(value) => {
+                    setActiveFormat(value);
+                  }}
+                  fetchData={inspectionFormatApi.getFormats}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="inspection_format"
+              render={({ field, fieldState: { error } }) => (
+                <AppSelect
+                  label={t("shared.model")}
+                  labelPlacement="outside"
+                  placeholder={t("shared.choose")}
+                  errorMessage={error?.message}
+                  isInvalid={!!error}
+                  value={field.value}
+                  itemKey="key"
+                  itemLabel="label"
+                  classNames={{
+                    trigger: "bg-default-100 text-foreground-500",
+                    label: "text-xs !text-default-600",
+                  }}
+                  onChange={(value) => {
+                    field.onChange(value);
+                    handleInspectionFormatChange(value);
+                  }}
+                  onItemSelect={(value) => {
+                    setActiveFormat(value);
+                  }}
+                  fetchData={inspectionFormatApi.getFormats}
+                />
+              )}
+            />
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-x-3 gap-y-4">
+            <Controller
+              control={control}
+              name="inspection_format"
+              render={({ field, fieldState: { error } }) => (
+                <AppSelect
+                  label={t("expertRequests.vinNumber")}
+                  labelPlacement="outside"
+                  placeholder={t("shared.choose")}
+                  errorMessage={error?.message}
+                  isInvalid={!!error}
+                  value={field.value}
+                  itemKey="key"
+                  itemLabel="label"
+                  classNames={{
+                    trigger: "bg-default-100 text-foreground-500",
+                    label: "text-xs !text-default-600",
+                  }}
+                  onChange={(value) => {
+                    field.onChange(value);
+                    handleInspectionFormatChange(value);
+                  }}
+                  onItemSelect={(value) => {
+                    setActiveFormat(value);
+                  }}
+                  fetchData={inspectionFormatApi.getFormats}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="inspection_format"
+              render={({ field, fieldState: { error } }) => (
+                <AppSelect
+                  label={t("shared.color")}
+                  labelPlacement="outside"
+                  placeholder={t("shared.choose")}
+                  errorMessage={error?.message}
+                  isInvalid={!!error}
+                  value={field.value}
+                  itemKey="key"
+                  itemLabel="label"
+                  classNames={{
+                    trigger: "bg-default-100 text-foreground-500",
+                    label: "text-xs !text-default-600",
+                  }}
+                  onChange={(value) => {
+                    field.onChange(value);
+                    handleInspectionFormatChange(value);
+                  }}
+                  onItemSelect={(value) => {
+                    setActiveFormat(value);
+                  }}
+                  fetchData={inspectionFormatApi.getFormats}
+                />
+              )}
+            />
+          </div>
         </div>
       )}
 

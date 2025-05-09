@@ -64,7 +64,7 @@ export default function StepTwo({ onStepComplete, onStepBack }: StepTwoProps) {
       {initializing ? (
         <div>loading</div>
       ) : (
-        <div>
+        <>
           <h6 className="text-xs text-default-600 mb-2">
             {t("expertRequests.templates")}
           </h6>
@@ -111,7 +111,7 @@ export default function StepTwo({ onStepComplete, onStepBack }: StepTwoProps) {
             onNextStep={submit}
             onPrevStep={onStepBack}
           />
-        </div>
+        </>
       )}
     </>
   );

@@ -13,7 +13,7 @@ export const StepperButtons = ({
   onNextStep,
 }: Props) => {
   return (
-    <div className="flex justify-center md:justify-end pt-8 gap-4 mt-auto">
+    <div className="flex justify-center md:justify-end gap-4 pt-4 md:pt-10 mt-auto">
       {currentStep > 1 && (
         <Button variant="light" onPress={onPrevStep} className="cursor-pointer">
           {t("shared.previousPage")}

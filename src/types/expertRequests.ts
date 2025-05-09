@@ -112,3 +112,35 @@ export type CreateRequestBody = {
     color: string;
   };
 };
+
+export type VehicleCategories = {
+  items: VehicleCategory[];
+  count: number;
+};
+
+export type VehicleCategory = {
+  name: string;
+  key: string;
+  label: string;
+};
+
+export type VehicleBrands = {
+  items: VehicleBrand[];
+  count: number;
+};
+
+export type VehicleBrand = {
+  key: string;
+  label: string;
+};
+
+export type VehicleModels = {
+  items: VehicleModel[];
+  count: number;
+};
+
+export type VehicleModel = {
+  key: string;
+  name_en: string;
+  label: string;
+};
