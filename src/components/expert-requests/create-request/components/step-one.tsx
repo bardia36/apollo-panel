@@ -5,67 +5,70 @@ import { formOptions } from "@/utils/validations";
 import { useValidationMessages } from "@/utils/rules";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useState } from "react";
+import { t } from "i18next";
+import { inspectionFormatApi } from "@/services/api/inspection-format";
 
 // components
-import { Select, SelectItem } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { Form } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
-import { t } from "i18next";
+import { AppSelect } from "@/components/shared/app-components/app-select";
+import { StepperButtons } from "./stepper-buttons";
 
-type StepOneFormValues = {
-  fullName: string;
-  phoneNumber: string;
-  email: string;
-  orderNumber: string;
-  insuranceType: string;
+type StepOneProps = {
+  onStepComplete: () => void;
+  onStepBack: () => void;
 };
 
-export default function StepOne() {
-  const [showInsuranceCard, setShowInsuranceCard] = useState(false);
+type StepOneFormValues = {
+  username: string;
+  mobile: string;
+  email: string;
+  order_number: string;
+  inspection_format: string;
+};
+
+export default function StepOne({ onStepComplete, onStepBack }: StepOneProps) {
+  const [showInspectionFormatDetailCard, setShowInspectionFormatDetailCard] =
+    useState(false);
 
   const validationSchema = object({
-    fullName: string().required(
+    username: string().required(
       useValidationMessages().required(t("shared.userName"))
     ),
-    phoneNumber: string().required(
-      useValidationMessages().required(t("shared.phoneNumber"))
+    mobile: string().required(
+      useValidationMessages().required(t("shared.mobile"))
     ),
     email: string()
       .email(useValidationMessages().email(".."))
       .required(useValidationMessages().required(t("shared.email"))),
-    orderNumber: string().required(
+    order_number: string().required(
       useValidationMessages().required(t("expertRequests.orderNumber"))
     ),
-    insuranceType: string().required(
+    inspection_format: string().required(
       useValidationMessages().required(t("expertRequests.reviewType"))
     ),
   }).required();
 
   const { control, handleSubmit } = useForm<StepOneFormValues>({
     ...formOptions,
-    defaultValues: {
-      fullName: "",
-      phoneNumber: "",
-      email: "",
-      orderNumber: "",
-      insuranceType: "",
-    },
     resolver: yupResolver(validationSchema),
   });
 
-  const handleInsuranceChange = (value: string) => {
+  const handleInspectionFormatChange = (value: string) => {
     if (value) {
       // Simulate API request
       setTimeout(() => {
-        setShowInsuranceCard(true);
+        setShowInspectionFormatDetailCard(true);
       }, 500);
     } else {
-      setShowInsuranceCard(false);
+      setShowInspectionFormatDetailCard(false);
     }
   };
 
-  const onSubmit = (data: StepOneFormValues) => {
-    console.log(data);
+  const submit = () => {
+    console.log("step 1 submit");
+    onStepComplete();
     // Handle form submission
   };
 
@@ -80,11 +83,11 @@ export default function StepOne() {
         </p>
       </div>
 
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={handleSubmit(submit)}>
         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-4">
           <Controller
             control={control}
-            name="fullName"
+            name="username"
             render={({ field, fieldState: { error } }) => (
               <AppInput
                 {...field}
@@ -111,7 +114,7 @@ export default function StepOne() {
 
           <Controller
             control={control}
-            name="phoneNumber"
+            name="mobile"
             render={({ field, fieldState: { error } }) => (
               <AppInput
                 {...field}
@@ -165,7 +168,7 @@ export default function StepOne() {
 
           <Controller
             control={control}
-            name="orderNumber"
+            name="order_number"
             render={({ field, fieldState: { error } }) => (
               <AppInput
                 {...field}
@@ -192,37 +195,55 @@ export default function StepOne() {
 
           <Controller
             control={control}
-            name="insuranceType"
+            name="inspection_format"
             render={({ field, fieldState: { error } }) => (
-              <Select
-                {...field}
+              <AppSelect
                 label={t("expertRequests.reviewType")}
+                fetchData={inspectionFormatApi.getFormats}
                 labelPlacement="outside"
                 placeholder={t("shared.choose")}
                 errorMessage={error?.message}
                 isInvalid={!!error}
-                className="col-span-1 md:col-span-2"
+                value={field.value}
+                itemKey="key"
+                itemLabel="label"
                 classNames={{
                   trigger: "bg-default-100 text-foreground-500",
                   label: "text-xs !text-default-600",
                 }}
-                onSelectionChange={(value) => {
+                onChange={(value) => {
                   field.onChange(value);
-                  handleInsuranceChange(value as string);
+                  handleInspectionFormatChange(value);
                 }}
-              >
-                <SelectItem key="1">بیمه‌های خودرو</SelectItem>
-              </Select>
+              />
             )}
           />
+
+          <div className="mt-auto">
+            <Button
+              variant="light"
+              color="warning"
+              fullWidth
+              className="justify-start"
+            >
+              <Icon icon="stash:crown-solid" width="20" height="20" />
+              {t("expertRequests.activateAndUseOtherTemplates")}
+            </Button>
+          </div>
         </div>
       </Form>
 
-      {showInsuranceCard && (
+      {showInspectionFormatDetailCard && (
         <div className="w-full bg-default-50 rounded-lg p-4 mt-4 mb-4 min-h-[100px]">
           {/* Content will be added later */}
         </div>
       )}
+
+      <StepperButtons
+        currentStep={1}
+        onNextStep={submit}
+        onPrevStep={onStepBack}
+      />
     </>
   );
 }

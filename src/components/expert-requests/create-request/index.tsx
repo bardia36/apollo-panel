@@ -7,7 +7,7 @@ import {
   useCallback,
 } from "react";
 import { Modal, ModalContent, ModalBody, useDisclosure } from "@heroui/react";
-import CreateSteps from "./create-steps.tsx";
+import StepsWrapper from "./steps-wrapper.tsx";
 import { useBreakpoint } from "@/hook/useBreakpoint";
 
 type Props = {
@@ -56,7 +56,7 @@ export const CreateRequestModal: FC<Props> = ({ activator }) => {
         >
           <ModalContent>
             <ModalBody className="p-4 overflow-y-auto">
-              <CreateSteps onCloseModal={handleModalClose} />
+              <StepsWrapper onCloseModal={handleModalClose} />
             </ModalBody>
           </ModalContent>
         </Modal>

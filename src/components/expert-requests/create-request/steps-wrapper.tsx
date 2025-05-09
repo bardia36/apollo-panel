@@ -3,10 +3,9 @@ import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Stepper from "./components/stepper";
 import { t } from "i18next";
+
 const StepOne = lazy(() => import("./components/step-one"));
-const StepTwo = lazy(() =>
-  Promise.resolve({ default: () => <div className="p-4">مرحله دوم</div> })
-);
+const StepTwo = lazy(() => import("./components/step-two"));
 const StepThree = lazy(() =>
   Promise.resolve({ default: () => <div className="p-4">مرحله سوم</div> })
 );
@@ -15,6 +14,11 @@ export type Step = {
   title: string;
   description: string;
 };
+
+type Props = {
+  onCloseModal: () => void;
+};
+
 const steps: Step[] = [
   {
     title: t("expertRequests.requestDetail"),
@@ -24,32 +28,36 @@ const steps: Step[] = [
     title: t("expertRequests.linkData"),
     description: t("expertRequests.casesDetail"),
   },
-  { title: t("expertRequests.finalCheck"), description: "chooseWayToSend" },
+  {
+    title: t("expertRequests.finalCheck"),
+    description: t("expertRequests.chooseWayToSend"),
+  },
 ];
 
-type Props = {
-  onCloseModal: () => void;
-};
-
-export default function CreateSteps({ onCloseModal }: Props) {
-  const [currentStep, setCurrentStep] = useState(0);
+export default function StepsWrapper({ onCloseModal }: Props) {
+  const [currentStep, setCurrentStep] = useState(1);
 
   const nextStep = () =>
-    setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
-  const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
+    setCurrentStep((prev) => Math.min(prev + 1, steps.length));
+
+  const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
   const renderStep = () => {
     switch (currentStep) {
-      case 0:
-        return <StepOne />;
       case 1:
-        return <StepTwo />;
+        return <StepOne onStepComplete={nextStep} onStepBack={prevStep} />;
       case 2:
+        return <StepTwo onStepComplete={nextStep} onStepBack={prevStep} />;
+      case 3:
         return <StepThree />;
       default:
         return null;
     }
   };
+
+  // const submit = () => {
+  //   console.log("submit");
+  // };
 
   return (
     <div className="lg:h-screen flex flex-col md:flex-row gap-6 md:gap-4">
@@ -77,29 +85,10 @@ export default function CreateSteps({ onCloseModal }: Props) {
         <Stepper steps={steps} currentStep={currentStep} />
       </aside>
 
-      <div className="md:w-2/3 flex flex-col justify-between md:py-4">
-        {/* // TODO: add skeleton and loading state */}
+      <div className="md:w-2/3 md:py-4 flex flex-col">
         <Suspense fallback={<div>در حال بارگذاری...</div>}>
-          <div className="xl:w-3/4 mx-auto">{renderStep()}</div>
+          <div className="lg:w-3/4 lg:mx-auto">{renderStep()}</div>
         </Suspense>
-
-        <div className="flex justify-center md:justify-end pt-8 gap-4 xl:w-3/4 mx-auto">
-          {currentStep > 0 && (
-            <Button
-              variant="light"
-              disabled={currentStep === 0}
-              onPress={prevStep}
-              className="cursor-pointer"
-            >
-              {t("shared.previousPage")}
-            </Button>
-          )}
-          {currentStep < steps.length - 1 ? (
-            <Button onPress={nextStep}>{t("shared.continue")}</Button>
-          ) : (
-            <Button>{t("shared.createIt")}</Button>
-          )}
-        </div>
       </div>
     </div>
   );
