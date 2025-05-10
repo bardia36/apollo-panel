@@ -1,6 +1,9 @@
 import { axiosHandler } from "./core";
 import { RequestMethod } from "@/types/api";
-import { ExpertRequestResponse } from "@/types/expertRequests";
+import {
+  CreateRequestBody,
+  ExpertRequestResponse,
+} from "@/types/expertRequests";
 
 const BASE_URL = "panel/inspection-request";
 
@@ -9,6 +12,13 @@ export const expertRequestsApi = {
     return axiosHandler<ExpertRequestResponse>(BASE_URL, {
       method: RequestMethod.GET,
       params,
+    });
+  },
+
+  createRequest(body: CreateRequestBody) {
+    return axiosHandler<{ id: string }>(BASE_URL, {
+      method: RequestMethod.POST,
+      body,
     });
   },
 };

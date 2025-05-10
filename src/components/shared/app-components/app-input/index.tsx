@@ -9,15 +9,19 @@ export interface Props extends InputProps {
 
 export const AppInput = forwardRef<HTMLInputElement, Props>(
   ({ error, className, ...props }, ref) => {
+    const isInvalid = error ? true : props.isInvalid;
+    const errorMessage = error?.message || props.errorMessage;
+
     return (
       <Input
         ref={ref}
         {...props}
         radius="md"
-        isInvalid={!!error}
-        errorMessage={error?.message}
+        isInvalid={isInvalid}
+        errorMessage={errorMessage}
         classNames={{
-          input: "disabled:text-neutral-7",
+          ...props.classNames,
+          input: `disabled:text-neutral-7 ${isInvalid ? "border-danger" : ""} ${props.classNames?.input || ""}`,
           errorMessage: "text-start",
         }}
         className={className}

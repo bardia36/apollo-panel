@@ -31,8 +31,6 @@ export const ImageUploader: FC<ImageUploaderProps> = ({ value, onChange }) => {
       objectUrlRef.current = null;
     }
 
-    console.log(file);
-
     if (file) {
       const url = URL.createObjectURL(file);
       objectUrlRef.current = url;
