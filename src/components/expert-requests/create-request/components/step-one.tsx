@@ -25,7 +25,6 @@ import { exceptionHandler } from "@/services/api/exception";
 
 type StepOneProps = {
   onStepComplete: () => void;
-  onStepBack: () => void;
 };
 
 type StepOneFormValues = {
@@ -43,7 +42,7 @@ type StepOneFormValues = {
   };
 };
 
-export default function StepOne({ onStepComplete, onStepBack }: StepOneProps) {
+export default function StepOne({ onStepComplete }: StepOneProps) {
   const [showInspectionFormatDetailCard, setShowInspectionFormatDetailCard] =
     useState(false);
   const [activeFormat, setActiveFormat] = useState<InspectionDataItem>();
@@ -269,11 +268,7 @@ export default function StepOne({ onStepComplete, onStepBack }: StepOneProps) {
         />
       )}
 
-      <StepperButtons
-        currentStep={1}
-        onNextStep={handleSubmit(submit)}
-        onPrevStep={onStepBack}
-      />
+      <StepperButtons currentStep={1} onNextStep={handleSubmit(submit)} />
     </>
   );
 }
