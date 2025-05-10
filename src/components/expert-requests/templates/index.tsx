@@ -21,13 +21,14 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { templatesApi } from "@/services/api/templates.ts";
 import { exceptionHandler } from "@/services/api/exception";
-import { Template, TemplateField, Templates } from "@/types/templates";
+import { Template, Templates } from "@/types/templates";
 // components
 import { AvailableTemplates } from "./available-templates.tsx";
 import { TemplateFields } from "./components/template-fields.tsx";
 import { TemplatesLoadingSkeleton } from "./components/loading-component.tsx";
 import { AddTemplateButton } from "./components/add-template-button.tsx";
 import { TemplateDetailsHeader } from "./components/template-details-header.tsx";
+import { useTemplateFields } from "./components/useTemplateFields.tsx";
 
 type Props = {
   activator: ReactNode;
@@ -38,13 +39,16 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
   const [initializing, setInitializing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [templates, setTemplates] = useState<Templates>();
-  const [activeTemplate, setActiveTemplate] = useState<Template>();
   const [isOnAddingTemplate, setIsOnAddingTemplate] = useState<boolean>(false);
-  const [activeFieldsCount, setActiveFieldsCount] = useState<number>(0);
-  // This state tracks modified fields for each template
-  const [modifiedTemplateFields, setModifiedTemplateFields] = useState<
-    Record<string, TemplateField[]>
-  >({});
+  const {
+    modifiedTemplateFields,
+    activeTemplate,
+    activeFieldsCount,
+    setActiveTemplate,
+    setActiveFieldsCount,
+    handleFieldsChange,
+    resetTemplateFields,
+  } = useTemplateFields();
   // Reference to the new template header component to access its name and logo
   const newTemplateRef = useRef<{ name: string; logo: string }>({
     name: "",
@@ -94,26 +98,6 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
       setIsOnAddingTemplate(true);
     }
   }
-
-  // Reusable function to handle field changes
-  const handleFieldsChange = useCallback(
-    (templateId: string, updatedFields: TemplateField[]) => {
-      const currentFields =
-        modifiedTemplateFields[templateId] ||
-        (templateId !== "new_template" && activeTemplate?._id === templateId
-          ? activeTemplate.fields
-          : []);
-
-      // Only update if fields have actually changed
-      if (JSON.stringify(currentFields) !== JSON.stringify(updatedFields)) {
-        setModifiedTemplateFields((prev) => ({
-          ...prev,
-          [templateId]: updatedFields,
-        }));
-      }
-    },
-    [modifiedTemplateFields, activeTemplate]
-  );
 
   // Replace the separate handler functions with a single function that updates the appropriate property
   const handleNewTemplateProperty = (
@@ -181,10 +165,8 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
     // Then reset all states
     setTimeout(() => {
       setTemplates(undefined);
-      setActiveTemplate(undefined);
+      resetTemplateFields();
       setIsOnAddingTemplate(false);
-      setActiveFieldsCount(0);
-      setModifiedTemplateFields({});
       newTemplateRef.current = { name: "", logo: "" };
     }, 300); // Small delay to ensure modal animation completes
   }, [onClose]);

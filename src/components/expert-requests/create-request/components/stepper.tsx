@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { Step } from "../create-steps";
+import { Step } from "../steps-wrapper";
 
 type Props = {
   currentStep: number;

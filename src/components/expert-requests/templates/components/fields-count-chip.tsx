@@ -5,7 +5,7 @@ type Props = {
   activeFieldsCount: number;
 };
 
-export default function DetailFieldsCountChip({ activeFieldsCount }: Props) {
+export default function FieldsCountChip({ activeFieldsCount }: Props) {
   return (
     <Chip
       classNames={{

@@ -5,9 +5,6 @@ import useAuthStore from "@/stores/auth-store";
 import { ErrorException } from "@/types/api";
 import useAppConfig from "@/config/app-config";
 import { accountApi } from "./auth";
-import { useCookies } from "react-cookie";
-import { CookieValues } from "@/types/auth";
-import { useNavigate } from "react-router-dom";
 
 const tryWithoutToken = [425];
 const statusConfig = {
@@ -107,9 +104,6 @@ async function errorHandler(
 }
 
 async function handleLogout() {
-  const navigate = useNavigate();
-  const [_, setCookie] = useCookies<"AUTH", CookieValues>(["AUTH"]);
-
   try {
     await accountApi.logout();
   } catch (error) {
@@ -117,7 +111,7 @@ async function handleLogout() {
   } finally {
     useAuthStore.getState().removeAuth();
 
-    setCookie("AUTH", null, { path: "/" });
-    navigate("/login");
+    document.cookie = "AUTH=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    window.location.href = "/login";
   }
 }
