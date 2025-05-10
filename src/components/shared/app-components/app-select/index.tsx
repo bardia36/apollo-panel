@@ -1,12 +1,14 @@
 import { useEffect, useState, useCallback } from "react";
 import { Select, SelectItem } from "@heroui/react";
 import { useInfiniteScroll } from "@heroui/use-infinite-scroll";
+import { FieldError } from "react-hook-form";
 
 interface AppSelectProps<T> {
   label: string;
   placeholder: string;
   errorMessage?: string;
   isInvalid?: boolean;
+  error?: FieldError;
   value?: string;
   itemKey?: keyof T & string;
   itemLabel?: keyof T & string;
@@ -29,6 +31,7 @@ export function AppSelect<T>({
   placeholder,
   errorMessage,
   isInvalid,
+  error,
   value,
   itemKey,
   itemLabel,
@@ -42,6 +45,10 @@ export function AppSelect<T>({
   const [items, setItems] = useState<T[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+
+  // Handle error state properly
+  const actualIsInvalid = error ? true : isInvalid;
+  const actualErrorMessage = error?.message || errorMessage;
 
   const loadMore = useCallback(async () => {
     if (!hasMore || isLoading) return;
@@ -93,19 +100,31 @@ export function AppSelect<T>({
     initialLoad();
   }, [fetchData, limit]);
 
-  const handleSelectionChange = (selectedValue: string) => {
-    onChange(selectedValue);
+  const handleSelectionChange = (selectedValue: any) => {
+    // Extract the key from the selection object
+    let key: string;
 
-    if (onItemSelect) {
-      // Extract the actual value from the Set-like structure if needed
-      const actualValue =
-        typeof selectedValue === "object" && selectedValue !== null
-          ? Array.from(selectedValue as any)[0] // Extract first value from Set-like object
-          : selectedValue;
+    if (typeof selectedValue === "object" && selectedValue !== null) {
+      // If it's an object like {anchorKey: "...", currentKey: "..."}
+      if (selectedValue.currentKey) {
+        key = selectedValue.currentKey;
+      } else if (selectedValue.anchorKey) {
+        key = selectedValue.anchorKey;
+      } else {
+        // If it's a Set-like object, extract the first value
+        key = Array.from(selectedValue)[0] as string;
+      }
+    } else {
+      // If it's already a string
+      key = selectedValue;
+    }
 
+    // Pass only the key to the onChange handler
+    onChange(key);
+
+    if (onItemSelect && key) {
       const selectedItem = items.find(
-        (item) =>
-          item && itemKey && String(item[itemKey as keyof T]) === actualValue
+        (item) => item && itemKey && String(item[itemKey as keyof T]) === key
       );
 
       if (selectedItem) onItemSelect(selectedItem);
@@ -117,12 +136,17 @@ export function AppSelect<T>({
       label={label}
       labelPlacement={labelPlacement}
       placeholder={placeholder}
-      errorMessage={errorMessage}
-      isInvalid={isInvalid}
+      errorMessage={actualErrorMessage}
+      isInvalid={actualIsInvalid}
       value={value}
       hideEmptyContent
-      classNames={classNames}
-      onSelectionChange={(value) => handleSelectionChange(value as string)}
+      classNames={{
+        ...classNames,
+        trigger: `${actualIsInvalid ? "border-danger" : ""} ${classNames?.trigger || ""}`,
+        label: `${labelPlacement === "outside" ? "top-5" : ""} ${classNames?.label || ""}`,
+        base: `${labelPlacement === "outside" ? "gap-1" : ""}`,
+      }}
+      onSelectionChange={(value) => handleSelectionChange(value)}
       scrollRef={scrollRef}
       isLoading={isLoading}
     >
