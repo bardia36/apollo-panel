@@ -1,14 +1,12 @@
 import { object, string } from "yup";
-import { Controller, useForm } from "react-hook-form";
+import { Control, Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { formOptions } from "@/utils/validations";
-import { useValidationMessages } from "@/utils/rules";
+import { useValidationMessages, validationRegex } from "@/utils/rules";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useState } from "react";
 import { t } from "i18next";
 import { inspectionFormatApi } from "@/services/api/inspection-format";
-
-// components
 import { Avatar, Button } from "@heroui/react";
 import { Form } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
@@ -18,6 +16,12 @@ import { InspectionDataItem } from "@/types/expertRequests";
 import { LazyImage } from "@/components/shared/lazy-image";
 import { truncateString } from "@/utils/base";
 import { useBreakpoint } from "@/hook/useBreakpoint";
+import { colorApi } from "@/services/api/colors";
+import { vehicleModelApi } from "@/services/api/vehicle-model";
+import { vehicleBrandApi } from "@/services/api/vehicle-brand";
+import { vehicleCategoryApi } from "@/services/api/vehicle-category";
+import { expertRequestsApi } from "@/services/api/expert-requests";
+import { exceptionHandler } from "@/services/api/exception";
 
 type StepOneProps = {
   onStepComplete: () => void;
@@ -30,6 +34,13 @@ type StepOneFormValues = {
   email: string;
   order_number: string;
   inspection_format: string;
+  inspection_data: {
+    vehicle_brand: string;
+    vehicle_model: string;
+    vehicle_compony: string;
+    vin: string;
+    color: string;
+  };
 };
 
 export default function StepOne({ onStepComplete, onStepBack }: StepOneProps) {
@@ -38,25 +49,37 @@ export default function StepOne({ onStepComplete, onStepBack }: StepOneProps) {
   const [activeFormat, setActiveFormat] = useState<InspectionDataItem>();
   const { isMdAndUp } = useBreakpoint();
 
+  const msgs = useValidationMessages();
+
   const validationSchema = object({
-    username: string().required(
-      useValidationMessages().required(t("shared.userName"))
-    ),
-    mobile: string().required(
-      useValidationMessages().required(t("shared.mobile"))
-    ),
+    username: string().required(msgs.required(t("shared.userName"))),
+    mobile: string()
+      .required(msgs.required(t("shared.mobile")))
+      .matches(validationRegex.mobile, msgs.isNotValid(t("shared.mobile"))),
     email: string()
-      .email(useValidationMessages().email(".."))
-      .required(useValidationMessages().required(t("shared.email"))),
+      .required(msgs.required(t("shared.email")))
+      .email(msgs.isNotValid(t("shared.email"))),
     order_number: string().required(
-      useValidationMessages().required(t("expertRequests.orderNumber"))
+      msgs.required(t("expertRequests.orderNumber"))
     ),
     inspection_format: string().required(
-      useValidationMessages().required(t("expertRequests.reviewType"))
+      msgs.required(t("expertRequests.reviewType"))
     ),
-  }).required();
+    inspection_data: object({
+      vehicle_brand: string().required(msgs.required(t("shared.producer"))),
+      vehicle_model: string().required(msgs.required(t("shared.model"))),
+      vehicle_compony: string().required(
+        msgs.required(t("expertRequests.carGroup"))
+      ),
+      vin: string().required(msgs.required(t("expertRequests.vinNumber"))),
+      color: string().required(msgs.required(t("shared.color"))),
+    }).when("inspection_format", {
+      is: (val: string) => !!val,
+      then: (schema) => schema.required(),
+    }),
+  });
 
-  const { control, handleSubmit } = useForm<StepOneFormValues>({
+  const { control, handleSubmit, getValues } = useForm<StepOneFormValues>({
     ...formOptions,
     resolver: yupResolver(validationSchema),
   });
@@ -69,10 +92,14 @@ export default function StepOne({ onStepComplete, onStepBack }: StepOneProps) {
     } else setShowInspectionFormatDetailCard(false);
   };
 
-  const submit = () => {
-    console.log("step 1 submit");
-    onStepComplete();
-    // Handle form submission
+  const submit = async () => {
+    try {
+      const data = getValues();
+      await expertRequestsApi.createRequest(data);
+      onStepComplete();
+    } catch (err) {
+      exceptionHandler(err);
+    }
   };
 
   return (
@@ -97,8 +124,7 @@ export default function StepOne({ onStepComplete, onStepBack }: StepOneProps) {
                 label={t("shared.userName")}
                 labelPlacement="outside"
                 placeholder={t("expertRequests.userNamePlaceholder")}
-                errorMessage={error?.message}
-                isInvalid={!!error}
+                error={error}
                 classNames={{
                   input: "bg-default-100 text-foreground-500",
                   label: "text-xs !text-default-600",
@@ -124,8 +150,7 @@ export default function StepOne({ onStepComplete, onStepBack }: StepOneProps) {
                 label={t("shared.phoneNumber")}
                 labelPlacement="outside"
                 placeholder="0912 123 45 678"
-                errorMessage={error?.message}
-                isInvalid={!!error}
+                error={error}
                 classNames={{
                   input: "bg-default-100 text-foreground-500",
                   label: "text-xs !text-default-600",
@@ -151,8 +176,7 @@ export default function StepOne({ onStepComplete, onStepBack }: StepOneProps) {
                 label={t("shared.email")}
                 labelPlacement="outside"
                 placeholder="test@customer.com"
-                errorMessage={error?.message}
-                isInvalid={!!error}
+                error={error}
                 classNames={{
                   input: "bg-default-100 text-foreground-500",
                   label: "text-xs !text-default-600",
@@ -178,8 +202,7 @@ export default function StepOne({ onStepComplete, onStepBack }: StepOneProps) {
                 label={t("expertRequests.orderNumber")}
                 labelPlacement="outside"
                 placeholder={t("expertRequests.orderNumberPlaceholder")}
-                errorMessage={error?.message}
-                isInvalid={!!error}
+                error={error}
                 classNames={{
                   input: "bg-default-100 text-foreground-500",
                   label: "text-xs !text-default-600",
@@ -204,8 +227,7 @@ export default function StepOne({ onStepComplete, onStepBack }: StepOneProps) {
                 label={t("expertRequests.reviewType")}
                 labelPlacement="outside"
                 placeholder={t("shared.choose")}
-                errorMessage={error?.message}
-                isInvalid={!!error}
+                error={error}
                 value={field.value}
                 itemKey="key"
                 itemLabel="label"
@@ -240,188 +262,169 @@ export default function StepOne({ onStepComplete, onStepBack }: StepOneProps) {
       </Form>
 
       {showInspectionFormatDetailCard && activeFormat && (
-        <div className="bg-default-50 rounded-lg p-4 mt-4 shadow-lg">
-          <div className="flex items-center gap-2 mb-8">
-            <Avatar
-              showFallback
-              className="w-12 h-12 rounded-large bg-default-100"
-              fallback={
-                <LazyImage
-                  src={activeFormat.logo}
-                  alt={activeFormat.label}
-                  width={24}
-                  height={24}
-                  className="min-w-[24px] min-h-[24px]"
-                />
-              }
-            />
-
-            <div>
-              <h6 className="font-semibold text-foreground-700">
-                {activeFormat.label}
-              </h6>
-              <p className="text-sm text-foreground-500">
-                {truncateString(activeFormat.description, isMdAndUp ? 60 : 20)}
-              </p>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-x-3 gap-y-4 mb-4">
-            <Controller
-              control={control}
-              name="inspection_format"
-              render={({ field, fieldState: { error } }) => (
-                <AppSelect
-                  label={t("expertRequests.carGroup")}
-                  labelPlacement="outside"
-                  placeholder={t("shared.choose")}
-                  errorMessage={error?.message}
-                  isInvalid={!!error}
-                  value={field.value}
-                  itemKey="key"
-                  itemLabel="label"
-                  classNames={{
-                    trigger: "bg-default-100 text-foreground-500",
-                    label: "text-xs !text-default-600",
-                  }}
-                  onChange={(value) => {
-                    field.onChange(value);
-                    handleInspectionFormatChange(value);
-                  }}
-                  onItemSelect={(value) => {
-                    setActiveFormat(value);
-                  }}
-                  fetchData={inspectionFormatApi.getFormats}
-                />
-              )}
-            />
-
-            <Controller
-              control={control}
-              name="inspection_format"
-              render={({ field, fieldState: { error } }) => (
-                <AppSelect
-                  label={t("shared.producer")}
-                  labelPlacement="outside"
-                  placeholder={t("shared.choose")}
-                  errorMessage={error?.message}
-                  isInvalid={!!error}
-                  value={field.value}
-                  itemKey="key"
-                  itemLabel="label"
-                  classNames={{
-                    trigger: "bg-default-100 text-foreground-500",
-                    label: "text-xs !text-default-600",
-                  }}
-                  onChange={(value) => {
-                    field.onChange(value);
-                    handleInspectionFormatChange(value);
-                  }}
-                  onItemSelect={(value) => {
-                    setActiveFormat(value);
-                  }}
-                  fetchData={inspectionFormatApi.getFormats}
-                />
-              )}
-            />
-
-            <Controller
-              control={control}
-              name="inspection_format"
-              render={({ field, fieldState: { error } }) => (
-                <AppSelect
-                  label={t("shared.model")}
-                  labelPlacement="outside"
-                  placeholder={t("shared.choose")}
-                  errorMessage={error?.message}
-                  isInvalid={!!error}
-                  value={field.value}
-                  itemKey="key"
-                  itemLabel="label"
-                  classNames={{
-                    trigger: "bg-default-100 text-foreground-500",
-                    label: "text-xs !text-default-600",
-                  }}
-                  onChange={(value) => {
-                    field.onChange(value);
-                    handleInspectionFormatChange(value);
-                  }}
-                  onItemSelect={(value) => {
-                    setActiveFormat(value);
-                  }}
-                  fetchData={inspectionFormatApi.getFormats}
-                />
-              )}
-            />
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-x-3 gap-y-4">
-            <Controller
-              control={control}
-              name="inspection_format"
-              render={({ field, fieldState: { error } }) => (
-                <AppSelect
-                  label={t("expertRequests.vinNumber")}
-                  labelPlacement="outside"
-                  placeholder={t("shared.choose")}
-                  errorMessage={error?.message}
-                  isInvalid={!!error}
-                  value={field.value}
-                  itemKey="key"
-                  itemLabel="label"
-                  classNames={{
-                    trigger: "bg-default-100 text-foreground-500",
-                    label: "text-xs !text-default-600",
-                  }}
-                  onChange={(value) => {
-                    field.onChange(value);
-                    handleInspectionFormatChange(value);
-                  }}
-                  onItemSelect={(value) => {
-                    setActiveFormat(value);
-                  }}
-                  fetchData={inspectionFormatApi.getFormats}
-                />
-              )}
-            />
-
-            <Controller
-              control={control}
-              name="inspection_format"
-              render={({ field, fieldState: { error } }) => (
-                <AppSelect
-                  label={t("shared.color")}
-                  labelPlacement="outside"
-                  placeholder={t("shared.choose")}
-                  errorMessage={error?.message}
-                  isInvalid={!!error}
-                  value={field.value}
-                  itemKey="key"
-                  itemLabel="label"
-                  classNames={{
-                    trigger: "bg-default-100 text-foreground-500",
-                    label: "text-xs !text-default-600",
-                  }}
-                  onChange={(value) => {
-                    field.onChange(value);
-                    handleInspectionFormatChange(value);
-                  }}
-                  onItemSelect={(value) => {
-                    setActiveFormat(value);
-                  }}
-                  fetchData={inspectionFormatApi.getFormats}
-                />
-              )}
-            />
-          </div>
-        </div>
+        <InspectionFormatDetailCard
+          activeFormat={activeFormat}
+          control={control}
+          isMdAndUp={isMdAndUp}
+        />
       )}
 
       <StepperButtons
         currentStep={1}
-        onNextStep={submit}
+        onNextStep={handleSubmit(submit)}
         onPrevStep={onStepBack}
       />
     </>
   );
 }
+
+type InspectionFormatDetailCardProps = {
+  activeFormat: InspectionDataItem;
+  control: Control<any>;
+  isMdAndUp: boolean;
+};
+const InspectionFormatDetailCard = ({
+  activeFormat,
+  control,
+  isMdAndUp,
+}: InspectionFormatDetailCardProps) => {
+  return (
+    <div className="bg-default-50 rounded-[20px] p-4 mt-4 shadow-md">
+      <div className="flex items-center gap-2 mb-8">
+        <Avatar
+          showFallback
+          className="w-12 h-12 rounded-large bg-default-100"
+          fallback={
+            <LazyImage
+              src={activeFormat.logo}
+              alt={activeFormat.label}
+              width={24}
+              height={24}
+              className="min-w-[24px] min-h-[24px]"
+            />
+          }
+        />
+
+        <div>
+          <h6 className="font-semibold text-foreground-700">
+            {activeFormat.label}
+          </h6>
+          <p className="text-sm text-foreground-500">
+            {truncateString(activeFormat.description, isMdAndUp ? 60 : 20)}
+          </p>
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-x-3 gap-y-4 mb-4">
+        <Controller
+          control={control}
+          name="inspection_data.vehicle_compony"
+          render={({ field, fieldState: { error } }) => (
+            <AppSelect
+              label={t("expertRequests.carGroup")}
+              labelPlacement="outside"
+              placeholder={t("shared.choose")}
+              error={error}
+              value={field.value}
+              itemKey="key"
+              itemLabel="label"
+              classNames={{
+                trigger: "bg-default-100 text-foreground-500",
+                label: "text-xs !text-default-600",
+              }}
+              onChange={(value) => field.onChange(value)}
+              fetchData={vehicleCategoryApi.getCategoriesInfo}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="inspection_data.vehicle_brand"
+          render={({ field, fieldState: { error } }) => (
+            <AppSelect
+              label={t("shared.producer")}
+              labelPlacement="outside"
+              placeholder={t("shared.choose")}
+              error={error}
+              value={field.value}
+              itemKey="key"
+              itemLabel="label"
+              classNames={{
+                trigger: "bg-default-100 text-foreground-500",
+                label: "text-xs !text-default-600",
+              }}
+              onChange={(value) => field.onChange(value)}
+              fetchData={vehicleBrandApi.getBrandsInfo}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="inspection_data.vehicle_model"
+          render={({ field, fieldState: { error } }) => (
+            <AppSelect
+              label={t("shared.model")}
+              labelPlacement="outside"
+              placeholder={t("shared.choose")}
+              error={error}
+              value={field.value}
+              itemKey="key"
+              itemLabel="label"
+              classNames={{
+                trigger: "bg-default-100 text-foreground-500",
+                label: "text-xs !text-default-600",
+              }}
+              onChange={(value) => field.onChange(value)}
+              fetchData={vehicleModelApi.getModelsInfo}
+            />
+          )}
+        />
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-x-3 gap-y-4">
+        <Controller
+          control={control}
+          name="inspection_data.vin"
+          render={({ field, fieldState: { error } }) => (
+            <AppInput
+              {...field}
+              label={t("expertRequests.vinNumber")}
+              labelPlacement="outside"
+              placeholder={t("expertRequests.orderNumberPlaceholder")}
+              error={error}
+              value={field.value}
+              classNames={{
+                input: "bg-default-100 text-foreground-500",
+                label: "text-xs !text-default-600",
+              }}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="inspection_data.color"
+          render={({ field, fieldState: { error } }) => (
+            <AppSelect
+              label={t("shared.color")}
+              labelPlacement="outside"
+              placeholder={t("shared.choose")}
+              error={error}
+              value={field.value}
+              itemKey="key"
+              itemLabel="label"
+              classNames={{
+                trigger: "bg-default-100 text-foreground-500",
+                label: "text-xs !text-default-600",
+              }}
+              onChange={(value) => field.onChange(value)}
+              fetchData={colorApi.getColorsInfo}
+            />
+          )}
+        />
+      </div>
+    </div>
+  );
+};

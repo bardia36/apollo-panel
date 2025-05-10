@@ -104,7 +104,7 @@ export type CreateRequestBody = {
   order_number: string;
   inspection_format: string;
   inspection_data: {
-    // TODO: inspection_data hard coded for now for handling vehicle data, in the future it will be dynamic based on the inspection format
+    // inspection_data hard coded for now for handling vehicle data, in the future it will be dynamic based on the inspection format
     vehicle_brand: string;
     vehicle_model: string;
     vehicle_compony: string;
@@ -142,5 +142,16 @@ export type VehicleModels = {
 export type VehicleModel = {
   key: string;
   name_en: string;
+  label: string;
+};
+
+
+export type Colors = {
+  items: Color[];
+  count: number;
+};
+
+export type Color = {
+  key: string;
   label: string;
 };
