@@ -5,6 +5,7 @@ export default {
   archive: "بایگانی",
   availableTemplates: "تمپلیت‌های موجود",
   branch: "نمایندگی",
+  carGroup: "گروه خودرو",
   casesDetail: "جزئیات موارد درخواستی",
   chooseWayToSend: "انتخاب نحوه ارسال",
   createRequest: "ایجاد درخواست",
@@ -34,6 +35,7 @@ export default {
   userAndExpertCaseInformation: "اطلاعات کاربر و مورد کارشناسی",
   userNamePlaceholder: "نام کامل، مثل بردیا جوادی",
   vehicleModel: "مدل خودرو",
+  vinNumber: "شماره VIN",
   wantedItemTitle: "عنوان مورد درخواستی",
   wantedRequests: "درخواستی‌ها",
 };
