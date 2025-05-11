@@ -36,6 +36,7 @@ export default {
   userNamePlaceholder: "Full name, like John Smith",
   vehicleModel: "Vehicle model",
   vinNumber: "VIN number",
+  vinNumberPlaceholder: "17-digit vehicle identification number",
   wantedItemTitle: "Requested item title",
   wantedRequests: "Requested items",
 };

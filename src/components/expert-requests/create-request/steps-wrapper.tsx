@@ -1,8 +1,10 @@
 import { useState, lazy, Suspense } from "react";
-import { Button } from "@heroui/react";
+import { Button, Skeleton } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Stepper from "./components/stepper";
 import { t } from "i18next";
+import { StepTwoLoading } from "./components/step-two";
+import { StepThreeLoading } from "./components/step-three";
 
 const StepOne = lazy(() => import("./components/step-one"));
 const StepTwo = lazy(() => import("./components/step-two"));
@@ -33,11 +35,13 @@ const steps: Step[] = [
 ];
 
 export default function StepsWrapper({ onCloseModal }: Props) {
-  const [currentStep, setCurrentStep] = useState(3);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [requestId, setRequestId] = useState<string | null>(null);
 
-  const nextStep = () =>
+  const nextStep = (id?: string) => {
+    if (id) setRequestId(id);
     setCurrentStep((prev) => Math.min(prev + 1, steps.length));
-
+  };
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
   const renderStep = () => {
@@ -45,9 +49,21 @@ export default function StepsWrapper({ onCloseModal }: Props) {
       case 1:
         return <StepOne onStepComplete={nextStep} />;
       case 2:
-        return <StepTwo onStepComplete={nextStep} onStepBack={prevStep} />;
+        return (
+          <StepTwo
+            requestId={requestId}
+            onStepComplete={nextStep}
+            onStepBack={prevStep}
+          />
+        );
       case 3:
-        return <StepThree onStepComplete={submit} onStepBack={prevStep} />;
+        return (
+          <StepThree
+            requestId={requestId}
+            onStepComplete={submit}
+            onStepBack={prevStep}
+          />
+        );
       default:
         return null;
     }
@@ -84,8 +100,17 @@ export default function StepsWrapper({ onCloseModal }: Props) {
       </aside>
 
       <div className="md:w-2/3 md:py-4">
-        {/* // TODO: add skeleton */}
-        <Suspense fallback={<div>در حال بارگذاری...</div>}>
+        <Suspense
+          fallback={
+            currentStep == 2 ? (
+              <StepTwoLoading />
+            ) : currentStep == 3 ? (
+              <StepThreeLoading />
+            ) : (
+              <Skeleton className="w-[90%] rounded-xl mx-auto h-full" />
+            )
+          }
+        >
           <div className="xl:w-3/4 xl:mx-auto flex flex-col h-full">
             {renderStep()}
           </div>

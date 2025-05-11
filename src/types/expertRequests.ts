@@ -1,4 +1,5 @@
 import { NameEnFa } from "./common";
+import { TemplateField } from "./templates";
 
 export type ExpertRequestResponse = {
   docs: ExpertRequest[];
@@ -31,6 +32,8 @@ export type ExpertRequest = {
     vehicle_brand?: NameEnFa;
     vehicle_model?: NameEnFa;
     vehicle_compony?: NameEnFa;
+    color: NameEnFa;
+    vin: string;
   };
   unit: {
     level: string;
@@ -145,7 +148,6 @@ export type VehicleModel = {
   label: string;
 };
 
-
 export type Colors = {
   items: Color[];
   count: number;
@@ -154,4 +156,9 @@ export type Colors = {
 export type Color = {
   key: string;
   label: string;
+};
+
+export type UpdateRequestLinkBody = {
+  template_id: string;
+  fields: Pick<TemplateField, "title" | "type">[];
 };
