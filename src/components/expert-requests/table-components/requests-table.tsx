@@ -234,7 +234,9 @@ export default function RequestsTable() {
           return <RenderOwnerCell owner={request.owner} />;
 
         case "unit":
-          return <RenderUnitCell unit={request.unit} />;
+          return (
+            <>{!!request.unit && <RenderUnitCell unit={request.unit} />}</>
+          );
 
         case "createdAt":
           return <RenderCreatedAtCell createdAt={request.createdAt} />;
