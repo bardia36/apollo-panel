@@ -6,9 +6,7 @@ import { t } from "i18next";
 
 const StepOne = lazy(() => import("./components/step-one"));
 const StepTwo = lazy(() => import("./components/step-two"));
-const StepThree = lazy(() =>
-  Promise.resolve({ default: () => <div className="p-4">مرحله سوم</div> })
-);
+const StepThree = lazy(() => import("./components/step-three"));
 
 export type Step = {
   title: string;
@@ -35,7 +33,7 @@ const steps: Step[] = [
 ];
 
 export default function StepsWrapper({ onCloseModal }: Props) {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(3);
 
   const nextStep = () =>
     setCurrentStep((prev) => Math.min(prev + 1, steps.length));
@@ -45,19 +43,19 @@ export default function StepsWrapper({ onCloseModal }: Props) {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <StepOne onStepComplete={nextStep} onStepBack={prevStep} />;
+        return <StepOne onStepComplete={nextStep} />;
       case 2:
         return <StepTwo onStepComplete={nextStep} onStepBack={prevStep} />;
       case 3:
-        return <StepThree />;
+        return <StepThree onStepComplete={submit} onStepBack={prevStep} />;
       default:
         return null;
     }
   };
 
-  // const submit = () => {
-  //   console.log("submit");
-  // };
+  const submit = () => {
+    console.log("submit");
+  };
 
   return (
     <div className="lg:h-screen flex flex-col md:flex-row gap-6 md:gap-4">
@@ -86,6 +84,7 @@ export default function StepsWrapper({ onCloseModal }: Props) {
       </aside>
 
       <div className="md:w-2/3 md:py-4">
+        {/* // TODO: add skeleton */}
         <Suspense fallback={<div>در حال بارگذاری...</div>}>
           <div className="xl:w-3/4 xl:mx-auto flex flex-col h-full">
             {renderStep()}

@@ -62,6 +62,7 @@ export default function StepTwo({ onStepComplete, onStepBack }: StepTwoProps) {
   return (
     <>
       {initializing ? (
+        // TODO: add skeleton
         <div>loading</div>
       ) : (
         <>
