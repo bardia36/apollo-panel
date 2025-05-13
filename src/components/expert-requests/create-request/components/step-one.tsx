@@ -7,12 +7,11 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useState } from "react";
 import { t } from "i18next";
 import { inspectionFormatApi } from "@/services/api/inspection-format";
-import { Avatar, Button } from "@heroui/react";
-import { Form } from "@heroui/react";
+import { Avatar, Button, Form } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import { AppSelect } from "@/components/shared/app-components/app-select";
 import { StepperButtons } from "./stepper-buttons";
-import { InspectionDataItem } from "@/types/expertRequests";
+import { CreateRequestBody, InspectionDataItem } from "@/types/expertRequests";
 import { LazyImage } from "@/components/shared/lazy-image";
 import { truncateString } from "@/utils/base";
 import { useBreakpoint } from "@/hook/useBreakpoint";
@@ -27,26 +26,12 @@ type StepOneProps = {
   onStepComplete: (id: string) => void;
 };
 
-type StepOneFormValues = {
-  username: string;
-  mobile: string;
-  email: string;
-  order_number: string;
-  inspection_format: string;
-  inspection_data: {
-    vehicle_brand: string;
-    vehicle_model: string;
-    vehicle_compony: string;
-    vin: string;
-    color: string;
-  };
-};
-
 export default function StepOne({ onStepComplete }: StepOneProps) {
   const [showInspectionFormatDetailCard, setShowInspectionFormatDetailCard] =
     useState(false);
   const [activeFormat, setActiveFormat] = useState<InspectionDataItem>();
   const { isMdAndUp } = useBreakpoint();
+  const [isLoading, setIsLoading] = useState(false);
 
   const msgs = useValidationMessages();
 
@@ -78,7 +63,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
     }),
   });
 
-  const { control, handleSubmit, getValues } = useForm<StepOneFormValues>({
+  const { control, handleSubmit, getValues } = useForm<CreateRequestBody>({
     ...formOptions,
     resolver: yupResolver(validationSchema),
   });
@@ -93,11 +78,14 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
 
   const submit = async () => {
     try {
+      setIsLoading(true);
       const data = getValues();
       const response = await expertRequestsApi.createRequest(data);
       onStepComplete(response.id);
     } catch (err) {
       exceptionHandler(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -125,7 +113,8 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
                 placeholder={t("expertRequests.userNamePlaceholder")}
                 error={error}
                 classNames={{
-                  input: "bg-default-100 text-foreground-500",
+                  inputWrapper: "bg-default-50",
+                  input: "text-foreground-500",
                   label: "text-xs !text-default-600",
                 }}
                 endContent={
@@ -151,7 +140,8 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
                 placeholder="876 54 321 0912"
                 error={error}
                 classNames={{
-                  input: "bg-default-100 text-foreground-500",
+                  inputWrapper: "bg-default-50",
+                  input: "text-foreground-500",
                   label: "text-xs !text-default-600",
                 }}
                 endContent={
@@ -177,7 +167,8 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
                 placeholder="test@customer.com"
                 error={error}
                 classNames={{
-                  input: "bg-default-100 text-foreground-500",
+                  inputWrapper: "bg-default-50",
+                  input: "text-foreground-500",
                   label: "text-xs !text-default-600",
                 }}
                 endContent={
@@ -203,7 +194,8 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
                 placeholder={t("expertRequests.orderNumberPlaceholder")}
                 error={error}
                 classNames={{
-                  input: "bg-default-100 text-foreground-500",
+                  inputWrapper: "bg-default-50",
+                  input: "text-foreground-500",
                   label: "text-xs !text-default-600",
                 }}
                 endContent={
@@ -254,7 +246,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
               className="justify-start"
             >
               <Icon
-                icon="stash:crown-solid"
+                icon="solar:crown-minimalistic-bold"
                 width="20"
                 height="20"
                 className="min-w-5"
@@ -273,7 +265,11 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
         />
       )}
 
-      <StepperButtons currentStep={1} onNextStep={handleSubmit(submit)} />
+      <StepperButtons
+        currentStep={1}
+        isLoading={isLoading}
+        onNextStep={handleSubmit(submit)}
+      />
     </>
   );
 }
@@ -396,7 +392,8 @@ const InspectionFormatDetailCard = ({
               error={error}
               value={field.value}
               classNames={{
-                input: "bg-default-100 text-foreground-500",
+                inputWrapper: "bg-default-50",
+                input: "text-foreground-500",
                 label: "text-xs !text-default-600",
               }}
             />

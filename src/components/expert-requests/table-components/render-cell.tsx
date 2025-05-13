@@ -10,7 +10,7 @@ import {
 } from "@heroui/react";
 import DateDisplay from "../../shared/date-display";
 import { t } from "i18next";
-import { ExpertRequest } from "@/types/expertRequests";
+import { ExpertRequestInfo } from "@/types/expertRequests";
 import { statusesMap } from "../constants";
 import { copyToClipboard } from "@/utils/base";
 
@@ -18,7 +18,7 @@ import { copyToClipboard } from "@/utils/base";
 export const RenderOrderNumberCell = ({
   orderNumber,
 }: {
-  orderNumber: ExpertRequest["order_number"];
+  orderNumber: ExpertRequestInfo["order_number"];
 }) => (
   <div className="flex items-center gap-2">
     <span className="text-default-500">{orderNumber}</span>
@@ -41,7 +41,7 @@ export const RenderOrderNumberCell = ({
 export const RenderInspectionDataCell = ({
   inspectionData,
 }: {
-  inspectionData: ExpertRequest["inspection_data"];
+  inspectionData: ExpertRequestInfo["inspection_data"];
 }) => (
   <>
     <div className="text-default-foreground mb-1">
@@ -56,7 +56,7 @@ export const RenderInspectionDataCell = ({
 export const RenderStatusCell = ({
   status,
 }: {
-  status: ExpertRequest["status"];
+  status: ExpertRequestInfo["status"];
 }) => (
   <Chip
     className={`bg-${statusesMap[status].bg} text-${statusesMap[status].text} h-8 gap-1`}
@@ -73,7 +73,7 @@ export const RenderStatusCell = ({
 export const RenderOwnerCell = ({
   owner,
 }: {
-  owner: ExpertRequest["owner"];
+  owner: ExpertRequestInfo["owner"];
 }) => (
   <User
     avatarProps={{
@@ -88,7 +88,11 @@ export const RenderOwnerCell = ({
   />
 );
 
-export const RenderUnitCell = ({ unit }: { unit: ExpertRequest["unit"] }) => (
+export const RenderUnitCell = ({
+  unit,
+}: {
+  unit: ExpertRequestInfo["unit"];
+}) => (
   <div className="flex gap-1 text-default-foreground">
     <Icon
       icon="solar:users-group-rounded-bold"
@@ -103,7 +107,7 @@ export const RenderUnitCell = ({ unit }: { unit: ExpertRequest["unit"] }) => (
 export const RenderCreatedAtCell = ({
   createdAt,
 }: {
-  createdAt: ExpertRequest["createdAt"];
+  createdAt: ExpertRequestInfo["createdAt"];
 }) => <DateDisplay isoDate={createdAt} />;
 
 export const RenderActionsCell = () => (

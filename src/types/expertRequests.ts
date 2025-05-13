@@ -1,8 +1,8 @@
 import { NameEnFa } from "./common";
-import { TemplateField } from "./templates";
+import { Template, TemplateField } from "./templates";
 
 export type ExpertRequestResponse = {
-  docs: ExpertRequest[];
+  docs: ExpertRequestInfo[];
   hasNextPage: boolean;
   hasPrevPage: boolean;
   limit: number;
@@ -11,36 +11,82 @@ export type ExpertRequestResponse = {
   totalPage: number;
 };
 
-export type ExpertRequest = {
-  _id: string;
-  order_number: string;
-  inspection_type: {
+export type ExpertRequestInfo = {
+  status: ExpertRequestStatus;
+  inspection_format: {
     name: string;
     logo: string;
-    type: InspectionType;
     description: string;
   };
+  order_number: string;
   owner: {
     image?: string;
     userName: string;
     phoneNumber?: string;
     email?: string;
   };
-  tags?: [string];
+  lead_specialist: {
+    image?: string;
+    userName: string;
+    phoneNumber?: string;
+    email?: string;
+  };
+  unit: {
+    title: string;
+    level: {
+      name: string;
+      level_number: number;
+    };
+  };
+  tags?: string[];
   createdAt: string;
   inspection_data: {
     vehicle_brand?: NameEnFa;
     vehicle_model?: NameEnFa;
     vehicle_compony?: NameEnFa;
-    color: NameEnFa;
-    vin: string;
   };
-  unit: {
-    level: string;
-    title: string;
-    _id: string;
+};
+
+export type ExpertRequestDetail = ExpertRequestInfo & {
+  _id: string;
+  key: string;
+  price: number;
+  documents?: {
+    img?: RequestCommonInfo[];
+    video?: RequestCommonInfo[];
   };
-  status: ExpertRequestStatus;
+  car_info: {
+    img?: RequestCommonInfo[];
+    sequence: RequestCommonInfo[];
+  };
+  required_fields: TemplateField[];
+  // request_log
+  // locations
+  template_fields_count: number;
+  template_id: Omit<Template, "_id">;
+  // previous_inspection;
+  // reviewers
+  inspection_data: ExpertRequestInfo["inspection_data"] & {
+    color?: {
+      name: string;
+      code: string;
+      color: string;
+    };
+    // vehicle_fuel;
+    // vehicle_category
+    // vehicle_usage;
+    // license_plate_number
+    // motor_code
+    // chassis_number
+    vin?: string;
+    // fanavaran_vin
+  };
+};
+
+export type RequestCommonInfo = {
+  name: string;
+  title: string;
+  path: string;
 };
 
 export type InspectionType =
@@ -161,4 +207,12 @@ export type Color = {
 export type UpdateRequestLinkBody = {
   template_id: string;
   fields: Pick<TemplateField, "title" | "type">[];
+};
+
+export type UpdateRequestFinalBody = {
+  send_sms?: boolean;
+  send_email?: boolean;
+  lead_specialist?: string;
+  tags?: (string | undefined)[];
+  forwarding_time?: string;
 };
