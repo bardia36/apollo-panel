@@ -28,6 +28,7 @@ import { FullLogo } from "@/components/shared/logo";
 export default function SignupForm({ email }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const msgs = useValidationMessages();
 
   const [isPassword, setIsPassword] = useState(true);
   const [progressing, setProgressing] = useState(false);
@@ -35,15 +36,15 @@ export default function SignupForm({ email }: Props) {
 
   const validationSchema = object({
     email: string()
-      .required(useValidationMessages().required(t("auth.email")))
-      .email(useValidationMessages().email(t("auth.email"))),
+      .required(msgs.required(t("auth.email")))
+      .email(msgs.isNotValid(t("auth.email"))),
     password: string()
-      .min(6, useValidationMessages().min(t("auth.password"), 6))
-      .required(useValidationMessages().required(t("auth.password"))),
+      .min(6, msgs.min(t("auth.password"), 6))
+      .required(msgs.required(t("auth.password"))),
     confirmPassword: string()
-      .oneOf([ref("password")], useValidationMessages().confirmPassword())
-      .min(6, useValidationMessages().min(t("auth.confirmPassword"), 6))
-      .required(useValidationMessages().required(t("auth.confirmPassword"))),
+      .oneOf([ref("password")], msgs.confirmPassword())
+      .min(6, msgs.min(t("auth.confirmPassword"), 6))
+      .required(msgs.required(t("auth.confirmPassword"))),
   }).required();
 
   const { handleSubmit, control } = useForm<ResetPasswordEntity>({

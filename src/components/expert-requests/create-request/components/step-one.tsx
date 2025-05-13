@@ -7,8 +7,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useState } from "react";
 import { t } from "i18next";
 import { inspectionFormatApi } from "@/services/api/inspection-format";
-import { Avatar, Button } from "@heroui/react";
-import { Form } from "@heroui/react";
+import { Avatar, Button, Form } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import { AppSelect } from "@/components/shared/app-components/app-select";
 import { StepperButtons } from "./stepper-buttons";
@@ -32,6 +31,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
     useState(false);
   const [activeFormat, setActiveFormat] = useState<InspectionDataItem>();
   const { isMdAndUp } = useBreakpoint();
+  const [isLoading, setIsLoading] = useState(false);
 
   const msgs = useValidationMessages();
 
@@ -78,11 +78,14 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
 
   const submit = async () => {
     try {
+      setIsLoading(true);
       const data = getValues();
       const response = await expertRequestsApi.createRequest(data);
       onStepComplete(response.id);
     } catch (err) {
       exceptionHandler(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -262,7 +265,11 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
         />
       )}
 
-      <StepperButtons currentStep={1} onNextStep={handleSubmit(submit)} />
+      <StepperButtons
+        currentStep={1}
+        isLoading={isLoading}
+        onNextStep={handleSubmit(submit)}
+      />
     </>
   );
 }

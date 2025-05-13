@@ -45,7 +45,7 @@ export const expertRequestsApi = {
   // create - step 3
   updateRequestFinal(id: string, body: UpdateRequestFinalBody) {
     return axiosHandler(BASE_URL, {
-      action: `${id}/final`,
+      action: `${id}/final-step`,
       method: RequestMethod.PATCH,
       body,
     });

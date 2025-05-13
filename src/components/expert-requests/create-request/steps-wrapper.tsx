@@ -5,6 +5,7 @@ import Stepper from "./components/stepper";
 import { t } from "i18next";
 import { StepTwoLoading } from "./components/step-two";
 import { StepThreeLoading } from "./components/step-three";
+import { useExpertRequests } from "@/components/expert-requests/context/expert-requests-context";
 
 const StepOne = lazy(() => import("./components/step-one"));
 const StepTwo = lazy(() => import("./components/step-two"));
@@ -35,8 +36,9 @@ const steps: Step[] = [
 ];
 
 export default function StepsWrapper({ onCloseModal }: Props) {
-  const [currentStep, setCurrentStep] = useState(3);
+  const [currentStep, setCurrentStep] = useState(1);
   const [requestId, setRequestId] = useState<string | null>(null);
+  const { refreshRequests } = useExpertRequests();
 
   const nextStep = (id?: string) => {
     if (id) setRequestId(id);
@@ -60,7 +62,7 @@ export default function StepsWrapper({ onCloseModal }: Props) {
         return (
           <StepThree
             requestId={requestId}
-            onStepComplete={submit}
+            onStepComplete={onFinal}
             onStepBack={prevStep}
           />
         );
@@ -69,8 +71,9 @@ export default function StepsWrapper({ onCloseModal }: Props) {
     }
   };
 
-  const submit = () => {
-    console.log("submit");
+  const onFinal = () => {
+    onCloseModal();
+    refreshRequests();
   };
 
   return (

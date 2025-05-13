@@ -1,8 +1,8 @@
 import { t } from "i18next";
 import { StepperButtons } from "./stepper-buttons";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useEffect, useState } from "react"; // Add useEffect and useState
-import { expertRequestsApi } from "@/services/api/expert-requests"; // Import the API
+import { useEffect, useState } from "react";
+import { expertRequestsApi } from "@/services/api/expert-requests";
 import { exceptionHandler } from "@/services/api/exception";
 import {
   ExpertRequestDetail,
@@ -29,23 +29,32 @@ export default function StepThree({
   onStepBack,
   onStepComplete,
 }: StepThreeProps) {
+  const [initializing, setInitializing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [requestData, setRequestData] = useState<ExpertRequestDetail>();
+  const [smsEnabled, setSmsEnabled] = useState(false);
+  const [emailEnabled, setEmailEnabled] = useState(false);
+  const specialists = [
+    { key: "68239c55f0cc20a87def2d4a", label: "متین شمسایی" },
+  ];
+  const tags = [{ key: "1", label: "تگ اول" }];
 
   useEffect(() => {
-    // if (requestId) {
-    expertRequestsApi
-      // .getRequestsById(requestId)
-      .getRequestsById("682362a6f0cc20a87dee8949")
-      .then((response) => {
-        let res = response;
-        res.required_fields = filterExistedFields(
-          res.template_id?.fields,
-          res.required_fields
-        );
-        setRequestData(response);
-      })
-      .catch((err) => exceptionHandler(err));
-    // }
+    if (requestId) {
+      expertRequestsApi
+        .getRequestsById(requestId)
+        // .getRequestsById("68239c55f0cc20a87def2d4a")
+        .then((response) => {
+          let res = response;
+          res.required_fields = filterExistedFields(
+            res.template_id?.fields,
+            res.required_fields
+          );
+          setRequestData(response);
+        })
+        .catch((err) => exceptionHandler(err))
+        .finally(() => setInitializing(false));
+    }
   }, []);
 
   function filterExistedFields(
@@ -62,25 +71,264 @@ export default function StepThree({
     return requestFields.filter((field) => !templateFieldIds.has(field.title));
   }
 
-  if (!requestData) {
-    return <StepThreeLoading />;
-  }
+  const validationSchema = object({
+    send_sms: boolean(),
+    send_email: boolean(),
+    lead_specialist: string(),
+    tags: array().of(string()),
+    forwarding_time: string(),
+  });
+
+  const { control, handleSubmit, getValues } = useForm<UpdateRequestFinalBody>({
+    ...formOptions,
+    resolver: yupResolver(validationSchema),
+    defaultValues: {
+      send_sms: false,
+      send_email: false,
+      tags: [],
+      forwarding_time: new Date().toISOString(),
+    },
+  });
+
+  const dateOfNow = () => {
+    const now = new Date();
+    const dateOptions: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    };
+    const timeOptions: Intl.DateTimeFormatOptions = {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    };
+
+    const datePart = now.toLocaleDateString("fa-IR", dateOptions);
+    const timePart = now.toLocaleTimeString("fa-IR", timeOptions);
+
+    return `${datePart} - ${timePart}`;
+  };
+
+  const submit = async () => {
+    if (!requestId) return;
+
+    try {
+      setIsLoading(true);
+      const data = getValues();
+      data.tags = [];
+      await expertRequestsApi.updateRequestFinal(requestId, data);
+      onStepComplete();
+    } catch (err) {
+      exceptionHandler(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (initializing || !requestData) return <StepThreeLoading />;
 
   return (
     <div className="flex flex-col h-full gap-6">
       <RequestSummary requestData={requestData} />
 
-      <RequestContact requestData={requestData} />
+      <div className="bg-default-50 px-4 py-3.5 flex items-center rounded-medium mb-2">
+        <Icon
+          icon="solar:chat-line-outline"
+          width={20}
+          height={20}
+          className="me-4 text-default-600"
+        />
+        {t("shared.sendSMS")}
+
+        <Controller
+          control={control}
+          name="send_sms"
+          render={({ field }) => (
+            <Switch
+              isSelected={field.value}
+              color="primary"
+              size="sm"
+              className="ms-auto"
+              onValueChange={(value) => {
+                field.onChange(value);
+                setSmsEnabled(value);
+              }}
+            />
+          )}
+        />
+      </div>
+
+      <div className="bg-default-50 px-4 py-3.5 flex items-center rounded-medium">
+        <Icon
+          icon="solar:letter-outline"
+          width={20}
+          height={20}
+          className="me-4 text-default-600"
+        />
+        {t("shared.sendEmail")}
+
+        <Controller
+          control={control}
+          name="send_email"
+          render={({ field }) => (
+            <Switch
+              isSelected={field.value}
+              color="primary"
+              size="sm"
+              className="ms-auto"
+              onValueChange={(value) => {
+                field.onChange(value);
+                setEmailEnabled(value);
+              }}
+            />
+          )}
+        />
+      </div>
+
+      <Form onSubmit={handleSubmit(submit)}>
+        {(!!smsEnabled || !!emailEnabled) && (
+          <div className="grid grid-cols-2 max-md:flex-col w-full gap-4 py-2 mt-4">
+            {!!smsEnabled && (
+              <AppInput
+                value={requestData.owner.phoneNumber}
+                label={t("shared.mobile")}
+                labelPlacement="outside"
+                placeholder="876 54 321 0912"
+                variant="faded"
+                size="lg"
+                isReadOnly
+                classNames={{
+                  inputWrapper: "bg-background",
+                  input: "text-foreground-500 text-xl font-bold text-center",
+                  label: "text-xs !text-default-600",
+                }}
+                endContent={
+                  <Icon
+                    icon="solar:iphone-outline"
+                    className="text-default-400"
+                    width="20"
+                    height="20"
+                  />
+                }
+              />
+            )}
+
+            {!!emailEnabled && (
+              <AppInput
+                value={requestData.owner.email}
+                label={t("shared.email")}
+                labelPlacement="outside"
+                variant="faded"
+                isReadOnly
+                size="lg"
+                classNames={{
+                  inputWrapper: "bg-background",
+                  input: "text-foreground-500 text-xl font-bold text-center",
+                  label: "text-xs !text-default-600",
+                }}
+                endContent={
+                  <Icon
+                    icon="solar:letter-outline"
+                    className="text-default-400"
+                    width="20"
+                    height="20"
+                  />
+                }
+              />
+            )}
+          </div>
+        )}
+
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+          <Controller
+            control={control}
+            name="lead_specialist"
+            render={({ field, fieldState: { error } }) => (
+              <Select
+                value={field.value}
+                className="max-w-xs"
+                placeholder={t("shared.choose")}
+                isInvalid={!!error}
+                errorMessage={error?.message}
+                classNames={{
+                  trigger: "bg-default-100 text-foreground-500",
+                  label: "text-xs !text-default-600",
+                }}
+                label={t("expertRequests.specialist")}
+                labelPlacement="outside"
+                onChange={(value) => field.onChange(value)}
+                selectedKeys={field.value ? [field.value] : []}
+              >
+                {specialists.map((specialist) => (
+                  <SelectItem key={specialist.key}>
+                    {specialist.label}
+                  </SelectItem>
+                ))}
+              </Select>
+            )}
+          />
+
+          <AppInput
+            value={dateOfNow()}
+            dir="ltr"
+            label={t("shared.sendingDate")}
+            labelPlacement="outside"
+            placeholder="876 54 321 0912"
+            size="lg"
+            variant="flat"
+            isDisabled
+            classNames={{
+              inputWrapper: "!bg-default-50",
+              input: "!text-default-300 text-end",
+              label: "text-xs !text-default-300",
+            }}
+            endContent={
+              <Icon
+                icon="solar:calendar-minimalistic-outline"
+                className="text-default-300"
+                width="20"
+                height="20"
+              />
+            }
+          />
+
+          <Controller
+            control={control}
+            name="tags"
+            render={({ field, fieldState: { error } }) => (
+              <Select
+                multiple
+                value={field.value?.filter((v): v is string => v !== undefined) || []}
+                className="max-w-xs"
+                isInvalid={!!error}
+                errorMessage={error?.message}
+                placeholder={t("shared.choose")}
+                classNames={{
+                  trigger: "bg-default-100 text-foreground-500",
+                  label: "text-xs !text-default-600",
+                }}
+                label={t("expertRequests.tag")}
+                labelPlacement="outside"
+                onChange={(value) => field.onChange(value)}
+                selectedKeys={field.value?.filter((v): v is string => v !== undefined) || []}
+              >
+                {tags.map((tag) => (
+                  <SelectItem key={tag.key}>{tag.label}</SelectItem>
+                ))}
+              </Select>
+            )}          />
+        </div>
+      </Form>
 
       <StepperButtons
         currentStep={3}
+        isLoading={isLoading}
         onPrevStep={onStepBack}
-        onNextStep={onStepComplete}
+        onNextStep={submit}
       />
     </div>
   );
 }
-
 function RequestSummary({ requestData }: { requestData: ExpertRequestDetail }) {
   return (
     <>
@@ -176,7 +424,7 @@ function RequestSummary({ requestData }: { requestData: ExpertRequestDetail }) {
               {t("expertRequests.wantedItem")}
             </h6>
             {!!requestData.required_fields?.length && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-end gap-2">
                 <FieldChip
                   field={{
                     ...requestData.required_fields[0],
@@ -204,232 +452,6 @@ function RequestSummary({ requestData }: { requestData: ExpertRequestDetail }) {
         </div>
       </div>
     </>
-  );
-}
-
-function RequestContact({ requestData }: { requestData: ExpertRequestDetail }) {
-  const [smsEnabled, setSmsEnabled] = useState(false);
-  const [emailEnabled, setEmailEnabled] = useState(false);
-  const specialists = [{ key: "1", label: "متین شمسایی" }];
-  const tags = [{ key: "1", label: "تگ اول" }];
-
-  const validationSchema = object({
-    send_sms: boolean(),
-    send_email: boolean(),
-    lead_specialist: string(),
-    tags: array().of(string()),
-    forwarding_time: string(),
-  });
-
-  const { control, handleSubmit, getValues } = useForm<UpdateRequestFinalBody>({
-    ...formOptions,
-    resolver: yupResolver(validationSchema),
-  });
-
-  const dateOfNow = () => {
-    const now = new Date();
-    const dateOptions: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    };
-    const timeOptions: Intl.DateTimeFormatOptions = {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    };
-
-    const datePart = now.toLocaleDateString("fa-IR", dateOptions);
-    const timePart = now.toLocaleTimeString("fa-IR", timeOptions);
-
-    return `${datePart} - ${timePart}`;
-  };
-
-  const submit = () => {
-    console.log(getValues());
-  };
-
-  return (
-    <div>
-      <div className="bg-default-50 px-4 py-3.5 flex items-center rounded-medium mb-2">
-        <Icon
-          icon="solar:chat-line-outline"
-          width={20}
-          height={20}
-          className="me-4 text-default-600"
-        />
-        {t("shared.sendSMS")}
-
-        <Controller
-          control={control}
-          name="send_sms"
-          render={() => (
-            <Switch
-              isSelected={smsEnabled}
-              color="primary"
-              size="sm"
-              className="ms-auto"
-              onValueChange={setSmsEnabled}
-            />
-          )}
-        />
-      </div>
-
-      <div className="bg-default-50 px-4 py-3.5 flex items-center rounded-medium">
-        <Icon
-          icon="solar:letter-outline"
-          width={20}
-          height={20}
-          className="me-4 text-default-600"
-        />
-        {t("shared.sendEmail")}
-
-        <Controller
-          control={control}
-          name="send_email"
-          render={() => (
-            <Switch
-              isSelected={emailEnabled}
-              color="primary"
-              size="sm"
-              className="ms-auto"
-              onValueChange={setEmailEnabled}
-            />
-          )}
-        />
-      </div>
-
-      <Form onSubmit={handleSubmit(submit)}>
-        {(!!smsEnabled || !!emailEnabled) && (
-          <div className="grid grid-cols-2 max-md:flex-col w-full gap-4 py-2 mt-4">
-            {!!smsEnabled && (
-              <AppInput
-                value={requestData.owner.phoneNumber}
-                label={t("shared.mobile")}
-                labelPlacement="outside"
-                placeholder="876 54 321 0912"
-                variant="faded"
-                size="lg"
-                isReadOnly
-                classNames={{
-                  inputWrapper: "bg-background",
-                  input: "text-foreground-500 text-xl font-bold text-center",
-                  label: "text-xs !text-default-600",
-                }}
-                endContent={
-                  <Icon
-                    icon="solar:iphone-outline"
-                    className="text-default-400"
-                    width="20"
-                    height="20"
-                  />
-                }
-              />
-            )}
-
-            {!!emailEnabled && (
-              <AppInput
-                value={requestData.owner.email}
-                label={t("shared.email")}
-                labelPlacement="outside"
-                variant="faded"
-                isReadOnly
-                size="lg"
-                classNames={{
-                  inputWrapper: "bg-background",
-                  input: "text-foreground-500 text-xl font-bold text-center",
-                  label: "text-xs !text-default-600",
-                }}
-                endContent={
-                  <Icon
-                    icon="solar:letter-outline"
-                    className="text-default-400"
-                    width="20"
-                    height="20"
-                  />
-                }
-              />
-            )}
-          </div>
-        )}
-
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-          <Controller
-            control={control}
-            name="lead_specialist"
-            render={({ field, fieldState: { error } }) => (
-              <Select
-                value={field.value}
-                className="max-w-xs"
-                placeholder={t("shared.choose")}
-                isInvalid={!!error}
-                errorMessage={error?.message}
-                classNames={{
-                  trigger: "bg-default-100 text-foreground-500",
-                  label: "text-xs !text-default-600",
-                }}
-                label={t("expertRequests.specialist")}
-                labelPlacement="outside"
-              >
-                {specialists.map((specialist) => (
-                  <SelectItem key={specialist.key}>
-                    {specialist.label}
-                  </SelectItem>
-                ))}
-              </Select>
-            )}
-          />
-
-          <AppInput
-            value={dateOfNow()}
-            dir="ltr"
-            label={t("shared.sendingDate")}
-            labelPlacement="outside"
-            placeholder="876 54 321 0912"
-            size="lg"
-            variant="flat"
-            isDisabled
-            classNames={{
-              inputWrapper: "!bg-default-50",
-              input: "!text-default-300 text-end",
-              label: "text-xs !text-default-300",
-            }}
-            endContent={
-              <Icon
-                icon="solar:calendar-minimalistic-outline"
-                className="text-default-300"
-                width="20"
-                height="20"
-              />
-            }
-          />
-
-          <Controller
-            control={control}
-            name="tags"
-            render={({ field, fieldState: { error } }) => (
-              <Select
-                value={field.value}
-                className="max-w-xs"
-                isInvalid={!!error}
-                errorMessage={error?.message}
-                placeholder={t("shared.choose")}
-                classNames={{
-                  trigger: "bg-default-100 text-foreground-500",
-                  label: "text-xs !text-default-600",
-                }}
-                label={t("expertRequests.tag")}
-                labelPlacement="outside"
-              >
-                {tags.map((tag) => (
-                  <SelectItem key={tag.key}>{tag.label}</SelectItem>
-                ))}
-              </Select>
-            )}
-          />
-        </div>
-      </Form>
-    </div>
   );
 }
 

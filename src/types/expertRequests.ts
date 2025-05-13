@@ -210,9 +210,9 @@ export type UpdateRequestLinkBody = {
 };
 
 export type UpdateRequestFinalBody = {
-  send_sms: boolean;
-  send_email: boolean;
-  lead_specialist: string;
-  tags: string[];
-  forwarding_time: string;
+  send_sms?: boolean;
+  send_email?: boolean;
+  lead_specialist?: string;
+  tags?: (string | undefined)[];
+  forwarding_time?: string;
 };

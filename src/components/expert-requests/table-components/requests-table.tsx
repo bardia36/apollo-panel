@@ -264,7 +264,7 @@ export default function RequestsTable({ requests, loading }: Props) {
         items={sortedItems}
       >
         {(item) => (
-          <TableRow key={item.order_number}>
+          <TableRow key={`${item.order_number} - ${item.createdAt}`}>
             {(columnKey) => (
               <TableCell>
                 {renderCell(item, columnKey as keyof ExpertRequestInfo)}
