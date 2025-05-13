@@ -2,7 +2,7 @@ import { axiosHandler } from "./core";
 import { RequestMethod } from "@/types/api";
 import {
   CreateRequestBody,
-  ExpertRequest,
+  ExpertRequestDetail,
   ExpertRequestResponse,
   UpdateRequestLinkBody,
 } from "@/types/expertRequests";
@@ -18,7 +18,7 @@ export const expertRequestsApi = {
   },
 
   getRequestsById(id: string) {
-    return axiosHandler<ExpertRequest>(BASE_URL, {
+    return axiosHandler<ExpertRequestDetail>(BASE_URL, {
       action: id,
       method: RequestMethod.GET,
     });

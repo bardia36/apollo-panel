@@ -21,7 +21,10 @@ import {
 } from "./render-cell";
 
 // other
-import { ExpertRequest, ExpertRequestResponse } from "@/types/expertRequests";
+import {
+  ExpertRequestInfo,
+  ExpertRequestResponse,
+} from "@/types/expertRequests";
 import { AddOrReplaceKey } from "@/utils/base";
 import { expertRequestsApi } from "@/services/api/expert-requests";
 import { exceptionHandler } from "@/services/api/exception";
@@ -55,7 +58,7 @@ export default function RequestsTable() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [sortDescriptor, setSortDescriptor] = useState<{
-    column: keyof ExpertRequest;
+    column: keyof ExpertRequestInfo;
     direction: "ascending" | "descending";
   }>({
     column: "order_number",
@@ -209,8 +212,8 @@ export default function RequestsTable() {
   // table data -
   const renderCell = useCallback(
     (
-      request: ExpertRequest,
-      columnKey: keyof AddOrReplaceKey<ExpertRequest, "actions", string>
+      request: ExpertRequestInfo,
+      columnKey: keyof AddOrReplaceKey<ExpertRequestInfo, "actions", string>
     ) => {
       let cellValue: React.ReactNode;
       if (columnKey === "actions") cellValue = "actions";
@@ -263,7 +266,7 @@ export default function RequestsTable() {
       onSelectionChange={(keys) => setSelectedKeys(keys as Set<string>)}
       onSortChange={(descriptor) =>
         setSortDescriptor({
-          column: descriptor.column as keyof ExpertRequest,
+          column: descriptor.column as keyof ExpertRequestInfo,
           direction: descriptor.direction,
         })
       }
@@ -289,7 +292,7 @@ export default function RequestsTable() {
           <TableRow key={item._id}>
             {(columnKey) => (
               <TableCell>
-                {renderCell(item, columnKey as keyof ExpertRequest)}
+                {renderCell(item, columnKey as keyof ExpertRequestInfo)}
               </TableCell>
             )}
           </TableRow>

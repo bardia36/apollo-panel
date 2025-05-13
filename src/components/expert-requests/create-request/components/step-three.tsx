@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useEffect, useState } from "react"; // Add useEffect and useState
 import { expertRequestsApi } from "@/services/api/expert-requests"; // Import the API
 import { exceptionHandler } from "@/services/api/exception";
-import { ExpertRequest } from "@/types/expertRequests";
+import { ExpertRequestInfo } from "@/types/expertRequests";
 
 type StepThreeProps = {
   requestId: string | null;
@@ -49,7 +49,7 @@ export default function StepThree({
   );
 }
 
-function RequestSummary({ requestData }: { requestData: ExpertRequest }) {
+function RequestSummary({ requestData }: { requestData: ExpertRequestInfo }) {
   return (
     <>
       <h6 className="text-xs text-default-600 mb-2">
@@ -153,5 +153,5 @@ function RequestOtherFields() {
 export function StepThreeLoading() {
   return (
     <div>Loading...</div> // TODO: skeleton
-  )
+  );
 }

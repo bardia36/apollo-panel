@@ -9,7 +9,7 @@ import {
 const BASE_URL = "panel/inspection-format";
 
 export const inspectionFormatApi = {
-  getFormats(params: SearchParams & InspectionFormatParams) {
+  getFormats(params?: SearchParams & InspectionFormatParams) {
     return axiosHandler<InspectionFormatInfo>(BASE_URL, {
       action: "info",
       method: RequestMethod.GET,
