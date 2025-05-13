@@ -4,7 +4,10 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useEffect, useState } from "react"; // Add useEffect and useState
 import { expertRequestsApi } from "@/services/api/expert-requests"; // Import the API
 import { exceptionHandler } from "@/services/api/exception";
-import { ExpertRequestDetail, ExpertRequestInfo } from "@/types/expertRequests";
+import {
+  ExpertRequestDetail,
+  UpdateRequestFinalBody,
+} from "@/types/expertRequests";
 import { FieldChip } from "../../templates/components/template-fields";
 import { truncateString } from "@/utils/base";
 import { Chip, Switch, Form, Select, SelectItem } from "@heroui/react";
@@ -12,7 +15,7 @@ import { TemplateField } from "@/types/templates";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { boolean, object } from "yup";
+import { array, boolean, object, string } from "yup";
 import { formOptions } from "@/utils/validations";
 
 type StepThreeProps = {
@@ -205,14 +208,6 @@ function RequestSummary({ requestData }: { requestData: ExpertRequestDetail }) {
 }
 
 function RequestContact({ requestData }: { requestData: ExpertRequestDetail }) {
-  type RequestContactValues = {
-    send_sms: boolean;
-    send_email: boolean;
-    lead_specialist: string;
-    tags: ExpertRequestInfo["tags"];
-    forward_time: string;
-  };
-
   const [smsEnabled, setSmsEnabled] = useState(false);
   const [emailEnabled, setEmailEnabled] = useState(false);
   const specialists = [{ key: "1", label: "متین شمسایی" }];
@@ -221,9 +216,12 @@ function RequestContact({ requestData }: { requestData: ExpertRequestDetail }) {
   const validationSchema = object({
     send_sms: boolean(),
     send_email: boolean(),
+    lead_specialist: string(),
+    tags: array().of(string()),
+    forwarding_time: string(),
   });
 
-  const { control, handleSubmit, getValues } = useForm<RequestContactValues>({
+  const { control, handleSubmit, getValues } = useForm<UpdateRequestFinalBody>({
     ...formOptions,
     resolver: yupResolver(validationSchema),
   });

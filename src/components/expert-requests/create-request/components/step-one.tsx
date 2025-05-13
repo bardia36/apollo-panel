@@ -12,7 +12,7 @@ import { Form } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import { AppSelect } from "@/components/shared/app-components/app-select";
 import { StepperButtons } from "./stepper-buttons";
-import { InspectionDataItem } from "@/types/expertRequests";
+import { CreateRequestBody, InspectionDataItem } from "@/types/expertRequests";
 import { LazyImage } from "@/components/shared/lazy-image";
 import { truncateString } from "@/utils/base";
 import { useBreakpoint } from "@/hook/useBreakpoint";
@@ -25,21 +25,6 @@ import { exceptionHandler } from "@/services/api/exception";
 
 type StepOneProps = {
   onStepComplete: (id: string) => void;
-};
-
-type StepOneFormValues = {
-  username: string;
-  mobile: string;
-  email: string;
-  order_number: string;
-  inspection_format: string;
-  inspection_data: {
-    vehicle_brand: string;
-    vehicle_model: string;
-    vehicle_compony: string;
-    vin: string;
-    color: string;
-  };
 };
 
 export default function StepOne({ onStepComplete }: StepOneProps) {
@@ -78,7 +63,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
     }),
   });
 
-  const { control, handleSubmit, getValues } = useForm<StepOneFormValues>({
+  const { control, handleSubmit, getValues } = useForm<CreateRequestBody>({
     ...formOptions,
     resolver: yupResolver(validationSchema),
   });
@@ -125,7 +110,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
                 placeholder={t("expertRequests.userNamePlaceholder")}
                 error={error}
                 classNames={{
-                  inputWrapper: 'bg-default-50',
+                  inputWrapper: "bg-default-50",
                   input: "text-foreground-500",
                   label: "text-xs !text-default-600",
                 }}
@@ -152,7 +137,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
                 placeholder="876 54 321 0912"
                 error={error}
                 classNames={{
-                  inputWrapper: 'bg-default-50',
+                  inputWrapper: "bg-default-50",
                   input: "text-foreground-500",
                   label: "text-xs !text-default-600",
                 }}
@@ -179,7 +164,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
                 placeholder="test@customer.com"
                 error={error}
                 classNames={{
-                  inputWrapper: 'bg-default-50',
+                  inputWrapper: "bg-default-50",
                   input: "text-foreground-500",
                   label: "text-xs !text-default-600",
                 }}
@@ -206,7 +191,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
                 placeholder={t("expertRequests.orderNumberPlaceholder")}
                 error={error}
                 classNames={{
-                  inputWrapper: 'bg-default-50',
+                  inputWrapper: "bg-default-50",
                   input: "text-foreground-500",
                   label: "text-xs !text-default-600",
                 }}
@@ -400,7 +385,7 @@ const InspectionFormatDetailCard = ({
               error={error}
               value={field.value}
               classNames={{
-                inputWrapper: 'bg-default-50',
+                inputWrapper: "bg-default-50",
                 input: "text-foreground-500",
                 label: "text-xs !text-default-600",
               }}

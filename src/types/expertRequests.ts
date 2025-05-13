@@ -208,3 +208,11 @@ export type UpdateRequestLinkBody = {
   template_id: string;
   fields: Pick<TemplateField, "title" | "type">[];
 };
+
+export type UpdateRequestFinalBody = {
+  send_sms: boolean;
+  send_email: boolean;
+  lead_specialist: string;
+  tags: string[];
+  forwarding_time: string;
+};
