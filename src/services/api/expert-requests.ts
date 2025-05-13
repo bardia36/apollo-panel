@@ -2,7 +2,9 @@ import { axiosHandler } from "./core";
 import { RequestMethod } from "@/types/api";
 import {
   CreateRequestBody,
+  ExpertRequest,
   ExpertRequestResponse,
+  UpdateRequestLinkBody,
 } from "@/types/expertRequests";
 
 const BASE_URL = "panel/inspection-request";
@@ -15,9 +17,26 @@ export const expertRequestsApi = {
     });
   },
 
+  getRequestsById(id: string) {
+    return axiosHandler<ExpertRequest>(BASE_URL, {
+      action: id,
+      method: RequestMethod.GET,
+    });
+  },
+
+  // create - step 1
   createRequest(body: CreateRequestBody) {
     return axiosHandler<{ id: string }>(BASE_URL, {
       method: RequestMethod.POST,
+      body,
+    });
+  },
+
+  // create - step 2
+  updateRequestLink(id: string, body: UpdateRequestLinkBody) {
+    return axiosHandler(BASE_URL, {
+      action: `${id}/link-step`,
+      method: RequestMethod.PATCH,
       body,
     });
   },

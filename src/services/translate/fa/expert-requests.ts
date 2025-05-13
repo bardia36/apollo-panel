@@ -36,6 +36,7 @@ export default {
   userNamePlaceholder: "نام کامل، مثل بردیا جوادی",
   vehicleModel: "مدل خودرو",
   vinNumber: "شماره VIN",
+  vinNumberPlaceholder: "شماره شناسایی ۱۷ رقمی خودرو",
   wantedItemTitle: "عنوان مورد درخواستی",
   wantedRequests: "درخواستی‌ها",
 };

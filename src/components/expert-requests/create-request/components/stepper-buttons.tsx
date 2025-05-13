@@ -14,7 +14,8 @@ export const StepperButtons = ({
 }: Props) => {
   return (
     <div className="flex justify-center md:justify-end gap-4 pt-4 md:pt-10 mt-auto">
-      {/* TODO: ICONS AND THIRD STEP SUBMIT BG */}
+      {/* // TODO: ICONS AND THIRD STEP SUBMIT BG */}
+      {/* // TODO: handle loading */}
       {currentStep > 1 && (
         <Button variant="light" onPress={onPrevStep} className="cursor-pointer">
           {t("shared.previousPage")}
