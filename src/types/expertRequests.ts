@@ -59,9 +59,11 @@ export type ExpertRequestDetail = ExpertRequestInfo & {
     img?: RequestCommonInfo[];
     sequence: RequestCommonInfo[];
   };
+  required_fields: TemplateField[];
   // request_log
   // locations
-  template_id?: Omit<Template, "_id">;
+  template_fields_count: number;
+  template_id: Omit<Template, "_id">;
   // previous_inspection;
   // reviewers
   inspection_data: ExpertRequestInfo["inspection_data"] & {

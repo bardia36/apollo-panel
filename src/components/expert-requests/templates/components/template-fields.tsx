@@ -181,9 +181,9 @@ export const TemplateFields = ({
 type FieldChipProps = {
   field: TemplateField;
   className?: string;
-  onClick: () => void;
+  onClick?: () => void;
 };
-const FieldChip = ({ field, className, onClick }: FieldChipProps) => {
+export const FieldChip = ({ field, className, onClick }: FieldChipProps) => {
   return (
     <Button
       variant="light"

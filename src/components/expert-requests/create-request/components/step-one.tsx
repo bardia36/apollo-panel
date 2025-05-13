@@ -125,7 +125,8 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
                 placeholder={t("expertRequests.userNamePlaceholder")}
                 error={error}
                 classNames={{
-                  input: "bg-default-100 text-foreground-500",
+                  inputWrapper: 'bg-default-50',
+                  input: "text-foreground-500",
                   label: "text-xs !text-default-600",
                 }}
                 endContent={
@@ -151,7 +152,8 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
                 placeholder="876 54 321 0912"
                 error={error}
                 classNames={{
-                  input: "bg-default-100 text-foreground-500",
+                  inputWrapper: 'bg-default-50',
+                  input: "text-foreground-500",
                   label: "text-xs !text-default-600",
                 }}
                 endContent={
@@ -177,7 +179,8 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
                 placeholder="test@customer.com"
                 error={error}
                 classNames={{
-                  input: "bg-default-100 text-foreground-500",
+                  inputWrapper: 'bg-default-50',
+                  input: "text-foreground-500",
                   label: "text-xs !text-default-600",
                 }}
                 endContent={
@@ -203,7 +206,8 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
                 placeholder={t("expertRequests.orderNumberPlaceholder")}
                 error={error}
                 classNames={{
-                  input: "bg-default-100 text-foreground-500",
+                  inputWrapper: 'bg-default-50',
+                  input: "text-foreground-500",
                   label: "text-xs !text-default-600",
                 }}
                 endContent={
@@ -254,7 +258,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
               className="justify-start"
             >
               <Icon
-                icon="stash:crown-solid"
+                icon="solar:crown-minimalistic-bold"
                 width="20"
                 height="20"
                 className="min-w-5"
@@ -396,7 +400,8 @@ const InspectionFormatDetailCard = ({
               error={error}
               value={field.value}
               classNames={{
-                input: "bg-default-100 text-foreground-500",
+                inputWrapper: 'bg-default-50',
+                input: "text-foreground-500",
                 label: "text-xs !text-default-600",
               }}
             />
