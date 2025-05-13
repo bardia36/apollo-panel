@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 //components
-import { Card, CardBody } from "@heroui/card";
+import { Card, CardBody } from "@heroui/react";
 
 import ForgetPasswordForm from "./components/forget-password-form";
 import ConfirmEmail from "./components/confirm-email";

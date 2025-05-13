@@ -1,13 +1,13 @@
-import { Chip } from "@heroui/chip";
-import { User } from "@heroui/user";
+import { Chip } from "@heroui/react";
+import { User } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { Button } from "@heroui/button";
+import { Button } from "@heroui/react";
 import {
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-} from "@heroui/dropdown";
+} from "@heroui/react";
 import DateDisplay from "../../shared/date-display";
 import { t } from "i18next";
 import { ExpertRequest } from "@/types/expertRequests";
@@ -28,7 +28,12 @@ export const RenderOrderNumberCell = ({
       className="min-w-6 w-6 h-6"
       onPress={copyToClipboard(orderNumber)}
     >
-      <Icon icon="solar:copy-linear" width={20} height={20} className="text-default-400" />
+      <Icon
+        icon="solar:copy-linear"
+        width={20}
+        height={20}
+        className="text-default-400"
+      />
     </Button>
   </div>
 );

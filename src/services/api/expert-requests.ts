@@ -1,14 +1,43 @@
 import { axiosHandler } from "./core";
 import { RequestMethod } from "@/types/api";
-import { ExpertRequestResponse, InspectionType } from "@/types/expertRequests";
+import {
+  CreateRequestBody,
+  ExpertRequest,
+  ExpertRequestResponse,
+  UpdateRequestLinkBody,
+} from "@/types/expertRequests";
 
 const BASE_URL = "panel/inspection-request";
 
 export const expertRequestsApi = {
-  getRequests(params: { inspection_type: InspectionType }) {
+  getRequests(params: { inspection_format: "PRE_INSURANCE_BODY_INSPECTION" }) {
     return axiosHandler<ExpertRequestResponse>(BASE_URL, {
       method: RequestMethod.GET,
       params,
+    });
+  },
+
+  getRequestsById(id: string) {
+    return axiosHandler<ExpertRequest>(BASE_URL, {
+      action: id,
+      method: RequestMethod.GET,
+    });
+  },
+
+  // create - step 1
+  createRequest(body: CreateRequestBody) {
+    return axiosHandler<{ id: string }>(BASE_URL, {
+      method: RequestMethod.POST,
+      body,
+    });
+  },
+
+  // create - step 2
+  updateRequestLink(id: string, body: UpdateRequestLinkBody) {
+    return axiosHandler(BASE_URL, {
+      action: `${id}/link-step`,
+      method: RequestMethod.PATCH,
+      body,
     });
   },
 };

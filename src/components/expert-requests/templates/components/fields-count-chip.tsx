@@ -1,11 +1,11 @@
-import { Chip } from "@heroui/chip";
+import { Chip } from "@heroui/react";
 import { t } from "i18next";
 
 type Props = {
   activeFieldsCount: number;
 };
 
-export default function DetailFieldsCountChip({ activeFieldsCount }: Props) {
+export default function FieldsCountChip({ activeFieldsCount }: Props) {
   return (
     <Chip
       classNames={{

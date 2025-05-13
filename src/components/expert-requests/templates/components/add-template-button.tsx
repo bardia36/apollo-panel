@@ -1,6 +1,6 @@
-import { Avatar } from "@heroui/avatar";
-import { Button } from "@heroui/button";
-import { cn } from "@heroui/theme";
+import { Avatar } from "@heroui/react";
+import { Button } from "@heroui/react";
+import { cn } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 

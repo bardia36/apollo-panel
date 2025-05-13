@@ -9,7 +9,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
-} from "@heroui/table";
+} from "@heroui/react";
 import {
   RenderOrderNumberCell,
   RenderInspectionDataCell,
@@ -28,6 +28,7 @@ import { exceptionHandler } from "@/services/api/exception";
 import { TopContent } from "./top-content";
 import { BottomContent } from "./bottom-content";
 import { columns, statusOptions } from "../constants";
+import { Key } from "@react-types/shared";
 
 // TODO:
 // 1. Add archived requests needs to the table
@@ -49,13 +50,13 @@ export default function RequestsTable() {
   const [selectedKeys, setSelectedKeys] = useState<Set<string> | string>(
     new Set([])
   );
-  const [visibleColumns, setVisibleColumns] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [visibleColumns, setVisibleColumns] = useState<string | Key[]>("all");
+  const [statusFilter, setStatusFilter] = useState<string | Key[]>("all");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [sortDescriptor, setSortDescriptor] = useState<{
     column: keyof ExpertRequest;
-    direction: string;
+    direction: "ascending" | "descending";
   }>({
     column: "order_number",
     direction: "ascending",
@@ -70,7 +71,7 @@ export default function RequestsTable() {
     setLoading(true);
     try {
       const res = await expertRequestsApi.getRequests({
-        inspection_type: "VEHICLE",
+        inspection_format: "PRE_INSURANCE_BODY_INSPECTION",
       });
       setRequests(res);
     } catch (err) {
@@ -211,9 +212,9 @@ export default function RequestsTable() {
       request: ExpertRequest,
       columnKey: keyof AddOrReplaceKey<ExpertRequest, "actions", string>
     ) => {
-      let cellValue;
+      let cellValue: React.ReactNode;
       if (columnKey === "actions") cellValue = "actions";
-      else cellValue = request[columnKey];
+      else cellValue = request[columnKey] as React.ReactNode;
 
       switch (columnKey) {
         case "order_number":
@@ -233,7 +234,9 @@ export default function RequestsTable() {
           return <RenderOwnerCell owner={request.owner} />;
 
         case "unit":
-          return <RenderUnitCell unit={request.unit} />;
+          return (
+            <>{!!request.unit && <RenderUnitCell unit={request.unit} />}</>
+          );
 
         case "createdAt":
           return <RenderCreatedAtCell createdAt={request.createdAt} />;
@@ -257,8 +260,13 @@ export default function RequestsTable() {
       bottomContent={bottomContentWrapper}
       selectedKeys={selectedKeys}
       sortDescriptor={sortDescriptor}
-      onSelectionChange={setSelectedKeys}
-      onSortChange={setSortDescriptor}
+      onSelectionChange={(keys) => setSelectedKeys(keys as Set<string>)}
+      onSortChange={(descriptor) =>
+        setSortDescriptor({
+          column: descriptor.column as keyof ExpertRequest,
+          direction: descriptor.direction,
+        })
+      }
     >
       <TableHeader columns={headerColumns}>
         {(column) => (
@@ -280,7 +288,9 @@ export default function RequestsTable() {
         {(item) => (
           <TableRow key={item._id}>
             {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
+              <TableCell>
+                {renderCell(item, columnKey as keyof ExpertRequest)}
+              </TableCell>
             )}
           </TableRow>
         )}

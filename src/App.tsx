@@ -32,13 +32,7 @@ import useAuthStore from "@/stores/auth-store";
 
 // Contexts
 import { BreadcrumbProvider } from "@/context/breadcrumbContext";
-
-// Types
-import type { ActhDto } from "./types/auth";
-
-type CookieValues = {
-  AUTH?: ActhDto;
-};
+import { CookieValues } from "./types/auth";
 
 function App() {
   const [cookie] = useCookies<"AUTH", CookieValues>(["AUTH"]);

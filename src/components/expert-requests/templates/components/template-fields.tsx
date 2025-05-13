@@ -1,8 +1,8 @@
 import { TemplateField } from "@/types/templates";
-import { Button } from "@heroui/button";
-import { Chip } from "@heroui/chip";
-import { Input } from "@heroui/input";
-import { cn } from "@heroui/theme";
+import { Button } from "@heroui/react";
+import { Chip } from "@heroui/react";
+import { Input } from "@heroui/react";
+import { cn } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { useEffect, useRef, useState } from "react";
@@ -80,7 +80,11 @@ export const TemplateFields = ({
     };
 
     stateSetters[fieldType]((prev) =>
-      prev.map((f) => (f._id === field._id ? { ...f, active: !f.active } : f))
+      prev.map((f) =>
+        `${f._id}-${f.title}` === `${field._id}-${field.title}`
+          ? { ...f, active: !f.active }
+          : f
+      )
     );
   }
 
@@ -94,7 +98,7 @@ export const TemplateFields = ({
           <div className="grid grid-cols-2 gap-1">
             {imageFields.map((field) => (
               <FieldChip
-                key={field._id}
+                key={`${field._id}-${field.title}`}
                 field={field}
                 className={
                   checkChipTitleOverflows(field.title) ? "col-span-2" : ""
@@ -114,7 +118,7 @@ export const TemplateFields = ({
           <div className="grid grid-cols-2 gap-1">
             {fileFields.map((field) => (
               <FieldChip
-                key={field._id}
+                key={`${field._id}-${field.title}`}
                 field={field}
                 className={
                   checkChipTitleOverflows(field.title) ? "col-span-2" : ""
@@ -134,7 +138,7 @@ export const TemplateFields = ({
           <div className="grid grid-cols-2 gap-1">
             {addedFields.map((field) => (
               <FieldChip
-                key={field._id}
+                key={`${field._id}-${field.title}`}
                 field={field}
                 className={
                   checkChipTitleOverflows(field.title) ? "col-span-2" : ""

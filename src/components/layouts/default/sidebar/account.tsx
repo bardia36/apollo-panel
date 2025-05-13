@@ -11,7 +11,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-} from "@heroui/dropdown";
+} from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { toast } from "@/utils/toast";
 import UserImage from "@/components/shared/user-image";

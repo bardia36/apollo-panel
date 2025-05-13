@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { Step } from "../create-steps";
+import { Step } from "../steps-wrapper";
 
 type Props = {
   currentStep: number;
@@ -15,8 +15,8 @@ export default function Stepper({ currentStep, steps }: Props) {
         const isLast = index === steps.length - 1;
 
         return (
-          <>
-            <div key={index} className="px-3 py-2">
+          <div key={`step-${index}`}>
+            <div className="px-3 py-2">
               <li className="flex items-start space-x-2 rtl:space-x-reverse">
                 <div className="mt-1">
                   {isCompleted ? (
@@ -55,7 +55,7 @@ export default function Stepper({ currentStep, steps }: Props) {
                 />
               </div>
             )}
-          </>
+          </div>
         );
       })}
     </ul>

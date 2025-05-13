@@ -22,10 +22,10 @@ import useAuthStore from "@/stores/auth-store";
 
 // components
 import { Link, useNavigate } from "react-router-dom";
-import { Divider } from "@heroui/divider";
-import { Form } from "@heroui/form";
-import { Button } from "@heroui/button";
-import { Checkbox } from "@heroui/checkbox";
+import { Divider } from "@heroui/react";
+import { Form } from "@heroui/react";
+import { Button } from "@heroui/react";
+import { Checkbox } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import GoogleButton from "./google-button";
 import { Icon } from "@iconify/react/dist/iconify.js";

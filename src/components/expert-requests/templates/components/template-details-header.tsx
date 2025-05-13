@@ -1,5 +1,5 @@
 import { Template } from "@/types/templates";
-import { Skeleton } from "@heroui/skeleton";
+import { Skeleton } from "@heroui/react";
 import { lazy, Suspense } from "react";
 import { ExistedTemplateHeader } from "../existed-template-header";
 const NewTemplateHeader = lazy(() => import("../new-template-header.tsx"));

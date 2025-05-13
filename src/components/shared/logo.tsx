@@ -1,5 +1,5 @@
-import { Image } from "@heroui/image";
-import { SlotsToClasses } from "@heroui/theme";
+import { Image } from "@heroui/react";
+import { SlotsToClasses } from "@heroui/react";
 import { useTheme } from "@heroui/use-theme";
 import { t } from "i18next";
 import logo from "@/assets/images/logo/logo.svg";

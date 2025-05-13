@@ -17,9 +17,9 @@ import { formOptions } from "@/utils/validations";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 // components
-import { Form } from "@heroui/form";
-import { Button } from "@heroui/button";
-import { Card, CardBody } from "@heroui/card";
+import { Form } from "@heroui/react";
+import { Button } from "@heroui/react";
+import { Card, CardBody } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
 import { AppInput } from "@/components/shared/app-components/app-input";

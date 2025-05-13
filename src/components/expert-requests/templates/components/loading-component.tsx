@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Skeleton } from "@heroui/skeleton";
+import { Skeleton } from "@heroui/react";
 
 export const TemplatesLoadingSkeleton: FC = () => {
   return (

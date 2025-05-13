@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Image } from "@heroui/image";
+import { Image } from "@heroui/react";
 import useAppConfig from "@/config/app-config";
 
 type LazyImageProps = {
@@ -8,6 +8,7 @@ type LazyImageProps = {
   width?: number;
   height?: number;
   className?: string;
+  fit?: "cover" | "contain";
 };
 
 export const LazyImage = ({
@@ -16,6 +17,7 @@ export const LazyImage = ({
   width,
   height,
   className,
+  fit = "contain",
 }: LazyImageProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const imageRef = useRef<HTMLDivElement | null>(null);
@@ -45,7 +47,7 @@ export const LazyImage = ({
           alt={alt}
           width={width}
           height={height}
-          classNames={{ img: "object-cover" }}
+          classNames={{ img: `object-${fit}` }}
         />
       )}
     </div>

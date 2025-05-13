@@ -2,7 +2,7 @@ name: Deploy to apollo server
 
 on:
   push:
-    branches: [ staging ]
+    branches: [ review ]
 
 jobs:
   deploy:
@@ -20,6 +20,6 @@ jobs:
     - name: Deploy Docker container
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
-          cd ./project/apollo-auth
+          cd ./project/apollo-panel
           bash deploy.sh
         EOF

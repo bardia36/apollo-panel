@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import { nav } from "@/nav/index";
-import { cn } from "@heroui/theme";
+import { cn } from "@heroui/react";
 
 export default function Nav() {
   return (

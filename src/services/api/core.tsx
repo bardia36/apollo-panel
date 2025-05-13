@@ -1,10 +1,11 @@
 import type { ErrorExceptions, RequestOption, ServerType } from "@/types/api";
-
 import { stringify } from "qs";
 import axios, { AxiosError, type AxiosRequestConfig } from "axios";
 import useAuthStore from "@/stores/auth-store";
 import { ErrorException } from "@/types/api";
 import useAppConfig from "@/config/app-config";
+import { accountApi } from "./auth";
+
 const tryWithoutToken = [425];
 const statusConfig = {
   loginRedirect: [406, 407, 401, 403],
@@ -96,8 +97,21 @@ async function errorHandler(
   }
 
   if (statusConfig.logout.includes(error.status)) {
-    // authStore.logout()
+    handleLogout();
   }
 
   throw error.data;
+}
+
+async function handleLogout() {
+  try {
+    await accountApi.logout();
+  } catch (error) {
+    console.error("Logout API call failed:", error);
+  } finally {
+    useAuthStore.getState().removeAuth();
+
+    document.cookie = "AUTH=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    window.location.href = "/login";
+  }
 }

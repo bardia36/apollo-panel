@@ -1,4 +1,4 @@
-import { Image } from "@heroui/image";
+import { Image } from "@heroui/react";
 import logoIcon from "@/assets/images/logo/logo-icon.svg";
 
 export default function ({ imgClass }: { imgClass?: string }) {

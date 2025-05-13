@@ -16,13 +16,13 @@ import { accountApi } from "@/services/api/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 // components
-import { Form } from "@heroui/form";
+import { Form } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
-import { Button } from "@heroui/button";
+import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { Checkbox } from "@heroui/checkbox";
+import { Checkbox } from "@heroui/react";
 import { Link } from "react-router-dom";
-import { Divider } from "@heroui/divider";
+import { Divider } from "@heroui/react";
 import GoogleButton from "@/components/auth/login/login-form/google-button";
 
 export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
