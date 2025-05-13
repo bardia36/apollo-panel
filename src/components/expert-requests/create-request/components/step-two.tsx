@@ -23,6 +23,7 @@ export default function StepTwo({
   onStepBack,
 }: StepTwoProps) {
   const [initializing, setInitializing] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [templates, setTemplates] = useState<Templates>();
 
   // Use the useTemplateFields hook to manage template fields
@@ -67,6 +68,8 @@ export default function StepTwo({
       return;
     }
 
+    setIsLoading(true);
+
     const body = {
       template_id: activeTemplate._id,
       fields: (
@@ -82,63 +85,61 @@ export default function StepTwo({
     expertRequestsApi
       .updateRequestLink(requestId, body)
       .then(() => onStepComplete())
-      .catch((err) => exceptionHandler(err));
+      .catch((err) => exceptionHandler(err))
+      .finally(() => setIsLoading(false));
   }
+
+  if (initializing) return <StepTwoLoading />;
 
   return (
     <>
-      {initializing ? (
-        <StepTwoLoading />
-      ) : (
-        <>
-          <h6 className="text-xs text-default-600 mb-2">
-            {t("expertRequests.templates")}
-          </h6>
+      <h6 className="text-xs text-default-600 mb-2">
+        {t("expertRequests.templates")}
+      </h6>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-2 mb-6">
-            {templates?.docs.map((template) => (
-              <TemplateCard
-                key={template._id}
-                template={template}
-                activeTemplateId={activeTemplate?._id || ""}
-                showTemplateDetail={setActiveTemplate}
-              />
-            ))}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-2 mb-6">
+        {templates?.docs.map((template) => (
+          <TemplateCard
+            key={template._id}
+            template={template}
+            activeTemplateId={activeTemplate?._id || ""}
+            showTemplateDetail={setActiveTemplate}
+          />
+        ))}
+      </div>
+
+      {activeTemplate && (
+        <>
+          <div className="flex justify-between items-center mb-1.5">
+            <h6 className="text-xs text-default-600">
+              {t("expertRequests.wantedRequests")}
+            </h6>
+
+            <FieldsCountChip activeFieldsCount={activeFieldsCount} />
           </div>
 
-          {activeTemplate && (
-            <>
-              <div className="flex justify-between items-center mb-1.5">
-                <h6 className="text-xs text-default-600">
-                  {t("expertRequests.wantedRequests")}
-                </h6>
-
-                <FieldsCountChip activeFieldsCount={activeFieldsCount} />
-              </div>
-
-              <div className="p-4 flex flex-col gap-4 bg-default-50 text-default-600 border-dashed shadow-lg rounded-[20px] border-default-200 border-2">
-                <TemplateFields
-                  key={activeTemplate._id}
-                  templateFields={
-                    modifiedTemplateFields[activeTemplate._id] ||
-                    activeTemplate.fields
-                  }
-                  onFieldsActiveCountChange={setActiveFieldsCount}
-                  onFieldsChange={(updatedFields) =>
-                    handleFieldsChange(activeTemplate._id, updatedFields)
-                  }
-                />
-              </div>
-            </>
-          )}
-
-          <StepperButtons
-            currentStep={2}
-            onNextStep={submit}
-            onPrevStep={onStepBack}
-          />
+          <div className="p-4 flex flex-col gap-4 bg-default-50 text-default-600 border-dashed shadow-lg rounded-[20px] border-default-200 border-2">
+            <TemplateFields
+              key={activeTemplate._id}
+              templateFields={
+                modifiedTemplateFields[activeTemplate._id] ||
+                activeTemplate.fields
+              }
+              onFieldsActiveCountChange={setActiveFieldsCount}
+              onFieldsChange={(updatedFields) =>
+                handleFieldsChange(activeTemplate._id, updatedFields)
+              }
+            />
+          </div>
         </>
       )}
+
+      <StepperButtons
+        currentStep={2}
+        isLoading={isLoading}
+        onNextStep={submit}
+        onPrevStep={onStepBack}
+      />
     </>
   );
 }

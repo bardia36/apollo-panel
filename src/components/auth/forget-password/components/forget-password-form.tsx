@@ -25,12 +25,13 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 
 export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
   const { t } = useTranslation();
+  const msgs = useValidationMessages();
   const [progressing, setProgressing] = useState(false);
 
   const validationSchema = object({
     email: string()
-      .required(useValidationMessages().required(t("auth.email")))
-      .email(useValidationMessages().email(t("auth.email"))),
+      .required(msgs.required(t("auth.email")))
+      .email(msgs.isNotValid(t("auth.email"))),
   }).required();
 
   const { handleSubmit, control } = useForm<ForgetPasswordEntity>({

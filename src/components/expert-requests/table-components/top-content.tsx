@@ -11,7 +11,7 @@ import { t } from "i18next";
 import { numberSplitter } from "@/utils/base";
 import { SetStateAction } from "react";
 import {
-  ExpertRequest,
+  ExpertRequestInfo,
   StatusOptions,
   TableColumns,
 } from "@/types/expertRequests";
@@ -23,7 +23,7 @@ type TopContentProps = {
   visibleColumns: string | Key[];
   statusOptions: StatusOptions;
   columns: TableColumns;
-  requestDocs: ExpertRequest[];
+  requestDocs: ExpertRequestInfo[];
   rowsPerPage: number;
   onSearchChange: (value: string) => void;
   setStatusFilter: (value: SetStateAction<string | Key[]>) => void;

@@ -2,9 +2,10 @@ import { axiosHandler } from "./core";
 import { RequestMethod } from "@/types/api";
 import {
   CreateRequestBody,
-  ExpertRequest,
+  ExpertRequestDetail,
   ExpertRequestResponse,
   UpdateRequestLinkBody,
+  UpdateRequestFinalBody,
 } from "@/types/expertRequests";
 
 const BASE_URL = "panel/inspection-request";
@@ -18,7 +19,7 @@ export const expertRequestsApi = {
   },
 
   getRequestsById(id: string) {
-    return axiosHandler<ExpertRequest>(BASE_URL, {
+    return axiosHandler<ExpertRequestDetail>(BASE_URL, {
       action: id,
       method: RequestMethod.GET,
     });
@@ -36,6 +37,15 @@ export const expertRequestsApi = {
   updateRequestLink(id: string, body: UpdateRequestLinkBody) {
     return axiosHandler(BASE_URL, {
       action: `${id}/link-step`,
+      method: RequestMethod.PATCH,
+      body,
+    });
+  },
+
+  // create - step 3
+  updateRequestFinal(id: string, body: UpdateRequestFinalBody) {
+    return axiosHandler(BASE_URL, {
+      action: `${id}/final-step`,
       method: RequestMethod.PATCH,
       body,
     });

@@ -56,7 +56,9 @@ export const CreateRequestModal: FC<Props> = ({ activator }) => {
         >
           <ModalContent>
             <ModalBody className="p-4 overflow-y-auto">
-              <StepsWrapper onCloseModal={handleModalClose} />
+              <StepsWrapper
+                onCloseModal={handleModalClose}
+              />
             </ModalBody>
           </ModalContent>
         </Modal>

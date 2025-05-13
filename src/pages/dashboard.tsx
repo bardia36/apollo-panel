@@ -6,5 +6,5 @@ export default function IndexPage() {
 
   useEffect(() => setLinks([]), [setLinks]);
 
-  return <div>Dashboardaa</div>;
+  return <div>Dashboard</div>;
 }
