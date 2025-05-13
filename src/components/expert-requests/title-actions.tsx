@@ -15,7 +15,11 @@ import {
 import { TemplatesModal } from "./templates";
 import { CreateRequestModal } from "./create-request";
 
-export default () => {
+type Props = {
+  requestsCount: number;
+};
+
+export default ({ requestsCount }: Props) => {
   const { theme } = useTheme();
 
   return (
@@ -37,7 +41,7 @@ export default () => {
             </h1>
 
             <Badge
-              content="0"
+              content={requestsCount}
               children
               className="bg-default-foreground text-background"
             />

@@ -1,5 +1,5 @@
 // modules
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { t } from "i18next";
 // components
 import {
@@ -26,29 +26,22 @@ import {
   ExpertRequestResponse,
 } from "@/types/expertRequests";
 import { AddOrReplaceKey } from "@/utils/base";
-import { expertRequestsApi } from "@/services/api/expert-requests";
-import { exceptionHandler } from "@/services/api/exception";
 import { TopContent } from "./top-content";
 import { BottomContent } from "./bottom-content";
 import { columns, statusOptions } from "../constants";
 import { Key } from "@react-types/shared";
 
+type Props = {
+  loading: boolean;
+  requests: ExpertRequestResponse;
+};
+
 // TODO:
 // 1. Add archived requests needs to the table
 // 2. Change Table content by changing table-type-tabs component
 // 3. Check filters and sort with backend
-export default function RequestsTable() {
+export default function RequestsTable({ requests, loading }: Props) {
   // states -
-  const [requests, setRequests] = useState<ExpertRequestResponse>({
-    docs: [],
-    hasNextPage: false,
-    hasPrevPage: false,
-    limit: 10,
-    page: 1,
-    totalDocs: 0,
-    totalPage: 1,
-  });
-  const [loading, setLoading] = useState<boolean>(false);
   const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<Set<string> | string>(
     new Set([])
@@ -56,7 +49,7 @@ export default function RequestsTable() {
   const [visibleColumns, setVisibleColumns] = useState<string | Key[]>("all");
   const [statusFilter, setStatusFilter] = useState<string | Key[]>("all");
   const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortDescriptor, setSortDescriptor] = useState<{
     column: keyof ExpertRequestInfo;
     direction: "ascending" | "descending";
@@ -65,24 +58,6 @@ export default function RequestsTable() {
     direction: "ascending",
   });
   // - states
-
-  useEffect(() => {
-    getRequests();
-  }, []);
-
-  async function getRequests() {
-    setLoading(true);
-    try {
-      const res = await expertRequestsApi.getRequests({
-        inspection_format: "PRE_INSURANCE_BODY_INSPECTION",
-      });
-      setRequests(res);
-    } catch (err) {
-      exceptionHandler(err);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   // variables -
   const hasSearchFilter = Boolean(filterValue);
@@ -289,7 +264,7 @@ export default function RequestsTable() {
         items={sortedItems}
       >
         {(item) => (
-          <TableRow key={item._id}>
+          <TableRow key={item.order_number}>
             {(columnKey) => (
               <TableCell>
                 {renderCell(item, columnKey as keyof ExpertRequestInfo)}
