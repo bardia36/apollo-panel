@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useEffect, useState } from "react"; // Add useEffect and useState
 import { expertRequestsApi } from "@/services/api/expert-requests"; // Import the API
 import { exceptionHandler } from "@/services/api/exception";
-import { ExpertRequestInfo } from "@/types/expertRequests";
+import { ExpertRequestDetail } from "@/types/expertRequests";
 
 type StepThreeProps = {
   requestId: string | null;
@@ -17,7 +17,7 @@ export default function StepThree({
   onStepBack,
   onStepComplete,
 }: StepThreeProps) {
-  const [requestData, setRequestData] = useState<any>(null);
+  const [requestData, setRequestData] = useState<ExpertRequestDetail>();
 
   useEffect(() => {
     if (requestId) {
@@ -49,7 +49,7 @@ export default function StepThree({
   );
 }
 
-function RequestSummary({ requestData }: { requestData: ExpertRequestInfo }) {
+function RequestSummary({ requestData }: { requestData: ExpertRequestDetail }) {
   return (
     <>
       <h6 className="text-xs text-default-600 mb-2">
@@ -112,7 +112,7 @@ function RequestSummary({ requestData }: { requestData: ExpertRequestInfo }) {
           </div>
 
           <div className="ms-auto text-end text-default-500 text-sm">
-            <h6>{requestData.inspection_data.color.name_fa}</h6>
+            <h6>{requestData.inspection_data.color?.name}</h6>
             <p>VIN: {requestData.inspection_data.vin}</p>
           </div>
         </div>
