@@ -24,7 +24,7 @@ import { expertRequestsApi } from "@/services/api/expert-requests";
 import { exceptionHandler } from "@/services/api/exception";
 
 type StepOneProps = {
-  onStepComplete: () => void;
+  onStepComplete: (id: string) => void;
 };
 
 type StepOneFormValues = {
@@ -70,7 +70,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
       vehicle_compony: string().required(
         msgs.required(t("expertRequests.carGroup"))
       ),
-      vin: string().required(msgs.required(t("expertRequests.vinNumber"))),
+      vin: string().required(msgs.required(t("expertRequests.vinNumber"))), // TODO: must be 17 char
       color: string().required(msgs.required(t("shared.color"))),
     }).when("inspection_format", {
       is: (val: string) => !!val,
@@ -94,8 +94,8 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
   const submit = async () => {
     try {
       const data = getValues();
-      await expertRequestsApi.createRequest(data);
-      onStepComplete();
+      const response = await expertRequestsApi.createRequest(data);
+      onStepComplete(response.id);
     } catch (err) {
       exceptionHandler(err);
     }
@@ -148,7 +148,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
                 {...field}
                 label={t("shared.phoneNumber")}
                 labelPlacement="outside"
-                placeholder="0912 123 45 678"
+                placeholder="876 54 321 0912"
                 error={error}
                 classNames={{
                   input: "bg-default-100 text-foreground-500",
@@ -253,7 +253,12 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
               fullWidth
               className="justify-start"
             >
-              <Icon icon="stash:crown-solid" width="20" height="20" />
+              <Icon
+                icon="stash:crown-solid"
+                width="20"
+                height="20"
+                className="min-w-5"
+              />
               {t("expertRequests.activateAndUseOtherTemplates")}
             </Button>
           </div>
@@ -387,7 +392,7 @@ const InspectionFormatDetailCard = ({
               {...field}
               label={t("expertRequests.vinNumber")}
               labelPlacement="outside"
-              placeholder={t("expertRequests.orderNumberPlaceholder")}
+              placeholder={t("expertRequests.vinNumberPlaceholder")}
               error={error}
               value={field.value}
               classNames={{

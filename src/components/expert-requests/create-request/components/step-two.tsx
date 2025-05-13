@@ -8,13 +8,20 @@ import { t } from "i18next";
 import FieldsCountChip from "../../templates/components/fields-count-chip";
 import { useTemplateFields } from "../../templates/components/useTemplateFields";
 import { StepperButtons } from "./stepper-buttons";
+import { expertRequestsApi } from "@/services/api/expert-requests";
+import { Skeleton } from "@heroui/react";
 
 type StepTwoProps = {
+  requestId: string | null;
   onStepComplete: () => void;
   onStepBack: () => void;
 };
 
-export default function StepTwo({ onStepComplete, onStepBack }: StepTwoProps) {
+export default function StepTwo({
+  requestId,
+  onStepComplete,
+  onStepBack,
+}: StepTwoProps) {
   const [initializing, setInitializing] = useState<boolean>(false);
   const [templates, setTemplates] = useState<Templates>();
 
@@ -55,15 +62,33 @@ export default function StepTwo({ onStepComplete, onStepBack }: StepTwoProps) {
   }
 
   function submit() {
-    console.log("step 2 submit");
-    onStepComplete();
+    if (!requestId || !activeTemplate) {
+      console.error("Request ID or active template is missing");
+      return;
+    }
+
+    const body = {
+      template_id: activeTemplate._id,
+      fields: (
+        modifiedTemplateFields[activeTemplate._id] || activeTemplate.fields
+      ).map(
+        ({ title, type }) => ({
+          title,
+          type: type === "OTHER" ? "IMAGE" : type,
+        }) // Filter to include only title and type and change other type to image
+      ),
+    };
+
+    expertRequestsApi
+      .updateRequestLink(requestId, body)
+      .then(() => onStepComplete())
+      .catch((err) => exceptionHandler(err));
   }
 
   return (
     <>
       {initializing ? (
-        // TODO: add skeleton
-        <div>loading</div>
+        <StepTwoLoading />
       ) : (
         <>
           <h6 className="text-xs text-default-600 mb-2">
@@ -115,5 +140,46 @@ export default function StepTwo({ onStepComplete, onStepBack }: StepTwoProps) {
         </>
       )}
     </>
+  );
+}
+
+export function StepTwoLoading() {
+  return (
+    <div>
+      <h6 className="text-xs text-default-600 mb-2">
+        <Skeleton classNames={{ base: "h-4 w-16 rounded-lg" }} />
+      </h6>
+
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-2 mb-6">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <div key={index} className="p-4 bg-default-50 rounded-[20px]">
+            <Skeleton classNames={{ base: "h-6 w-3/4 mb-2 rounded-lg" }} />
+            <Skeleton classNames={{ base: "h-4 w-1/2 rounded-lg" }} />
+          </div>
+        ))}
+      </div>
+
+      <div className="flex justify-between items-center mb-1.5">
+        <h6 className="text-xs text-default-600">
+          <Skeleton classNames={{ base: "h-4 w-20 rounded-lg" }} />
+        </h6>
+        <Skeleton classNames={{ base: "h-6 w-12 rounded-full" }} />
+      </div>
+
+      <div className="p-4 bg-default-50 text-default-600 border-dashed shadow-lg rounded-[20px] border-default-200 border-2">
+        <h6 className="text-xs text-default-600">
+          <Skeleton classNames={{ base: "h-4 w-20 rounded-lg mb-2" }} />
+        </h6>
+
+        <div className="grid grid-cols-2 gap-1">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <Skeleton
+              key={index}
+              classNames={{ base: "h-6 w-32 rounded-lg" }}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
