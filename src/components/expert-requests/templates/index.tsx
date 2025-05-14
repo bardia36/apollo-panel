@@ -242,14 +242,18 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
                     addTemplate={addTemplate}
                   />
 
-                  <TemplateDetailsHeader
-                    isOnAddingTemplate={isOnAddingTemplate}
-                    templateName={activeTemplate?.name}
-                    activeFieldsCount={activeFieldsCount}
-                    onDeleteTemplate={deleteTemplate}
-                    onNewTemplatePropertyChange={handleNewTemplateProperty}
-                  />
-
+                  {!!activeTemplate && (
+                    <TemplateDetailsHeader
+                      isOnAddingTemplate={isOnAddingTemplate}
+                      template={{
+                        name: activeTemplate.name,
+                        default: activeTemplate.default,
+                      }}
+                      activeFieldsCount={activeFieldsCount}
+                      onDeleteTemplate={deleteTemplate}
+                      onNewTemplatePropertyChange={handleNewTemplateProperty}
+                    />
+                  )}
                   <div className="p-4 flex flex-col gap-4 bg-default-50 text-default-600 border-dashed shadow-lg rounded-[20px] border-default-200 border-2">
                     {isOnAddingTemplate ? (
                       <TemplateFields
