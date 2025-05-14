@@ -9,5 +9,5 @@ COPY . .
 RUN npm run build
 
 FROM nginx:1.25.2-alpine-slim
-COPY --from=buildenv /app/build /usr/share/nginx/html
+COPY --from=buildenv /app/dist /usr/share/nginx/html
 COPY /nginx.conf /etc/nginx/conf.d/default.conf
