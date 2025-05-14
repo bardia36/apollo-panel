@@ -14,7 +14,6 @@ import { ExpertRequestInfo } from "@/types/expertRequests";
 import { statusesMap } from "../constants";
 import { copyToClipboard } from "@/utils/base";
 
-// TODO: add copy to clipboard icon */
 export const RenderOrderNumberCell = ({
   orderNumber,
 }: {
