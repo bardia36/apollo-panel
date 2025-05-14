@@ -55,7 +55,9 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
       vehicle_compony: string().required(
         msgs.required(t("expertRequests.carGroup"))
       ),
-      vin: string().required(msgs.required(t("expertRequests.vinNumber"))), // TODO: must be 17 char
+      vin: string()
+        .length(17, msgs.length(t("expertRequests.vinNumber"), 17))
+        .required(msgs.required(t("expertRequests.vinNumber"))),
       color: string().required(msgs.required(t("shared.color"))),
     }).when("inspection_format", {
       is: (val: string) => !!val,

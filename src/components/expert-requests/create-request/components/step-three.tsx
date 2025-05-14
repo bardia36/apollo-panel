@@ -10,7 +10,14 @@ import {
 } from "@/types/expertRequests";
 import { FieldChip } from "../../templates/components/template-fields";
 import { truncateString } from "@/utils/base";
-import { Chip, Switch, Form, Select, SelectItem } from "@heroui/react";
+import {
+  Chip,
+  Switch,
+  Form,
+  Select,
+  SelectItem,
+  Skeleton,
+} from "@heroui/react";
 import { TemplateField } from "@/types/templates";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import { Controller, useForm } from "react-hook-form";
@@ -298,7 +305,9 @@ export default function StepThree({
             render={({ field, fieldState: { error } }) => (
               <Select
                 multiple
-                value={field.value?.filter((v): v is string => v !== undefined) || []}
+                value={
+                  field.value?.filter((v): v is string => v !== undefined) || []
+                }
                 className="max-w-xs"
                 isInvalid={!!error}
                 errorMessage={error?.message}
@@ -310,13 +319,16 @@ export default function StepThree({
                 label={t("expertRequests.tag")}
                 labelPlacement="outside"
                 onChange={(value) => field.onChange(value)}
-                selectedKeys={field.value?.filter((v): v is string => v !== undefined) || []}
+                selectedKeys={
+                  field.value?.filter((v): v is string => v !== undefined) || []
+                }
               >
                 {tags.map((tag) => (
                   <SelectItem key={tag.key}>{tag.label}</SelectItem>
                 ))}
               </Select>
-            )}          />
+            )}
+          />
         </div>
       </Form>
 
@@ -457,6 +469,65 @@ function RequestSummary({ requestData }: { requestData: ExpertRequestDetail }) {
 
 export function StepThreeLoading() {
   return (
-    <div>Loading...</div> // TODO: skeleton
+    <div className="flex flex-col h-full gap-6">
+      <Skeleton className="w-32 h-5 rounded-lg" />
+      <div className="p-4 flex flex-col gap-4 bg-default-50 shadow-md rounded-[20px]">
+        <div className="flex items-center gap-2">
+          <Skeleton className="w-12 h-12 rounded-full" />
+
+          <div className="flex-1">
+            <Skeleton className="w-32 h-6 mb-1 rounded-lg" />
+            <Skeleton className="w-24 h-4 rounded-lg" />
+          </div>
+
+          <div className="text-sm ms-auto">
+            <Skeleton className="w-20 h-5 mb-1 rounded-lg ms-auto" />
+            <Skeleton className="w-28 h-4 rounded-lg" />
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Skeleton className="w-12 h-12 rounded-full" />
+
+          <div className="flex-1">
+            <Skeleton className="w-36 h-6 mb-1 rounded-lg" />
+            <Skeleton className="w-28 h-4 rounded-lg" />
+          </div>
+
+          <div className="ms-auto text-end">
+            <Skeleton className="w-24 h-5 mb-1 rounded-lg ms-auto" />
+            <Skeleton className="w-32 h-4 rounded-lg" />
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Skeleton className="w-12 h-12 rounded-full" />
+
+          <div className="flex-1">
+            <Skeleton className="w-40 h-6 mb-1 rounded-lg" />
+            <Skeleton className="w-32 h-4 rounded-lg" />
+          </div>
+
+          <div className="ms-auto text-end">
+            <Skeleton className="w-24 h-5 mb-1 rounded-lg ms-auto" />
+            <Skeleton className="w-32 h-4 rounded-lg" />
+          </div>
+        </div>
+      </div>
+
+      <Skeleton className="w-full h-14 rounded-medium" />
+      <Skeleton className="w-full h-14 rounded-medium" />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+        <Skeleton className="w-full h-20 rounded-lg" />
+        <Skeleton className="w-full h-20 rounded-lg" />
+        <Skeleton className="w-full h-20 rounded-lg" />
+      </div>
+
+      <div className="flex justify-end mt-auto">
+        <Skeleton className="w-32 h-10 rounded-lg me-4" />
+        <Skeleton className="w-32 h-10 rounded-lg" />
+      </div>
+    </div>
   );
 }
