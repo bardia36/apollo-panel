@@ -36,7 +36,7 @@ const steps: Step[] = [
 ];
 
 export default function StepsWrapper({ onCloseModal }: Props) {
-  const [currentStep, setCurrentStep] = useState(3);
+  const [currentStep, setCurrentStep] = useState(1);
   const [requestId, setRequestId] = useState<string | null>(null);
   const { refreshRequests } = useExpertRequests();
 

@@ -31,33 +31,22 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
   const msgs = useValidationMessages();
 
   const validationSchema = object({
-    username: string().required(msgs.required(t("shared.userName"))),
+    username: string().optional(),
     mobile: string()
       .required(msgs.required(t("shared.mobile")))
       .matches(validationRegex.mobile, msgs.isNotValid(t("shared.mobile"))),
     email: string()
       .required(msgs.required(t("shared.email")))
       .email(msgs.isNotValid(t("shared.email"))),
-    order_number: string().required(
-      msgs.required(t("expertRequests.orderNumber"))
-    ),
-    inspection_format: string().required(
-      msgs.required(t("expertRequests.reviewType"))
-    ),
+    order_number: string().optional(),
+    inspection_format: string().optional(),
     inspection_data: object({
-      vehicle_brand: string().required(msgs.required(t("shared.producer"))),
-      vehicle_model: string().required(msgs.required(t("shared.model"))),
-      vehicle_compony: string().required(
-        msgs.required(t("expertRequests.carGroup"))
-      ),
-      vin: string()
-        .length(17, msgs.length(t("expertRequests.vinNumber"), 17))
-        .required(msgs.required(t("expertRequests.vinNumber"))),
-      color: string().required(msgs.required(t("shared.color"))),
-    }).when("inspection_format", {
-      is: (val: string) => !!val,
-      then: (schema) => schema.required(),
-    }),
+      vehicle_brand: string().optional(),
+      vehicle_model: string().optional(),
+      vehicle_compony: string().optional(),
+      vin: string().length(17, msgs.length(t("expertRequests.vinNumber"), 17)),
+      color: string().optional(),
+    }).optional(),
   });
 
   const { control, handleSubmit, getValues } = useForm<CreateRequestBody>({
