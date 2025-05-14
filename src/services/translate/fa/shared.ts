@@ -50,6 +50,7 @@ export default {
   sendSMS: "ارسال پیامک",
   settings: "تنظیمات",
   status: "وضعیت",
+  tagLabel: "عنوان تگ",
   total: "در کل",
   user: "کاربر",
   userName: "نام کاربر",

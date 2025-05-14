@@ -3,13 +3,13 @@ import { Button, Skeleton } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Stepper from "./components/stepper";
 import { t } from "i18next";
-import { StepTwoLoading } from "./components/step-two";
-import { StepThreeLoading } from "./components/step-three";
 import { useExpertRequests } from "@/components/expert-requests/context/expert-requests-context";
+import { StepTwoLoading } from "./components/loadings/step-two-loading";
+import { StepThreeLoading } from "./components/loadings/step-three-loading";
 
 const StepOne = lazy(() => import("./components/step-one"));
 const StepTwo = lazy(() => import("./components/step-two"));
-const StepThree = lazy(() => import("./components/step-three"));
+const StepThree = lazy(() => import("./components/step-three/step-three"));
 
 export type Step = {
   title: string;
@@ -36,7 +36,7 @@ const steps: Step[] = [
 ];
 
 export default function StepsWrapper({ onCloseModal }: Props) {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(3);
   const [requestId, setRequestId] = useState<string | null>(null);
   const { refreshRequests } = useExpertRequests();
 

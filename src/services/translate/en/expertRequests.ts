@@ -14,6 +14,8 @@ export default {
     "Or form link to send information for online visit",
   currentCases: "Current cases",
   deleteTemplate: "Delete template",
+  deleteTemplateDescription:
+    "All information will be deleted and cannot be restored! Are you sure?",
   finalCheck: "Final check",
   linkData: "Link contents",
   management: "Management",

@@ -50,6 +50,7 @@ export default {
   sendSMS: "Send SMS",
   settings: "Settings",
   status: "Status",
+  tagLabel: "Tag label",
   total: "Total",
   user: "User",
   userName: "Username",

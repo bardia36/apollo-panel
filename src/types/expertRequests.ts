@@ -1,4 +1,4 @@
-import { NameEnFa } from "./common";
+import { CommonListResponse, NameEnFa } from "./common";
 import { Template, TemplateField } from "./templates";
 
 export type ExpertRequestResponse = {
@@ -134,10 +134,7 @@ export type InspectionFormatParams = {
   inspection_category_id?: string;
 };
 
-export type InspectionFormatInfo = {
-  items: InspectionDataItem[];
-  count: number;
-};
+export type InspectionFormatInfo = CommonListResponse<InspectionDataItem>;
 
 export type InspectionDataItem = {
   key: string;
@@ -162,10 +159,7 @@ export type CreateRequestBody = {
   };
 };
 
-export type VehicleCategories = {
-  items: VehicleCategory[];
-  count: number;
-};
+export type VehicleCategories = CommonListResponse<VehicleCategory>;
 
 export type VehicleCategory = {
   name: string;
@@ -173,20 +167,14 @@ export type VehicleCategory = {
   label: string;
 };
 
-export type VehicleBrands = {
-  items: VehicleBrand[];
-  count: number;
-};
+export type VehicleBrands = CommonListResponse<VehicleBrand>;
 
 export type VehicleBrand = {
   key: string;
   label: string;
 };
 
-export type VehicleModels = {
-  items: VehicleModel[];
-  count: number;
-};
+export type VehicleModels = CommonListResponse<VehicleModel>;
 
 export type VehicleModel = {
   key: string;
@@ -194,10 +182,7 @@ export type VehicleModel = {
   label: string;
 };
 
-export type Colors = {
-  items: Color[];
-  count: number;
-};
+export type Colors = CommonListResponse<Color>;
 
 export type Color = {
   key: string;

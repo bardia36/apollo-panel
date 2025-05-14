@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Button,
   Modal,
   ModalBody,
@@ -37,17 +36,17 @@ export const ExistedTemplateHeader = ({
 
         <FieldsCountChip activeFieldsCount={activeFieldsCount} />
 
-        {/* {!template?.default && ( */}
-        <Button
-          variant="light"
-          color="danger"
-          className="px-2 h-8 text-xs"
-          onPress={onOpen}
-        >
-          <Icon icon="solar:trash-bin-trash-bold" width={20} height={20} />
-          {t("expertRequests.deleteTemplate")}
-        </Button>
-        {/* )} */}
+        {!template?.default && (
+          <Button
+            variant="light"
+            color="danger"
+            className="px-2 h-8 text-xs"
+            onPress={onOpen}
+          >
+            <Icon icon="solar:trash-bin-trash-bold" width={20} height={20} />
+            {t("expertRequests.deleteTemplate")}
+          </Button>
+        )}
       </div>
 
       <DeleteConfirmModal
@@ -85,20 +84,23 @@ function DeleteConfirmModal({
         >
           <ModalContent>
             {/* <ModalBody className="gap-0 overflow-y-auto pb-6"></ModalBody> */}
-            <ModalBody className="px-4 pt-6">
-              <Avatar
-                className="bg-danger-50"
-                isBordered
-                icon={
-                  <Icon
-                    icon="solar:trash-bin-trash-bold-duotone"
-                    width={32}
-                    height={32}
-                    className="!text-danger"
-                  />
-                }
-                size="lg"
-              ></Avatar>
+            <ModalBody className="px-4 pt-6 pb-4 gap-4">
+              <div className="bg-danger-50 border-2 border-danger-100 rounded-full p-4 w-fit mx-auto">
+                <Icon
+                  icon="solar:trash-bin-trash-bold-duotone"
+                  width={32}
+                  height={32}
+                  className="text-danger drop-shadow-lg"
+                />
+              </div>
+
+              <h6 className="text-center text-default-foreground text-lg font-bold">
+                {t("expertRequests.deleteTemplate")}
+              </h6>
+
+              <p className="text-center text-default-800 text-sm">
+                {t("expertRequests.deleteTemplateDescription")}
+              </p>
             </ModalBody>
 
             <ModalFooter className="justify-center px-4">
@@ -109,6 +111,7 @@ function DeleteConfirmModal({
               <Button
                 className="bg-default-foreground text-content1"
                 fullWidth
+                variant="shadow"
                 onPress={onDelete}
               >
                 {t("shared.yesDelete")}
