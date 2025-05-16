@@ -26,7 +26,6 @@ import { Template, Templates } from "@/types/templates";
 import { AvailableTemplates } from "./available-templates.tsx";
 import { TemplateFields } from "./components/template-fields.tsx";
 import { TemplatesLoadingSkeleton } from "./components/loading-component.tsx";
-import { AddTemplateButton } from "./components/add-template-button.tsx";
 import { TemplateDetailsHeader } from "./components/template-details-header.tsx";
 import { useTemplateFields } from "./components/useTemplateFields.tsx";
 
@@ -77,10 +76,6 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
   function showExistedTemplateDetail(template: Template) {
     setIsOnAddingTemplate(false);
     setActiveTemplate(template);
-  }
-
-  function addTemplate() {
-    setIsOnAddingTemplate(true);
   }
 
   function deleteTemplate() {
@@ -234,22 +229,22 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
                       isOnAddingTemplate={isOnAddingTemplate}
                       activeTemplateId={activeTemplate._id}
                       showTemplateDetail={showExistedTemplateDetail}
+                      onAddingTemplate={() => setIsOnAddingTemplate(true)}
                     />
                   )}
 
-                  <AddTemplateButton
-                    isOnAddingTemplate={isOnAddingTemplate}
-                    addTemplate={addTemplate}
-                  />
-
-                  <TemplateDetailsHeader
-                    isOnAddingTemplate={isOnAddingTemplate}
-                    templateName={activeTemplate?.name}
-                    activeFieldsCount={activeFieldsCount}
-                    onDeleteTemplate={deleteTemplate}
-                    onNewTemplatePropertyChange={handleNewTemplateProperty}
-                  />
-
+                  {!!activeTemplate && (
+                    <TemplateDetailsHeader
+                      isOnAddingTemplate={isOnAddingTemplate}
+                      template={{
+                        name: activeTemplate.name,
+                        default: activeTemplate.default,
+                      }}
+                      activeFieldsCount={activeFieldsCount}
+                      onDeleteTemplate={deleteTemplate}
+                      onNewTemplatePropertyChange={handleNewTemplateProperty}
+                    />
+                  )}
                   <div className="p-4 flex flex-col gap-4 bg-default-50 text-default-600 border-dashed shadow-lg rounded-[20px] border-default-200 border-2">
                     {isOnAddingTemplate ? (
                       <TemplateFields

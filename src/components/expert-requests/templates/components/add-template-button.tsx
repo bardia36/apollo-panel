@@ -6,19 +6,22 @@ import { t } from "i18next";
 
 type AddTemplateButtonProps = {
   isOnAddingTemplate: boolean;
+  className?: string;
   addTemplate: () => void;
 };
 
 export const AddTemplateButton = ({
   isOnAddingTemplate,
+  className,
   addTemplate,
 }: AddTemplateButtonProps) => {
   return (
     <Button
       variant="bordered"
       className={cn(
-        "mt-2 mb-6 bg-default-50 text-primary border-default-200 min-h-14 justify-start",
-        isOnAddingTemplate ? "border-primary" : "border-dashed"
+        "bg-default-50 text-primary border-default-200 min-h-14 justify-start",
+        isOnAddingTemplate ? "border-primary" : "border-dashed",
+        className
       )}
       onPress={addTemplate}
     >

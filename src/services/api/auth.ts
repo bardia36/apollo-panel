@@ -6,9 +6,11 @@ import {
   LoginEntity,
   RegisterEntity,
   ResetPasswordEntity,
+  UsersInfo,
 } from "@/types/auth";
 import { axiosHandler } from "./core";
 import { RequestMethod, ServerType } from "@/types/api";
+import { SearchParams } from "@/types/common";
 
 const BASE_URL = "auth";
 
@@ -167,6 +169,18 @@ export const accountApi = {
       action: "logout",
       method: RequestMethod.POST,
       serverType,
+    });
+  },
+
+  usersInfo(
+    params: SearchParams,
+    serverType: ServerType = "AUTHENTICATION_SERVER"
+  ) {
+    return axiosHandler<UsersInfo>(BASE_URL, {
+      action: "info",
+      method: RequestMethod.GET,
+      serverType,
+      params,
     });
   },
 };

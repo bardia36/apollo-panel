@@ -1,5 +1,5 @@
 import { t } from "i18next";
-import { StepperButtons } from "./stepper-buttons";
+import { StepperButtons } from "../stepper-buttons";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useEffect, useState } from "react";
 import { expertRequestsApi } from "@/services/api/expert-requests";
@@ -8,15 +8,18 @@ import {
   ExpertRequestDetail,
   UpdateRequestFinalBody,
 } from "@/types/expertRequests";
-import { FieldChip } from "../../templates/components/template-fields";
-import { truncateString } from "@/utils/base";
-import { Chip, Switch, Form, Select, SelectItem } from "@heroui/react";
+import { Switch, Form } from "@heroui/react";
 import { TemplateField } from "@/types/templates";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { array, boolean, object, string } from "yup";
 import { formOptions } from "@/utils/validations";
+import { accountApi } from "@/services/api/auth";
+import { AppSelect } from "@/components/shared/app-components/app-select";
+import { StepThreeLoading } from "../loadings/step-three-loading";
+import { RequestSummary } from "./request-summary";
+import { TagInput } from "@/components/shared/tag-input";
 
 type StepThreeProps = {
   requestId: string | null;
@@ -34,27 +37,24 @@ export default function StepThree({
   const [requestData, setRequestData] = useState<ExpertRequestDetail>();
   const [smsEnabled, setSmsEnabled] = useState(false);
   const [emailEnabled, setEmailEnabled] = useState(false);
-  const specialists = [
-    { key: "68239c55f0cc20a87def2d4a", label: "متین شمسایی" },
-  ];
-  const tags = [{ key: "1", label: "تگ اول" }];
 
   useEffect(() => {
-    if (requestId) {
-      expertRequestsApi
-        .getRequestsById(requestId)
-        // .getRequestsById("68239c55f0cc20a87def2d4a")
-        .then((response) => {
-          let res = response;
-          res.required_fields = filterExistedFields(
-            res.template_id?.fields,
-            res.required_fields
-          );
-          setRequestData(response);
-        })
-        .catch((err) => exceptionHandler(err))
-        .finally(() => setInitializing(false));
-    }
+    // if (requestId) {
+    setInitializing(true);
+    expertRequestsApi
+      // .getRequestsById(requestId)
+      .getRequestsById("68239c55f0cc20a87def2d4a")
+      .then((response) => {
+        let res = response;
+        res.required_fields = filterExistedFields(
+          res.template_id?.fields,
+          res.required_fields
+        );
+        setRequestData(response);
+      })
+      .catch((err) => exceptionHandler(err))
+      .finally(() => setInitializing(false));
+    // }
   }, []);
 
   function filterExistedFields(
@@ -128,7 +128,7 @@ export default function StepThree({
   if (initializing || !requestData) return <StepThreeLoading />;
 
   return (
-    <div className="flex flex-col h-full gap-6">
+    <div className="flex flex-col h-full">
       <RequestSummary requestData={requestData} />
 
       <div className="bg-default-50 px-4 py-3.5 flex items-center rounded-medium mb-2">
@@ -185,9 +185,9 @@ export default function StepThree({
         />
       </div>
 
-      <Form onSubmit={handleSubmit(submit)}>
+      <Form onSubmit={handleSubmit(submit)} className="gap-0">
         {(!!smsEnabled || !!emailEnabled) && (
-          <div className="grid grid-cols-2 max-md:flex-col w-full gap-4 py-2 mt-4">
+          <div className="grid md:grid-cols-2 max-md:flex-col w-full gap-4 py-2 mt-4">
             {!!smsEnabled && (
               <AppInput
                 value={requestData.owner.phoneNumber}
@@ -239,32 +239,26 @@ export default function StepThree({
           </div>
         )}
 
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 w-full mb-4">
           <Controller
             control={control}
             name="lead_specialist"
             render={({ field, fieldState: { error } }) => (
-              <Select
-                value={field.value}
-                className="max-w-xs"
+              <AppSelect
+                label={t("expertRequests.specialist")}
+                labelPlacement="outside"
                 placeholder={t("shared.choose")}
-                isInvalid={!!error}
-                errorMessage={error?.message}
+                error={error}
+                value={field.value}
+                itemKey="key"
+                itemLabel="label"
                 classNames={{
                   trigger: "bg-default-100 text-foreground-500",
                   label: "text-xs !text-default-600",
                 }}
-                label={t("expertRequests.specialist")}
-                labelPlacement="outside"
                 onChange={(value) => field.onChange(value)}
-                selectedKeys={field.value ? [field.value] : []}
-              >
-                {specialists.map((specialist) => (
-                  <SelectItem key={specialist.key}>
-                    {specialist.label}
-                  </SelectItem>
-                ))}
-              </Select>
+                fetchData={accountApi.usersInfo}
+              />
             )}
           />
 
@@ -291,33 +285,31 @@ export default function StepThree({
               />
             }
           />
-
-          <Controller
-            control={control}
-            name="tags"
-            render={({ field, fieldState: { error } }) => (
-              <Select
-                multiple
-                value={field.value?.filter((v): v is string => v !== undefined) || []}
-                className="max-w-xs"
-                isInvalid={!!error}
-                errorMessage={error?.message}
-                placeholder={t("shared.choose")}
-                classNames={{
-                  trigger: "bg-default-100 text-foreground-500",
-                  label: "text-xs !text-default-600",
-                }}
-                label={t("expertRequests.tag")}
-                labelPlacement="outside"
-                onChange={(value) => field.onChange(value)}
-                selectedKeys={field.value?.filter((v): v is string => v !== undefined) || []}
-              >
-                {tags.map((tag) => (
-                  <SelectItem key={tag.key}>{tag.label}</SelectItem>
-                ))}
-              </Select>
-            )}          />
         </div>
+
+        <Controller
+          control={control}
+          name="tags"
+          render={({ field, fieldState: { error } }) => (
+            <TagInput
+              value={
+                field.value?.filter(
+                  (tag): tag is string => typeof tag === "string"
+                ) || []
+              }
+              onChange={(tags) => field.onChange(tags)}
+              label={t("expertRequests.tag")}
+              placeholder={t("shared.tagLabel")}
+              labelPlacement="outside"
+              isInvalid={!!error}
+              errorMessage={error?.message}
+              classNames={{
+                inputWrapper: "bg-default-100",
+                label: "text-xs !text-default-600",
+              }}
+            />
+          )}
+        />
       </Form>
 
       <StepperButtons
@@ -327,136 +319,5 @@ export default function StepThree({
         onNextStep={submit}
       />
     </div>
-  );
-}
-function RequestSummary({ requestData }: { requestData: ExpertRequestDetail }) {
-  return (
-    <>
-      <h6 className="text-xs text-default-600 mb-2">
-        {t("expertRequests.requestSummary")}
-      </h6>
-
-      <div className="p-4 flex flex-col gap-4 bg-default-50 shadow-md rounded-[20px]">
-        <div className="flex items-center gap-2">
-          <div className="p-3.5">
-            <Icon
-              icon="solar:user-linear"
-              className="text-default-400"
-              width={20}
-              height={20}
-            />
-          </div>
-
-          <div>
-            <h6 className="font-semibold text-foreground-700">
-              {requestData.owner.userName}
-            </h6>
-            <p className="text-foreground-500 text-sm">
-              {requestData.owner.phoneNumber}
-            </p>
-          </div>
-
-          <div className="text-sm ms-auto">
-            <div className="flex items-center justify-end gap-2">
-              <h6 className="text-foreground-700">
-                {requestData.order_number}
-              </h6>
-              <Icon
-                icon="solar:box-minimalistic-outline"
-                className="text-default-400"
-                width={16}
-                height={16}
-              />
-            </div>
-            <p className="text-foreground-500 text-end">
-              {requestData.owner.email}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <div className="p-3.5">
-            <Icon
-              icon="lineicons:search-1"
-              className="text-default-400"
-              width={20}
-              height={20}
-            />
-          </div>
-
-          <div>
-            <h6 className="font-semibold text-foreground-700">
-              {requestData.inspection_data.vehicle_model?.name_fa}
-            </h6>
-            <p className="text-foreground-500 text-sm">
-              {requestData.inspection_data.vehicle_brand?.name_fa}
-            </p>
-          </div>
-
-          <div className="ms-auto text-end text-foreground-500 text-sm">
-            <h6>{requestData.inspection_data.color?.name}</h6>
-            <p>VIN: {requestData.inspection_data.vin}</p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <div className="p-3.5">
-            <Icon
-              icon="solar:folder-linear"
-              className="text-default-400"
-              width={20}
-              height={20}
-            />
-          </div>
-
-          <div>
-            <h6 className="font-semibold text-foreground-700">
-              {requestData.template_id?.name}
-            </h6>
-            <p className="text-foreground-500 text-sm">
-              {requestData.inspection_format.name}
-            </p>
-          </div>
-
-          <div className="text-end ms-auto text-sm">
-            <h6 className="text-foreground-500 mb-1">
-              {requestData.template_fields_count}{" "}
-              {t("expertRequests.wantedItem")}
-            </h6>
-            {!!requestData.required_fields?.length && (
-              <div className="flex items-center justify-end gap-2">
-                <FieldChip
-                  field={{
-                    ...requestData.required_fields[0],
-                    title: truncateString(
-                      requestData.required_fields[0].title,
-                      20
-                    ),
-                    active: true,
-                  }}
-                />
-
-                {requestData.required_fields.length > 1 && (
-                  <Chip
-                    classNames={{
-                      base: "text-default-foreground bg-default bg-opacity-40",
-                      content: "flex items-center",
-                    }}
-                  >
-                    +{requestData.required_fields.length - 1}
-                  </Chip>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </>
-  );
-}
-
-export function StepThreeLoading() {
-  return (
-    <div>Loading...</div> // TODO: skeleton
   );
 }

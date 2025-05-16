@@ -1,7 +1,7 @@
+import { AppInput } from "@/components/shared/app-components/app-input";
 import { TemplateField } from "@/types/templates";
 import { Button } from "@heroui/react";
 import { Chip } from "@heroui/react";
-import { Input } from "@heroui/react";
 import { cn } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
@@ -155,7 +155,7 @@ export const TemplateFields = ({
           {t("shared.addNewItem")}
         </h6>
 
-        <Input
+        <AppInput
           value={newFieldTitle}
           variant="bordered"
           placeholder={t("expertRequests.wantedItemTitle")}
@@ -193,16 +193,17 @@ export const FieldChip = ({ field, className, onClick }: FieldChipProps) => {
       <Chip
         isDisabled={!field.active}
         classNames={{
-          base: "text-default-foreground bg-default bg-opacity-40",
-          content: "flex items-center",
+          base: "text-default-foreground bg-default bg-opacity-40 min-h-7 h-auto",
+          content: "flex items-center py-1",
         }}
       >
         <Icon
           icon={field.active ? "bi:check" : "clarity:minus-line"}
           width={20}
           height={20}
+          className="min-w-5 min-h-5"
         />
-        <span className="text-xs ms-1">{field.title}</span>
+        <span className="text-xs ms-1 text-wrap">{field.title}</span>
       </Chip>
     </Button>
   );

@@ -6,7 +6,7 @@ const NewTemplateHeader = lazy(() => import("../new-template-header.tsx"));
 
 type TemplateDetailsHeaderProps = {
   isOnAddingTemplate: boolean;
-  templateName?: Template["name"];
+  template?: { name: Template["name"]; default: Template["default"] };
   activeFieldsCount: number;
   onDeleteTemplate: () => void;
   onNewTemplatePropertyChange?: (
@@ -17,7 +17,7 @@ type TemplateDetailsHeaderProps = {
 
 export const TemplateDetailsHeader = ({
   isOnAddingTemplate,
-  templateName,
+  template,
   activeFieldsCount,
   onDeleteTemplate,
   onNewTemplatePropertyChange,
@@ -39,9 +39,9 @@ export const TemplateDetailsHeader = ({
         </Suspense>
       ) : (
         <>
-          {!!templateName && (
+          {!!template && (
             <ExistedTemplateHeader
-              templateName={templateName}
+              template={template}
               activeFieldsCount={activeFieldsCount}
               onDeleteTemplate={onDeleteTemplate}
             />

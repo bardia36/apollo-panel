@@ -14,6 +14,8 @@ export default {
     "Or form link to send information for online visit",
   currentCases: "Current cases",
   deleteTemplate: "Delete template",
+  deleteTemplateDescription:
+    "All information will be deleted and cannot be restored! Are you sure?",
   finalCheck: "Final check",
   linkData: "Link contents",
   management: "Management",
@@ -30,6 +32,9 @@ export default {
   reviewType: "Review template",
   sendToArchive: "Send to archive",
   specialist: "Specialist",
+  step1: "Step one",
+  step2: "Step two",
+  step3: "Step three",
   stepsToCreateReviewLink: "Steps to create review link",
   tag: "Tag",
   templateDetails: "Template contents",
