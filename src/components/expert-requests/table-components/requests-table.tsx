@@ -196,13 +196,24 @@ export default function RequestsTable({ requests, loading }: Props) {
 
       switch (columnKey) {
         case "order_number":
-          return <RenderOrderNumberCell orderNumber={request.order_number} />;
+          return (
+            <>
+              {request.order_number && (
+                <RenderOrderNumberCell orderNumber={request.order_number} />
+              )}
+              ;
+            </>
+          );
 
         case "inspection_data":
           return (
-            <RenderInspectionDataCell
-              inspectionData={request.inspection_data}
-            />
+            <>
+              {request.inspection_data && (
+                <RenderInspectionDataCell
+                  inspectionData={request.inspection_data}
+                />
+              )}
+            </>
           );
 
         case "status":
