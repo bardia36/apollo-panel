@@ -7,6 +7,7 @@ export default {
   archived: "Archived",
   back: "Back",
   bulkActions: "Bulk actions",
+  cancel: "Cancel",
   canceled: "Canceled",
   changeStatus: "Change status",
   choose: "Choose",
@@ -49,7 +50,9 @@ export default {
   sendSMS: "Send SMS",
   settings: "Settings",
   status: "Status",
+  tagLabel: "Tag label",
   total: "Total",
   user: "User",
   userName: "Username",
+  yesDelete: "Yes, delete!",
 };

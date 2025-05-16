@@ -1,8 +1,8 @@
-import { Input } from "@heroui/react";
 import { t } from "i18next";
 import { ChangeEvent, useEffect, useState } from "react";
 import FieldsCountChip from "./components/fields-count-chip";
 import { ImageUploader } from "@/components/shared/uploader";
+import { AppInput } from "@/components/shared/app-components/app-input";
 
 type Props = {
   activeFieldsCount: number;
@@ -28,7 +28,7 @@ export default ({ activeFieldsCount, onPropertyChange }: Props) => {
     <div className="flex items-center gap-4 mb-2 px-2 md:px-4">
       <ImageUploader value={imageUrl} onChange={handleImageChange} />
 
-      <Input
+      <AppInput
         label={t("expertRequests.templateName")}
         onChange={handleNameChange}
       />

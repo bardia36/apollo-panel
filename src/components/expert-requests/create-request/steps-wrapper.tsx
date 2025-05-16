@@ -1,15 +1,17 @@
 import { useState, lazy, Suspense } from "react";
 import { Button, Skeleton } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import Stepper from "./components/stepper";
 import { t } from "i18next";
-import { StepTwoLoading } from "./components/step-two";
-import { StepThreeLoading } from "./components/step-three";
 import { useExpertRequests } from "@/components/expert-requests/context/expert-requests-context";
+import { StepTwoLoading } from "./components/loadings/step-two-loading";
+import { StepThreeLoading } from "./components/loadings/step-three-loading";
+import { useBreakpoint } from "@/hook/useBreakpoint";
+import { StepOneHeader } from "./components/step-one";
+import { DesktopStepper, MobileStepper } from "./components/stepper";
 
 const StepOne = lazy(() => import("./components/step-one"));
 const StepTwo = lazy(() => import("./components/step-two"));
-const StepThree = lazy(() => import("./components/step-three"));
+const StepThree = lazy(() => import("./components/step-three/step-three"));
 
 export type Step = {
   title: string;
@@ -36,21 +38,22 @@ const steps: Step[] = [
 ];
 
 export default function StepsWrapper({ onCloseModal }: Props) {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0);
   const [requestId, setRequestId] = useState<string | null>(null);
   const { refreshRequests } = useExpertRequests();
+  const { isMdAndUp } = useBreakpoint();
 
   const nextStep = (id?: string) => {
     if (id) setRequestId(id);
-    setCurrentStep((prev) => Math.min(prev + 1, steps.length));
+    setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
   };
-  const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
+  const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
 
   const renderStep = () => {
     switch (currentStep) {
-      case 1:
+      case 0:
         return <StepOne onStepComplete={nextStep} />;
-      case 2:
+      case 1:
         return (
           <StepTwo
             requestId={requestId}
@@ -58,7 +61,7 @@ export default function StepsWrapper({ onCloseModal }: Props) {
             onStepBack={prevStep}
           />
         );
-      case 3:
+      case 2:
         return (
           <StepThree
             requestId={requestId}
@@ -78,29 +81,38 @@ export default function StepsWrapper({ onCloseModal }: Props) {
 
   return (
     <div className="lg:h-screen flex flex-col md:flex-row gap-6 md:gap-4">
-      <aside className="md:w-1/3 bg-primary-50 py-6 px-8 rounded-large flex flex-col items-start gap-8">
-        <Button
-          radius="full"
-          variant="flat"
-          size="sm"
-          className="bg-content1 text-default-foreground min-h-8"
-          onPress={onCloseModal}
-        >
-          <Icon icon="material-symbols:arrow-back-ios-new-rounded" hFlip />
-          {t("shared.return")}
-        </Button>
+      {isMdAndUp && (
+        <aside className="md:w-1/3 bg-primary-50 py-6 px-8 rounded-large flex flex-col items-start gap-8">
+          <Button
+            radius="full"
+            variant="flat"
+            size="sm"
+            className="bg-content1 text-default-foreground min-h-8"
+            onPress={onCloseModal}
+          >
+            <Icon icon="material-symbols:arrow-back-ios-new-rounded" hFlip />
+            {t("shared.return")}
+          </Button>
 
+          <div>
+            <h2 className="text-xl mb-1">
+              {t("expertRequests.stepsToCreateReviewLink")}
+            </h2>
+            <p className="text-default-500">
+              {t("expertRequests.addReqStepperDescription")}
+            </p>
+          </div>
+
+          <DesktopStepper steps={steps} currentStep={currentStep} />
+        </aside>
+      )}
+
+      {!isMdAndUp && (
         <div>
-          <h2 className="text-xl mb-1">
-            {t("expertRequests.stepsToCreateReviewLink")}
-          </h2>
-          <p className="text-default-500">
-            {t("expertRequests.addReqStepperDescription")}
-          </p>
+          {currentStep == 0 && <StepOneHeader />}
+          <MobileStepper steps={steps} currentStep={currentStep} />
         </div>
-
-        <Stepper steps={steps} currentStep={currentStep} />
-      </aside>
+      )}
 
       <div className="md:w-2/3 md:py-4">
         <Suspense

@@ -1,3 +1,5 @@
+import { CommonListResponse } from "./common";
+
 export type User = {
   has_set_password: boolean;
   status: boolean;
@@ -106,3 +108,5 @@ export type UserExist = Pick<Auth, "userName">;
 export type CookieValues = {
   AUTH?: ActhDto;
 };
+
+export type UsersInfo = CommonListResponse<{ key: string; label: string }>;

@@ -48,17 +48,15 @@ export const CreateRequestModal: FC<Props> = ({ activator }) => {
         <Modal
           isOpen={isOpen}
           backdrop="blur"
-          hideCloseButton={true}
+          hideCloseButton={isMdAndUp ? true : false}
           isDismissable={false}
-          className="xl:min-w-[1140px] 2xl:min-w-fit md:max-h-[80vh] my-auto"
+          className="xl:min-w-[1140px] md:max-h-[95vh] my-auto"
           size={isMdAndUp ? "5xl" : "full"}
           onClose={handleModalClose}
         >
           <ModalContent>
             <ModalBody className="p-4 overflow-y-auto">
-              <StepsWrapper
-                onCloseModal={handleModalClose}
-              />
+              <StepsWrapper onCloseModal={handleModalClose} />
             </ModalBody>
           </ModalContent>
         </Modal>
