@@ -11,13 +11,13 @@ export const RequestSummary = ({
   requestData: ExpertRequestDetail;
 }) => {
   return (
-    <div>
+    <div className="mb-6">
       <h6 className="text-xs text-default-600 mb-2">
         {t("expertRequests.requestSummary")}
       </h6>
 
       <div className="p-4 flex flex-col gap-4 bg-default-50 shadow-md rounded-[20px]">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center flex-wrap gap-2">
           <div className="p-3.5">
             <Icon
               icon="solar:user-linear"
@@ -54,7 +54,7 @@ export const RequestSummary = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center flex-wrap gap-2">
           <div className="p-3.5">
             <Icon
               icon="lineicons:search-1"
@@ -79,7 +79,7 @@ export const RequestSummary = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center flex-wrap gap-2">
           <div className="p-3.5">
             <Icon
               icon="solar:folder-linear"

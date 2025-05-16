@@ -77,14 +77,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
 
   return (
     <>
-      <div className="text-center mb-6">
-        <h2 className="text-default-foreground text-3xl font-black mb-2">
-          {t("expertRequests.createReviewRequest")}
-        </h2>
-        <p className="text-default-500">
-          {t("expertRequests.createReviewRequestDescription")}
-        </p>
-      </div>
+      {isMdAndUp && <StepOneHeader />}
 
       <Form onSubmit={handleSubmit(submit)}>
         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-4">
@@ -247,7 +240,6 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
         <InspectionFormatDetailCard
           activeFormat={activeFormat}
           control={control}
-          isMdAndUp={isMdAndUp}
         />
       )}
 
@@ -259,3 +251,16 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
     </>
   );
 }
+
+export const StepOneHeader = () => {
+  return (
+    <div className="text-center mb-6">
+      <h2 className="text-default-foreground text-3xl font-black mb-2">
+        {t("expertRequests.createReviewRequest")}
+      </h2>
+      <p className="text-default-500">
+        {t("expertRequests.createReviewRequestDescription")}
+      </p>
+    </div>
+  );
+};

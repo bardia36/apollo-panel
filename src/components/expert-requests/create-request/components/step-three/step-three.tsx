@@ -128,7 +128,7 @@ export default function StepThree({
   if (initializing || !requestData) return <StepThreeLoading />;
 
   return (
-    <div className="flex flex-col h-full gap-6">
+    <div className="flex flex-col h-full">
       <RequestSummary requestData={requestData} />
 
       <div className="bg-default-50 px-4 py-3.5 flex items-center rounded-medium mb-2">
@@ -185,9 +185,9 @@ export default function StepThree({
         />
       </div>
 
-      <Form onSubmit={handleSubmit(submit)}>
+      <Form onSubmit={handleSubmit(submit)} className="gap-0">
         {(!!smsEnabled || !!emailEnabled) && (
-          <div className="grid grid-cols-2 max-md:flex-col w-full gap-4 py-2 mt-4">
+          <div className="grid md:grid-cols-2 max-md:flex-col w-full gap-4 py-2 mt-4">
             {!!smsEnabled && (
               <AppInput
                 value={requestData.owner.phoneNumber}
@@ -239,7 +239,7 @@ export default function StepThree({
           </div>
         )}
 
-        <div className="mt-6 md:flex md:justify-between gap-4 w-full mb-2">
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 w-full mb-4">
           <Controller
             control={control}
             name="lead_specialist"

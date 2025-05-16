@@ -1,4 +1,3 @@
-import { Input } from "@heroui/react";
 import {
   Dropdown,
   DropdownTrigger,
@@ -16,6 +15,7 @@ import {
   TableColumns,
 } from "@/types/expertRequests";
 import { Key } from "@react-types/shared";
+import { AppInput } from "@/components/shared/app-components/app-input";
 
 type TopContentProps = {
   filterValue: string;
@@ -54,7 +54,7 @@ export const TopContent = ({
     <div className="flex flex-col gap-4">
       <div className="flex justify-between">
         <div className="flex gap-4">
-          <Input
+          <AppInput
             className="w-full sm:max-w-[44%] lg:max-w-[100%] lg:min-w-[272px]"
             classNames={{
               input:

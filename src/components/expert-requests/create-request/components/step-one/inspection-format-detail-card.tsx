@@ -6,7 +6,6 @@ import { vehicleBrandApi } from "@/services/api/vehicle-brand";
 import { vehicleCategoryApi } from "@/services/api/vehicle-category";
 import { vehicleModelApi } from "@/services/api/vehicle-model";
 import { InspectionDataItem } from "@/types/expertRequests";
-import { truncateString } from "@/utils/base";
 import { Avatar } from "@heroui/react";
 import { t } from "i18next";
 import { Control, Controller } from "react-hook-form";
@@ -14,13 +13,11 @@ import { Control, Controller } from "react-hook-form";
 type InspectionFormatDetailCardProps = {
   activeFormat: InspectionDataItem;
   control: Control<any>;
-  isMdAndUp: boolean;
 };
 
 export const InspectionFormatDetailCard = ({
   activeFormat,
   control,
-  isMdAndUp,
 }: InspectionFormatDetailCardProps) => {
   return (
     <div className="bg-default-50 rounded-[20px] p-4 mt-4 shadow-md">
@@ -43,8 +40,8 @@ export const InspectionFormatDetailCard = ({
           <h6 className="font-semibold text-foreground-700">
             {activeFormat.label}
           </h6>
-          <p className="text-sm text-foreground-500">
-            {truncateString(activeFormat.description, isMdAndUp ? 60 : 20)}
+          <p className="text-sm text-foreground-500 line-clamp-1">
+            {activeFormat.description}
           </p>
         </div>
       </div>

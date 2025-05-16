@@ -1,12 +1,13 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Step } from "../steps-wrapper";
+import { t } from "i18next";
 
 type Props = {
   currentStep: number;
   steps: Step[];
 };
 
-export default function Stepper({ currentStep, steps }: Props) {
+export const DesktopStepper = ({ currentStep, steps }: Props) => {
   return (
     <ul className="space-y-1">
       {steps.map((step, index) => {
@@ -60,4 +61,53 @@ export default function Stepper({ currentStep, steps }: Props) {
       })}
     </ul>
   );
-}
+};
+
+export const MobileStepper = ({ currentStep, steps }: Props) => {
+  return (
+    <>
+      <ul className="flex justify-center mb-4">
+        {steps.map((_, index) => {
+          const isCompleted = index < currentStep;
+          const isActive = index === currentStep;
+          const isLast = index === steps.length - 1;
+
+          return (
+            <div key={`step-${index}`} className="flex items-center">
+              <li className="flex items-start space-x-2 rtl:space-x-reverse">
+                {isCompleted ? (
+                  <Icon
+                    icon="material-symbols:check-circle"
+                    className="text-blue-600"
+                    width={20}
+                    height={20}
+                  />
+                ) : (
+                  <div
+                    className={`rounded-full border-2 w-4 h-4 mx-0.5 ${isActive ? "bg-primary border-primary" : "border-default-400"}`}
+                  ></div>
+                )}
+              </li>
+
+              {!isLast && (
+                <div className="h-0.5 w-6 bg-default-400">
+                  <div
+                    className="w-full h-full bg-primary transition-all duration-300 ease-in-out"
+                    style={{
+                      transform: `scaleX(${isCompleted ? 1 : 0})`,
+                      transformOrigin: "right",
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </ul>
+
+      <h6 className="text-sm font-bold text-center">
+        {`${t(`expertRequests.step${currentStep + 1}`)} - ${steps[currentStep].title}`}
+      </h6>
+    </>
+  );
+};

@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { Input, Chip, InputProps } from "@heroui/react";
+import { Chip, InputProps } from "@heroui/react";
 import { useState, KeyboardEvent } from "react";
+import { AppInput } from "./app-components/app-input";
 
 type TagInputProps = {
   value: string[];
@@ -45,7 +46,7 @@ export function TagInput({
 
   return (
     <div className="w-full flex flex-col gap-2">
-      <Input
+      <AppInput
         label={label}
         value={inputValue}
         onChange={handleInputChange}

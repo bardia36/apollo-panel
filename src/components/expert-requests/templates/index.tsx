@@ -26,7 +26,6 @@ import { Template, Templates } from "@/types/templates";
 import { AvailableTemplates } from "./available-templates.tsx";
 import { TemplateFields } from "./components/template-fields.tsx";
 import { TemplatesLoadingSkeleton } from "./components/loading-component.tsx";
-import { AddTemplateButton } from "./components/add-template-button.tsx";
 import { TemplateDetailsHeader } from "./components/template-details-header.tsx";
 import { useTemplateFields } from "./components/useTemplateFields.tsx";
 
@@ -77,10 +76,6 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
   function showExistedTemplateDetail(template: Template) {
     setIsOnAddingTemplate(false);
     setActiveTemplate(template);
-  }
-
-  function addTemplate() {
-    setIsOnAddingTemplate(true);
   }
 
   function deleteTemplate() {
@@ -234,13 +229,9 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
                       isOnAddingTemplate={isOnAddingTemplate}
                       activeTemplateId={activeTemplate._id}
                       showTemplateDetail={showExistedTemplateDetail}
+                      onAddingTemplate={() => setIsOnAddingTemplate(true)}
                     />
                   )}
-
-                  <AddTemplateButton
-                    isOnAddingTemplate={isOnAddingTemplate}
-                    addTemplate={addTemplate}
-                  />
 
                   {!!activeTemplate && (
                     <TemplateDetailsHeader
