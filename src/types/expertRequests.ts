@@ -1,5 +1,5 @@
 import { CommonListResponse, NameEnFa } from "./common";
-import { Template, TemplateField } from "./templates";
+import { Template, TemplateField, TemplateFieldType } from "./templates";
 
 export type ExpertRequestResponse = {
   docs: ExpertRequestInfo[];
@@ -144,22 +144,6 @@ export type InspectionDataItem = {
   description: string;
 };
 
-export type CreateRequestBody = {
-  username: string;
-  mobile?: string;
-  email?: string;
-  order_number?: string;
-  inspection_format?: string;
-  inspection_data?: {
-    // inspection_data hard coded for now for handling vehicle data, in the future it will be dynamic based on the inspection format
-    vehicle_brand?: string;
-    vehicle_model?: string;
-    vehicle_compony?: string;
-    vin?: string;
-    color?: string;
-  };
-};
-
 export type VehicleCategories = CommonListResponse<VehicleCategory>;
 
 export type VehicleCategory = {
@@ -190,6 +174,24 @@ export type Color = {
   label: string;
 };
 
+export type RegisterRequestStep = "INFO" | "LINK" | "FINAL";
+
+export type CreateRequestInfoBody = {
+  username: string;
+  mobile?: string;
+  email?: string;
+  order_number?: string;
+  inspection_format?: string;
+  inspection_data?: {
+    // inspection_data hard coded for now for handling vehicle data, in the future it will be dynamic based on the inspection format
+    vehicle_brand?: string;
+    vehicle_model?: string;
+    vehicle_compony?: string;
+    vin?: string;
+    color?: string;
+  };
+};
+
 export type UpdateRequestLinkBody = {
   template_id: string;
   fields: Pick<TemplateField, "title" | "type">[];
@@ -201,4 +203,65 @@ export type UpdateRequestFinalBody = {
   lead_specialist?: string;
   tags?: (string | undefined)[];
   forwarding_time?: string;
+};
+
+export type RegisterRequestBody = (
+  | CreateRequestInfoBody
+  | UpdateRequestLinkBody
+  | UpdateRequestFinalBody
+) & {
+  step: RegisterRequestStep;
+};
+
+export type RegisterRequestResponse = {
+  username: string;
+  mobile: string;
+  email: string;
+  order_number: string;
+  inspection_format: string;
+  template_id: string;
+  required_fields: [
+    {
+      type: TemplateFieldType;
+      title: string;
+    },
+  ];
+  created_at: string;
+  updated_at: string;
+  lead_specialist: string;
+  owner: string;
+  status: ExpertRequestStatus;
+  step: RegisterRequestStep;
+  unit: string;
+  inspection_data: {
+    vehicle_category: string;
+    vehicle_brand: string;
+    vehicle_model: string;
+    vehicle_company: string;
+    vin: string;
+    color: string;
+    vehicle_category_info: {
+      name: string;
+      _id: string;
+    };
+    vehicle_brand_info: {
+      name_en: string;
+      name_fa: string;
+      _id: string;
+    };
+    vehicle_model_info: {
+      name_en: string;
+      name_fa: string;
+      _id: string;
+    };
+    vehicle_company_info: {
+      name: string;
+      name_local: string;
+      _id: string;
+    };
+    color_info: {
+      name: string;
+      _id: string;
+    };
+  };
 };

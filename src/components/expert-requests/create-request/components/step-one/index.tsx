@@ -11,7 +11,10 @@ import { Button, Form } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import { AppSelect } from "@/components/shared/app-components/app-select";
 import { StepperButtons } from "../stepper-buttons";
-import { CreateRequestBody, InspectionDataItem } from "@/types/expertRequests";
+import {
+  CreateRequestInfoBody,
+  InspectionDataItem,
+} from "@/types/expertRequests";
 import { useBreakpoint } from "@/hook/useBreakpoint";
 import { expertRequestsApi } from "@/services/api/expert-requests";
 import { exceptionHandler } from "@/services/api/exception";
@@ -51,7 +54,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
   });
 
   const { control, handleSubmit, getValues, reset } =
-    useForm<CreateRequestBody>({
+    useForm<CreateRequestInfoBody>({
       ...formOptions,
       resolver: yupResolver(validationSchema),
       defaultValues: stepOneData || undefined,

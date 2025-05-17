@@ -1,16 +1,16 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import {
-  CreateRequestBody,
+  CreateRequestInfoBody,
   UpdateRequestLinkBody,
   UpdateRequestFinalBody,
 } from "@/types/expertRequests";
 
 type CreateRequestContextType = {
-  stepOneData: CreateRequestBody | null;
+  stepOneData: CreateRequestInfoBody | null;
   stepTwoData: UpdateRequestLinkBody | null;
   stepThreeData: UpdateRequestFinalBody | null;
   requestId: string | null;
-  setStepOneData: (data: CreateRequestBody) => void;
+  setStepOneData: (data: CreateRequestInfoBody) => void;
   setStepTwoData: (data: UpdateRequestLinkBody) => void;
   setStepThreeData: (data: UpdateRequestFinalBody) => void;
   setRequestId: (id: string) => void;
@@ -22,7 +22,7 @@ const CreateRequestContext = createContext<
 >(undefined);
 
 export function CreateRequestProvider({ children }: { children: ReactNode }) {
-  const [stepOneData, setStepOneData] = useState<CreateRequestBody | null>(
+  const [stepOneData, setStepOneData] = useState<CreateRequestInfoBody | null>(
     null
   );
   const [stepTwoData, setStepTwoData] = useState<UpdateRequestLinkBody | null>(
