@@ -10,21 +10,18 @@ import { useTemplateFields } from "../../templates/components/useTemplateFields"
 import { StepperButtons } from "./stepper-buttons";
 import { expertRequestsApi } from "@/services/api/expert-requests";
 import { StepTwoLoading } from "./loadings/step-two-loading";
+import { useCreateRequest } from "../context/create-request-context";
 
 type StepTwoProps = {
-  requestId: string | null;
   onStepComplete: () => void;
   onStepBack: () => void;
 };
 
-export default function StepTwo({
-  requestId,
-  onStepComplete,
-  onStepBack,
-}: StepTwoProps) {
+export default function StepTwo({ onStepComplete, onStepBack }: StepTwoProps) {
   const [initializing, setInitializing] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [templates, setTemplates] = useState<Templates>();
+  const { requestId, stepTwoData, setStepTwoData } = useCreateRequest();
 
   // Use the useTemplateFields hook to manage template fields
   const {
@@ -39,6 +36,17 @@ export default function StepTwo({
   useEffect(() => {
     getTemplates();
   }, []);
+
+  useEffect(() => {
+    if (stepTwoData && activeTemplate) {
+      const fieldsWithId = stepTwoData.fields.map((field) => ({
+        ...field,
+        _id:
+          activeTemplate.fields.find((f) => f.title === field.title)?._id || "",
+      }));
+      handleFieldsChange(activeTemplate._id, fieldsWithId);
+    }
+  }, [stepTwoData, activeTemplate]);
 
   async function getTemplates() {
     setInitializing(true);
@@ -83,7 +91,10 @@ export default function StepTwo({
 
     expertRequestsApi
       .updateRequestLink(requestId, body)
-      .then(() => onStepComplete())
+      .then(() => {
+        setStepTwoData(body);
+        onStepComplete();
+      })
       .catch((err) => exceptionHandler(err))
       .finally(() => setIsLoading(false));
   }

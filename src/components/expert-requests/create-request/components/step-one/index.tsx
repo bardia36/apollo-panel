@@ -4,7 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { formOptions } from "@/utils/validations";
 import { useValidationMessages, validationRegex } from "@/utils/rules";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { t } from "i18next";
 import { inspectionFormatApi } from "@/services/api/inspection-format";
 import { Button, Form } from "@heroui/react";
@@ -16,6 +16,7 @@ import { useBreakpoint } from "@/hook/useBreakpoint";
 import { expertRequestsApi } from "@/services/api/expert-requests";
 import { exceptionHandler } from "@/services/api/exception";
 import { InspectionFormatDetailCard } from "./inspection-format-detail-card";
+import { useCreateRequest } from "../../context/create-request-context";
 
 type StepOneProps = {
   onStepComplete: (id: string) => void;
@@ -23,17 +24,20 @@ type StepOneProps = {
 
 export default function StepOne({ onStepComplete }: StepOneProps) {
   const [showInspectionFormatDetailCard, setShowInspectionFormatDetailCard] =
-    useState(false);
+    useState(true);
   const [activeFormat, setActiveFormat] = useState<InspectionDataItem>();
   const { isMdAndUp } = useBreakpoint();
   const [isLoading, setIsLoading] = useState(false);
+  const { stepOneData, setStepOneData, setRequestId } = useCreateRequest();
 
   const msgs = useValidationMessages();
 
   const validationSchema = object({
     username: string().required(msgs.required(t("shared.userName"))),
-    mobile: string()
-      .matches(validationRegex.mobile, msgs.isNotValid(t("shared.mobile"))),
+    mobile: string().matches(
+      validationRegex.mobile,
+      msgs.isNotValid(t("shared.mobile"))
+    ),
     email: string().email(msgs.isNotValid(t("shared.email"))),
     order_number: string(),
     inspection_format: string(),
@@ -46,10 +50,18 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
     }).optional(),
   });
 
-  const { control, handleSubmit, getValues } = useForm<CreateRequestBody>({
-    ...formOptions,
-    resolver: yupResolver(validationSchema),
-  });
+  const { control, handleSubmit, getValues, reset } =
+    useForm<CreateRequestBody>({
+      ...formOptions,
+      resolver: yupResolver(validationSchema),
+      defaultValues: stepOneData || undefined,
+    });
+
+  useEffect(() => {
+    if (stepOneData) {
+      reset(stepOneData);
+    }
+  }, [stepOneData, reset]);
 
   const handleInspectionFormatChange = (value: string) => {
     if (value) {
@@ -64,6 +76,8 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
       setIsLoading(true);
       const data = getValues();
       const response = await expertRequestsApi.createRequest(data);
+      setStepOneData(data);
+      setRequestId(response.id);
       onStepComplete(response.id);
     } catch (err) {
       exceptionHandler(err);
@@ -89,7 +103,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
                 placeholder={t("expertRequests.userNamePlaceholder")}
                 error={error}
                 classNames={{
-                  inputWrapper: "bg-default-50",
+                  inputWrapper: "bg-default-100",
                   input: "text-foreground-500",
                   label: "text-xs !text-default-600",
                 }}
@@ -116,7 +130,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
                 placeholder="876 54 321 0912"
                 error={error}
                 classNames={{
-                  inputWrapper: "bg-default-50",
+                  inputWrapper: "bg-default-100",
                   input: "text-foreground-500",
                   label: "text-xs !text-default-600",
                 }}
@@ -143,7 +157,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
                 placeholder="test@customer.com"
                 error={error}
                 classNames={{
-                  inputWrapper: "bg-default-50",
+                  inputWrapper: "bg-default-100",
                   input: "text-foreground-500",
                   label: "text-xs !text-default-600",
                 }}
@@ -170,7 +184,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
                 placeholder={t("expertRequests.orderNumberPlaceholder")}
                 error={error}
                 classNames={{
-                  inputWrapper: "bg-default-50",
+                  inputWrapper: "bg-default-100",
                   input: "text-foreground-500",
                   label: "text-xs !text-default-600",
                 }}
@@ -198,6 +212,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
                 value={field.value}
                 itemKey="key"
                 itemLabel="label"
+                selectFirstItem
                 classNames={{
                   trigger: "bg-default-100 text-foreground-500",
                   label: "text-xs !text-default-600",
@@ -206,9 +221,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
                   field.onChange(value);
                   handleInspectionFormatChange(value);
                 }}
-                onItemSelect={(value) => {
-                  setActiveFormat(value);
-                }}
+                onItemSelect={(value) => setActiveFormat(value)}
                 fetchData={inspectionFormatApi.getFormats}
               />
             )}
