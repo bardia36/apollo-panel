@@ -52,9 +52,8 @@ export default function StepTwo({
 
       setTemplates(templatesRes);
       // Set the first template as active if available
-      if (templatesRes?.docs.length > 0) {
+      if (templatesRes?.docs.length > 0)
         setActiveTemplate(templatesRes.docs[0]);
-      }
     } catch (err) {
       exceptionHandler(err);
     } finally {

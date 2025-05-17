@@ -39,22 +39,22 @@ export default function StepThree({
   const [emailEnabled, setEmailEnabled] = useState(false);
 
   useEffect(() => {
-    // if (requestId) {
-    setInitializing(true);
-    expertRequestsApi
-      // .getRequestsById(requestId)
-      .getRequestsById("68239c55f0cc20a87def2d4a")
-      .then((response) => {
-        let res = response;
-        res.required_fields = filterExistedFields(
-          res.template_id?.fields,
-          res.required_fields
-        );
-        setRequestData(response);
-      })
-      .catch((err) => exceptionHandler(err))
-      .finally(() => setInitializing(false));
-    // }
+    if (requestId) {
+      setInitializing(true);
+      expertRequestsApi
+        .getRequestsById(requestId)
+        // .getRequestsById("68239c55f0cc20a87def2d4a")
+        .then((response) => {
+          let res = response;
+          res.required_fields = filterExistedFields(
+            res.template_id?.fields,
+            res.required_fields
+          );
+          setRequestData(response);
+        })
+        .catch((err) => exceptionHandler(err))
+        .finally(() => setInitializing(false));
+    }
   }, []);
 
   function filterExistedFields(

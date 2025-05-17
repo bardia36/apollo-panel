@@ -31,21 +31,18 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
   const msgs = useValidationMessages();
 
   const validationSchema = object({
-    username: string().optional(),
+    username: string().required(msgs.required(t("shared.userName"))),
     mobile: string()
-      .required(msgs.required(t("shared.mobile")))
       .matches(validationRegex.mobile, msgs.isNotValid(t("shared.mobile"))),
-    email: string()
-      .required(msgs.required(t("shared.email")))
-      .email(msgs.isNotValid(t("shared.email"))),
-    order_number: string().optional(),
-    inspection_format: string().optional(),
+    email: string().email(msgs.isNotValid(t("shared.email"))),
+    order_number: string(),
+    inspection_format: string(),
     inspection_data: object({
-      vehicle_brand: string().optional(),
-      vehicle_model: string().optional(),
-      vehicle_compony: string().optional(),
+      vehicle_brand: string(),
+      vehicle_model: string(),
+      vehicle_compony: string(),
       vin: string().length(17, msgs.length(t("expertRequests.vinNumber"), 17)),
-      color: string().optional(),
+      color: string(),
     }).optional(),
   });
 
