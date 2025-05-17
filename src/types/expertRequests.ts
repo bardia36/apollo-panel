@@ -144,9 +144,9 @@ export type InspectionDataItem = {
 };
 
 export type CreateRequestBody = {
-  username?: string;
-  mobile: string;
-  email: string;
+  username: string;
+  mobile?: string;
+  email?: string;
   order_number?: string;
   inspection_format?: string;
   inspection_data?: {

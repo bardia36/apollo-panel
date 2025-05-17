@@ -42,7 +42,6 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
   const {
     modifiedTemplateFields,
     activeTemplate,
-    activeFieldsCount,
     setActiveTemplate,
     setActiveFieldsCount,
     handleFieldsChange,
@@ -240,7 +239,6 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
                         name: activeTemplate.name,
                         default: activeTemplate.default,
                       }}
-                      activeFieldsCount={activeFieldsCount}
                       onDeleteTemplate={deleteTemplate}
                       onNewTemplatePropertyChange={handleNewTemplateProperty}
                     />
