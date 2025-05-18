@@ -38,6 +38,7 @@ export default function StepThree({
     setStepThreeData,
   } = useCreateRequest();
 
+  // TODO: add validation for mobile and email
   const validationSchema = object({
     send_sms: boolean(),
     send_email: boolean(),

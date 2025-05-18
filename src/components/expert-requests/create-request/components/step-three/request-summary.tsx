@@ -110,7 +110,7 @@ export const RequestSummary = ({ requestData }: RequestSummaryProps) => {
 
           <div>
             <h6 className="font-semibold text-foreground-700">
-              {requestData.template_id}
+              {requestData.template_id._id}
             </h6>
             <p className="text-foreground-500 text-sm">
               {requestData.inspection_format}

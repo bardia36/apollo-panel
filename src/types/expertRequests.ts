@@ -222,7 +222,11 @@ export type RegisterRequestResponse = {
   email: string;
   order_number: string;
   inspection_format: string;
-  template_id: string;
+  template_id: {
+    fields: TemplateField[];
+    name: string;
+    _id: string;
+  };
   required_fields: [
     {
       type: TemplateFieldType;
