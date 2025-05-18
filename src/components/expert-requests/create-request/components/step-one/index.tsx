@@ -31,7 +31,8 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
   const [activeFormat, setActiveFormat] = useState<InspectionDataItem>();
   const { isMdAndUp } = useBreakpoint();
   const [isLoading, setIsLoading] = useState(false);
-  const { stepOneData, setStepOneData, setRequestId } = useCreateRequest();
+  const { requestId, stepOneData, setStepOneData, setRequestId } =
+    useCreateRequest();
 
   const msgs = useValidationMessages();
 
@@ -78,10 +79,13 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
     try {
       setIsLoading(true);
       const data = getValues();
-      const response = await expertRequestsApi.createRequest(data);
+      const response = await expertRequestsApi.registerRequest(
+        requestId ? requestId : "0",
+        { ...data, step: "INFO" }
+      );
       setStepOneData(data);
-      setRequestId(response.id);
-      onStepComplete(response.id);
+      if (!requestId) setRequestId(response._id);
+      onStepComplete(response._id);
     } catch (err) {
       exceptionHandler(err);
     } finally {

@@ -200,6 +200,8 @@ export type UpdateRequestLinkBody = {
 export type UpdateRequestFinalBody = {
   send_sms?: boolean;
   send_email?: boolean;
+  mobile?: string;
+  email?: string;
   lead_specialist?: string;
   tags?: (string | undefined)[];
   forwarding_time?: string;
@@ -214,6 +216,7 @@ export type RegisterRequestBody = (
 };
 
 export type RegisterRequestResponse = {
+  _id: string;
   username: string;
   mobile: string;
   email: string;
