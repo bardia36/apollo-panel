@@ -201,7 +201,6 @@ export default function RequestsTable({ requests, loading }: Props) {
               {request.order_number && (
                 <RenderOrderNumberCell orderNumber={request.order_number} />
               )}
-              ;
             </>
           );
 

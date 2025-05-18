@@ -8,6 +8,7 @@ import { StepThreeLoading } from "./components/loadings/step-three-loading";
 import { useBreakpoint } from "@/hook/useBreakpoint";
 import { StepOneHeader } from "./components/step-one";
 import { DesktopStepper, MobileStepper } from "./components/stepper";
+import { useCreateRequest } from "./context/create-request-context";
 
 const StepOne = lazy(() => import("./components/step-one"));
 const StepTwo = lazy(() => import("./components/step-two"));
@@ -38,13 +39,12 @@ const steps: Step[] = [
 ];
 
 export default function StepsWrapper({ onCloseModal }: Props) {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [requestId, setRequestId] = useState<string | null>(null);
+  const [currentStep, setCurrentStep] = useState(0); // 0 | 1 | 2
   const { refreshRequests } = useExpertRequests();
   const { isMdAndUp } = useBreakpoint();
+  const { resetData } = useCreateRequest();
 
-  const nextStep = (id?: string) => {
-    if (id) setRequestId(id);
+  const nextStep = () => {
     setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
   };
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
@@ -54,21 +54,9 @@ export default function StepsWrapper({ onCloseModal }: Props) {
       case 0:
         return <StepOne onStepComplete={nextStep} />;
       case 1:
-        return (
-          <StepTwo
-            requestId={requestId}
-            onStepComplete={nextStep}
-            onStepBack={prevStep}
-          />
-        );
+        return <StepTwo onStepComplete={nextStep} onStepBack={prevStep} />;
       case 2:
-        return (
-          <StepThree
-            requestId={requestId}
-            onStepComplete={onFinal}
-            onStepBack={prevStep}
-          />
-        );
+        return <StepThree onStepComplete={onFinal} onStepBack={prevStep} />;
       default:
         return null;
     }
@@ -77,6 +65,7 @@ export default function StepsWrapper({ onCloseModal }: Props) {
   const onFinal = () => {
     onCloseModal();
     refreshRequests();
+    resetData();
   };
 
   return (

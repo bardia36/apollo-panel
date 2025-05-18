@@ -24,6 +24,11 @@ interface AppSelectProps<T> {
     page: number;
     limit: number;
   }) => Promise<{ items: T[] }>;
+  selectFirstItem?: boolean;
+  defaultSelection?: {
+    key: string;
+    label: string;
+  };
 }
 
 export function AppSelect<T>({
@@ -41,14 +46,23 @@ export function AppSelect<T>({
   onChange,
   onItemSelect,
   fetchData,
+  selectFirstItem = false,
+  defaultSelection,
 }: AppSelectProps<T>) {
   const [items, setItems] = useState<T[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [selectedValue, setSelectedValue] = useState<string | undefined>(value);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   // Handle error state properly
   const actualIsInvalid = error ? true : isInvalid;
   const actualErrorMessage = error?.message || errorMessage;
+
+  // Update selectedValue when value prop changes
+  useEffect(() => {
+    if (!isInitialLoad) setSelectedValue(value);
+  }, [value, isInitialLoad]);
 
   const loadMore = useCallback(async () => {
     if (!hasMore || isLoading) return;
@@ -78,9 +92,45 @@ export function AppSelect<T>({
     onLoadMore: loadMore,
   });
 
+  const handleSelectionChange = useCallback(
+    (selectedValue: any) => {
+      // Extract the key from the selection object
+      let key: string;
+
+      if (typeof selectedValue === "object" && selectedValue !== null) {
+        // If it's an object like {anchorKey: "...", currentKey: "..."}
+        if (selectedValue.currentKey) key = selectedValue.currentKey;
+        else if (selectedValue.anchorKey) key = selectedValue.anchorKey;
+        else {
+          // If it's a Set-like object, extract the first value
+          key = Array.from(selectedValue)[0] as string;
+        }
+      } else {
+        // If it's already a string
+        key = selectedValue;
+      }
+
+      setSelectedValue(key);
+      onChange(key);
+
+      if (onItemSelect && key) {
+        const selectedItem = items.find(
+          (item) => item && itemKey && String(item[itemKey as keyof T]) === key
+        );
+
+        if (selectedItem) onItemSelect(selectedItem);
+      }
+    },
+    [items, itemKey, onChange, onItemSelect]
+  );
+
+  // Initial load effect
   useEffect(() => {
-    // Initial load
+    let mounted = true;
+
     const initialLoad = async () => {
+      if (!mounted) return;
+
       setIsLoading(true);
       try {
         const response = await fetchData({
@@ -88,48 +138,44 @@ export function AppSelect<T>({
           limit,
         });
 
-        setItems(response.items || []);
-        setHasMore((response.items || []).length === limit);
+        let newItems = response.items || [];
+
+        if (mounted) {
+          // Handle default selection or first item selection
+          if (!selectedValue) {
+            if (defaultSelection) {
+              newItems = [defaultSelection as T, ...newItems];
+              handleSelectionChange(defaultSelection.key);
+              onChange(defaultSelection.key);
+              onItemSelect?.(defaultSelection as T);
+            } else if (selectFirstItem && newItems.length > 0) {
+              const firstItem = newItems[0];
+              const firstItemKey = String(firstItem[itemKey as keyof T]);
+              handleSelectionChange(firstItemKey);
+              onChange(firstItemKey);
+              onItemSelect?.(firstItem as T);
+            }
+          }
+
+          setItems(newItems);
+          setHasMore(newItems.length === limit);
+          setIsInitialLoad(false);
+        }
       } catch (error) {
         console.error("Error loading initial select data:", error);
       } finally {
-        setIsLoading(false);
+        if (mounted) {
+          setIsLoading(false);
+        }
       }
     };
 
     initialLoad();
-  }, [fetchData, limit]);
 
-  const handleSelectionChange = (selectedValue: any) => {
-    // Extract the key from the selection object
-    let key: string;
-
-    if (typeof selectedValue === "object" && selectedValue !== null) {
-      // If it's an object like {anchorKey: "...", currentKey: "..."}
-      if (selectedValue.currentKey) {
-        key = selectedValue.currentKey;
-      } else if (selectedValue.anchorKey) {
-        key = selectedValue.anchorKey;
-      } else {
-        // If it's a Set-like object, extract the first value
-        key = Array.from(selectedValue)[0] as string;
-      }
-    } else {
-      // If it's already a string
-      key = selectedValue;
-    }
-
-    // Pass only the key to the onChange handler
-    onChange(key);
-
-    if (onItemSelect && key) {
-      const selectedItem = items.find(
-        (item) => item && itemKey && String(item[itemKey as keyof T]) === key
-      );
-
-      if (selectedItem) onItemSelect(selectedItem);
-    }
-  };
+    return () => {
+      mounted = false;
+    };
+  }, []); // Empty dependency array since this should only run once
 
   return (
     <Select
@@ -138,7 +184,8 @@ export function AppSelect<T>({
       placeholder={placeholder}
       errorMessage={actualErrorMessage}
       isInvalid={actualIsInvalid}
-      value={value}
+      value={selectedValue}
+      selectedKeys={selectedValue ? new Set([selectedValue]) : new Set()}
       hideEmptyContent
       classNames={{
         ...classNames,
@@ -146,7 +193,7 @@ export function AppSelect<T>({
         label: `${labelPlacement === "outside" ? "top-5" : ""} ${classNames?.label || ""}`,
         base: `${labelPlacement === "outside" ? "gap-1" : ""}`,
       }}
-      onSelectionChange={(value) => handleSelectionChange(value)}
+      onSelectionChange={handleSelectionChange}
       scrollRef={scrollRef}
       isLoading={isLoading}
     >
