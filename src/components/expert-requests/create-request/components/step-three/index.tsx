@@ -171,10 +171,8 @@ export default function StepThree({
                 value={requestData.mobile}
                 label={t("shared.mobile")}
                 labelPlacement="outside"
-                placeholder="876 54 321 0912"
                 variant="faded"
                 size="lg"
-                isReadOnly
                 classNames={{
                   inputWrapper: "bg-background",
                   input: "text-foreground-500 text-xl font-bold text-center",
@@ -197,7 +195,6 @@ export default function StepThree({
                 label={t("shared.email")}
                 labelPlacement="outside"
                 variant="faded"
-                isReadOnly
                 size="lg"
                 classNames={{
                   inputWrapper: "bg-background",

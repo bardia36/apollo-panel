@@ -28,11 +28,16 @@ type StepOneProps = {
 export default function StepOne({ onStepComplete }: StepOneProps) {
   const [showInspectionFormatDetailCard, setShowInspectionFormatDetailCard] =
     useState(true);
-  const [activeFormat, setActiveFormat] = useState<InspectionDataItem>();
   const { isMdAndUp } = useBreakpoint();
   const [isLoading, setIsLoading] = useState(false);
-  const { requestId, requestData, setRequestData, setRequestId } =
-    useCreateRequest();
+  const {
+    requestId,
+    requestData,
+    setRequestData,
+    setRequestId,
+    activeFormat,
+    setActiveFormat,
+  } = useCreateRequest();
 
   const msgs = useValidationMessages();
 
@@ -72,7 +77,10 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
       setTimeout(() => {
         setShowInspectionFormatDetailCard(true);
       }, 200);
-    } else setShowInspectionFormatDetailCard(false);
+    } else {
+      setShowInspectionFormatDetailCard(false);
+      setActiveFormat(null);
+    }
   };
 
   const submit = async () => {
