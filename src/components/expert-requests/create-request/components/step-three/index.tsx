@@ -122,7 +122,10 @@ export default function StepThree({
       setIsLoading(true);
       const data = getValues();
       data.tags = [];
-      await expertRequestsApi.updateRequestFinal(requestId, data);
+      await expertRequestsApi.registerRequest(requestId, {
+        ...data,
+        step: "FINAL",
+      });
       setStepThreeData(data);
       onStepComplete();
     } catch (err) {

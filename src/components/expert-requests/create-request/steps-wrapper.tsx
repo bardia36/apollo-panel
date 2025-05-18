@@ -12,7 +12,7 @@ import { useCreateRequest } from "./context/create-request-context";
 
 const StepOne = lazy(() => import("./components/step-one"));
 const StepTwo = lazy(() => import("./components/step-two"));
-const StepThree = lazy(() => import("./components/step-three/step-three"));
+const StepThree = lazy(() => import("./components/step-three"));
 
 export type Step = {
   title: string;

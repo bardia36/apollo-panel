@@ -90,7 +90,7 @@ export default function StepTwo({ onStepComplete, onStepBack }: StepTwoProps) {
     };
 
     expertRequestsApi
-      .updateRequestLink(requestId, body)
+      .registerRequest(requestId, { ...body, step: "LINK" })
       .then(() => {
         setStepTwoData(body);
         onStepComplete();
