@@ -237,12 +237,7 @@ export type RegisterRequestResponse = {
   step: RegisterRequestStep;
   unit: string;
   inspection_data: {
-    vehicle_category: string;
-    vehicle_brand: string;
-    vehicle_model: string;
-    vehicle_company: string;
     vin: string;
-    color: string;
     vehicle_category_info: {
       name: string;
       _id: string;
