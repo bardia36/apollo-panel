@@ -9,19 +9,19 @@ import {
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { Template } from "@/types/templates";
-import FieldsCountChip from "./components/fields-count-chip";
+import FieldsCountChip from "../fields-count-chip";
+import { useTemplateFields } from "../useTemplateFields";
 
 type ExistedTemplateDetailsHeaderProps = {
   template?: { name: Template["name"]; default: Template["default"] };
-  activeFieldsCount: number;
   onDeleteTemplate: () => void;
 };
 export const ExistedTemplateHeader = ({
   template,
-  activeFieldsCount,
   onDeleteTemplate,
 }: ExistedTemplateDetailsHeaderProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { activeFieldsCount } = useTemplateFields();
 
   return (
     <>

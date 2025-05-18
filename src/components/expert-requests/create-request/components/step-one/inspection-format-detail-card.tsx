@@ -127,7 +127,7 @@ export const InspectionFormatDetailCard = ({
               error={error}
               value={field.value}
               classNames={{
-                inputWrapper: "bg-default-50",
+                inputWrapper: "bg-default-100",
                 input: "text-foreground-500",
                 label: "text-xs !text-default-600",
               }}

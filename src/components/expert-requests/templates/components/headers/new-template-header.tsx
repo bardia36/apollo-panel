@@ -1,17 +1,17 @@
 import { t } from "i18next";
 import { ChangeEvent, useEffect, useState } from "react";
-import FieldsCountChip from "./components/fields-count-chip";
+import FieldsCountChip from "../fields-count-chip";
 import { ImageUploader } from "@/components/shared/uploader";
 import { AppInput } from "@/components/shared/app-components/app-input";
+import { useTemplateFields } from "../useTemplateFields";
 
 type Props = {
-  activeFieldsCount: number;
   onPropertyChange?: (property: "name" | "logo", value: string) => void;
 };
 
-export default ({ activeFieldsCount, onPropertyChange }: Props) => {
+export default ({ onPropertyChange }: Props) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-
+  const { activeFieldsCount } = useTemplateFields();
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (onPropertyChange) onPropertyChange("name", e.target.value);
   };

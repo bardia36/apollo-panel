@@ -1,11 +1,13 @@
 import { axiosHandler } from "./core";
 import { RequestMethod } from "@/types/api";
 import {
-  CreateRequestBody,
+  CreateRequestInfoBody,
   ExpertRequestDetail,
   ExpertRequestResponse,
   UpdateRequestLinkBody,
   UpdateRequestFinalBody,
+  RegisterRequestBody,
+  RegisterRequestResponse,
 } from "@/types/expertRequests";
 
 const BASE_URL = "panel/inspection-request";
@@ -26,7 +28,7 @@ export const expertRequestsApi = {
   },
 
   // create - step 1
-  createRequest(body: CreateRequestBody) {
+  createRequest(body: CreateRequestInfoBody) {
     return axiosHandler<{ id: string }>(BASE_URL, {
       method: RequestMethod.POST,
       body,
@@ -47,6 +49,14 @@ export const expertRequestsApi = {
     return axiosHandler(BASE_URL, {
       action: `${id}/final-step`,
       method: RequestMethod.PATCH,
+      body,
+    });
+  },
+
+  registerRequest(id: string, body: RegisterRequestBody) {
+    return axiosHandler<RegisterRequestResponse>(BASE_URL, {
+      action: id,
+      method: RequestMethod.POST,
       body,
     });
   },

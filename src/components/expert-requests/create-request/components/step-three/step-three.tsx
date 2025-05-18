@@ -20,15 +20,14 @@ import { AppSelect } from "@/components/shared/app-components/app-select";
 import { StepThreeLoading } from "../loadings/step-three-loading";
 import { RequestSummary } from "./request-summary";
 import { TagInput } from "@/components/shared/tag-input";
+import { useCreateRequest } from "../../context/create-request-context";
 
 type StepThreeProps = {
-  requestId: string | null;
   onStepComplete: () => void;
   onStepBack: () => void;
 };
 
 export default function StepThree({
-  requestId,
   onStepBack,
   onStepComplete,
 }: StepThreeProps) {
@@ -37,25 +36,26 @@ export default function StepThree({
   const [requestData, setRequestData] = useState<ExpertRequestDetail>();
   const [smsEnabled, setSmsEnabled] = useState(false);
   const [emailEnabled, setEmailEnabled] = useState(false);
+  const { requestId, stepThreeData, setStepThreeData } = useCreateRequest();
 
   useEffect(() => {
-    // if (requestId) {
-    setInitializing(true);
-    expertRequestsApi
-      // .getRequestsById(requestId)
-      .getRequestsById("68239c55f0cc20a87def2d4a")
-      .then((response) => {
-        let res = response;
-        res.required_fields = filterExistedFields(
-          res.template_id?.fields,
-          res.required_fields
-        );
-        setRequestData(response);
-      })
-      .catch((err) => exceptionHandler(err))
-      .finally(() => setInitializing(false));
-    // }
-  }, []);
+    if (requestId) {
+      setInitializing(true);
+      expertRequestsApi
+        .getRequestsById(requestId)
+        // .getRequestsById("68239c55f0cc20a87def2d4a")
+        .then((response) => {
+          let res = response;
+          res.required_fields = filterExistedFields(
+            res.template_id?.fields,
+            res.required_fields
+          );
+          setRequestData(response);
+        })
+        .catch((err) => exceptionHandler(err))
+        .finally(() => setInitializing(false));
+    }
+  }, [requestId]);
 
   function filterExistedFields(
     templateDefaultFields: TemplateField[],
@@ -79,16 +79,22 @@ export default function StepThree({
     forwarding_time: string(),
   });
 
-  const { control, handleSubmit, getValues } = useForm<UpdateRequestFinalBody>({
-    ...formOptions,
-    resolver: yupResolver(validationSchema),
-    defaultValues: {
-      send_sms: false,
-      send_email: false,
-      tags: [],
-      forwarding_time: new Date().toISOString(),
-    },
-  });
+  const { control, handleSubmit, getValues, reset } =
+    useForm<UpdateRequestFinalBody>({
+      ...formOptions,
+      resolver: yupResolver(validationSchema),
+      defaultValues: stepThreeData || {
+        send_sms: false,
+        send_email: false,
+        tags: [],
+        forwarding_time: new Date().toISOString(),
+        lead_specialist: requestData?.lead_specialist._id || "",
+      },
+    });
+
+  useEffect(() => {
+    if (stepThreeData) reset(stepThreeData);
+  }, [stepThreeData, reset]);
 
   const dateOfNow = () => {
     const now = new Date();
@@ -117,6 +123,7 @@ export default function StepThree({
       const data = getValues();
       data.tags = [];
       await expertRequestsApi.updateRequestFinal(requestId, data);
+      setStepThreeData(data);
       onStepComplete();
     } catch (err) {
       exceptionHandler(err);
@@ -252,6 +259,15 @@ export default function StepThree({
                 value={field.value}
                 itemKey="key"
                 itemLabel="label"
+                defaultSelection={
+                  requestData?.lead_specialist._id &&
+                  requestData?.lead_specialist.userName
+                    ? {
+                        key: requestData?.lead_specialist._id,
+                        label: requestData?.lead_specialist.userName,
+                      }
+                    : undefined
+                }
                 classNames={{
                   trigger: "bg-default-100 text-foreground-500",
                   label: "text-xs !text-default-600",

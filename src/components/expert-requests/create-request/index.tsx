@@ -9,6 +9,7 @@ import {
 import { Modal, ModalContent, ModalBody, useDisclosure } from "@heroui/react";
 import StepsWrapper from "./steps-wrapper.tsx";
 import { useBreakpoint } from "@/hook/useBreakpoint";
+import { CreateRequestProvider } from "./context/create-request-context";
 
 type Props = {
   activator: ReactNode;
@@ -56,7 +57,9 @@ export const CreateRequestModal: FC<Props> = ({ activator }) => {
         >
           <ModalContent>
             <ModalBody className="p-4 overflow-y-auto">
-              <StepsWrapper onCloseModal={handleModalClose} />
+              <CreateRequestProvider>
+                <StepsWrapper onCloseModal={handleModalClose} />
+              </CreateRequestProvider>
             </ModalBody>
           </ModalContent>
         </Modal>
