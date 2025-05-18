@@ -231,7 +231,13 @@ export type RegisterRequestResponse = {
   ];
   created_at: string;
   updated_at: string;
-  lead_specialist: string;
+  lead_specialist: {
+    image?: string;
+    userName: string;
+    phoneNumber?: string;
+    email?: string;
+    _id?: string;
+  };
   owner: string;
   status: ExpertRequestStatus;
   step: RegisterRequestStep;

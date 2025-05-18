@@ -1,17 +1,14 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import {
-  CreateRequestInfoBody,
-  UpdateRequestLinkBody,
+  RegisterRequestResponse,
   UpdateRequestFinalBody,
 } from "@/types/expertRequests";
 
 type CreateRequestContextType = {
-  stepOneData: CreateRequestInfoBody | null;
-  stepTwoData: UpdateRequestLinkBody | null;
+  requestData: RegisterRequestResponse | null;
   stepThreeData: UpdateRequestFinalBody | null;
   requestId: string | null;
-  setStepOneData: (data: CreateRequestInfoBody) => void;
-  setStepTwoData: (data: UpdateRequestLinkBody) => void;
+  setRequestData: (data: RegisterRequestResponse) => void;
   setStepThreeData: (data: UpdateRequestFinalBody) => void;
   setRequestId: (id: string) => void;
   resetData: () => void;
@@ -22,19 +19,14 @@ const CreateRequestContext = createContext<
 >(undefined);
 
 export function CreateRequestProvider({ children }: { children: ReactNode }) {
-  const [stepOneData, setStepOneData] = useState<CreateRequestInfoBody | null>(
-    null
-  );
-  const [stepTwoData, setStepTwoData] = useState<UpdateRequestLinkBody | null>(
-    null
-  );
+  const [requestData, setRequestData] =
+    useState<RegisterRequestResponse | null>(null);
   const [stepThreeData, setStepThreeData] =
     useState<UpdateRequestFinalBody | null>(null);
   const [requestId, setRequestId] = useState<string | null>(null);
 
   const resetData = () => {
-    setStepOneData(null);
-    setStepTwoData(null);
+    setRequestData(null);
     setStepThreeData(null);
     setRequestId(null);
   };
@@ -42,12 +34,10 @@ export function CreateRequestProvider({ children }: { children: ReactNode }) {
   return (
     <CreateRequestContext.Provider
       value={{
-        stepOneData,
-        stepTwoData,
+        requestData,
         stepThreeData,
         requestId,
-        setStepOneData,
-        setStepTwoData,
+        setRequestData,
         setStepThreeData,
         setRequestId,
         resetData,

@@ -31,7 +31,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
   const [activeFormat, setActiveFormat] = useState<InspectionDataItem>();
   const { isMdAndUp } = useBreakpoint();
   const [isLoading, setIsLoading] = useState(false);
-  const { requestId, stepOneData, setStepOneData, setRequestId } =
+  const { requestId, requestData, setRequestData, setRequestId } =
     useCreateRequest();
 
   const msgs = useValidationMessages();
@@ -58,14 +58,14 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
     useForm<CreateRequestInfoBody>({
       ...formOptions,
       resolver: yupResolver(validationSchema),
-      defaultValues: stepOneData || undefined,
+      defaultValues: requestData || undefined,
     });
 
   useEffect(() => {
-    if (stepOneData) {
-      reset(stepOneData);
+    if (requestData) {
+      reset(requestData);
     }
-  }, [stepOneData, reset]);
+  }, [requestData, reset]);
 
   const handleInspectionFormatChange = (value: string) => {
     if (value) {
@@ -83,7 +83,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
         requestId ? requestId : "0",
         { ...data, step: "INFO" }
       );
-      setStepOneData(data);
+      setRequestData(response);
       if (!requestId) setRequestId(response._id);
       onStepComplete(response._id);
     } catch (err) {

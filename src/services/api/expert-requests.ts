@@ -56,7 +56,7 @@ export const expertRequestsApi = {
   registerRequest(id: string, body: RegisterRequestBody) {
     return axiosHandler<RegisterRequestResponse>(BASE_URL, {
       action: id,
-      method: RequestMethod.POST,
+      method: RequestMethod.PUT,
       body,
     });
   },

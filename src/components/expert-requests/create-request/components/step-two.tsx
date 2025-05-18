@@ -21,7 +21,7 @@ export default function StepTwo({ onStepComplete, onStepBack }: StepTwoProps) {
   const [initializing, setInitializing] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [templates, setTemplates] = useState<Templates>();
-  const { requestId, stepTwoData, setStepTwoData } = useCreateRequest();
+  const { requestId, requestData, setRequestData } = useCreateRequest();
 
   // Use the useTemplateFields hook to manage template fields
   const {
@@ -38,15 +38,16 @@ export default function StepTwo({ onStepComplete, onStepBack }: StepTwoProps) {
   }, []);
 
   useEffect(() => {
-    if (stepTwoData && activeTemplate) {
-      const fieldsWithId = stepTwoData.fields.map((field) => ({
+    if (requestData && activeTemplate) {
+      const fieldsWithId = requestData.required_fields.map((field) => ({
         ...field,
         _id:
           activeTemplate.fields.find((f) => f.title === field.title)?._id || "",
+        active: true,
       }));
       handleFieldsChange(activeTemplate._id, fieldsWithId);
     }
-  }, [stepTwoData, activeTemplate]);
+  }, [requestData, activeTemplate]);
 
   async function getTemplates() {
     setInitializing(true);
@@ -91,8 +92,8 @@ export default function StepTwo({ onStepComplete, onStepBack }: StepTwoProps) {
 
     expertRequestsApi
       .registerRequest(requestId, { ...body, step: "LINK" })
-      .then(() => {
-        setStepTwoData(body);
+      .then((response) => {
+        setRequestData(response);
         onStepComplete();
       })
       .catch((err) => exceptionHandler(err))

@@ -1,16 +1,16 @@
 import { FieldChip } from "@/components/expert-requests/templates/components/template-fields";
-import { ExpertRequestDetail } from "@/types/expertRequests";
+import { RegisterRequestResponse } from "@/types/expertRequests";
 import { truncateString } from "@/utils/base";
 import { Chip } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { useBreakpoint } from "@/hook/useBreakpoint";
 
-export const RequestSummary = ({
-  requestData,
-}: {
-  requestData: ExpertRequestDetail;
-}) => {
+type RequestSummaryProps = {
+  requestData: RegisterRequestResponse;
+};
+
+export const RequestSummary = ({ requestData }: RequestSummaryProps) => {
   const { isSmAndDown } = useBreakpoint();
 
   return (
@@ -33,18 +33,18 @@ export const RequestSummary = ({
           <div>
             <h6 className="font-semibold text-foreground-700">
               {isSmAndDown
-                ? truncateString(requestData.owner.userName, 15)
-                : requestData.owner.userName}
+                ? truncateString(requestData.username, 15)
+                : requestData.username}
             </h6>
 
-            {!!requestData.owner.phoneNumber && (
+            {!!requestData.mobile && (
               <p className="text-foreground-500 text-sm">
-                {requestData.owner.phoneNumber}
+                {requestData.mobile}
               </p>
             )}
           </div>
 
-          <div className="text-sm ms-auto">
+          <div className="ms-auto text-end">
             {!!requestData.order_number && (
               <div className="flex items-center justify-end gap-2">
                 <h6 className="text-foreground-700">
@@ -61,11 +61,11 @@ export const RequestSummary = ({
               </div>
             )}
 
-            {!!requestData.owner.email && (
+            {!!requestData.email && (
               <p className="text-foreground-500 text-end">
                 {isSmAndDown
-                  ? truncateString(requestData.owner.email, 15)
-                  : requestData.owner.email}
+                  ? truncateString(requestData.email, 15)
+                  : requestData.email}
               </p>
             )}
           </div>
@@ -84,15 +84,15 @@ export const RequestSummary = ({
 
             <div>
               <h6 className="font-semibold text-foreground-700">
-                {requestData.inspection_data.vehicle_model?.name_fa}
+                {requestData.inspection_data.vehicle_model_info?.name_fa}
               </h6>
               <p className="text-foreground-500 text-sm">
-                {requestData.inspection_data.vehicle_brand?.name_fa}
+                {requestData.inspection_data.vehicle_brand_info?.name_fa}
               </p>
             </div>
 
             <div className="ms-auto text-end text-foreground-500 text-sm">
-              <h6>{requestData.inspection_data.color?.name}</h6>
+              <h6>{requestData.inspection_data.color_info?.name}</h6>
               <p>VIN: {requestData.inspection_data.vin}</p>
             </div>
           </div>
@@ -110,22 +110,23 @@ export const RequestSummary = ({
 
           <div>
             <h6 className="font-semibold text-foreground-700">
-              {requestData.template_id?.name}
+              {requestData.template_id}
             </h6>
             <p className="text-foreground-500 text-sm">
-              {requestData.inspection_format.name}
+              {requestData.inspection_format}
             </p>
           </div>
 
           <div className="text-end ms-auto text-sm">
             <h6 className="text-foreground-500">
-              {requestData.template_fields_count}{" "}
+              {requestData.required_fields.length}{" "}
               {t("expertRequests.wantedItem")}
             </h6>
             {!!requestData.required_fields?.length && (
               <div className="flex items-center justify-end gap-2 mt-1">
                 <FieldChip
                   field={{
+                    _id: requestData.required_fields[0].title,
                     ...requestData.required_fields[0],
                     title: truncateString(
                       requestData.required_fields[0].title,

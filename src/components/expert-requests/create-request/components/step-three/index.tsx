@@ -4,12 +4,8 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useEffect, useState } from "react";
 import { expertRequestsApi } from "@/services/api/expert-requests";
 import { exceptionHandler } from "@/services/api/exception";
-import {
-  ExpertRequestDetail,
-  UpdateRequestFinalBody,
-} from "@/types/expertRequests";
+import { UpdateRequestFinalBody } from "@/types/expertRequests";
 import { Switch, Form } from "@heroui/react";
-import { TemplateField } from "@/types/templates";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -31,45 +27,16 @@ export default function StepThree({
   onStepBack,
   onStepComplete,
 }: StepThreeProps) {
-  const [initializing, setInitializing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [requestData, setRequestData] = useState<ExpertRequestDetail>();
   const [smsEnabled, setSmsEnabled] = useState(false);
   const [emailEnabled, setEmailEnabled] = useState(false);
-  const { requestId, stepThreeData, setStepThreeData } = useCreateRequest();
-
-  useEffect(() => {
-    if (requestId) {
-      setInitializing(true);
-      expertRequestsApi
-        .getRequestsById(requestId)
-        // .getRequestsById("68239c55f0cc20a87def2d4a")
-        .then((response) => {
-          let res = response;
-          res.required_fields = filterExistedFields(
-            res.template_id?.fields,
-            res.required_fields
-          );
-          setRequestData(response);
-        })
-        .catch((err) => exceptionHandler(err))
-        .finally(() => setInitializing(false));
-    }
-  }, [requestId]);
-
-  function filterExistedFields(
-    templateDefaultFields: TemplateField[],
-    requestFields: TemplateField[]
-  ) {
-    if (!templateDefaultFields || !requestFields) return [];
-
-    const templateFieldIds = new Set(
-      templateDefaultFields.map((field) => field.title)
-    );
-
-    // Filter requestFields to only include those whose title doesn't exists in templateFieldIds
-    return requestFields.filter((field) => !templateFieldIds.has(field.title));
-  }
+  const {
+    requestId,
+    requestData,
+    stepThreeData,
+    setRequestData,
+    setStepThreeData,
+  } = useCreateRequest();
 
   const validationSchema = object({
     send_sms: boolean(),
@@ -88,7 +55,7 @@ export default function StepThree({
         send_email: false,
         tags: [],
         forwarding_time: new Date().toISOString(),
-        lead_specialist: requestData?.lead_specialist._id || "",
+        lead_specialist: "",
       },
     });
 
@@ -122,10 +89,11 @@ export default function StepThree({
       setIsLoading(true);
       const data = getValues();
       data.tags = [];
-      await expertRequestsApi.registerRequest(requestId, {
+      const response = await expertRequestsApi.registerRequest(requestId, {
         ...data,
         step: "FINAL",
       });
+      setRequestData(response);
       setStepThreeData(data);
       onStepComplete();
     } catch (err) {
@@ -135,7 +103,7 @@ export default function StepThree({
     }
   };
 
-  if (initializing || !requestData) return <StepThreeLoading />;
+  if (!requestData) return <StepThreeLoading />;
 
   return (
     <div className="flex flex-col h-full">
@@ -200,7 +168,7 @@ export default function StepThree({
           <div className="grid md:grid-cols-2 max-md:flex-col w-full gap-4 py-2 mt-4">
             {!!smsEnabled && (
               <AppInput
-                value={requestData.owner.phoneNumber}
+                value={requestData.mobile}
                 label={t("shared.mobile")}
                 labelPlacement="outside"
                 placeholder="876 54 321 0912"
@@ -225,7 +193,7 @@ export default function StepThree({
 
             {!!emailEnabled && (
               <AppInput
-                value={requestData.owner.email}
+                value={requestData.email}
                 label={t("shared.email")}
                 labelPlacement="outside"
                 variant="faded"
