@@ -123,6 +123,7 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
           _id: `-1`,
           name: newTemplateRef.current.name,
           logo: newTemplateRef.current.logo,
+          default: false,
           fields: modifiedTemplateFields["new_template"] || [],
         };
 
@@ -133,6 +134,7 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
         _id: template._id,
         name: template.name,
         logo: template.logo,
+        default: template.default || false,
         fields: (template.fields || [])
           .filter((field) => field.active) // Filter out inactive fields
           .map((field) => ({
