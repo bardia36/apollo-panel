@@ -44,7 +44,7 @@ export type ExpertRequestInfo = {
   inspection_data: {
     vehicle_brand?: NameEnFa;
     vehicle_model?: NameEnFa;
-    vehicle_compony?: NameEnFa;
+    vehicle_company?: NameEnFa;
   };
 };
 
@@ -186,7 +186,7 @@ export type CreateRequestInfoBody = {
     // inspection_data hard coded for now for handling vehicle data, in the future it will be dynamic based on the inspection format
     vehicle_brand?: string;
     vehicle_model?: string;
-    vehicle_compony?: string;
+    vehicle_company?: string;
     vin?: string;
     color?: string;
   };
@@ -221,8 +221,15 @@ export type RegisterRequestResponse = {
   mobile: string;
   email: string;
   order_number: string;
-  inspection_format: string;
-  template_id: string;
+  inspection_format: {
+    name: string;
+    _id: string;
+  };
+  template_id: {
+    fields: TemplateField[];
+    name: string;
+    _id: string;
+  };
   required_fields: [
     {
       type: TemplateFieldType;
@@ -231,33 +238,35 @@ export type RegisterRequestResponse = {
   ];
   created_at: string;
   updated_at: string;
-  lead_specialist: string;
+  lead_specialist: {
+    image?: string;
+    userName: string;
+    phoneNumber?: string;
+    email?: string;
+    _id?: string;
+  };
   owner: string;
   status: ExpertRequestStatus;
   step: RegisterRequestStep;
   unit: string;
   inspection_data: {
     vin: string;
-    vehicle_category_info: {
-      name: string;
-      _id: string;
-    };
-    vehicle_brand_info: {
+    vehicle_brand: {
       name_en: string;
       name_fa: string;
       _id: string;
     };
-    vehicle_model_info: {
+    vehicle_model: {
       name_en: string;
       name_fa: string;
       _id: string;
     };
-    vehicle_company_info: {
+    vehicle_company: {
       name: string;
       name_local: string;
       _id: string;
     };
-    color_info: {
+    color: {
       name: string;
       _id: string;
     };

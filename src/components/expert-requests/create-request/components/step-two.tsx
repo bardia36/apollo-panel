@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { TemplateCard } from "../../templates/available-templates";
 import { TemplateFields } from "../../templates/components/template-fields";
-import { Templates } from "@/types/templates";
+import { Templates, TemplateField } from "@/types/templates";
 import { exceptionHandler } from "@/services/api/exception";
 import { templatesApi } from "@/services/api/templates";
 import { t } from "i18next";
 import FieldsCountChip from "../../templates/components/fields-count-chip";
-import { useTemplateFields } from "../../templates/components/useTemplateFields";
 import { StepperButtons } from "./stepper-buttons";
 import { expertRequestsApi } from "@/services/api/expert-requests";
 import { StepTwoLoading } from "./loadings/step-two-loading";
@@ -21,32 +20,69 @@ export default function StepTwo({ onStepComplete, onStepBack }: StepTwoProps) {
   const [initializing, setInitializing] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [templates, setTemplates] = useState<Templates>();
-  const { requestId, stepTwoData, setStepTwoData } = useCreateRequest();
-
-  // Use the useTemplateFields hook to manage template fields
+  const [activeFieldsCount, setActiveFieldsCount] = useState(0);
   const {
+    requestId,
+    requestData,
+    setRequestData,
     activeTemplate,
-    modifiedTemplateFields,
-    activeFieldsCount,
     setActiveTemplate,
-    setActiveFieldsCount,
-    handleFieldsChange,
-  } = useTemplateFields();
+    modifiedTemplateFields,
+    setModifiedTemplateFields,
+  } = useCreateRequest();
 
+  // Only fetch templates once on mount
   useEffect(() => {
     getTemplates();
   }, []);
 
+  // Initialize fields only once when template changes or requestData is loaded
   useEffect(() => {
-    if (stepTwoData && activeTemplate) {
-      const fieldsWithId = stepTwoData.fields.map((field) => ({
+    if (
+      requestData &&
+      activeTemplate &&
+      !modifiedTemplateFields[activeTemplate._id]
+    ) {
+      const fieldsWithId = requestData.required_fields.map((field) => ({
         ...field,
         _id:
           activeTemplate.fields.find((f) => f.title === field.title)?._id || "",
+        active: true,
       }));
-      handleFieldsChange(activeTemplate._id, fieldsWithId);
+
+      setModifiedTemplateFields({
+        ...modifiedTemplateFields,
+        [activeTemplate._id]: fieldsWithId,
+      });
+
+      // Initialize active fields count
+      setActiveFieldsCount(fieldsWithId.length);
+    } else if (activeTemplate && !modifiedTemplateFields[activeTemplate._id]) {
+      // Initialize with template's default fields if no requestData
+      const initialFields = activeTemplate.fields.map((field) => ({
+        ...field,
+        active: true,
+      }));
+
+      setModifiedTemplateFields({
+        ...modifiedTemplateFields,
+        [activeTemplate._id]: initialFields,
+      });
+
+      // Initialize active fields count
+      setActiveFieldsCount(initialFields.length);
     }
-  }, [stepTwoData, activeTemplate]);
+  }, [requestData, activeTemplate?._id]); // Only depend on _id to prevent unnecessary updates
+
+  // Update active fields count when template fields change
+  useEffect(() => {
+    if (activeTemplate && modifiedTemplateFields[activeTemplate._id]) {
+      const activeFields = modifiedTemplateFields[activeTemplate._id].filter(
+        (field) => field.active
+      );
+      setActiveFieldsCount(activeFields.length);
+    }
+  }, [modifiedTemplateFields, activeTemplate]);
 
   async function getTemplates() {
     setInitializing(true);
@@ -59,15 +95,27 @@ export default function StepTwo({ onStepComplete, onStepBack }: StepTwoProps) {
       );
 
       setTemplates(templatesRes);
-      // Set the first template as active if available
-      if (templatesRes?.docs.length > 0)
+
+      // Set the first template as active if no active template exists
+      if (!activeTemplate && templatesRes?.docs.length > 0) {
         setActiveTemplate(templatesRes.docs[0]);
+      }
     } catch (err) {
       exceptionHandler(err);
     } finally {
       setInitializing(false);
     }
   }
+
+  const handleFieldsChange = (
+    templateId: string,
+    updatedFields: TemplateField[]
+  ) => {
+    setModifiedTemplateFields({
+      ...modifiedTemplateFields,
+      [templateId]: updatedFields,
+    });
+  };
 
   function submit() {
     if (!requestId || !activeTemplate) {
@@ -81,18 +129,18 @@ export default function StepTwo({ onStepComplete, onStepBack }: StepTwoProps) {
       template_id: activeTemplate._id,
       fields: (
         modifiedTemplateFields[activeTemplate._id] || activeTemplate.fields
-      ).map(
-        ({ title, type }) => ({
+      )
+        .filter((field) => field.active)
+        .map(({ title, type }) => ({
           title,
           type: type === "OTHER" ? "IMAGE" : type,
-        }) // Filter to include only title and type and change other type to image
-      ),
+        })),
     };
 
     expertRequestsApi
       .registerRequest(requestId, { ...body, step: "LINK" })
-      .then(() => {
-        setStepTwoData(body);
+      .then((response) => {
+        setRequestData(response);
         onStepComplete();
       })
       .catch((err) => exceptionHandler(err))

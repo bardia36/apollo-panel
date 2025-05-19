@@ -49,7 +49,7 @@ export const InspectionFormatDetailCard = ({
       <div className="grid md:grid-cols-3 gap-x-3 gap-y-4 mb-4">
         <Controller
           control={control}
-          name="inspection_data.vehicle_compony"
+          name="inspection_data.vehicle_company"
           render={({ field, fieldState: { error } }) => (
             <AppSelect
               label={t("expertRequests.carGroup")}

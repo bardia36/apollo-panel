@@ -8,7 +8,7 @@ import { StepThreeLoading } from "./components/loadings/step-three-loading";
 import { useBreakpoint } from "@/hook/useBreakpoint";
 import { StepOneHeader } from "./components/step-one";
 import { DesktopStepper, MobileStepper } from "./components/stepper";
-import { useCreateRequest } from "./context/create-request-context";
+import { CreateRequestProvider } from "./context/create-request-context";
 
 const StepOne = lazy(() => import("./components/step-one"));
 const StepTwo = lazy(() => import("./components/step-two"));
@@ -42,7 +42,6 @@ export default function StepsWrapper({ onCloseModal }: Props) {
   const [currentStep, setCurrentStep] = useState(0); // 0 | 1 | 2
   const { refreshRequests } = useExpertRequests();
   const { isMdAndUp } = useBreakpoint();
-  const { resetData } = useCreateRequest();
 
   const nextStep = () => {
     setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
@@ -65,61 +64,62 @@ export default function StepsWrapper({ onCloseModal }: Props) {
   const onFinal = () => {
     onCloseModal();
     refreshRequests();
-    resetData();
   };
 
   return (
-    <div className="lg:h-screen flex flex-col md:flex-row gap-6 md:gap-4">
-      {isMdAndUp && (
-        <aside className="md:w-1/3 bg-primary-50 py-6 px-8 rounded-large flex flex-col items-start gap-8">
-          <Button
-            radius="full"
-            variant="flat"
-            size="sm"
-            className="bg-content1 text-default-foreground min-h-8"
-            onPress={onCloseModal}
-          >
-            <Icon icon="material-symbols:arrow-back-ios-new-rounded" hFlip />
-            {t("shared.return")}
-          </Button>
+    <CreateRequestProvider>
+      <div className="lg:h-screen flex flex-col md:flex-row gap-6 md:gap-4">
+        {isMdAndUp && (
+          <aside className="md:w-1/3 bg-primary-50 py-6 px-8 rounded-large flex flex-col items-start gap-8">
+            <Button
+              radius="full"
+              variant="flat"
+              size="sm"
+              className="bg-content1 text-default-foreground min-h-8"
+              onPress={onCloseModal}
+            >
+              <Icon icon="material-symbols:arrow-back-ios-new-rounded" hFlip />
+              {t("shared.return")}
+            </Button>
 
+            <div>
+              <h2 className="text-xl mb-1">
+                {t("expertRequests.stepsToCreateReviewLink")}
+              </h2>
+              <p className="text-default-500">
+                {t("expertRequests.addReqStepperDescription")}
+              </p>
+            </div>
+
+            <DesktopStepper steps={steps} currentStep={currentStep} />
+          </aside>
+        )}
+
+        {!isMdAndUp && (
           <div>
-            <h2 className="text-xl mb-1">
-              {t("expertRequests.stepsToCreateReviewLink")}
-            </h2>
-            <p className="text-default-500">
-              {t("expertRequests.addReqStepperDescription")}
-            </p>
+            {currentStep == 0 && <StepOneHeader />}
+            <MobileStepper steps={steps} currentStep={currentStep} />
           </div>
+        )}
 
-          <DesktopStepper steps={steps} currentStep={currentStep} />
-        </aside>
-      )}
-
-      {!isMdAndUp && (
-        <div>
-          {currentStep == 0 && <StepOneHeader />}
-          <MobileStepper steps={steps} currentStep={currentStep} />
+        <div className="md:w-2/3 md:py-4">
+          <Suspense
+            fallback={
+              currentStep == 2 ? (
+                <StepTwoLoading />
+              ) : currentStep == 3 ? (
+                <StepThreeLoading />
+              ) : (
+                <Skeleton className="w-[90%] rounded-xl mx-auto h-full" />
+              )
+            }
+          >
+            <div className="xl:w-3/4 xl:mx-auto flex flex-col h-full">
+              {renderStep()}
+            </div>
+          </Suspense>
         </div>
-      )}
-
-      <div className="md:w-2/3 md:py-4">
-        <Suspense
-          fallback={
-            currentStep == 2 ? (
-              <StepTwoLoading />
-            ) : currentStep == 3 ? (
-              <StepThreeLoading />
-            ) : (
-              <Skeleton className="w-[90%] rounded-xl mx-auto h-full" />
-            )
-          }
-        >
-          <div className="xl:w-3/4 xl:mx-auto flex flex-col h-full">
-            {renderStep()}
-          </div>
-        </Suspense>
       </div>
-    </div>
+    </CreateRequestProvider>
   );
 }
