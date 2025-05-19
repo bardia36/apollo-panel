@@ -84,15 +84,15 @@ export const RequestSummary = ({ requestData }: RequestSummaryProps) => {
 
             <div>
               <h6 className="font-semibold text-foreground-700">
-                {requestData.inspection_data.vehicle_model_info?.name_fa}
+                {requestData.inspection_data.vehicle_model?.name_fa}
               </h6>
               <p className="text-foreground-500 text-sm">
-                {requestData.inspection_data.vehicle_brand_info?.name_fa}
+                {requestData.inspection_data.vehicle_brand?.name_fa}
               </p>
             </div>
 
             <div className="ms-auto text-end text-foreground-500 text-sm">
-              <h6>{requestData.inspection_data.color_info?.name}</h6>
+              <h6>{requestData.inspection_data.color?.name}</h6>
               <p>VIN: {requestData.inspection_data.vin}</p>
             </div>
           </div>
@@ -110,13 +110,14 @@ export const RequestSummary = ({ requestData }: RequestSummaryProps) => {
 
           <div>
             <h6 className="font-semibold text-foreground-700">
-              {requestData.template_id._id}
+              {requestData.template_id.name}
             </h6>
             <p className="text-foreground-500 text-sm">
-              {requestData.inspection_format}
+              {requestData.inspection_format.name}
             </p>
           </div>
 
+          {/* TODO: handle correct length based on user choice */}
           <div className="text-end ms-auto text-sm">
             <h6 className="text-foreground-500">
               {requestData.required_fields.length}{" "}

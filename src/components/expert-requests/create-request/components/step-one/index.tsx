@@ -13,7 +13,7 @@ import { AppSelect } from "@/components/shared/app-components/app-select";
 import { StepperButtons } from "../stepper-buttons";
 import {
   CreateRequestInfoBody,
-  InspectionDataItem,
+  RegisterRequestResponse,
 } from "@/types/expertRequests";
 import { useBreakpoint } from "@/hook/useBreakpoint";
 import { expertRequestsApi } from "@/services/api/expert-requests";
@@ -23,6 +23,20 @@ import { useCreateRequest } from "../../context/create-request-context";
 
 type StepOneProps = {
   onStepComplete: (id: string) => void;
+};
+
+const transformRequestData = (data: RegisterRequestResponse | null) => {
+  if (!data) return undefined;
+  return {
+    ...data,
+    inspection_data: {
+      ...data.inspection_data,
+      vehicle_brand: data.inspection_data?.vehicle_brand?._id || "",
+      vehicle_model: data.inspection_data?.vehicle_model?._id || "",
+      vehicle_company: data.inspection_data?.vehicle_company?._id || "",
+      color: data.inspection_data?.color?._id || "",
+    },
+  };
 };
 
 export default function StepOne({ onStepComplete }: StepOneProps) {
@@ -53,7 +67,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
     inspection_data: object({
       vehicle_brand: string(),
       vehicle_model: string(),
-      vehicle_compony: string(),
+      vehicle_company: string(),
       vin: string().length(17, msgs.length(t("expertRequests.vinNumber"), 17)),
       color: string(),
     }).optional(),
@@ -63,14 +77,29 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
     useForm<CreateRequestInfoBody>({
       ...formOptions,
       resolver: yupResolver(validationSchema),
-      defaultValues: requestData || undefined,
+      defaultValues: transformRequestData(requestData || null),
     });
 
   useEffect(() => {
     if (requestData) {
-      reset(requestData);
+      reset(transformRequestData(requestData));
     }
   }, [requestData, reset]);
+
+  useEffect(() => {
+    // Show inspection format detail card if there's existing data
+    if (requestData?.inspection_format) {
+      setShowInspectionFormatDetailCard(true);
+      // Fetch and set the active format
+      inspectionFormatApi.getFormats().then((response) => {
+        const formats = Array.isArray(response) ? response : [];
+        const format = formats.find(
+          (f: { key: string }) => f.key === requestData.inspection_format
+        );
+        if (format) setActiveFormat(format);
+      });
+    }
+  }, [requestData]);
 
   const handleInspectionFormatChange = (value: string) => {
     if (value) {
