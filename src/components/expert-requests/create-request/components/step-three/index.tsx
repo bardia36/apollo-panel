@@ -109,7 +109,6 @@ export default function StepThree({
     try {
       setIsLoading(true);
       const data = getValues();
-      data.tags = [];
       const response = await expertRequestsApi.registerRequest(requestId, {
         ...data,
         step: "FINAL",
