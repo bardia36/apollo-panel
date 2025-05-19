@@ -1,19 +1,24 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import {
-  CreateRequestInfoBody,
-  UpdateRequestLinkBody,
+  RegisterRequestResponse,
   UpdateRequestFinalBody,
+  InspectionDataItem,
 } from "@/types/expertRequests";
+import { Template, TemplateField } from "@/types/templates";
 
 type CreateRequestContextType = {
-  stepOneData: CreateRequestInfoBody | null;
-  stepTwoData: UpdateRequestLinkBody | null;
+  requestData: RegisterRequestResponse | null;
   stepThreeData: UpdateRequestFinalBody | null;
   requestId: string | null;
-  setStepOneData: (data: CreateRequestInfoBody) => void;
-  setStepTwoData: (data: UpdateRequestLinkBody) => void;
+  activeFormat: InspectionDataItem | null;
+  activeTemplate: Template | null;
+  modifiedTemplateFields: Record<string, TemplateField[]>;
+  setRequestData: (data: RegisterRequestResponse) => void;
   setStepThreeData: (data: UpdateRequestFinalBody) => void;
   setRequestId: (id: string) => void;
+  setActiveFormat: (format: InspectionDataItem | null) => void;
+  setActiveTemplate: (template: Template | null) => void;
+  setModifiedTemplateFields: (fields: Record<string, TemplateField[]>) => void;
   resetData: () => void;
 };
 
@@ -22,34 +27,39 @@ const CreateRequestContext = createContext<
 >(undefined);
 
 export function CreateRequestProvider({ children }: { children: ReactNode }) {
-  const [stepOneData, setStepOneData] = useState<CreateRequestInfoBody | null>(
-    null
-  );
-  const [stepTwoData, setStepTwoData] = useState<UpdateRequestLinkBody | null>(
-    null
-  );
+  const [requestData, setRequestData] =
+    useState<RegisterRequestResponse | null>(null);
   const [stepThreeData, setStepThreeData] =
     useState<UpdateRequestFinalBody | null>(null);
   const [requestId, setRequestId] = useState<string | null>(null);
+  const [activeFormat, setActiveFormat] = useState<InspectionDataItem | null>(null);
+  const [activeTemplate, setActiveTemplate] = useState<Template | null>(null);
+  const [modifiedTemplateFields, setModifiedTemplateFields] = useState<Record<string, TemplateField[]>>({});
 
   const resetData = () => {
-    setStepOneData(null);
-    setStepTwoData(null);
+    setRequestData(null);
     setStepThreeData(null);
     setRequestId(null);
+    setActiveFormat(null);
+    setActiveTemplate(null);
+    setModifiedTemplateFields({});
   };
 
   return (
     <CreateRequestContext.Provider
       value={{
-        stepOneData,
-        stepTwoData,
+        requestData,
         stepThreeData,
         requestId,
-        setStepOneData,
-        setStepTwoData,
+        activeFormat,
+        activeTemplate,
+        modifiedTemplateFields,
+        setRequestData,
         setStepThreeData,
         setRequestId,
+        setActiveFormat,
+        setActiveTemplate,
+        setModifiedTemplateFields,
         resetData,
       }}
     >

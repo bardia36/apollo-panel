@@ -1,11 +1,8 @@
 import { axiosHandler } from "./core";
 import { RequestMethod } from "@/types/api";
 import {
-  CreateRequestInfoBody,
   ExpertRequestDetail,
   ExpertRequestResponse,
-  UpdateRequestLinkBody,
-  UpdateRequestFinalBody,
   RegisterRequestBody,
   RegisterRequestResponse,
 } from "@/types/expertRequests";
@@ -27,36 +24,10 @@ export const expertRequestsApi = {
     });
   },
 
-  // create - step 1
-  createRequest(body: CreateRequestInfoBody) {
-    return axiosHandler<{ id: string }>(BASE_URL, {
-      method: RequestMethod.POST,
-      body,
-    });
-  },
-
-  // create - step 2
-  updateRequestLink(id: string, body: UpdateRequestLinkBody) {
-    return axiosHandler(BASE_URL, {
-      action: `${id}/link-step`,
-      method: RequestMethod.PATCH,
-      body,
-    });
-  },
-
-  // create - step 3
-  updateRequestFinal(id: string, body: UpdateRequestFinalBody) {
-    return axiosHandler(BASE_URL, {
-      action: `${id}/final-step`,
-      method: RequestMethod.PATCH,
-      body,
-    });
-  },
-
   registerRequest(id: string, body: RegisterRequestBody) {
     return axiosHandler<RegisterRequestResponse>(BASE_URL, {
       action: id,
-      method: RequestMethod.POST,
+      method: RequestMethod.PUT,
       body,
     });
   },

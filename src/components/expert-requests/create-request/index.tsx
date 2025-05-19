@@ -51,7 +51,7 @@ export const CreateRequestModal: FC<Props> = ({ activator }) => {
           backdrop="blur"
           hideCloseButton={isMdAndUp ? true : false}
           isDismissable={false}
-          className="xl:min-w-[1140px] md:max-h-[95vh] my-auto"
+          className="xl:min-w-[1140px] md:max-h-[80vh] my-auto"
           size={isMdAndUp ? "5xl" : "full"}
           onClose={handleModalClose}
         >

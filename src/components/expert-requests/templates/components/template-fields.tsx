@@ -18,35 +18,33 @@ export const TemplateFields = ({
   onFieldsActiveCountChange,
   onFieldsChange,
 }: Props) => {
-  const [imageFields, setImageFields] = useState<TemplateField[]>(
-    templateFields.filter((field) => field.type === "IMAGE") || []
-  );
-  const [fileFields, setFileFields] = useState<TemplateField[]>(
-    templateFields.filter((field) => field.type === "FILE") || []
-  );
-  const [addedFields, setAddedFields] = useState<TemplateField[]>(
-    templateFields.filter((field) => field.type === "OTHER") || []
-  );
+  const [imageFields, setImageFields] = useState<TemplateField[]>([]);
+  const [fileFields, setFileFields] = useState<TemplateField[]>([]);
+  const [addedFields, setAddedFields] = useState<TemplateField[]>([]);
   const [newFieldTitle, setNewFieldTitle] = useState<string>("");
+  const initialized = useRef(false);
 
-  // Separate useEffect for counting active fields
+  // Initialize fields only once when templateFields prop changes and not initialized yet
   useEffect(() => {
-    const allFields = [...imageFields, ...fileFields, ...addedFields];
+    if (!initialized.current) {
+      setImageFields(templateFields.filter((field) => field.type === "IMAGE") || []);
+      setFileFields(templateFields.filter((field) => field.type === "FILE") || []);
+      setAddedFields(templateFields.filter((field) => field.type === "OTHER") || []);
+      initialized.current = true;
+    }
+  }, [templateFields]);
+
+  // Update counts and notify parent when fields change
+  const updateParent = (
+    newImageFields = imageFields,
+    newFileFields = fileFields,
+    newAddedFields = addedFields
+  ) => {
+    const allFields = [...newImageFields, ...newFileFields, ...newAddedFields];
     const activeFields = allFields.filter((field) => field.active);
     onFieldsActiveCountChange(activeFields.length);
-  }, [imageFields, fileFields, addedFields, onFieldsActiveCountChange]);
-
-  // Separate useEffect for notifying parent of changes, with a ref to prevent initial call
-  const isInitialRender = useRef(true);
-  useEffect(() => {
-    if (isInitialRender.current) {
-      isInitialRender.current = false;
-      return;
-    }
-
-    const allFields = [...imageFields, ...fileFields, ...addedFields];
     onFieldsChange(allFields);
-  }, [imageFields, fileFields, addedFields, onFieldsChange]);
+  };
 
   function checkChipTitleOverflows(title: string) {
     return title.length > 30;
@@ -65,8 +63,13 @@ export const TemplateFields = ({
       type: "OTHER",
       active: true,
     };
-    setAddedFields((prev) => [...prev, field]);
+    
+    const newAddedFields = [...addedFields, field];
+    setAddedFields(newAddedFields);
     setNewFieldTitle("");
+    
+    // Update parent with new fields
+    setTimeout(() => updateParent(imageFields, fileFields, newAddedFields), 0);
   }
 
   function toggleFieldActive(
@@ -79,13 +82,26 @@ export const TemplateFields = ({
       added: setAddedFields,
     };
 
-    stateSetters[fieldType]((prev) =>
-      prev.map((f) =>
+    stateSetters[fieldType]((prev) => {
+      const newFields = prev.map((f) =>
         `${f._id}-${f.title}` === `${field._id}-${field.title}`
           ? { ...f, active: !f.active }
           : f
-      )
-    );
+      );
+
+      // Update parent with the correct set of fields
+      setTimeout(() => {
+        if (fieldType === "image") {
+          updateParent(newFields, fileFields, addedFields);
+        } else if (fieldType === "file") {
+          updateParent(imageFields, newFields, addedFields);
+        } else {
+          updateParent(imageFields, fileFields, newFields);
+        }
+      }, 0);
+
+      return newFields;
+    });
   }
 
   return (
@@ -158,6 +174,7 @@ export const TemplateFields = ({
         <AppInput
           value={newFieldTitle}
           variant="bordered"
+          autoFocus
           placeholder={t("expertRequests.wantedItemTitle")}
           classNames={{
             inputWrapper: "pe-1",

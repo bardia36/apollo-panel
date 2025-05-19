@@ -13,7 +13,7 @@ import { AppSelect } from "@/components/shared/app-components/app-select";
 import { StepperButtons } from "../stepper-buttons";
 import {
   CreateRequestInfoBody,
-  InspectionDataItem,
+  RegisterRequestResponse,
 } from "@/types/expertRequests";
 import { useBreakpoint } from "@/hook/useBreakpoint";
 import { expertRequestsApi } from "@/services/api/expert-requests";
@@ -25,13 +25,42 @@ type StepOneProps = {
   onStepComplete: (id: string) => void;
 };
 
+const transformRequestData = (
+  data: RegisterRequestResponse | null
+): CreateRequestInfoBody | undefined => {
+  if (!data) return undefined;
+
+  return {
+    username: data.username,
+    mobile: data.mobile,
+    email: data.email,
+    order_number: data.order_number,
+    inspection_format: data.inspection_format._id,
+    inspection_data: data.inspection_data
+      ? {
+          vehicle_brand: data.inspection_data.vehicle_brand?._id,
+          vehicle_model: data.inspection_data.vehicle_model?._id,
+          vehicle_company: data.inspection_data.vehicle_company?._id,
+          color: data.inspection_data.color?._id,
+          vin: data.inspection_data.vin,
+        }
+      : undefined,
+  } as CreateRequestInfoBody;
+};
+
 export default function StepOne({ onStepComplete }: StepOneProps) {
   const [showInspectionFormatDetailCard, setShowInspectionFormatDetailCard] =
     useState(true);
-  const [activeFormat, setActiveFormat] = useState<InspectionDataItem>();
   const { isMdAndUp } = useBreakpoint();
   const [isLoading, setIsLoading] = useState(false);
-  const { stepOneData, setStepOneData, setRequestId } = useCreateRequest();
+  const {
+    requestId,
+    requestData,
+    setRequestData,
+    setRequestId,
+    activeFormat,
+    setActiveFormat,
+  } = useCreateRequest();
 
   const msgs = useValidationMessages();
 
@@ -47,7 +76,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
     inspection_data: object({
       vehicle_brand: string(),
       vehicle_model: string(),
-      vehicle_compony: string(),
+      vehicle_company: string(),
       vin: string().length(17, msgs.length(t("expertRequests.vinNumber"), 17)),
       color: string(),
     }).optional(),
@@ -57,31 +86,52 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
     useForm<CreateRequestInfoBody>({
       ...formOptions,
       resolver: yupResolver(validationSchema),
-      defaultValues: stepOneData || undefined,
+      defaultValues: transformRequestData(requestData || null),
     });
 
   useEffect(() => {
-    if (stepOneData) {
-      reset(stepOneData);
+    if (requestData) {
+      reset(transformRequestData(requestData));
     }
-  }, [stepOneData, reset]);
+  }, [requestData, reset]);
+
+  useEffect(() => {
+    // Show inspection format detail card if there's existing data
+    if (requestData?.inspection_format) {
+      setShowInspectionFormatDetailCard(true);
+      // Fetch and set the active format
+      inspectionFormatApi.getFormats().then((response) => {
+        const formats = Array.isArray(response) ? response : [];
+        const format = formats.find(
+          (f: { key: string }) => f.key === requestData.inspection_format._id
+        );
+        if (format) setActiveFormat(format);
+      });
+    }
+  }, [requestData]);
 
   const handleInspectionFormatChange = (value: string) => {
     if (value) {
       setTimeout(() => {
         setShowInspectionFormatDetailCard(true);
       }, 200);
-    } else setShowInspectionFormatDetailCard(false);
+    } else {
+      setShowInspectionFormatDetailCard(false);
+      setActiveFormat(null);
+    }
   };
 
   const submit = async () => {
     try {
       setIsLoading(true);
       const data = getValues();
-      const response = await expertRequestsApi.createRequest(data);
-      setStepOneData(data);
-      setRequestId(response.id);
-      onStepComplete(response.id);
+      const response = await expertRequestsApi.registerRequest(
+        requestId ? requestId : "0",
+        { ...data, step: "INFO" }
+      );
+      setRequestData(response);
+      if (!requestId) setRequestId(response._id);
+      onStepComplete(response._id);
     } catch (err) {
       exceptionHandler(err);
     } finally {

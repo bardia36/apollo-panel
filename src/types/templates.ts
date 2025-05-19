@@ -2,7 +2,7 @@ export type Template = {
   _id: string;
   name: string;
   logo: string;
-  default?: boolean;
+  default: boolean;
   fields: TemplateField[];
 };
 
