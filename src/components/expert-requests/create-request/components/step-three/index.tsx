@@ -17,6 +17,7 @@ import { StepThreeLoading } from "../loadings/step-three-loading";
 import { RequestSummary } from "./request-summary";
 import { TagInput } from "@/components/shared/tag-input";
 import { useCreateRequest } from "../../context/create-request-context";
+import { useValidationMessages, validationRegex } from "@/utils/rules";
 
 type StepThreeProps = {
   onStepComplete: () => void;
@@ -38,13 +39,30 @@ export default function StepThree({
     setStepThreeData,
   } = useCreateRequest();
 
-  // TODO: add validation for mobile and email
+  const msgs = useValidationMessages();
+
   const validationSchema = object({
     send_sms: boolean(),
     send_email: boolean(),
     lead_specialist: string(),
     tags: array().of(string()),
     forwarding_time: string(),
+    mobile: string().when("send_sms", {
+      is: true,
+      then: (schema) =>
+        schema
+          .required(msgs.required(t("shared.mobile")))
+          .matches(validationRegex.mobile, msgs.isNotValid(t("shared.mobile"))),
+      otherwise: (schema) => schema.optional(),
+    }),
+    email: string().when("send_email", {
+      is: true,
+      then: (schema) =>
+        schema
+          .required(msgs.required(t("shared.email")))
+          .email(msgs.isNotValid(t("shared.email"))),
+      otherwise: (schema) => schema.optional(),
+    }),
   });
 
   const { control, handleSubmit, getValues, reset } =
@@ -57,6 +75,8 @@ export default function StepThree({
         tags: [],
         forwarding_time: new Date().toISOString(),
         lead_specialist: "",
+        mobile: requestData?.mobile || "",
+        email: requestData?.email || "",
       },
     });
 
@@ -168,48 +188,68 @@ export default function StepThree({
         {(!!smsEnabled || !!emailEnabled) && (
           <div className="grid md:grid-cols-2 max-md:flex-col w-full gap-4 py-2 mt-4">
             {!!smsEnabled && (
-              <AppInput
-                value={requestData.mobile}
-                label={t("shared.mobile")}
-                labelPlacement="outside"
-                variant="faded"
-                size="lg"
-                classNames={{
-                  inputWrapper: "bg-background",
-                  input: "text-foreground-500 text-xl font-bold text-center",
-                  label: "text-xs !text-default-600",
-                }}
-                endContent={
-                  <Icon
-                    icon="solar:iphone-outline"
-                    className="text-default-400"
-                    width="20"
-                    height="20"
+              <Controller
+                control={control}
+                name="mobile"
+                render={({ field, fieldState: { error } }) => (
+                  <AppInput
+                    {...field}
+                    label={t("shared.mobile")}
+                    labelPlacement="outside"
+                    variant="faded"
+                    size="lg"
+                    placeholder="876 54 321 0912"
+                    isInvalid={!!error}
+                    errorMessage={error?.message}
+                    classNames={{
+                      inputWrapper: "bg-background",
+                      input:
+                        "placeholder:text-foreground-500 text-xl font-bold text-center",
+                      label: "text-xs !text-default-600",
+                    }}
+                    endContent={
+                      <Icon
+                        icon="solar:iphone-outline"
+                        className="text-default-400"
+                        width="20"
+                        height="20"
+                      />
+                    }
                   />
-                }
+                )}
               />
             )}
 
             {!!emailEnabled && (
-              <AppInput
-                value={requestData.email}
-                label={t("shared.email")}
-                labelPlacement="outside"
-                variant="faded"
-                size="lg"
-                classNames={{
-                  inputWrapper: "bg-background",
-                  input: "text-foreground-500 text-xl font-bold text-center",
-                  label: "text-xs !text-default-600",
-                }}
-                endContent={
-                  <Icon
-                    icon="solar:letter-outline"
-                    className="text-default-400"
-                    width="20"
-                    height="20"
+              <Controller
+                control={control}
+                name="email"
+                render={({ field, fieldState: { error } }) => (
+                  <AppInput
+                    {...field}
+                    label={t("shared.email")}
+                    labelPlacement="outside"
+                    variant="faded"
+                    size="lg"
+                    placeholder="test@customer.com"
+                    isInvalid={!!error}
+                    errorMessage={error?.message}
+                    classNames={{
+                      inputWrapper: "bg-background",
+                      input:
+                        "placeholder:text-foreground-500 text-xl font-bold text-center",
+                      label: "text-xs !text-default-600",
+                    }}
+                    endContent={
+                      <Icon
+                        icon="solar:letter-outline"
+                        className="text-default-400"
+                        width="20"
+                        height="20"
+                      />
+                    }
                   />
-                }
+                )}
               />
             )}
           </div>
@@ -301,7 +341,7 @@ export default function StepThree({
         currentStep={3}
         isLoading={isLoading}
         onPrevStep={onStepBack}
-        onNextStep={submit}
+        onNextStep={handleSubmit(submit)}
       />
     </div>
   );

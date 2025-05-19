@@ -174,6 +174,7 @@ export const TemplateFields = ({
         <AppInput
           value={newFieldTitle}
           variant="bordered"
+          autoFocus
           placeholder={t("expertRequests.wantedItemTitle")}
           classNames={{
             inputWrapper: "pe-1",
