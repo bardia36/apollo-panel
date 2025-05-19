@@ -38,10 +38,15 @@ export default function StepTwo({ onStepComplete, onStepBack }: StepTwoProps) {
 
   // Initialize fields only once when template changes or requestData is loaded
   useEffect(() => {
-    if (requestData && activeTemplate && !modifiedTemplateFields[activeTemplate._id]) {
+    if (
+      requestData &&
+      activeTemplate &&
+      !modifiedTemplateFields[activeTemplate._id]
+    ) {
       const fieldsWithId = requestData.required_fields.map((field) => ({
         ...field,
-        _id: activeTemplate.fields.find((f) => f.title === field.title)?._id || "",
+        _id:
+          activeTemplate.fields.find((f) => f.title === field.title)?._id || "",
         active: true,
       }));
 
@@ -49,21 +54,21 @@ export default function StepTwo({ onStepComplete, onStepBack }: StepTwoProps) {
         ...modifiedTemplateFields,
         [activeTemplate._id]: fieldsWithId,
       });
-      
+
       // Initialize active fields count
       setActiveFieldsCount(fieldsWithId.length);
     } else if (activeTemplate && !modifiedTemplateFields[activeTemplate._id]) {
       // Initialize with template's default fields if no requestData
-      const initialFields = activeTemplate.fields.map(field => ({
+      const initialFields = activeTemplate.fields.map((field) => ({
         ...field,
-        active: true
+        active: true,
       }));
-      
+
       setModifiedTemplateFields({
         ...modifiedTemplateFields,
         [activeTemplate._id]: initialFields,
       });
-      
+
       // Initialize active fields count
       setActiveFieldsCount(initialFields.length);
     }
@@ -90,7 +95,7 @@ export default function StepTwo({ onStepComplete, onStepBack }: StepTwoProps) {
       );
 
       setTemplates(templatesRes);
-      
+
       // Set the first template as active if no active template exists
       if (!activeTemplate && templatesRes?.docs.length > 0) {
         setActiveTemplate(templatesRes.docs[0]);
@@ -102,7 +107,10 @@ export default function StepTwo({ onStepComplete, onStepBack }: StepTwoProps) {
     }
   }
 
-  const handleFieldsChange = (templateId: string, updatedFields: TemplateField[]) => {
+  const handleFieldsChange = (
+    templateId: string,
+    updatedFields: TemplateField[]
+  ) => {
     setModifiedTemplateFields({
       ...modifiedTemplateFields,
       [templateId]: updatedFields,
@@ -121,10 +129,12 @@ export default function StepTwo({ onStepComplete, onStepBack }: StepTwoProps) {
       template_id: activeTemplate._id,
       fields: (
         modifiedTemplateFields[activeTemplate._id] || activeTemplate.fields
-      ).map(({ title, type }) => ({
-        title,
-        type: type === "OTHER" ? "IMAGE" : type,
-      })),
+      )
+        .filter((field) => field.active)
+        .map(({ title, type }) => ({
+          title,
+          type: type === "OTHER" ? "IMAGE" : type,
+        })),
     };
 
     expertRequestsApi

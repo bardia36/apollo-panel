@@ -25,18 +25,27 @@ type StepOneProps = {
   onStepComplete: (id: string) => void;
 };
 
-const transformRequestData = (data: RegisterRequestResponse | null) => {
+const transformRequestData = (
+  data: RegisterRequestResponse | null
+): CreateRequestInfoBody | undefined => {
   if (!data) return undefined;
+
   return {
-    ...data,
-    inspection_data: {
-      ...data.inspection_data,
-      vehicle_brand: data.inspection_data?.vehicle_brand?._id || "",
-      vehicle_model: data.inspection_data?.vehicle_model?._id || "",
-      vehicle_company: data.inspection_data?.vehicle_company?._id || "",
-      color: data.inspection_data?.color?._id || "",
-    },
-  };
+    username: data.username,
+    mobile: data.mobile,
+    email: data.email,
+    order_number: data.order_number,
+    inspection_format: data.inspection_format._id,
+    inspection_data: data.inspection_data
+      ? {
+          vehicle_brand: data.inspection_data.vehicle_brand?._id,
+          vehicle_model: data.inspection_data.vehicle_model?._id,
+          vehicle_company: data.inspection_data.vehicle_company?._id,
+          color: data.inspection_data.color?._id,
+          vin: data.inspection_data.vin,
+        }
+      : undefined,
+  } as CreateRequestInfoBody;
 };
 
 export default function StepOne({ onStepComplete }: StepOneProps) {
@@ -94,7 +103,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
       inspectionFormatApi.getFormats().then((response) => {
         const formats = Array.isArray(response) ? response : [];
         const format = formats.find(
-          (f: { key: string }) => f.key === requestData.inspection_format
+          (f: { key: string }) => f.key === requestData.inspection_format._id
         );
         if (format) setActiveFormat(format);
       });
