@@ -53,13 +53,13 @@ export default function Otp({ userName, setCurrentComponent }: Props) {
     setCurrentComponent("password");
   }
 
+  const msgs = useValidationMessages();
+
   const validationSchema = object({
-    userName: string().required(
-      useValidationMessages().required(t("auth.emailOrPhoneNumber"))
-    ),
+    userName: string().required(msgs.required(t("auth.emailOrPhoneNumber"))),
     code: string()
-      .min(5, useValidationMessages().min(t("auth.otp"), 5))
-      .required(useValidationMessages().required(t("auth.otp"))),
+      .min(5, msgs.min(t("auth.otp"), 5))
+      .required(msgs.required(t("auth.otp"))),
   }).required();
 
   const { handleSubmit, control, getValues } = useForm<LoginByOtpEntity>({

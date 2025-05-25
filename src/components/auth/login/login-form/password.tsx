@@ -40,13 +40,13 @@ export default function Password({ userName, setCurrentComponent }: Props) {
   const [progressing, setProgressing] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
+  const msgs = useValidationMessages();
+
   const validationSchema = object({
-    userName: string().required(
-      useValidationMessages().required(t("auth.emailOrPhoneNumber"))
-    ),
+    userName: string().required(msgs.required(t("auth.emailOrPhoneNumber"))),
     password: string()
-      .min(6, useValidationMessages().min(t("auth.password"), 6))
-      .required(useValidationMessages().required(t("auth.password"))),
+      .min(6, msgs.min(t("auth.password"), 6))
+      .required(msgs.required(t("auth.password"))),
   }).required();
 
   const { handleSubmit, control } = useForm<LoginEntity>({
