@@ -19,8 +19,8 @@ import {
 import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
-import { templatesApi } from "@/services/api/templates.ts";
-import { exceptionHandler } from "@/services/api/exception";
+import { templatesApi } from "@/apis/templates.ts";
+import { exceptionHandler } from "@/apis/exception.tsx";
 import { Template, Templates } from "@/types/templates";
 // components
 import { AvailableTemplates } from "./available-templates.tsx";

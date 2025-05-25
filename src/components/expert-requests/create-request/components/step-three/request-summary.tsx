@@ -1,9 +1,9 @@
-import { RegisterRequestResponse } from "@/types/expertRequests";
+import { RegisterRequestResponse } from "@/types/expert-requests";
 import { truncateString } from "@/utils/base";
 import { Chip } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
-import { useBreakpoint } from "@/hook/useBreakpoint";
+import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { FieldChip } from "@/components/shared/field-chip";
 
 const getFieldsInfo = (requestData: RegisterRequestResponse) => {

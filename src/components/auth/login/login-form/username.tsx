@@ -15,8 +15,8 @@ import { Controller, useForm } from "react-hook-form";
 import { formOptions } from "@/utils/validations";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useValidationMessages } from "@/utils/rules";
-import { accountApi } from "@/services/api/auth";
-import { exceptionHandler } from "@/services/api/exception";
+import { accountApi } from "@/apis/auth";
+import { exceptionHandler } from "@/apis/exception";
 
 // Components
 import { Link, useNavigate } from "react-router-dom";

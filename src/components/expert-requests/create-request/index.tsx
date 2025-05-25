@@ -8,7 +8,7 @@ import {
 } from "react";
 import { Modal, ModalContent, ModalBody, useDisclosure } from "@heroui/react";
 import StepsWrapper from "./steps-wrapper.tsx";
-import { useBreakpoint } from "@/hook/useBreakpoint";
+import { useBreakpoint } from "@/hooks/useBreakpoint.tsx";
 import { CreateRequestProvider } from "./context/create-request-context";
 
 type Props = {

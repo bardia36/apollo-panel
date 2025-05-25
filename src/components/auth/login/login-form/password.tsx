@@ -12,7 +12,7 @@ import { useState } from "react";
 import { object, string } from "yup";
 import { v4 } from "uuid";
 import { useTranslation } from "react-i18next";
-import { exceptionHandler } from "@/services/api/exception";
+import { exceptionHandler } from "@/apis/exception";
 import { formOptions } from "@/utils/validations";
 import { Controller, useForm } from "react-hook-form";
 import { useValidationMessages } from "@/utils/rules";
@@ -29,7 +29,7 @@ import { Checkbox } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import GoogleButton from "./google-button";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { accountApi } from "@/services/api/auth";
+import { accountApi } from "@/apis/auth";
 import { useCookies } from "react-cookie";
 
 export default function Password({ userName, setCurrentComponent }: Props) {

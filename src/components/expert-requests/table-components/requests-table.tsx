@@ -24,7 +24,7 @@ import {
 import {
   ExpertRequestInfo,
   ExpertRequestResponse,
-} from "@/types/expertRequests";
+} from "@/types/expert-requests";
 import { AddOrReplaceKey } from "@/utils/base";
 import { TopContent } from "./top-content";
 import { BottomContent } from "./bottom-content";

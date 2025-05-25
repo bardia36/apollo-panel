@@ -31,7 +31,7 @@ import PublicRoutes from "./public-route";
 import useAuthStore from "@/stores/auth-store";
 
 // Contexts
-import { BreadcrumbProvider } from "@/context/breadcrumbContext";
+import { BreadcrumbProvider } from "@/contexts/breadcrumbContext";
 import { CookieValues } from "./types/auth";
 
 function App() {

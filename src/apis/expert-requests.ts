@@ -6,7 +6,7 @@ import {
   ExportReportParams,
   RegisterRequestBody,
   RegisterRequestResponse,
-} from "@/types/expertRequests";
+} from "@/types/expert-requests";
 import { File } from "buffer";
 
 const BASE_URL = "panel/inspection-request";

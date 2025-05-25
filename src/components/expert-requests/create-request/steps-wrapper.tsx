@@ -5,7 +5,7 @@ import { t } from "i18next";
 import { useExpertRequests } from "@/components/expert-requests/context/expert-requests-context";
 import { StepTwoLoading } from "./components/loadings/step-two-loading";
 import { StepThreeLoading } from "./components/loadings/step-three-loading";
-import { useBreakpoint } from "@/hook/useBreakpoint";
+import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { StepOneHeader } from "./components/step-one";
 import { DesktopStepper, MobileStepper } from "./components/stepper";
 import { CreateRequestProvider } from "./context/create-request-context";

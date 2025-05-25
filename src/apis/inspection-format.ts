@@ -4,7 +4,7 @@ import { SearchParams } from "@/types/common";
 import {
   InspectionFormatInfo,
   InspectionFormatParams,
-} from "@/types/expertRequests";
+} from "@/types/expert-requests";
 
 const BASE_URL = "panel/inspection-format";
 

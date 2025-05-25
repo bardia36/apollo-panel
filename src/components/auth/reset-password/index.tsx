@@ -10,8 +10,8 @@ import { useNavigate } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 
 import { toast } from "@/utils/toast";
-import { accountApi } from "@/services/api/auth";
-import { exceptionHandler } from "@/services/api/exception";
+import { accountApi } from "@/apis/auth";
+import { exceptionHandler } from "@/apis/exception";
 import { useValidationMessages } from "@/utils/rules";
 import { formOptions } from "@/utils/validations";
 import { yupResolver } from "@hookform/resolvers/yup";

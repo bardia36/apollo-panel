@@ -1,6 +1,6 @@
 import ConfirmMessage from "@/components/shared/confirm-message";
-import { accountApi } from "@/services/api/auth";
-import { exceptionHandler } from "@/services/api/exception";
+import { accountApi } from "@/apis/auth";
+import { exceptionHandler } from "@/apis/exception";
 import { Dispatch, SetStateAction, useState } from "react";
 
 type Props = {

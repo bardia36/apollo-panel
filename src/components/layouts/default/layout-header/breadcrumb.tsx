@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
-import { useBreadcrumb } from "@/context/breadcrumbContext";
+import { useBreadcrumb } from "@/contexts/breadcrumbContext";
 
 export default function Breadcrumb() {
   const { links } = useBreadcrumb();

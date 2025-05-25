@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useBreakpoint } from "@/hook/useBreakpoint";
+import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { Accordion, AccordionItem } from "@heroui/react";
 import { Image } from "@heroui/react";
 import { Link } from "@heroui/react";

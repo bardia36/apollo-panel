@@ -6,7 +6,7 @@ import { useValidationMessages, validationRegex } from "@/utils/rules";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useState, useEffect } from "react";
 import { t } from "i18next";
-import { inspectionFormatApi } from "@/services/api/inspection-format";
+import { inspectionFormatApi } from "@/apis/inspection-format";
 import { Button, Form } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import { AppSelect } from "@/components/shared/app-components/app-select";
@@ -14,10 +14,10 @@ import { StepperButtons } from "../stepper-buttons";
 import {
   CreateRequestInfoBody,
   RegisterRequestResponse,
-} from "@/types/expertRequests";
-import { useBreakpoint } from "@/hook/useBreakpoint";
-import { expertRequestsApi } from "@/services/api/expert-requests";
-import { exceptionHandler } from "@/services/api/exception";
+} from "@/types/expert-requests";
+import { useBreakpoint } from "@/hooks/useBreakpoint";
+import { expertRequestsApi } from "@/apis/expert-requests";
+import { exceptionHandler } from "@/apis/exception";
 import { InspectionFormatDetailCard } from "./inspection-format-detail-card";
 import { useCreateRequest } from "../../context/create-request-context";
 

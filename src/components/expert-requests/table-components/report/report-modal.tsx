@@ -10,8 +10,8 @@ import {
 import { t } from "i18next";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
-import { expertRequestsApi } from "@/services/api/expert-requests";
-import { ExportReportParams } from "@/types/expertRequests";
+import { expertRequestsApi } from "@/apis/expert-requests";
+import { ExportReportParams } from "@/types/expert-requests";
 import { AppInput } from "@/components/shared/app-components/app-input";
 
 type ReportModalProps = {

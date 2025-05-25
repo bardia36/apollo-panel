@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { TemplateCard } from "../../templates/available-templates";
 import { TemplateFields } from "../../templates/components/template-fields";
 import { Templates, TemplateField } from "@/types/templates";
-import { exceptionHandler } from "@/services/api/exception";
-import { templatesApi } from "@/services/api/templates";
+import { exceptionHandler } from "@/apis/exception";
+import { templatesApi } from "@/apis/templates";
 import { t } from "i18next";
 import FieldsCountChip from "../../templates/components/fields-count-chip";
 import { StepperButtons } from "./stepper-buttons";
-import { expertRequestsApi } from "@/services/api/expert-requests";
+import { expertRequestsApi } from "@/apis/expert-requests";
 import { StepTwoLoading } from "./loadings/step-two-loading";
 import { useCreateRequest } from "../context/create-request-context";
 

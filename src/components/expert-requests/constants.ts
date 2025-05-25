@@ -2,7 +2,7 @@ import {
   StatusesMap,
   StatusOptions,
   TableColumns,
-} from "@/types/expertRequests";
+} from "@/types/expert-requests";
 import { t } from "i18next";
 
 export const columns: TableColumns = [

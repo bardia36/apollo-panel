@@ -14,11 +14,11 @@ import { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { formOptions } from "@/utils/validations";
 import { toast } from "@/utils/toast";
-import { accountApi } from "@/services/api/auth";
+import { accountApi } from "@/apis/auth";
 import { useCookies } from "react-cookie";
 import useAuthStore from "@/stores/auth-store";
 import { useValidationMessages } from "@/utils/rules";
-import { exceptionHandler } from "@/services/api/exception";
+import { exceptionHandler } from "@/apis/exception";
 
 // components
 import { Form } from "@heroui/react";

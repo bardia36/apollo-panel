@@ -1,6 +1,6 @@
 import { ErrorException } from "@/types/api";
 import { toast } from "@/utils/toast";
-import i18n from "@/services/translate/index";
+import i18n from "@/translations/index";
 
 export function isError(error: unknown) {
   return typeof error === "object";

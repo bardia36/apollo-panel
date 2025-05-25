@@ -1,11 +1,11 @@
 import { AppInput } from "@/components/shared/app-components/app-input";
 import { AppSelect } from "@/components/shared/app-components/app-select";
 import { LazyImage } from "@/components/shared/lazy-image";
-import { colorApi } from "@/services/api/colors";
-import { vehicleBrandApi } from "@/services/api/vehicle-brand";
-import { vehicleCategoryApi } from "@/services/api/vehicle-category";
-import { vehicleModelApi } from "@/services/api/vehicle-model";
-import { InspectionDataItem } from "@/types/expertRequests";
+import { colorApi } from "@/apis/colors";
+import { vehicleBrandApi } from "@/apis/vehicle-brand";
+import { vehicleCategoryApi } from "@/apis/vehicle-category";
+import { vehicleModelApi } from "@/apis/vehicle-model";
+import { InspectionDataItem } from "@/types/expert-requests";
 import { Avatar } from "@heroui/react";
 import { t } from "i18next";
 import { Control, Controller } from "react-hook-form";

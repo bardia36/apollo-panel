@@ -1,6 +1,6 @@
 import { axiosHandler } from "./core";
 import { RequestMethod } from "@/types/api";
-import { uploadParams } from "@/types/fileUpload";
+import { uploadParams } from "@/types/file-upload";
 
 const BASE_URL = "shared/files";
 

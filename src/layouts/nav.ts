@@ -1,5 +1,5 @@
 import type { NavItem } from "@/types/nav";
-import i18n from "@/services/translate";
+import i18n from "@/translations";
 
 const nav: NavItem[] = [
   {

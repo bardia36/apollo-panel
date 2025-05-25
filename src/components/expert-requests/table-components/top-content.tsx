@@ -13,7 +13,7 @@ import {
   ExpertRequestInfo,
   StatusOptions,
   TableColumns,
-} from "@/types/expertRequests";
+} from "@/types/expert-requests";
 import { Key } from "@react-types/shared";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import { exportToExcel } from "@/utils/excel";

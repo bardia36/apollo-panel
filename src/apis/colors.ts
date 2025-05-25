@@ -1,7 +1,7 @@
 import { axiosHandler } from "./core";
 import { RequestMethod } from "@/types/api";
 import { SearchParams } from "@/types/common";
-import { Colors } from "@/types/expertRequests";
+import { Colors } from "@/types/expert-requests";
 
 const BASE_URL = "panel/color";
 
