@@ -1,11 +1,13 @@
-import { Key, useEffect, useState } from "react";
-import TitleActions from "./title-actions";
-import TableTypeTabs from "./table-components/table-type-tabs";
-import RequestsTable from "./table-components/requests-table";
+import { Key, useEffect, useState, lazy, Suspense } from "react";
 import {
-  useExpertRequests,
   ExpertRequestsProvider,
+  useExpertRequests,
 } from "./context/expert-requests-context";
+import Loading from "../shared/loading";
+
+const TitleActions = lazy(() => import("./title-actions"));
+const TableTypeTabs = lazy(() => import("./table-components/table-type-tabs"));
+const RequestsTable = lazy(() => import("./table-components/requests-table"));
 
 function ExpertRequestsContent() {
   const [activeTab, setActiveTab] = useState("current");
@@ -22,10 +24,14 @@ function ExpertRequestsContent() {
   return (
     <>
       <div className="lg:px-4">
-        <TitleActions requestsCount={requests.totalDocs} />
-        <TableTypeTabs activeTab={activeTab} onChange={onTabChange} />
+        <Suspense fallback={<Loading />}>
+          <TitleActions requestsCount={requests.totalDocs} />
+          <TableTypeTabs activeTab={activeTab} onChange={onTabChange} />
+        </Suspense>
       </div>
-      <RequestsTable requests={requests} loading={loading} />
+      <Suspense fallback={<Loading />}>
+        <RequestsTable requests={requests} loading={loading} />
+      </Suspense>
     </>
   );
 }
