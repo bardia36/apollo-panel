@@ -3,12 +3,12 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Button,
 } from "@heroui/react";
-import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { t } from "i18next";
 import { numberSplitter } from "@/utils/base";
-import { SetStateAction } from "react";
+import { SetStateAction, useState } from "react";
 import {
   ExpertRequestInfo,
   StatusOptions,
@@ -19,6 +19,7 @@ import { AppInput } from "@/components/shared/app-components/app-input";
 import { exportToExcel } from "@/utils/excel";
 import { statusesMap } from "../constants";
 import { formatDateTime } from "@/utils/base";
+import { ReportModal } from "./report/report-modal";
 
 type TopContentProps = {
   filterValue: string;
@@ -52,9 +53,9 @@ export const TopContent = ({
   onSendToArchive,
 }: TopContentProps) => {
   const perPageNumbers = [5, 10, 15, 20];
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
   const exportTableToExcel = () => {
-    // Create export data structure
     const exportData = requestDocs.map((doc) => ({
       [t("expertRequests.orderNumber")]: doc.order_number,
       [t("expertRequests.vehicleModel")]:
@@ -234,7 +235,7 @@ export const TopContent = ({
               <DropdownItem
                 key="get-report"
                 className="hover:bg-default-200 text-default-foreground"
-                onPress={() => setSelectedKeys(new Set([]))}
+                onPress={() => setIsReportModalOpen(true)}
               >
                 {t("expertRequests.getReport")}
               </DropdownItem>
@@ -302,6 +303,11 @@ export const TopContent = ({
           </Dropdown>
         </div>
       </div>
+
+      <ReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+      />
     </div>
   );
 };

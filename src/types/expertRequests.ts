@@ -272,3 +272,11 @@ export type RegisterRequestResponse = {
     };
   };
 };
+
+export type ExportReportParams = {
+  book_type: "xlsx" | "csv";
+  status: ExpertRequestStatus[];
+  from_date: string;
+  to_date: string;
+  inspection_format?: string;
+};

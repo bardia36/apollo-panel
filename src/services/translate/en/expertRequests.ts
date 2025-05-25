@@ -33,6 +33,7 @@ export default {
   randomImages: "Random Images",
   randomImagesDescription:
     "Images related to screen capture video should be random.",
+  reportDescription:"Specify the desired statuses and time range to get the report.",
   request: "Request",
   requestDetail: "Request Detail",
   requestExpiry: "Request Expiry",
@@ -40,6 +41,7 @@ export default {
   requests: "Requests",
   requestsManagement: "Requests Management",
   requestsPageDescription: "View and manage online visit request list",
+  requestsReport: "Requests Report",
   requestsSettings: "Requests Settings",
   requestSummary: "Request Summary",
   reviewType: "Review Type",

@@ -3,9 +3,11 @@ import { RequestMethod } from "@/types/api";
 import {
   ExpertRequestDetail,
   ExpertRequestResponse,
+  ExportReportParams,
   RegisterRequestBody,
   RegisterRequestResponse,
 } from "@/types/expertRequests";
+import { File } from "buffer";
 
 const BASE_URL = "panel/inspection-request";
 
@@ -29,6 +31,14 @@ export const expertRequestsApi = {
       action: id,
       method: RequestMethod.PUT,
       body,
+    });
+  },
+
+  exportReport(params: ExportReportParams) {
+    return axiosHandler<File>(BASE_URL, {
+      action: "export",
+      method: RequestMethod.GET,
+      params,
     });
   },
 };
