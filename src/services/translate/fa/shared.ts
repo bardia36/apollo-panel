@@ -44,6 +44,7 @@ export default {
   reviewed: "در حال بررسی",
   saveAndSubmit: "ثبت و ذخیره",
   search: "جستجو",
+  seconds: "ثانیه",
   selectedItemsCount: "{{selectedItems}} مورد انتخاب شده‌",
   sendEmail: "ارسال ایمیل",
   sendingDate: "زمان ارسال",

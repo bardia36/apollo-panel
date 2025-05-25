@@ -14,6 +14,7 @@ import {
 } from "@heroui/react";
 import { TemplatesModal } from "./templates";
 import { CreateRequestModal } from "./create-request";
+import { Settings } from "./settings";
 
 type Props = {
   requestsCount: number;
@@ -97,14 +98,19 @@ export default ({ requestsCount }: Props) => {
                   title: "text-default-foreground flex items-center",
                 }}
               >
-                <Icon
-                  icon="lineicons:gear-1"
-                  width={18}
-                  height={18}
-                  className="text-default-600 me-3"
+                <Settings
+                  activator={
+                    <div className="flex items-center">
+                      <Icon
+                        icon="lineicons:gear-1"
+                        width={18}
+                        height={18}
+                        className="text-default-600 me-3"
+                      />
+                      {t("shared.settings")}
+                    </div>
+                  }
                 />
-
-                {t("shared.settings")}
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
@@ -124,16 +130,7 @@ export default ({ requestsCount }: Props) => {
       </div>
 
       <div className="hidden xl:flex items-end">
-        <Button variant="light" className="text-default-foreground me-2.5">
-          <Icon
-            icon="lineicons:gear-1"
-            width={20}
-            height={20}
-            className="text-default-500"
-          />
-
-          {t("shared.settings")}
-        </Button>
+        <Settings className="text-default-foreground me-2.5" />
 
         <Button variant="flat" className="text-default-foreground me-2.5">
           <Icon

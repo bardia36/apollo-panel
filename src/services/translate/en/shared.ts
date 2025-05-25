@@ -44,6 +44,7 @@ export default {
   reviewed: "Under review",
   saveAndSubmit: "Save and submit",
   search: "Search",
+  seconds: "seconds",
   selectedItemsCount: "{{selectedItems}} items selected",
   sendEmail: "Send email",
   sendingDate: "Sending date",
