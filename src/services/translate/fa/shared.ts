@@ -17,7 +17,7 @@ export default {
   continue: "ادامه",
   countPerPage: "تعداد نمایش در هر صفحه",
   create: "ایجاد",
-  created: "تاریخ ایجاد",
+  createdAt: "تاریخ ایجاد",
   createIt: "ایجاد کن",
   delete: "حذف",
   discardSelections: "لغو انتخاب شده‌ها",

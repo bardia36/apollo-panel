@@ -1,6 +1,7 @@
 export default {
   activateAndUseOtherTemplates: "فعال‌سازی و استفاده از سایر قالب‌ها",
-  addReqStepperDescription:    "اطلاعات کاربر، مورد کارشناسی و جزئیات موارد درخواستی را وارد کنید. در انتها لینک درخواست ایجاد شده و برای کاربر ارسال می‌شود.",
+  addReqStepperDescription:
+    "اطلاعات کاربر، مورد کارشناسی و جزئیات موارد درخواستی را وارد کنید. در انتها لینک درخواست ایجاد شده و برای کاربر ارسال می‌شود.",
   archive: "بایگانی",
   availableTemplates: "تمپلیت‌های موجود",
   branch: "نمایندگی",
@@ -9,15 +10,19 @@ export default {
   chooseWayToSend: "انتخاب نحوه ارسال",
   createRequest: "ایجاد درخواست",
   createReviewRequest: "ایجاد درخواست کارشناسی",
-  createReviewRequestDescription:    "یا فرم لینک ارسال اطلاعات برای بازدید آنلاین",
+  createReviewRequestDescription:
+    "یا فرم لینک ارسال اطلاعات برای بازدید آنلاین",
   currentCases: "پرونده‌های جاری",
   deleteTemplate: "حذف تمپلیت",
-  deleteTemplateDescription:    "تمام اطلاعات آن حذف خواهد شد و امکان بازگشت وجود ندارد! اطمینان دارید؟",
+  deleteTemplateDescription:
+    "تمام اطلاعات آن حذف خواهد شد و امکان بازگشت وجود ندارد! اطمینان دارید؟",
   finalCheck: "بررسی نهایی",
+  getReport: "دریافت گزارش",
   linkData: "محتویات لینک",
   management: "مدیریت",
   moreInfo: "اطلاعات بیشتر",
-  moreInfoDescription:    "در صورت نیاز به اطلاعات از کاربر، از موارد زیر می‌توانید انتخاب کنید:",
+  moreInfoDescription:
+    "در صورت نیاز به اطلاعات از کاربر، از موارد زیر می‌توانید انتخاب کنید:",
   newTemplate: "تمپلیت جدید",
   noRequestFound: "هیچ درخواستی پیدا نشد.",
   orderNumber: "شماره سفارش",
@@ -42,6 +47,7 @@ export default {
   step2: "مرحله دوم",
   step3: "مرحله سوم",
   stepsToCreateReviewLink: "مراحل ایجاد لینک کارشناسی",
+  tableExcelExport: "فایل اکسل جدول",
   tag: "تگ",
   templateDetails: "محتویات تمپلیت",
   templateName: "عنوان تمپلیت",

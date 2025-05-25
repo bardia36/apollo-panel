@@ -17,7 +17,7 @@ export default {
   continue: "Continue",
   countPerPage: "Items per page",
   create: "Create",
-  created: "Created date",
+  createdAt: "Created at",
   createIt: "Create it",
   delete: "Delete",
   discardSelections: "Discard selections",

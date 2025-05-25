@@ -24,7 +24,7 @@ export const columns: TableColumns = [
     name: "createdAt",
     uid: "createdAt",
     sortable: true,
-    label: t("shared.created"),
+    label: t("shared.createdAt"),
   },
   {
     name: "unit",

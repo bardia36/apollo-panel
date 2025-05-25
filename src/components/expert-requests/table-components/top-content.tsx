@@ -16,6 +16,9 @@ import {
 } from "@/types/expertRequests";
 import { Key } from "@react-types/shared";
 import { AppInput } from "@/components/shared/app-components/app-input";
+import { exportToExcel } from "@/utils/excel";
+import { statusesMap } from "../constants";
+import { formatDateTime } from "@/utils/base";
 
 type TopContentProps = {
   filterValue: string;
@@ -49,6 +52,25 @@ export const TopContent = ({
   onSendToArchive,
 }: TopContentProps) => {
   const perPageNumbers = [5, 10, 15, 20];
+
+  const exportTableToExcel = () => {
+    // Create export data structure
+    const exportData = requestDocs.map((doc) => ({
+      [t("expertRequests.orderNumber")]: doc.order_number,
+      [t("expertRequests.vehicleModel")]:
+        doc.inspection_data?.vehicle_model?.name_en || "",
+      [t("shared.status")]: statusesMap[doc.status].label,
+      [t("shared.user")]: doc.owner?.userName || "",
+      [t("shared.createdAt")]: formatDateTime(doc.createdAt).formattedDate,
+      [t("expertRequests.branch")]: doc.unit?.title || "",
+    }));
+
+    exportToExcel({
+      data: exportData,
+      filename: t("title.expertRequests"),
+      sheetName: t("title.expertRequests"),
+    });
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -161,11 +183,7 @@ export const TopContent = ({
               </Button>
             </DropdownTrigger>
 
-            <DropdownMenu
-              disallowEmptySelection
-              aria-label="Bulk Actions"
-              selectedKeys={visibleColumns}
-            >
+            <DropdownMenu disallowEmptySelection aria-label="Bulk Actions">
               <DropdownItem
                 key="discard-selection"
                 startContent={
@@ -200,14 +218,36 @@ export const TopContent = ({
             </DropdownMenu>
           </Dropdown>
 
-          <Button isIconOnly className="bg-default-100">
-            <Icon
-              icon="mdi:dots-horizontal"
-              width={20}
-              height={20}
-              className="text-default-500"
-            />
-          </Button>
+          <Dropdown>
+            <DropdownTrigger className="hidden sm:flex">
+              <Button isIconOnly className="bg-default-100">
+                <Icon
+                  icon="mdi:dots-horizontal"
+                  width={20}
+                  height={20}
+                  className="text-default-500"
+                />
+              </Button>
+            </DropdownTrigger>
+
+            <DropdownMenu disallowEmptySelection aria-label="More Actions">
+              <DropdownItem
+                key="get-report"
+                className="hover:bg-default-200 text-default-foreground"
+                onPress={() => setSelectedKeys(new Set([]))}
+              >
+                {t("expertRequests.getReport")}
+              </DropdownItem>
+
+              <DropdownItem
+                key="table-excel-export"
+                className="hover:bg-default-200 text-default-foreground"
+                onPress={() => exportTableToExcel()}
+              >
+                {t("expertRequests.tableExcelExport")}
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </div>
       </div>
 
