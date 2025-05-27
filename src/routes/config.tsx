@@ -40,6 +40,10 @@ export const publicRoutes: AppRoute[] = [
     children: [
       {
         path: "/",
+        element: <Navigate to="/login" replace />,
+      },
+      {
+        path: "/",
         element: <AuthLayout />,
         children: [
           {
