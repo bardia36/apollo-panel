@@ -8,7 +8,7 @@ import useAuthStore from "@/stores/auth-store";
 
 // Components
 import Loading from "@/components/shared/loading";
-import { RouterProvider } from "@/routes/RouterProvider";
+import { RouterProvider, RouteTitleHandler } from "@/routes/RouterProvider";
 
 // Contexts
 import { BreadcrumbProvider } from "@/contexts/breadcrumbContext";
@@ -48,6 +48,7 @@ function App() {
       ) : (
         <div className="text-foreground bg-background">
           <BreadcrumbProvider>
+            <RouteTitleHandler />
             <RouterProvider />
           </BreadcrumbProvider>
         </div>

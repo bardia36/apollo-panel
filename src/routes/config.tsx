@@ -7,6 +7,7 @@ import useAuthStore from "@/stores/auth-store";
 import DefaultLayout from "@/layouts/default";
 import AuthLayout from "@/layouts/auth";
 import EmptyLayout from "@/layouts/empty";
+import { t } from "i18next";
 
 // Guards
 const AuthGuard = () => {
@@ -44,22 +45,22 @@ export const publicRoutes: AppRoute[] = [
           {
             path: "login",
             element: <LoginPage />,
-            title: "Login",
+            title: t("title.login"),
           },
           {
             path: "signup",
             element: <SignupPage />,
-            title: "Sign Up",
+            title: t("title.signUp"),
           },
           {
             path: "forget-password",
             element: <ForgetPasswordPage />,
-            title: "Forget Password",
+            title: t("title.forgetPassword"),
           },
           {
             path: "reset-password",
             element: <ResetPasswordPage />,
-            title: "Reset Password",
+            title: t("title.resetPassword"),
           },
         ],
       },
@@ -78,13 +79,13 @@ export const privateRoutes: AppRoute[] = [
           {
             path: "dashboard",
             element: <DashboardPage />,
-            title: "Dashboard",
+            title: t("title.dashboard"),
             breadcrumb: "Dashboard",
           },
           {
             path: "expert-requests",
             element: <ExpertRequestsPage />,
-            title: "Expert Requests",
+            title: t("title.expertRequests"),
             breadcrumb: "Expert Requests",
           },
           {
@@ -105,7 +106,7 @@ export const commonRoutes: AppRoute[] = [
       {
         path: "*",
         element: <Page404 />,
-        title: "404 - Not Found",
+        title: t("title.notFound"),
       },
     ],
   },
