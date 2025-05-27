@@ -6,7 +6,7 @@ import { cn } from "@heroui/react";
 export default function Nav() {
   return (
     <div className="w-full relative flex flex-col overflow-clip list-none">
-      <nav className="w-full flex flex-col gap-0.5 outline-none items-center">
+      <nav className="w-full flex flex-col gap-0.5 outline-none items-center" role="navigation">
         {nav.map((item) => (
           <Link
             key={item.label}

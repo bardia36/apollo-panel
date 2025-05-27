@@ -9,7 +9,7 @@ export default function Breadcrumb() {
 
   return (
     <nav
-      aria-label="Breadcrumb"
+      aria-label="breadcrumb"
       className="text-sm text-gray-600 flex items-center space-x-2"
     >
       <div>
