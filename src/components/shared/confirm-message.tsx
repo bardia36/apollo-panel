@@ -16,7 +16,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { Divider } from "@heroui/react";
 import GoogleButton from "../auth/login/login-form/google-button";
 import { Link } from "react-router-dom";
-import confirmMessageImg from "@/assets/images/auth/confirm-message.svg";
+import confirmMessageImg from "@/assets/images/auth/confirm-message.webp";
 
 export default function ConfirmMessage({
   progressing,

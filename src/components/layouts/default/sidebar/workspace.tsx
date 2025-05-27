@@ -1,6 +1,6 @@
 import { Image } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import asiaInsuranceImg from "@/assets/images/layout/asia-insurance.svg";
+import asiaInsuranceImg from "@/assets/images/layout/asia-insurance.webp";
 
 export default function Workspace() {
   return (

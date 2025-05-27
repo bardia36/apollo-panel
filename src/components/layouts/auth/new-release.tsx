@@ -4,7 +4,7 @@ import { Accordion, AccordionItem } from "@heroui/react";
 import { Image } from "@heroui/react";
 import { Link } from "@heroui/react";
 import newReleaseImg from "@/assets/images/auth/new-release.webp";
-import corporateImg from "@/assets/images/auth/corporate.svg";
+import corporateImg from "@/assets/images/auth/corporate.webp";
 
 export default function NewRelease() {
   const { t } = useTranslation();
