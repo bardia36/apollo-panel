@@ -14,7 +14,6 @@ import { t } from "i18next";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { ReactNode, useState } from "react";
 import { FieldChip } from "@/components/shared/field-chip";
-import { AppInput } from "@/components/shared/app-components/app-input";
 import { TemplateField } from "@/types/templates";
 
 // EditFieldRow: reusable row for edit/view mode fields
@@ -49,7 +48,7 @@ const EditFieldRow = ({
         <Button
           isIconOnly
           radius="full"
-          className="bg-default-foreground text-foreground-50 shadow-lg shadow-neutral"
+          className="bg-primary text-foreground-50 shadow-lg shadow-neutral"
           onPress={onAccept}
         >
           <Icon
@@ -128,6 +127,13 @@ const REQUEST_EXPIRY_OPTIONS = [
   { label: "بدون انقضا", value: "no_expiry" },
 ];
 
+const REQUEST_TIMEOUT_OPTIONS = [
+  { label: "۵۰ ثانیه", value: "50" },
+  { label: "۱۰۰ ثانیه", value: "100" },
+  { label: "۱۵۰ ثانیه", value: "150" },
+  { label: "۲۰۰ ثانیه", value: "200" },
+];
+
 const DEFAULT_FIELDS: TemplateField[] = [
   { _id: "1", title: "آدرس کاربر", type: "OTHER", active: true },
   { _id: "2", title: "تاریخ تولد", type: "OTHER", active: true },
@@ -135,6 +141,50 @@ const DEFAULT_FIELDS: TemplateField[] = [
   { _id: "4", title: "کد ملی", type: "OTHER", active: true },
   { _id: "5", title: "آدرس شرکت بیمه‌نامه", type: "OTHER", active: false },
 ];
+
+type SettingsDropdownProps = {
+  options: { label: string; value: string }[];
+  value: string;
+  onChange: (value: string) => void;
+  ariaLabel: string;
+  className?: string;
+};
+
+const SettingsDropdown = ({
+  options,
+  value,
+  onChange,
+  ariaLabel,
+  className = "",
+}: SettingsDropdownProps) => (
+  <Dropdown>
+    <DropdownTrigger>
+      <Button
+        variant="faded"
+        size="lg"
+        className={`max-w-[110px] bg-default-50 border-default-200 text-foreground text-md justify-between shadow-sm shadow-neutral px-2 gap-2 ${className}`}
+        endContent={
+          <Icon
+            icon="solar:alt-arrow-down-linear"
+            width={20}
+            height={20}
+            className="text-default-400"
+          />
+        }
+      >
+        {options.find((o) => o.value === value)?.label}
+      </Button>
+    </DropdownTrigger>
+    <DropdownMenu
+      aria-label={ariaLabel}
+      onAction={(key) => onChange(key as string)}
+    >
+      {options.map((opt) => (
+        <DropdownItem key={opt.value}>{opt.label}</DropdownItem>
+      ))}
+    </DropdownMenu>
+  </Dropdown>
+);
 
 type Props = {
   isOpen: boolean;
@@ -145,7 +195,7 @@ export const SettingsModal = ({ isOpen, onClose }: Props) => {
   const [editExpiry, setEditExpiry] = useState(false);
   const [editTimeout, setEditTimeout] = useState(false);
   const [expiry, setExpiry] = useState("24h");
-  const [photoTimeout, setPhotoTimeout] = useState("50");
+  const [timeout, setTimeout] = useState("50");
   const [randomImages, setRandomImages] = useState(true);
   const [moreInfoEnabled, setMoreInfoEnabled] = useState(false);
   const [fields, setFields] = useState<TemplateField[]>(DEFAULT_FIELDS);
@@ -188,38 +238,12 @@ export const SettingsModal = ({ isOpen, onClose }: Props) => {
                 REQUEST_EXPIRY_OPTIONS.find((o) => o.value === expiry)?.label
               }
               editContent={
-                <Dropdown>
-                  <DropdownTrigger>
-                    <Button
-                      variant="faded"
-                      size="lg"
-                      className="max-w-[110px] bg-default-50 border-default-200 text-foreground text-md justify-between shadow-sm shadow-neutral px-2 gap-2"
-                      endContent={
-                        <Icon
-                          icon="solar:alt-arrow-down-linear"
-                          width={20}
-                          height={20}
-                          className="text-default-400"
-                        />
-                      }
-                    >
-                      {
-                        REQUEST_EXPIRY_OPTIONS.find((o) => o.value === expiry)
-                          ?.label
-                      }
-                    </Button>
-                  </DropdownTrigger>
-                  <DropdownMenu
-                    aria-label="expiry-options"
-                    onAction={(key) => {
-                      setExpiry(key as string);
-                    }}
-                  >
-                    {REQUEST_EXPIRY_OPTIONS.map((opt) => (
-                      <DropdownItem key={opt.value}>{opt.label}</DropdownItem>
-                    ))}
-                  </DropdownMenu>
-                </Dropdown>
+                <SettingsDropdown
+                  options={REQUEST_EXPIRY_OPTIONS}
+                  value={expiry}
+                  onChange={setExpiry}
+                  ariaLabel="expiry-options"
+                />
               }
             />
 
@@ -231,18 +255,15 @@ export const SettingsModal = ({ isOpen, onClose }: Props) => {
               onAccept={() => setEditTimeout(false)}
               viewContent={
                 <>
-                  {photoTimeout} {t("shared.seconds")}
+                  {timeout} {t("shared.seconds")}
                 </>
               }
               editContent={
-                <AppInput
-                  value={photoTimeout}
-                  variant="faded"
-                  classNames={{ inputWrapper: "bg-default-50" }}
-                  size="lg"
-                  className="max-w-[110px]"
-                  onChange={(e) => setPhotoTimeout(e.target.value)}
-                  autoFocus
+                <SettingsDropdown
+                  options={REQUEST_TIMEOUT_OPTIONS}
+                  value={timeout}
+                  onChange={setTimeout}
+                  ariaLabel="timeout-options"
                 />
               }
             />

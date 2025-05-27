@@ -37,18 +37,20 @@ export const columns: TableColumns = [
 
 // TODO: make it from statusesMap inside renderCell
 export const statusOptions: StatusOptions = [
-  { uid: "accepted", label: t("shared.accepted") },
-  { uid: "archived", label: t("shared.archived") },
-  { uid: "canceled", label: t("shared.canceled") },
-  { uid: "expired", label: t("shared.expired") },
-  { uid: "failed", label: t("shared.failed") },
-  { uid: "inProgress", label: t("shared.inProgress") },
-  { uid: "opened", label: t("shared.opened") },
-  { uid: "pending", label: t("shared.pending") },
-  { uid: "rejected", label: t("shared.rejected") },
+  { uid: "ACCEPTED", label: t("shared.accepted") },
+  { uid: "ARCHIVED", label: t("shared.archived") },
+  { uid: "CANCELED", label: t("shared.canceled") },
+  { uid: "EXPIRED", label: t("shared.expired") },
+  { uid: "FAILED", label: t("shared.failed") },
+  { uid: "IN_PROGRESS", label: t("shared.inProgress") },
+  { uid: "OPENED", label: t("shared.opened") },
+  { uid: "PENDING", label: t("shared.pending") },
+  { uid: "REJECTED", label: t("shared.rejected") },
+  { uid: "REVIEWED", label: t("shared.reviewed") },
+  { uid: "COMPLETED", label: t("shared.completed") },
+  { uid: "DRAFT", label: t("shared.draft") },
 ];
 
-// TODO: it is not completed yet, need to add more options from backend
 export const statusesMap: StatusesMap = {
   DRAFT: {
     bg: "foreground-50 border border-foreground-200 border-dashed",

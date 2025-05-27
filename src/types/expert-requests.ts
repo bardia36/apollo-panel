@@ -275,7 +275,7 @@ export type RegisterRequestResponse = {
 
 export type ExportReportParams = {
   book_type: "xlsx" | "csv";
-  status: ExpertRequestStatus[];
+  status: string;
   from_date: string;
   to_date: string;
   inspection_format?: string;

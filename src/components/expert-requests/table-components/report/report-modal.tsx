@@ -6,13 +6,22 @@ import {
   ModalFooter,
   Button,
   cn,
+  Select,
+  Chip,
+  SelectItem,
+  SelectedItems,
 } from "@heroui/react";
 import { t } from "i18next";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { expertRequestsApi } from "@/apis/expert-requests";
-import { ExportReportParams } from "@/types/expert-requests";
+import {
+  ExportReportParams,
+  StatusesMap,
+  ExpertRequestStatus,
+} from "@/types/expert-requests";
 import { AppInput } from "@/components/shared/app-components/app-input";
+import { statusesMap, statusOptions } from "../../constants";
 
 type ReportModalProps = {
   isOpen: boolean;
@@ -22,6 +31,11 @@ type ReportModalProps = {
 export const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+  const [statuses, setStatuses] = useState<ExpertRequestStatus[]>([
+    "ACCEPTED",
+    "REJECTED",
+    "EXPIRED",
+  ]);
   const [fileType, setFileType] = useState<"xlsx" | "csv">("xlsx");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -30,7 +44,7 @@ export const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
       setIsLoading(true);
       const params: ExportReportParams = {
         book_type: fileType,
-        status: [], // TODO: Implement status selection later
+        status: statuses.join(","),
         from_date: fromDate,
         to_date: toDate,
       };
@@ -93,6 +107,60 @@ export const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
                 </span>
               </div>
             </div>
+
+            <Select
+              selectedKeys={new Set(statuses)}
+              classNames={{
+                trigger: "min-h-12 py-2",
+                label: "!text-default-600",
+              }}
+              isMultiline={true}
+              labelPlacement="outside"
+              items={statusOptions}
+              label={t("shared.status")}
+              selectionMode="multiple"
+              variant="bordered"
+              renderValue={(
+                items: SelectedItems<{ uid: string; label: string }>
+              ) => {
+                return (
+                  <div className="flex flex-wrap gap-2">
+                    {items.map(
+                      (status) =>
+                        status.data && (
+                          <Chip
+                            key={status.data.uid}
+                            className="bg-default-100 text-default-700 h-10 gap-1"
+                            classNames={{
+                              content: "flex gap-1",
+                              base: "rounded-large",
+                            }}
+                          >
+                            <Icon
+                              icon={
+                                statusesMap[
+                                  status.data.uid as keyof StatusesMap
+                                ]?.icon
+                              }
+                              className={`text-${statusesMap[status.data.uid as keyof StatusesMap]?.text} drop-shadow-md`}
+                              width={20}
+                              height={20}
+                            />
+                            <span className="font-semibold">
+                              {status.data.label}
+                            </span>
+                          </Chip>
+                        )
+                    )}
+                  </div>
+                );
+              }}
+              onSelectionChange={(keys) =>
+                setStatuses(Array.from(keys) as ExpertRequestStatus[])
+              }
+            >
+              {(status) => <SelectItem key={status.uid} title={status.label} />}
+            </Select>
 
             <div className="grid grid-cols-2 gap-4 md:gap-6">
               <div>

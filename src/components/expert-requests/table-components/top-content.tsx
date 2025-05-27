@@ -9,15 +9,11 @@ import { Icon } from "@iconify/react";
 import { t } from "i18next";
 import { numberSplitter } from "@/utils/base";
 import { SetStateAction, useState } from "react";
-import {
-  ExpertRequestInfo,
-  StatusOptions,
-  TableColumns,
-} from "@/types/expert-requests";
+import { ExpertRequestInfo } from "@/types/expert-requests";
 import { Key } from "@react-types/shared";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import { exportToExcel } from "@/utils/excel";
-import { statusesMap } from "../constants";
+import { columns, statusesMap, statusOptions } from "../constants";
 import { formatDateTime } from "@/utils/base";
 import { ReportModal } from "./report/report-modal";
 
@@ -25,8 +21,6 @@ type TopContentProps = {
   filterValue: string;
   statusFilter: string | Key[];
   visibleColumns: string | Key[];
-  statusOptions: StatusOptions;
-  columns: TableColumns;
   requestDocs: ExpertRequestInfo[];
   rowsPerPage: number;
   onSearchChange: (value: string) => void;
@@ -40,9 +34,7 @@ type TopContentProps = {
 export const TopContent = ({
   filterValue,
   statusFilter,
-  statusOptions,
   visibleColumns,
-  columns,
   requestDocs,
   rowsPerPage,
   onSearchChange,

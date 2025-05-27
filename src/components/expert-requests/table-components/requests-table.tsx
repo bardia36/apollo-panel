@@ -144,8 +144,6 @@ export default function RequestsTable({ requests, loading }: Props) {
           filterValue={filterValue}
           statusFilter={statusFilter}
           visibleColumns={visibleColumns}
-          columns={columns}
-          statusOptions={statusOptions}
           requestDocs={requests.docs}
           rowsPerPage={rowsPerPage}
           onSearchChange={setFilterValue}
