@@ -1,7 +1,4 @@
-import { Image } from "@heroui/react";
-import { Badge } from "@heroui/react";
 import { t } from "i18next";
-import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import requestsHeaderIcon from "@/assets/images/expert-requests/requests-header-icon.webp";
 import requestsHeaderIconDark from "@/assets/images/expert-requests/requests-header-icon-dark.webp";
@@ -11,6 +8,9 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  Button,
+  Badge,
+  Image,
 } from "@heroui/react";
 import { TemplatesModal } from "./templates";
 import { CreateRequestModal } from "./create-request";
