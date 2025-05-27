@@ -25,11 +25,13 @@ export default ({ requestsCount }: Props) => {
 
   return (
     <div className="pt-3 mb-4 flex justify-between">
-      <div className="flex flex-wrap items-center w-full xl:py-1.5">
+      <div className="flex flex-wrap gap-4 items-center w-full xl:py-1.5">
         <Image
           src={theme === "dark" ? requestsHeaderIconDark : requestsHeaderIcon}
           alt={t("expertRequests.requestsManagement")}
-          className="hidden xl:block me-4"
+          width={64}
+          height={64}
+          className="hidden xl:block"
         />
 
         <div>

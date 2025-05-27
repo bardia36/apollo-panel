@@ -75,7 +75,7 @@ export default function SignupForm({ email }: Props) {
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
-      <FullLogo classNames={{ wrapper: "mb-6 mt-6 mt-md-0" }} />
+      <FullLogo classNames={{ wrapper: "w-40 mb-6 mt-6 mt-md-0" }} />
 
       <Card
         fullWidth
