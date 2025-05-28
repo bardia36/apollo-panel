@@ -13,7 +13,7 @@ import { ExpertRequestInfo } from "@/types/expert-requests";
 import { Key } from "@react-types/shared";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import { exportToExcel } from "@/utils/excel";
-import { columns, statusesMap, statusOptions } from "../constants";
+import { columns, statusesMap, statusOptions } from "../../constants";
 import { formatDateTime } from "@/utils/base";
 import { ReportModal } from "./report/report-modal";
 

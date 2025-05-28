@@ -2,12 +2,18 @@ import { Key, useEffect, useState, lazy, Suspense } from "react";
 import {
   ExpertRequestsProvider,
   useExpertRequests,
-} from "./context/expert-requests-context";
+} from "./index-page/context/expert-requests-context";
 import Loading from "../shared/loading";
 
-const TitleActions = lazy(() => import("./title-actions"));
-const TableTypeTabs = lazy(() => import("./table-components/table-type-tabs"));
-const RequestsTable = lazy(() => import("./table-components/requests-table"));
+const TitleActions = lazy(
+  () => import("./index-page/table-components/title-actions")
+);
+const TableTypeTabs = lazy(
+  () => import("./index-page/table-components/table-type-tabs")
+);
+const RequestsTable = lazy(
+  () => import("./index-page/table-components/requests-table")
+);
 
 function ExpertRequestsContent() {
   const [activeTab, setActiveTab] = useState("current");
@@ -29,6 +35,7 @@ function ExpertRequestsContent() {
           <TableTypeTabs activeTab={activeTab} onChange={onTabChange} />
         </Suspense>
       </div>
+
       <Suspense fallback={<Loading />}>
         <RequestsTable requests={requests} loading={loading} />
       </Suspense>
