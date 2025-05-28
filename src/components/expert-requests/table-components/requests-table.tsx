@@ -24,7 +24,7 @@ import {
 import {
   ExpertRequestInfo,
   ExpertRequestResponse,
-} from "@/types/expertRequests";
+} from "@/types/expert-requests";
 import { AddOrReplaceKey } from "@/utils/base";
 import { TopContent } from "./top-content";
 import { BottomContent } from "./bottom-content";
@@ -144,8 +144,6 @@ export default function RequestsTable({ requests, loading }: Props) {
           filterValue={filterValue}
           statusFilter={statusFilter}
           visibleColumns={visibleColumns}
-          columns={columns}
-          statusOptions={statusOptions}
           requestDocs={requests.docs}
           rowsPerPage={rowsPerPage}
           onSearchChange={setFilterValue}

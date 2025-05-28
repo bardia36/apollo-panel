@@ -12,7 +12,7 @@ import { useState } from "react";
 import { object, string } from "yup";
 import { v4 } from "uuid";
 import { useTranslation } from "react-i18next";
-import { exceptionHandler } from "@/services/api/exception";
+import { exceptionHandler } from "@/apis/exception";
 import { formOptions } from "@/utils/validations";
 import { Controller, useForm } from "react-hook-form";
 import { useValidationMessages } from "@/utils/rules";
@@ -29,7 +29,7 @@ import { Checkbox } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import GoogleButton from "./google-button";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { accountApi } from "@/services/api/auth";
+import { accountApi } from "@/apis/auth";
 import { useCookies } from "react-cookie";
 
 export default function Password({ userName, setCurrentComponent }: Props) {
@@ -40,13 +40,13 @@ export default function Password({ userName, setCurrentComponent }: Props) {
   const [progressing, setProgressing] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
+  const msgs = useValidationMessages();
+
   const validationSchema = object({
-    userName: string().required(
-      useValidationMessages().required(t("auth.emailOrPhoneNumber"))
-    ),
+    userName: string().required(msgs.required(t("auth.emailOrPhoneNumber"))),
     password: string()
-      .min(6, useValidationMessages().min(t("auth.password"), 6))
-      .required(useValidationMessages().required(t("auth.password"))),
+      .min(6, msgs.min(t("auth.password"), 6))
+      .required(msgs.required(t("auth.password"))),
   }).required();
 
   const { handleSubmit, control } = useForm<LoginEntity>({

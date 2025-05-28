@@ -10,7 +10,7 @@ import {
 } from "@heroui/react";
 import DateDisplay from "../../shared/date-display";
 import { t } from "i18next";
-import { ExpertRequestInfo } from "@/types/expertRequests";
+import { ExpertRequestInfo } from "@/types/expert-requests";
 import { statusesMap } from "../constants";
 import { copyToClipboard } from "@/utils/base";
 

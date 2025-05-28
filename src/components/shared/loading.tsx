@@ -1,5 +1,3 @@
 export default function Loading() {
-  return <div className="w-full h-screen bg-primary-200">
-    
-  </div>
+  return <div className="w-full h-screen bg-primary-200" role="status" aria-live="polite"></div>;
 }

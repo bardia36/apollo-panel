@@ -1,11 +1,10 @@
 import { AppInput } from "@/components/shared/app-components/app-input";
 import { TemplateField } from "@/types/templates";
 import { Button } from "@heroui/react";
-import { Chip } from "@heroui/react";
-import { cn } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { useEffect, useRef, useState } from "react";
+import { FieldChip } from "@/components/shared/field-chip";
 
 type Props = {
   templateFields: TemplateField[];
@@ -27,9 +26,15 @@ export const TemplateFields = ({
   // Initialize fields only once when templateFields prop changes and not initialized yet
   useEffect(() => {
     if (!initialized.current) {
-      setImageFields(templateFields.filter((field) => field.type === "IMAGE") || []);
-      setFileFields(templateFields.filter((field) => field.type === "FILE") || []);
-      setAddedFields(templateFields.filter((field) => field.type === "OTHER") || []);
+      setImageFields(
+        templateFields.filter((field) => field.type === "IMAGE") || []
+      );
+      setFileFields(
+        templateFields.filter((field) => field.type === "FILE") || []
+      );
+      setAddedFields(
+        templateFields.filter((field) => field.type === "OTHER") || []
+      );
       initialized.current = true;
     }
   }, [templateFields]);
@@ -63,11 +68,11 @@ export const TemplateFields = ({
       type: "OTHER",
       active: true,
     };
-    
+
     const newAddedFields = [...addedFields, field];
     setAddedFields(newAddedFields);
     setNewFieldTitle("");
-    
+
     // Update parent with new fields
     setTimeout(() => updateParent(imageFields, fileFields, newAddedFields), 0);
   }
@@ -192,37 +197,6 @@ export const TemplateFields = ({
         />
       </div>
     </div>
-  );
-};
-
-type FieldChipProps = {
-  field: TemplateField;
-  className?: string;
-  onClick?: () => void;
-};
-export const FieldChip = ({ field, className, onClick }: FieldChipProps) => {
-  return (
-    <Button
-      variant="light"
-      className={cn("p-0 w-fit h-fit min-w-fit", className)}
-      onPress={onClick}
-    >
-      <Chip
-        isDisabled={!field.active}
-        classNames={{
-          base: "text-default-foreground bg-default bg-opacity-40 min-h-7 h-auto",
-          content: "flex items-center py-1",
-        }}
-      >
-        <Icon
-          icon={field.active ? "bi:check" : "clarity:minus-line"}
-          width={20}
-          height={20}
-          className="min-w-5 min-h-5"
-        />
-        <span className="text-xs ms-1 text-wrap">{field.title}</span>
-      </Chip>
-    </Button>
   );
 };
 

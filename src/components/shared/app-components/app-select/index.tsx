@@ -61,8 +61,10 @@ export function AppSelect<T>({
 
   // Update selectedValue when value prop changes
   useEffect(() => {
-    if (!isInitialLoad) setSelectedValue(value);
-  }, [value, isInitialLoad]);
+    if (!isInitialLoad && value !== selectedValue) {
+      setSelectedValue(value);
+    }
+  }, [value, isInitialLoad, selectedValue]);
 
   const loadMore = useCallback(async () => {
     if (!hasMore || isLoading) return;
@@ -76,14 +78,30 @@ export function AppSelect<T>({
       });
 
       const newItems = response.items || [];
-      setItems((prev) => [...prev, ...newItems]);
+      // Only update if new items are actually added
+      if (newItems.length > 0) {
+        setItems((prev) => {
+          // Prevent duplicate items by key
+          const prevKeys = new Set(
+            prev.map((item) =>
+              itemKey ? String(item[itemKey as keyof T]) : ""
+            )
+          );
+          const filteredNewItems = newItems.filter((item) => {
+            const key = itemKey ? String(item[itemKey as keyof T]) : "";
+            return !prevKeys.has(key);
+          });
+          if (filteredNewItems.length === 0) return prev;
+          return [...prev, ...filteredNewItems];
+        });
+      }
       setHasMore(newItems.length === limit);
     } catch (error) {
       console.error("Error loading select data:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [fetchData, items.length, limit, hasMore, isLoading]);
+  }, [fetchData, items, limit, hasMore, isLoading, itemKey]);
 
   const [scrollRef] = useInfiniteScroll({
     hasMore,
@@ -93,39 +111,37 @@ export function AppSelect<T>({
   });
 
   const handleSelectionChange = useCallback(
-    (selectedValue: any) => {
+    (selected: any) => {
       // Extract the key from the selection object
       let key: string;
 
-      if (typeof selectedValue === "object" && selectedValue !== null) {
-        // If it's an object like {anchorKey: "...", currentKey: "..."}
-        if (selectedValue.currentKey) key = selectedValue.currentKey;
-        else if (selectedValue.anchorKey) key = selectedValue.anchorKey;
+      if (typeof selected === "object" && selected !== null) {
+        if (selected.currentKey) key = selected.currentKey;
+        else if (selected.anchorKey) key = selected.anchorKey;
         else {
-          // If it's a Set-like object, extract the first value
-          key = Array.from(selectedValue)[0] as string;
+          key = Array.from(selected)[0] as string;
         }
       } else {
-        // If it's already a string
-        key = selectedValue;
+        key = selected;
       }
 
-      setSelectedValue(key);
+      if (key !== selectedValue) {
+        setSelectedValue(key);
+      }
       onChange(key);
 
       if (onItemSelect && key) {
         const selectedItem = items.find(
           (item) => item && itemKey && String(item[itemKey as keyof T]) === key
         );
-
         if (selectedItem) onItemSelect(selectedItem);
       }
     },
-    [items, itemKey, onChange, onItemSelect]
+    [items, itemKey, onChange, onItemSelect, selectedValue]
   );
 
-  // Initial load effect
   useEffect(() => {
+    const abortController = new AbortController();
     let mounted = true;
 
     const initialLoad = async () => {
@@ -133,18 +149,31 @@ export function AppSelect<T>({
 
       setIsLoading(true);
       try {
-        const response = await fetchData({
-          page: 1,
-          limit,
-        });
+        // Only pass signal if fetchData supports it
+        const fetchParams: any = { page: 1, limit };
+        if ("signal" in fetchData) {
+          fetchParams.signal = abortController.signal;
+        }
+        const response = await fetchData(fetchParams);
 
         let newItems = response.items || [];
 
         if (mounted) {
+          setItems((prev) => {
+            if (
+              prev.length === newItems.length &&
+              prev.every((item, idx) => item === newItems[idx])
+            ) {
+              return prev;
+            }
+            return newItems;
+          });
+          setHasMore(newItems.length === limit);
+          setIsInitialLoad(false);
+
           // Handle default selection or first item selection
           if (!selectedValue) {
             if (defaultSelection) {
-              newItems = [defaultSelection as T, ...newItems];
               handleSelectionChange(defaultSelection.key);
               onChange(defaultSelection.key);
               onItemSelect?.(defaultSelection as T);
@@ -156,13 +185,11 @@ export function AppSelect<T>({
               onItemSelect?.(firstItem as T);
             }
           }
-
-          setItems(newItems);
-          setHasMore(newItems.length === limit);
-          setIsInitialLoad(false);
         }
-      } catch (error) {
-        console.error("Error loading initial select data:", error);
+      } catch (error: any) {
+        if (error.name !== "AbortError") {
+          console.error("Error loading initial select data:", error);
+        }
       } finally {
         if (mounted) {
           setIsLoading(false);
@@ -174,8 +201,9 @@ export function AppSelect<T>({
 
     return () => {
       mounted = false;
+      abortController.abort();
     };
-  }, []); // Empty dependency array since this should only run once
+  }, []);
 
   return (
     <Select

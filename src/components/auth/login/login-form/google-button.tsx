@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { accountApi } from "@/services/api/auth";
-import { exceptionHandler } from "@/services/api/exception";
+import { accountApi } from "@/apis/auth";
+import { exceptionHandler } from "@/apis/exception";
 
 // Components
 import { Button } from "@heroui/react";

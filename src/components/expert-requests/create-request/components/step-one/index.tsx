@@ -4,9 +4,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { formOptions } from "@/utils/validations";
 import { useValidationMessages, validationRegex } from "@/utils/rules";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy } from "react";
 import { t } from "i18next";
-import { inspectionFormatApi } from "@/services/api/inspection-format";
+import { inspectionFormatApi } from "@/apis/inspection-format";
 import { Button, Form } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import { AppSelect } from "@/components/shared/app-components/app-select";
@@ -14,12 +14,14 @@ import { StepperButtons } from "../stepper-buttons";
 import {
   CreateRequestInfoBody,
   RegisterRequestResponse,
-} from "@/types/expertRequests";
-import { useBreakpoint } from "@/hook/useBreakpoint";
-import { expertRequestsApi } from "@/services/api/expert-requests";
-import { exceptionHandler } from "@/services/api/exception";
+} from "@/types/expert-requests";
+import { useBreakpoint } from "@/hooks/useBreakpoint";
+import { expertRequestsApi } from "@/apis/expert-requests";
+import { exceptionHandler } from "@/apis/exception";
 import { InspectionFormatDetailCard } from "./inspection-format-detail-card";
 import { useCreateRequest } from "../../context/create-request-context";
+
+const StepOneHeader = lazy(() => import("./step-one-header"));
 
 type StepOneProps = {
   onStepComplete: (id: string) => void;
@@ -314,16 +316,3 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
     </>
   );
 }
-
-export const StepOneHeader = () => {
-  return (
-    <div className="text-center mb-6">
-      <h2 className="text-default-foreground text-3xl font-black mb-2">
-        {t("expertRequests.createReviewRequest")}
-      </h2>
-      <p className="text-default-500">
-        {t("expertRequests.createReviewRequestDescription")}
-      </p>
-    </div>
-  );
-};

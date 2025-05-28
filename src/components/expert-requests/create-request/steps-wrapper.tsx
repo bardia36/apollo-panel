@@ -5,11 +5,13 @@ import { t } from "i18next";
 import { useExpertRequests } from "@/components/expert-requests/context/expert-requests-context";
 import { StepTwoLoading } from "./components/loadings/step-two-loading";
 import { StepThreeLoading } from "./components/loadings/step-three-loading";
-import { useBreakpoint } from "@/hook/useBreakpoint";
-import { StepOneHeader } from "./components/step-one";
+import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { DesktopStepper, MobileStepper } from "./components/stepper";
 import { CreateRequestProvider } from "./context/create-request-context";
 
+const StepOneHeader = lazy(
+  () => import("./components/step-one/step-one-header")
+);
 const StepOne = lazy(() => import("./components/step-one"));
 const StepTwo = lazy(() => import("./components/step-two"));
 const StepThree = lazy(() => import("./components/step-three"));

@@ -1,5 +1,5 @@
 import { Image } from "@heroui/react";
-import logoIcon from "@/assets/images/logo/logo-icon.svg";
+import logoIcon from "@/assets/images/logo/logo-icon.webp";
 
 export default function ({ imgClass }: { imgClass?: string }) {
   return (

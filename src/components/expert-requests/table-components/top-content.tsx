@@ -3,26 +3,24 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Button,
 } from "@heroui/react";
-import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { t } from "i18next";
 import { numberSplitter } from "@/utils/base";
-import { SetStateAction } from "react";
-import {
-  ExpertRequestInfo,
-  StatusOptions,
-  TableColumns,
-} from "@/types/expertRequests";
+import { SetStateAction, useState } from "react";
+import { ExpertRequestInfo } from "@/types/expert-requests";
 import { Key } from "@react-types/shared";
 import { AppInput } from "@/components/shared/app-components/app-input";
+import { exportToExcel } from "@/utils/excel";
+import { columns, statusesMap, statusOptions } from "../constants";
+import { formatDateTime } from "@/utils/base";
+import { ReportModal } from "./report/report-modal";
 
 type TopContentProps = {
   filterValue: string;
   statusFilter: string | Key[];
   visibleColumns: string | Key[];
-  statusOptions: StatusOptions;
-  columns: TableColumns;
   requestDocs: ExpertRequestInfo[];
   rowsPerPage: number;
   onSearchChange: (value: string) => void;
@@ -36,9 +34,7 @@ type TopContentProps = {
 export const TopContent = ({
   filterValue,
   statusFilter,
-  statusOptions,
   visibleColumns,
-  columns,
   requestDocs,
   rowsPerPage,
   onSearchChange,
@@ -49,6 +45,25 @@ export const TopContent = ({
   onSendToArchive,
 }: TopContentProps) => {
   const perPageNumbers = [5, 10, 15, 20];
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+
+  const exportTableToExcel = () => {
+    const exportData = requestDocs.map((doc) => ({
+      [t("expertRequests.orderNumber")]: doc.order_number,
+      [t("expertRequests.vehicleModel")]:
+        doc.inspection_data?.vehicle_model?.name_en || "",
+      [t("shared.status")]: statusesMap[doc.status].label,
+      [t("shared.user")]: doc.owner?.userName || "",
+      [t("shared.createdAt")]: formatDateTime(doc.createdAt).formattedDate,
+      [t("expertRequests.branch")]: doc.unit?.title || "",
+    }));
+
+    exportToExcel({
+      data: exportData,
+      filename: t("title.expertRequests"),
+      sheetName: t("title.expertRequests"),
+    });
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -161,11 +176,7 @@ export const TopContent = ({
               </Button>
             </DropdownTrigger>
 
-            <DropdownMenu
-              disallowEmptySelection
-              aria-label="Bulk Actions"
-              selectedKeys={visibleColumns}
-            >
+            <DropdownMenu disallowEmptySelection aria-label="Bulk Actions">
               <DropdownItem
                 key="discard-selection"
                 startContent={
@@ -200,14 +211,36 @@ export const TopContent = ({
             </DropdownMenu>
           </Dropdown>
 
-          <Button isIconOnly className="bg-default-100">
-            <Icon
-              icon="mdi:dots-horizontal"
-              width={20}
-              height={20}
-              className="text-default-500"
-            />
-          </Button>
+          <Dropdown>
+            <DropdownTrigger className="hidden sm:flex">
+              <Button isIconOnly className="bg-default-100">
+                <Icon
+                  icon="mdi:dots-horizontal"
+                  width={20}
+                  height={20}
+                  className="text-default-500"
+                />
+              </Button>
+            </DropdownTrigger>
+
+            <DropdownMenu disallowEmptySelection aria-label="More Actions">
+              <DropdownItem
+                key="get-report"
+                className="hover:bg-default-200 text-default-foreground"
+                onPress={() => setIsReportModalOpen(true)}
+              >
+                {t("expertRequests.getReport")}
+              </DropdownItem>
+
+              <DropdownItem
+                key="table-excel-export"
+                className="hover:bg-default-200 text-default-foreground"
+                onPress={() => exportTableToExcel()}
+              >
+                {t("expertRequests.tableExcelExport")}
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </div>
       </div>
 
@@ -262,6 +295,11 @@ export const TopContent = ({
           </Dropdown>
         </div>
       </div>
+
+      <ReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+      />
     </div>
   );
 };

@@ -3,8 +3,8 @@ import { Avatar } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import imageThumbnail from "@/assets/images/base/image-thumbnail.svg";
 import { Image } from "@heroui/react";
-import { filesApi } from "@/services/api/files";
-import { exceptionHandler } from "@/services/api/exception";
+import { filesApi } from "@/apis/files";
+import { exceptionHandler } from "@/apis/exception";
 
 type ImageUploaderProps = {
   value?: string | null;

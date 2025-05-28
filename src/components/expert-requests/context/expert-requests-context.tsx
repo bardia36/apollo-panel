@@ -5,9 +5,9 @@ import {
   useState,
   useCallback,
 } from "react";
-import { ExpertRequestResponse } from "@/types/expertRequests";
-import { expertRequestsApi } from "@/services/api/expert-requests";
-import { exceptionHandler } from "@/services/api/exception";
+import { ExpertRequestResponse } from "@/types/expert-requests";
+import { expertRequestsApi } from "@/apis/expert-requests";
+import { exceptionHandler } from "@/apis/exception";
 
 interface ExpertRequestsContextType {
   requests: ExpertRequestResponse;

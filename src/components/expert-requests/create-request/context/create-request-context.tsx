@@ -3,7 +3,7 @@ import {
   RegisterRequestResponse,
   UpdateRequestFinalBody,
   InspectionDataItem,
-} from "@/types/expertRequests";
+} from "@/types/expert-requests";
 import { Template, TemplateField } from "@/types/templates";
 
 type CreateRequestContextType = {
@@ -32,9 +32,13 @@ export function CreateRequestProvider({ children }: { children: ReactNode }) {
   const [stepThreeData, setStepThreeData] =
     useState<UpdateRequestFinalBody | null>(null);
   const [requestId, setRequestId] = useState<string | null>(null);
-  const [activeFormat, setActiveFormat] = useState<InspectionDataItem | null>(null);
+  const [activeFormat, setActiveFormat] = useState<InspectionDataItem | null>(
+    null
+  );
   const [activeTemplate, setActiveTemplate] = useState<Template | null>(null);
-  const [modifiedTemplateFields, setModifiedTemplateFields] = useState<Record<string, TemplateField[]>>({});
+  const [modifiedTemplateFields, setModifiedTemplateFields] = useState<
+    Record<string, TemplateField[]>
+  >({});
 
   const resetData = () => {
     setRequestData(null);

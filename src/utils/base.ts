@@ -1,3 +1,5 @@
+import jalaali from "jalaali-js";
+
 export function fancyTimeFormat(duration: number) {
   // Hours, minutes and seconds
   const hrs = ~~(duration / 3600);
@@ -93,3 +95,31 @@ export function convertPersianToEnglishNumbers(input: string): string {
 
   return result;
 }
+
+export interface FormattedDateTime {
+  formattedDate: string; // YYYY/MM/DD
+  formattedTime: string; // HH:mm
+}
+
+/**
+ * Formats an ISO date string to Jalali date and time
+ * @param isoDate ISO date string
+ * @returns Object containing formatted date (YYYY/MM/DD) and time (HH:mm)
+ */
+export const formatDateTime = (isoDate: string): FormattedDateTime => {
+  const date = new Date(isoDate);
+
+  // Convert to Jalali
+  const jDate = jalaali.toJalaali(date);
+
+  // Format date (YYYY/MM/DD)
+  const formattedDate = `${jDate.jy}/${jDate.jm.toString().padStart(2, "0")}/${jDate.jd.toString().padStart(2, "0")}`;
+
+  // Format time (HH:mm)
+  const formattedTime = `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
+
+  return {
+    formattedDate,
+    formattedTime,
+  };
+};

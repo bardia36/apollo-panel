@@ -14,11 +14,11 @@ import { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { formOptions } from "@/utils/validations";
 import { toast } from "@/utils/toast";
-import { accountApi } from "@/services/api/auth";
+import { accountApi } from "@/apis/auth";
 import { useCookies } from "react-cookie";
 import useAuthStore from "@/stores/auth-store";
 import { useValidationMessages } from "@/utils/rules";
-import { exceptionHandler } from "@/services/api/exception";
+import { exceptionHandler } from "@/apis/exception";
 
 // components
 import { Form } from "@heroui/react";
@@ -53,13 +53,13 @@ export default function Otp({ userName, setCurrentComponent }: Props) {
     setCurrentComponent("password");
   }
 
+  const msgs = useValidationMessages();
+
   const validationSchema = object({
-    userName: string().required(
-      useValidationMessages().required(t("auth.emailOrPhoneNumber"))
-    ),
+    userName: string().required(msgs.required(t("auth.emailOrPhoneNumber"))),
     code: string()
-      .min(5, useValidationMessages().min(t("auth.otp"), 5))
-      .required(useValidationMessages().required(t("auth.otp"))),
+      .min(5, msgs.min(t("auth.otp"), 5))
+      .required(msgs.required(t("auth.otp"))),
   }).required();
 
   const { handleSubmit, control, getValues } = useForm<LoginByOtpEntity>({
