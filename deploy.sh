@@ -15,5 +15,5 @@ echo "--5/6-- Deleting old image..."
 docker rmi apollo-panel:old >/dev/null | true
 
 echo "--6/6-- Running new image..."
-docker-compose down -v    # remove containers + volumes
-docker-compose up --build -d
+docker compose down -v    # remove containers + volumes
+docker compose up --build -d
