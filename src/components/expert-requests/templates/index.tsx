@@ -19,14 +19,13 @@ import {
 import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
-import { templatesApi } from "@/services/api/templates.ts";
-import { exceptionHandler } from "@/services/api/exception";
+import { templatesApi } from "@/apis/templates.ts";
+import { exceptionHandler } from "@/apis/exception.tsx";
 import { Template, Templates } from "@/types/templates";
 // components
 import { AvailableTemplates } from "./available-templates.tsx";
 import { TemplateFields } from "./components/template-fields.tsx";
 import { TemplatesLoadingSkeleton } from "./components/loading-component.tsx";
-import { AddTemplateButton } from "./components/add-template-button.tsx";
 import { TemplateDetailsHeader } from "./components/template-details-header.tsx";
 import { useTemplateFields } from "./components/useTemplateFields.tsx";
 
@@ -43,7 +42,6 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
   const {
     modifiedTemplateFields,
     activeTemplate,
-    activeFieldsCount,
     setActiveTemplate,
     setActiveFieldsCount,
     handleFieldsChange,
@@ -77,10 +75,6 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
   function showExistedTemplateDetail(template: Template) {
     setIsOnAddingTemplate(false);
     setActiveTemplate(template);
-  }
-
-  function addTemplate() {
-    setIsOnAddingTemplate(true);
   }
 
   function deleteTemplate() {
@@ -129,6 +123,7 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
           _id: `-1`,
           name: newTemplateRef.current.name,
           logo: newTemplateRef.current.logo,
+          default: false,
           fields: modifiedTemplateFields["new_template"] || [],
         };
 
@@ -139,6 +134,7 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
         _id: template._id,
         name: template.name,
         logo: template.logo,
+        default: template.default || false,
         fields: (template.fields || [])
           .filter((field) => field.active) // Filter out inactive fields
           .map((field) => ({
@@ -234,22 +230,21 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
                       isOnAddingTemplate={isOnAddingTemplate}
                       activeTemplateId={activeTemplate._id}
                       showTemplateDetail={showExistedTemplateDetail}
+                      onAddingTemplate={() => setIsOnAddingTemplate(true)}
                     />
                   )}
 
-                  <AddTemplateButton
-                    isOnAddingTemplate={isOnAddingTemplate}
-                    addTemplate={addTemplate}
-                  />
-
-                  <TemplateDetailsHeader
-                    isOnAddingTemplate={isOnAddingTemplate}
-                    templateName={activeTemplate?.name}
-                    activeFieldsCount={activeFieldsCount}
-                    onDeleteTemplate={deleteTemplate}
-                    onNewTemplatePropertyChange={handleNewTemplateProperty}
-                  />
-
+                  {!!activeTemplate && (
+                    <TemplateDetailsHeader
+                      isOnAddingTemplate={isOnAddingTemplate}
+                      template={{
+                        name: activeTemplate.name,
+                        default: activeTemplate.default,
+                      }}
+                      onDeleteTemplate={deleteTemplate}
+                      onNewTemplatePropertyChange={handleNewTemplateProperty}
+                    />
+                  )}
                   <div className="p-4 flex flex-col gap-4 bg-default-50 text-default-600 border-dashed shadow-lg rounded-[20px] border-default-200 border-2">
                     {isOnAddingTemplate ? (
                       <TemplateFields

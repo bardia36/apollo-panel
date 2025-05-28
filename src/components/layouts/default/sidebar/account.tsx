@@ -2,8 +2,8 @@ import { useTranslation } from "react-i18next";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "@/stores/auth-store";
-import { accountApi } from "@/services/api/auth";
-import { exceptionHandler } from "@/services/api/exception";
+import { accountApi } from "@/apis/auth";
+import { exceptionHandler } from "@/apis/exception";
 
 // components
 import {

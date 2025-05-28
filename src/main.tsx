@@ -6,7 +6,7 @@ import App from "./App.tsx";
 import { Provider } from "./provider.tsx";
 
 // i18n
-import "./services/translate/index.ts";
+import "./translations/index.ts";
 
 // style
 import "@/assets/fonts/index.css";

@@ -3,12 +3,14 @@ import { Avatar, Button } from "@heroui/react";
 import { cn } from "@heroui/react";
 import { t } from "i18next";
 import { LazyImage } from "@/components/shared/lazy-image";
+import { AddTemplateButton } from "./components/add-template-button";
 
 type Props = {
   templates: Templates;
   activeTemplateId: string;
   isOnAddingTemplate?: boolean;
   showTemplateDetail: (template: Template) => void;
+  onAddingTemplate: () => void;
 };
 
 export const AvailableTemplates = ({
@@ -16,6 +18,7 @@ export const AvailableTemplates = ({
   activeTemplateId,
   isOnAddingTemplate,
   showTemplateDetail,
+  onAddingTemplate,
 }: Props) => {
   return (
     <>
@@ -33,6 +36,18 @@ export const AvailableTemplates = ({
             showTemplateDetail={showTemplateDetail}
           />
         ))}
+
+        <div
+          className={cn("mb-6", {
+            "col-span-2 mt-2": templates?.docs.length > 1,
+          })}
+        >
+          <AddTemplateButton
+            isOnAddingTemplate={isOnAddingTemplate || false}
+            className="w-full"
+            addTemplate={onAddingTemplate}
+          />
+        </div>
       </div>
     </>
   );

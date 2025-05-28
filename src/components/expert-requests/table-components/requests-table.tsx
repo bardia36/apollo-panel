@@ -1,5 +1,5 @@
 // modules
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { t } from "i18next";
 // components
 import {
@@ -21,31 +21,27 @@ import {
 } from "./render-cell";
 
 // other
-import { ExpertRequest, ExpertRequestResponse } from "@/types/expertRequests";
+import {
+  ExpertRequestInfo,
+  ExpertRequestResponse,
+} from "@/types/expert-requests";
 import { AddOrReplaceKey } from "@/utils/base";
-import { expertRequestsApi } from "@/services/api/expert-requests";
-import { exceptionHandler } from "@/services/api/exception";
 import { TopContent } from "./top-content";
 import { BottomContent } from "./bottom-content";
 import { columns, statusOptions } from "../constants";
 import { Key } from "@react-types/shared";
 
+type Props = {
+  loading: boolean;
+  requests: ExpertRequestResponse;
+};
+
 // TODO:
 // 1. Add archived requests needs to the table
 // 2. Change Table content by changing table-type-tabs component
 // 3. Check filters and sort with backend
-export default function RequestsTable() {
+export default function RequestsTable({ requests, loading }: Props) {
   // states -
-  const [requests, setRequests] = useState<ExpertRequestResponse>({
-    docs: [],
-    hasNextPage: false,
-    hasPrevPage: false,
-    limit: 10,
-    page: 1,
-    totalDocs: 0,
-    totalPage: 1,
-  });
-  const [loading, setLoading] = useState<boolean>(false);
   const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<Set<string> | string>(
     new Set([])
@@ -53,33 +49,15 @@ export default function RequestsTable() {
   const [visibleColumns, setVisibleColumns] = useState<string | Key[]>("all");
   const [statusFilter, setStatusFilter] = useState<string | Key[]>("all");
   const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortDescriptor, setSortDescriptor] = useState<{
-    column: keyof ExpertRequest;
+    column: keyof ExpertRequestInfo;
     direction: "ascending" | "descending";
   }>({
     column: "order_number",
     direction: "ascending",
   });
   // - states
-
-  useEffect(() => {
-    getRequests();
-  }, []);
-
-  async function getRequests() {
-    setLoading(true);
-    try {
-      const res = await expertRequestsApi.getRequests({
-        inspection_format: "PRE_INSURANCE_BODY_INSPECTION",
-      });
-      setRequests(res);
-    } catch (err) {
-      exceptionHandler(err);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   // variables -
   const hasSearchFilter = Boolean(filterValue);
@@ -166,8 +144,6 @@ export default function RequestsTable() {
           filterValue={filterValue}
           statusFilter={statusFilter}
           visibleColumns={visibleColumns}
-          columns={columns}
-          statusOptions={statusOptions}
           requestDocs={requests.docs}
           rowsPerPage={rowsPerPage}
           onSearchChange={setFilterValue}
@@ -209,8 +185,8 @@ export default function RequestsTable() {
   // table data -
   const renderCell = useCallback(
     (
-      request: ExpertRequest,
-      columnKey: keyof AddOrReplaceKey<ExpertRequest, "actions", string>
+      request: ExpertRequestInfo,
+      columnKey: keyof AddOrReplaceKey<ExpertRequestInfo, "actions", string>
     ) => {
       let cellValue: React.ReactNode;
       if (columnKey === "actions") cellValue = "actions";
@@ -218,13 +194,23 @@ export default function RequestsTable() {
 
       switch (columnKey) {
         case "order_number":
-          return <RenderOrderNumberCell orderNumber={request.order_number} />;
+          return (
+            <>
+              {request.order_number && (
+                <RenderOrderNumberCell orderNumber={request.order_number} />
+              )}
+            </>
+          );
 
         case "inspection_data":
           return (
-            <RenderInspectionDataCell
-              inspectionData={request.inspection_data}
-            />
+            <>
+              {request.inspection_data && (
+                <RenderInspectionDataCell
+                  inspectionData={request.inspection_data}
+                />
+              )}
+            </>
           );
 
         case "status":
@@ -263,7 +249,7 @@ export default function RequestsTable() {
       onSelectionChange={(keys) => setSelectedKeys(keys as Set<string>)}
       onSortChange={(descriptor) =>
         setSortDescriptor({
-          column: descriptor.column as keyof ExpertRequest,
+          column: descriptor.column as keyof ExpertRequestInfo,
           direction: descriptor.direction,
         })
       }
@@ -286,10 +272,10 @@ export default function RequestsTable() {
         items={sortedItems}
       >
         {(item) => (
-          <TableRow key={item._id}>
+          <TableRow key={`${item.order_number} - ${item.createdAt}`}>
             {(columnKey) => (
               <TableCell>
-                {renderCell(item, columnKey as keyof ExpertRequest)}
+                {renderCell(item, columnKey as keyof ExpertRequestInfo)}
               </TableCell>
             )}
           </TableRow>

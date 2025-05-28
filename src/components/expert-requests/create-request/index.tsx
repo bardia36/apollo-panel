@@ -8,7 +8,8 @@ import {
 } from "react";
 import { Modal, ModalContent, ModalBody, useDisclosure } from "@heroui/react";
 import StepsWrapper from "./steps-wrapper.tsx";
-import { useBreakpoint } from "@/hook/useBreakpoint";
+import { useBreakpoint } from "@/hooks/useBreakpoint.tsx";
+import { CreateRequestProvider } from "./context/create-request-context";
 
 type Props = {
   activator: ReactNode;
@@ -48,15 +49,17 @@ export const CreateRequestModal: FC<Props> = ({ activator }) => {
         <Modal
           isOpen={isOpen}
           backdrop="blur"
-          hideCloseButton={true}
+          hideCloseButton={isMdAndUp ? true : false}
           isDismissable={false}
-          className="xl:min-w-[1140px] 2xl:min-w-fit md:max-h-[80vh] my-auto"
+          className="xl:min-w-[1140px] md:max-h-[80vh] my-auto"
           size={isMdAndUp ? "5xl" : "full"}
           onClose={handleModalClose}
         >
           <ModalContent>
             <ModalBody className="p-4 overflow-y-auto">
-              <StepsWrapper onCloseModal={handleModalClose} />
+              <CreateRequestProvider>
+                <StepsWrapper onCloseModal={handleModalClose} />
+              </CreateRequestProvider>
             </ModalBody>
           </ModalContent>
         </Modal>

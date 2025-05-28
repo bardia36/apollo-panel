@@ -8,3 +8,8 @@ export type SearchParams = {
   limit?: number;
   keyword?: string;
 };
+
+export type CommonListResponse<T> = {
+  items: T[];
+  count: number;
+};

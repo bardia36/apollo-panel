@@ -3,12 +3,12 @@ import { Pagination } from "@heroui/react";
 import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { t } from "i18next";
-import { ExpertRequest } from "@/types/expertRequests";
+import { ExpertRequestInfo } from "@/types/expert-requests";
 
 type BottomContentProps = {
   page: number;
   selectedKeys: Set<string> | string;
-  filteredItems: ExpertRequest[];
+  filteredItems: ExpertRequestInfo[];
   requests: { totalPage: number; hasNextPage: boolean; hasPrevPage: boolean };
   setPage: (value: number) => void;
 };

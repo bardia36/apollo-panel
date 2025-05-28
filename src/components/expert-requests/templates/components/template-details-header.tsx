@@ -1,13 +1,14 @@
 import { Template } from "@/types/templates";
 import { Skeleton } from "@heroui/react";
 import { lazy, Suspense } from "react";
-import { ExistedTemplateHeader } from "../existed-template-header";
-const NewTemplateHeader = lazy(() => import("../new-template-header.tsx"));
+import { ExistedTemplateHeader } from "./headers/existed-template-header.tsx";
+const NewTemplateHeader = lazy(
+  () => import("./headers/new-template-header.tsx")
+);
 
 type TemplateDetailsHeaderProps = {
   isOnAddingTemplate: boolean;
-  templateName?: Template["name"];
-  activeFieldsCount: number;
+  template?: { name: Template["name"]; default: Template["default"] };
   onDeleteTemplate: () => void;
   onNewTemplatePropertyChange?: (
     property: "name" | "logo",
@@ -17,8 +18,7 @@ type TemplateDetailsHeaderProps = {
 
 export const TemplateDetailsHeader = ({
   isOnAddingTemplate,
-  templateName,
-  activeFieldsCount,
+  template,
   onDeleteTemplate,
   onNewTemplatePropertyChange,
 }: TemplateDetailsHeaderProps) => {
@@ -33,16 +33,14 @@ export const TemplateDetailsHeader = ({
           }
         >
           <NewTemplateHeader
-            activeFieldsCount={activeFieldsCount}
             onPropertyChange={onNewTemplatePropertyChange}
           />
         </Suspense>
       ) : (
         <>
-          {!!templateName && (
+          {!!template && (
             <ExistedTemplateHeader
-              templateName={templateName}
-              activeFieldsCount={activeFieldsCount}
+              template={template}
               onDeleteTemplate={onDeleteTemplate}
             />
           )}

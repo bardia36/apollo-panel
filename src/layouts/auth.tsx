@@ -1,10 +1,10 @@
 import { Outlet } from "react-router-dom";
 import { useTheme } from "@heroui/use-theme";
-import { useBreakpoint } from "@/hook/useBreakpoint";
+import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { Image } from "@heroui/react";
 import NewRelease from "@/components/layouts/auth/new-release";
-import authLightImg from "@/assets/images/auth/auth-light.png";
-import authDarkImg from "@/assets/images/auth/auth-dark.png";
+import authLightImg from "@/assets/images/auth/auth-light.webp";
+import authDarkImg from "@/assets/images/auth/auth-dark.webp";
 
 export default function AuthLayout() {
   const { isMdAndDown } = useBreakpoint();

@@ -1,3 +1,5 @@
+import jalaali from "jalaali-js";
+
 export function fancyTimeFormat(duration: number) {
   // Hours, minutes and seconds
   const hrs = ~~(duration / 3600);
@@ -65,3 +67,59 @@ export function copyToClipboard(text: string) {
     navigator.clipboard.writeText(text);
   };
 }
+
+/**
+ * Converts Persian/Arabic numbers to English numbers
+ * @param input String containing Persian/Arabic numbers
+ * @returns String with converted English numbers
+ */
+export function convertPersianToEnglishNumbers(input: string): string {
+  if (!input) return input;
+
+  const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+  const arabicDigits = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
+
+  let result = input;
+
+  // Replace Persian digits
+  for (let i = 0; i < 10; i++) {
+    const regex = new RegExp(persianDigits[i], "g");
+    result = result.replace(regex, i.toString());
+  }
+
+  // Replace Arabic digits
+  for (let i = 0; i < 10; i++) {
+    const regex = new RegExp(arabicDigits[i], "g");
+    result = result.replace(regex, i.toString());
+  }
+
+  return result;
+}
+
+export interface FormattedDateTime {
+  formattedDate: string; // YYYY/MM/DD
+  formattedTime: string; // HH:mm
+}
+
+/**
+ * Formats an ISO date string to Jalali date and time
+ * @param isoDate ISO date string
+ * @returns Object containing formatted date (YYYY/MM/DD) and time (HH:mm)
+ */
+export const formatDateTime = (isoDate: string): FormattedDateTime => {
+  const date = new Date(isoDate);
+
+  // Convert to Jalali
+  const jDate = jalaali.toJalaali(date);
+
+  // Format date (YYYY/MM/DD)
+  const formattedDate = `${jDate.jy}/${jDate.jm.toString().padStart(2, "0")}/${jDate.jd.toString().padStart(2, "0")}`;
+
+  // Format time (HH:mm)
+  const formattedTime = `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
+
+  return {
+    formattedDate,
+    formattedTime,
+  };
+};
