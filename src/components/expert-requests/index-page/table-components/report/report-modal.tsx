@@ -21,7 +21,7 @@ import {
   ExpertRequestStatus,
 } from "@/types/expert-requests";
 import { AppInput } from "@/components/shared/app-components/app-input";
-import { statusesMap, statusOptions } from "../../constants";
+import { statusesMap, statusOptions } from "../../../constants";
 
 type ReportModalProps = {
   isOpen: boolean;

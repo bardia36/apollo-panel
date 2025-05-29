@@ -15,8 +15,8 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
+  Button,
 } from "@heroui/react";
-import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { templatesApi } from "@/apis/templates.ts";

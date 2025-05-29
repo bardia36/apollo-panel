@@ -19,7 +19,7 @@ export const expertRequestsApi = {
     });
   },
 
-  getRequestsById(id: string) {
+  getRequestById(id: string) {
     return axiosHandler<ExpertRequestDetail>(BASE_URL, {
       action: id,
       method: RequestMethod.GET,
