@@ -2,7 +2,7 @@ import { useState, lazy, Suspense } from "react";
 import { Button, Skeleton } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
-import { useExpertRequests } from "@/components/expert-requests/context/expert-requests-context";
+import { useExpertRequests } from "@/components/expert-requests/index-page/context/expert-requests-context";
 import { StepTwoLoading } from "./components/loadings/step-two-loading";
 import { StepThreeLoading } from "./components/loadings/step-three-loading";
 import { useBreakpoint } from "@/hooks/useBreakpoint";

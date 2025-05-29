@@ -28,7 +28,7 @@ import {
 import { AddOrReplaceKey } from "@/utils/base";
 import { TopContent } from "./top-content";
 import { BottomContent } from "./bottom-content";
-import { columns, statusOptions } from "../constants";
+import { columns, statusOptions } from "../../constants";
 import { Key } from "@react-types/shared";
 
 type Props = {
