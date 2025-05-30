@@ -294,3 +294,13 @@ export type GetRequestsParams = {
   keyword?: string;
   inspection_format?: "PRE_INSURANCE_BODY_INSPECTION";
 };
+
+export type RequestsSetting = {
+  expiration_time: "UNTIL_DAY_END" | "24H" | "48H" | "UNLIMITED";
+  photo_deadline: "30" | "40" | "50" | "60" | "120" | "180";
+  random_picture: boolean;
+  more_fields: {
+    title: string;
+    type: "INPUT" | "SELECT" | "CHECKBOX" | "RADIO" | "DATE" | "TIME";
+  }[];
+};

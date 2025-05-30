@@ -7,6 +7,7 @@ import {
   GetRequestsParams,
   RegisterRequestBody,
   RegisterRequestResponse,
+  RequestsSetting,
 } from "@/types/expert-requests";
 import { File } from "buffer";
 
@@ -43,6 +44,21 @@ export const expertRequestsApi = {
       action: "export",
       method: RequestMethod.GET,
       params,
+    });
+  },
+
+  getRequestsSetting() {
+    return axiosHandler<RequestsSetting>(BASE_URL, {
+      action: "settings",
+      method: RequestMethod.GET,
+    });
+  },
+
+  updateRequestsSetting(body: RequestsSetting) {
+    return axiosHandler<RequestsSetting>(BASE_URL, {
+      action: "settings",
+      method: RequestMethod.PUT,
+      body,
     });
   },
 };
