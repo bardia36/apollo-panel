@@ -2,17 +2,17 @@ import { Key, useEffect, useState, lazy, Suspense } from "react";
 import {
   ExpertRequestsProvider,
   useExpertRequests,
-} from "./index-page/context/expert-requests-context";
+} from "./index-components/context/expert-requests-context";
 import Loading from "../shared/loading";
 
 const TitleActions = lazy(
-  () => import("./index-page/table-components/title-actions")
+  () => import("./index-components/table-components/title-actions")
 );
 const TableTypeTabs = lazy(
-  () => import("./index-page/table-components/table-type-tabs")
+  () => import("./index-components/table-components/table-type-tabs")
 );
 const RequestsTable = lazy(
-  () => import("./index-page/table-components/requests-table")
+  () => import("./index-components/table-components/requests-table")
 );
 
 function ExpertRequestsContent() {

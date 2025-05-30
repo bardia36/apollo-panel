@@ -7,7 +7,6 @@ import {
   Button,
   cn,
   Select,
-  Chip,
   SelectItem,
   SelectedItems,
 } from "@heroui/react";
@@ -17,11 +16,11 @@ import { useState } from "react";
 import { expertRequestsApi } from "@/apis/expert-requests";
 import {
   ExportReportParams,
-  StatusesMap,
   ExpertRequestStatus,
 } from "@/types/expert-requests";
 import { AppInput } from "@/components/shared/app-components/app-input";
-import { statusesMap, statusOptions } from "../../../constants";
+import { statusOptions } from "@/components/expert-requests/constants";
+import { NeutralChip } from "@/components/shared/request-status-chip";
 
 type ReportModalProps = {
   isOpen: boolean;
@@ -127,30 +126,7 @@ export const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
                   <div className="flex flex-wrap gap-2">
                     {items.map(
                       (status) =>
-                        status.data && (
-                          <Chip
-                            key={status.data.uid}
-                            className="bg-default-100 text-default-700 h-10 gap-1"
-                            classNames={{
-                              content: "flex gap-1",
-                              base: "rounded-large",
-                            }}
-                          >
-                            <Icon
-                              icon={
-                                statusesMap[
-                                  status.data.uid as keyof StatusesMap
-                                ]?.icon
-                              }
-                              className={`text-${statusesMap[status.data.uid as keyof StatusesMap]?.text} drop-shadow-md`}
-                              width={20}
-                              height={20}
-                            />
-                            <span className="font-semibold">
-                              {status.data.label}
-                            </span>
-                          </Chip>
-                        )
+                        status.data && <NeutralChip status={status.data} />
                     )}
                   </div>
                 );
