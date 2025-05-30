@@ -56,18 +56,20 @@ export const RenderStatusCell = ({
   status,
 }: {
   status: ExpertRequestInfo["status"];
-}) => (
-  <Chip
-    className={`bg-${statusesMap[status].bg} text-${statusesMap[status].text} h-8 gap-1`}
-    size="sm"
-    variant="flat"
-    startContent={
-      <Icon icon={statusesMap[status].icon} width={20} height={20} />
-    }
-  >
-    <span className="font-semibold text-sm">{statusesMap[status].label}</span>
-  </Chip>
-);
+}) => {
+  const statusMap = statusesMap[status];
+
+  return (
+    <Chip
+      className={`bg-${statusMap.bg} text-${statusMap.text} h-8 gap-1`}
+      size="sm"
+      variant="flat"
+      startContent={<Icon icon={statusMap.icon} width={20} height={20} />}
+    >
+      <span className="font-semibold text-sm">{statusMap.label}</span>
+    </Chip>
+  );
+};
 
 export const RenderOwnerCell = ({
   owner,

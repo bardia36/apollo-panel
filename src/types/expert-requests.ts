@@ -120,10 +120,11 @@ export type TableColumns = {
   label?: string;
 }[];
 
-export type StatusOptions = { uid: string; label: string }[];
+export type StatusOption = { uid: string; label: string };
 
 export type StatusesMap = {
   [key in ExpertRequestStatus]: {
+    fadedBg: string;
     bg: string;
     text: string;
     label: string;
