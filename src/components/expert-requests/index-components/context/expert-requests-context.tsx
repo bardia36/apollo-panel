@@ -38,9 +38,7 @@ export const ExpertRequestsProvider = ({
   const refreshRequests = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await expertRequestsApi.getRequests({
-        inspection_format: "PRE_INSURANCE_BODY_INSPECTION",
-      });
+      const res = await expertRequestsApi.getRequests();
       setRequests(res);
     } catch (err) {
       exceptionHandler(err);

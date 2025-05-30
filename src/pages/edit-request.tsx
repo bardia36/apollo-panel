@@ -9,7 +9,7 @@ export default function EditExpertRequestPage() {
   useEffect(() => {
     setLinks([
       { name: t("title.expertRequests"), url: "/expert-requests" },
-      { name: t("title.editRequest"), url: "/expert-requests/edit/:id" },
+      { name: t("title.editRequest"), url: "/expert-requests/:id" },
     ]);
   }, [setLinks]);
 

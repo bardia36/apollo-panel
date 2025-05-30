@@ -21,6 +21,7 @@ export default {
   createIt: "ایجاد کن",
   csvFile: "فایل CSV",
   delete: "حذف",
+  discardSelection: "لغو درخواست",
   discardSelections: "لغو انتخاب شده‌ها",
   draft: "پیش‌نویس",
   edit: "ویرایش",

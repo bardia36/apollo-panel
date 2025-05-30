@@ -21,6 +21,7 @@ export default {
   createIt: "Create it",
   csvFile: "CSV file",
   delete: "Delete",
+  discardSelection: "Discard selection",
   discardSelections: "Discard selections",
   draft: "Draft",
   edit: "Edit",

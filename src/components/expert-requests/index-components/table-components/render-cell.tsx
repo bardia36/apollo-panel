@@ -13,6 +13,7 @@ import { t } from "i18next";
 import { ExpertRequestInfo } from "@/types/expert-requests";
 import { statusesMap } from "../../constants";
 import { copyToClipboard } from "@/utils/base";
+import { Link } from "react-router-dom";
 
 export const RenderOrderNumberCell = ({
   orderNumber,
@@ -111,7 +112,7 @@ export const RenderCreatedAtCell = ({
   createdAt: ExpertRequestInfo["createdAt"];
 }) => <DateDisplay isoDate={createdAt} />;
 
-export const RenderActionsCell = () => (
+export const RenderActionsCell = ({ id }: { id: ExpertRequestInfo["_id"] }) => (
   <div className="relative flex justify-end items-center gap-2">
     <Dropdown>
       <DropdownTrigger>
@@ -125,13 +126,44 @@ export const RenderActionsCell = () => (
         </Button>
       </DropdownTrigger>
 
-      <DropdownMenu>
-        <DropdownItem key="edit">{t("shared.edit")}</DropdownItem>
-        <DropdownItem key="delete">{t("shared.delete")}</DropdownItem>
+      <DropdownMenu aria-label="Request item actions">
+        <DropdownItem
+          key="discard-selection"
+          startContent={
+            <Icon
+              icon="solar:close-square-bold"
+              width={18}
+              height={18}
+              className="text-default-600"
+            />
+          }
+          className="hover:bg-default-200 text-default-foreground"
+          onPress={() => console.log("discard")}
+        >
+          {t("shared.discardSelection")}
+        </DropdownItem>
+
+        <DropdownItem
+          key="send-to-archive"
+          startContent={
+            <Icon
+              icon="solar:bookmark-circle-bold"
+              width={18}
+              height={18}
+              className="text-default-600"
+            />
+          }
+          className="hover:bg-default-200 text-default-foreground"
+          onPress={() => console.log("send to archive")}
+        >
+          {t("expertRequests.sendToArchive")}
+        </DropdownItem>
       </DropdownMenu>
     </Dropdown>
 
     <Button
+      as={Link}
+      to={`/expert-requests/${id}`}
       isIconOnly
       size="sm"
       variant="solid"

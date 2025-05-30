@@ -4,6 +4,7 @@ import {
   ExpertRequestDetail,
   ExpertRequestResponse,
   ExportReportParams,
+  GetRequestsParams,
   RegisterRequestBody,
   RegisterRequestResponse,
 } from "@/types/expert-requests";
@@ -12,10 +13,13 @@ import { File } from "buffer";
 const BASE_URL = "panel/inspection-request";
 
 export const expertRequestsApi = {
-  getRequests(params: { inspection_format: "PRE_INSURANCE_BODY_INSPECTION" }) {
+  getRequests(params?: GetRequestsParams) {
     return axiosHandler<ExpertRequestResponse>(BASE_URL, {
       method: RequestMethod.GET,
-      params,
+      params: {
+        ...params,
+        inspection_format: "PRE_INSURANCE_BODY_INSPECTION",
+      },
     });
   },
 

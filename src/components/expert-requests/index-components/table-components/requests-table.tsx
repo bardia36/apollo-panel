@@ -228,7 +228,7 @@ export default function RequestsTable({ requests, loading }: Props) {
           return <RenderCreatedAtCell createdAt={request.createdAt} />;
 
         case "actions":
-          return <RenderActionsCell />;
+          return <RenderActionsCell id={request._id} />;
 
         default:
           return cellValue;
