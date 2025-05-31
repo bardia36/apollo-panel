@@ -5,7 +5,10 @@ import {
   useState,
   useCallback,
 } from "react";
-import { ExpertRequestResponse } from "@/types/expert-requests";
+import {
+  ExpertRequestResponse,
+  GetRequestsParams,
+} from "@/types/expert-requests";
 import { expertRequestsApi } from "@/apis/expert-requests";
 import { exceptionHandler } from "@/apis/exception";
 
@@ -16,6 +19,8 @@ interface ExpertRequestsContextType {
     keyword?: string;
     page?: number;
     limit?: number;
+    sortColumn?: string;
+    sortValue?: GetRequestsParams["sortValue"];
   }) => Promise<void>;
 }
 
@@ -40,13 +45,21 @@ export const ExpertRequestsProvider = ({
   });
 
   const refreshRequests = useCallback(
-    async (params?: { keyword?: string; page?: number; limit?: number }) => {
+    async (params?: {
+      keyword?: string;
+      page?: number;
+      limit?: number;
+      sortColumn?: string;
+      sortValue?: GetRequestsParams["sortValue"];
+    }) => {
       setLoading(true);
       try {
         const res = await expertRequestsApi.getRequests({
           keyword: params?.keyword,
           page: params?.page ?? 1,
           limit: params?.limit ?? 10,
+          sortColumn: params?.sortColumn?? 'order_number',
+          sortValue: params?.sortValue?? '1',
         });
         setRequests(res);
       } catch (err) {

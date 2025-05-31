@@ -29,7 +29,7 @@ import { AddOrReplaceKey } from "@/utils/base";
 import { TopContent } from "./top-content";
 import { BottomContent } from "./bottom-content";
 import { columns, statusOptions } from "../../constants";
-import { Key } from "@react-types/shared";
+import { Key, SortDescriptor } from "@react-types/shared";
 import { useExpertRequests } from "../context/expert-requests-context";
 
 type Props = {
@@ -40,7 +40,6 @@ type Props = {
 // TODO:
 // 1. Add archived requests needs to the table
 // 2. Change Table content by changing table-type-tabs component
-// 3. Check filters and sort with backend
 export default function RequestsTable({ requests, loading }: Props) {
   // states -
   const [filterValue, setFilterValue] = useState("");
@@ -70,6 +69,7 @@ export default function RequestsTable({ requests, loading }: Props) {
     [refreshRequests, rowsPerPage]
   );
 
+  // TODO: when change perPage to a smaller number and the page is greater than 1, the pagination will be broken
   const handleRowsPerPageChange = useCallback(
     (perPage: number) => {
       setRowsPerPage(perPage);
@@ -109,19 +109,6 @@ export default function RequestsTable({ requests, loading }: Props) {
 
     return filteredItems.slice(start, end);
   }, [page, filteredItems, rowsPerPage]);
-
-  const sortedItems = useMemo(() => {
-    if (items) {
-      return [...items].sort((a, b) => {
-        const first = a[sortDescriptor.column];
-        const second = b[sortDescriptor.column];
-        const cmp =
-          first && second ? (first < second ? -1 : first > second ? 1 : 0) : 0;
-
-        return sortDescriptor.direction === "descending" ? -cmp : cmp;
-      });
-    }
-  }, [sortDescriptor, items]);
   // - variables
 
   // top content -
@@ -238,6 +225,23 @@ export default function RequestsTable({ requests, loading }: Props) {
     []
   );
 
+  const handleSortChange = useCallback(
+    (descriptor: SortDescriptor) => {
+      const column = descriptor.column as string;
+      setSortDescriptor({
+        column: column as keyof ExpertRequestInfo,
+        direction: descriptor.direction,
+      });
+      refreshRequests({
+        page: page,
+        limit: rowsPerPage,
+        sortColumn: column,
+        sortValue: descriptor.direction === "ascending" ? "1" : "-1",
+      });
+    },
+    [refreshRequests, page, rowsPerPage]
+  );
+
   return (
     <Table
       isHeaderSticky
@@ -248,12 +252,7 @@ export default function RequestsTable({ requests, loading }: Props) {
       selectedKeys={selectedKeys}
       sortDescriptor={sortDescriptor}
       onSelectionChange={(keys) => setSelectedKeys(keys as Set<string>)}
-      onSortChange={(descriptor) =>
-        setSortDescriptor({
-          column: descriptor.column as keyof ExpertRequestInfo,
-          direction: descriptor.direction,
-        })
-      }
+      onSortChange={handleSortChange}
     >
       <TableHeader columns={headerColumns}>
         {(column) => (
@@ -270,7 +269,7 @@ export default function RequestsTable({ requests, loading }: Props) {
       <TableBody
         isLoading={loading}
         emptyContent={t("expertRequests.noRequestFound")}
-        items={sortedItems}
+        items={filteredItems}
       >
         {(item) => (
           <TableRow key={`${item.order_number} - ${item.createdAt}`}>
