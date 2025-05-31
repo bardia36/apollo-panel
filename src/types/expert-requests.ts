@@ -215,7 +215,7 @@ export type RegisterRequestBody = (
   | UpdateRequestFinalBody
 ) & {
   step: RegisterRequestStep;
-  workspace_id: string;
+  workspace_id?: string;
 };
 
 export type RegisterRequestResponse = {

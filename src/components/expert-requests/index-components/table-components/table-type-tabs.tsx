@@ -8,17 +8,17 @@ export default ({
   onChange,
 }: {
   activeTab: string;
-  onChange: (key: Key) => void;
+  onChange: (key: Key | null) => void;
 }) => {
   const isArchiveTab = activeTab === "archive";
 
   return (
     <Tabs
       selectedKey={activeTab}
-      onSelectionChange={onChange}
       aria-label="Requests Types"
       size="lg"
       className="mb-4"
+      onSelectionChange={onChange}
     >
       <Tab
         key="current"
