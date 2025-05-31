@@ -292,6 +292,10 @@ export type GetRequestsParams = {
   key?: string;
   price?: number;
   keyword?: string;
+  page?: number;
+  limit?: number;
+  sortValue?: "1" | "-1";
+  sortColumn?: string;
   inspection_format?: "PRE_INSURANCE_BODY_INSPECTION";
 };
 
