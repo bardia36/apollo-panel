@@ -23,8 +23,9 @@ function ExpertRequestsContent() {
     refreshRequests();
   }, [refreshRequests]);
 
-  function onTabChange(key: Key) {
-    setActiveTab(key as string);
+  function onTabChange(key: Key | null) {
+    if (key === null) setActiveTab("current");
+    else setActiveTab(key as string);
   }
 
   return (

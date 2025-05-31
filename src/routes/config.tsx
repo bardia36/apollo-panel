@@ -97,7 +97,7 @@ export const privateRoutes: AppRoute[] = [
                 breadcrumb: "Expert Requests",
               },
               {
-                path: "edit/:id",
+                path: ":id",
                 element: <EditExpertRequestPage />,
                 title: t("title.editRequest"),
                 breadcrumb: "Edit Expert Request",

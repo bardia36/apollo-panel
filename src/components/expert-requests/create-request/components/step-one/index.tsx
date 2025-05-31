@@ -129,7 +129,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
       const data = getValues();
       const response = await expertRequestsApi.registerRequest(
         requestId ? requestId : "0",
-        { ...data, step: "INFO" }
+        { ...data, step: "INFO", workspace_id: "68383efb8e88a63a100ccafa" }
       );
       setRequestData(response);
       if (!requestId) setRequestId(response._id);

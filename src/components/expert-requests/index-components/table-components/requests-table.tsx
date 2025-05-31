@@ -30,6 +30,7 @@ import { TopContent } from "./top-content";
 import { BottomContent } from "./bottom-content";
 import { columns, statusOptions } from "../../constants";
 import { Key } from "@react-types/shared";
+import { useExpertRequests } from "../context/expert-requests-context";
 
 type Props = {
   loading: boolean;
@@ -59,9 +60,9 @@ export default function RequestsTable({ requests, loading }: Props) {
   });
   // - states
 
-  // variables -
-  const hasSearchFilter = Boolean(filterValue);
+  const { refreshRequests } = useExpertRequests();
 
+  // variables -
   const headerColumns = useMemo(() => {
     if (visibleColumns === "all") return columns;
 
@@ -73,14 +74,6 @@ export default function RequestsTable({ requests, loading }: Props) {
   const filteredItems = useMemo(() => {
     let filteredRequests = [...requests.docs];
 
-    if (hasSearchFilter) {
-      filteredRequests = filteredRequests.filter((request) =>
-        request.inspection_data.vehicle_model?.name_en
-          .toLowerCase()
-          .includes(filterValue.toLowerCase())
-      );
-    }
-
     if (
       statusFilter !== "all" &&
       Array.from(statusFilter).length !== statusOptions.length
@@ -91,7 +84,7 @@ export default function RequestsTable({ requests, loading }: Props) {
     }
 
     return filteredRequests;
-  }, [requests, filterValue, statusFilter]);
+  }, [requests, statusFilter]);
 
   const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -120,17 +113,14 @@ export default function RequestsTable({ requests, loading }: Props) {
     setPage(1);
   }, []);
 
-  const onSearchChange = useCallback((value: string) => {
-    if (value) {
+  const onSearchChange = useCallback(
+    (value: string) => {
       setFilterValue(value);
+      refreshRequests(value);
       setPage(1);
-    } else setFilterValue("");
-  }, []);
-
-  // const onClear = useCallback(() => {
-  //   setFilterValue("");
-  //   setPage(1);
-  // }, []);
+    },
+    [refreshRequests]
+  );
 
   const onSendToArchive = () => {
     // TODO: Send request to backend
@@ -146,7 +136,7 @@ export default function RequestsTable({ requests, loading }: Props) {
           visibleColumns={visibleColumns}
           requestDocs={requests.docs}
           rowsPerPage={rowsPerPage}
-          onSearchChange={setFilterValue}
+          onSearchChange={onSearchChange}
           setStatusFilter={setStatusFilter}
           setVisibleColumns={setVisibleColumns}
           onRowsPerPageChange={setRowsPerPage}
@@ -160,9 +150,8 @@ export default function RequestsTable({ requests, loading }: Props) {
     statusFilter,
     visibleColumns,
     onRowsPerPageChange,
-    requests.docs.length,
+    requests.docs,
     onSearchChange,
-    hasSearchFilter,
   ]);
   // - top content
 
@@ -179,7 +168,7 @@ export default function RequestsTable({ requests, loading }: Props) {
         />
       </>
     );
-  }, [selectedKeys, items.length, page, requests.totalPage, hasSearchFilter]);
+  }, [selectedKeys, items.length, page, requests.totalPage]);
   // - bottom content
 
   // table data -
@@ -228,7 +217,7 @@ export default function RequestsTable({ requests, loading }: Props) {
           return <RenderCreatedAtCell createdAt={request.createdAt} />;
 
         case "actions":
-          return <RenderActionsCell />;
+          return <RenderActionsCell id={request._id} />;
 
         default:
           return cellValue;

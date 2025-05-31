@@ -12,6 +12,7 @@ export type ExpertRequestResponse = {
 };
 
 export type ExpertRequestInfo = {
+  _id: string;
   status: ExpertRequestStatus;
   inspection_format: {
     name: string;
@@ -214,6 +215,7 @@ export type RegisterRequestBody = (
   | UpdateRequestFinalBody
 ) & {
   step: RegisterRequestStep;
+  workspace_id?: string;
 };
 
 export type RegisterRequestResponse = {
@@ -280,4 +282,25 @@ export type ExportReportParams = {
   from_date: string;
   to_date: string;
   inspection_format?: string;
+};
+
+export type GetRequestsParams = {
+  id?: string;
+  status?: ExpertRequestStatus;
+  order_number?: string;
+  reference_id?: string;
+  key?: string;
+  price?: number;
+  keyword?: string;
+  inspection_format?: "PRE_INSURANCE_BODY_INSPECTION";
+};
+
+export type RequestsSetting = {
+  expiration_time: "UNTIL_DAY_END" | "24H" | "48H" | "UNLIMITED";
+  photo_deadline: "30" | "40" | "50" | "60" | "120" | "180";
+  random_picture: boolean;
+  more_fields: {
+    title: string;
+    type: "INPUT" | "SELECT" | "CHECKBOX" | "RADIO" | "DATE" | "TIME";
+  }[];
 };
