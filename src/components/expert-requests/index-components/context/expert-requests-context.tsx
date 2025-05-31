@@ -12,7 +12,11 @@ import { exceptionHandler } from "@/apis/exception";
 interface ExpertRequestsContextType {
   requests: ExpertRequestResponse;
   loading: boolean;
-  refreshRequests: (keyword?: string) => Promise<void>;
+  refreshRequests: (params?: {
+    keyword?: string;
+    page?: number;
+    limit?: number;
+  }) => Promise<void>;
 }
 
 const ExpertRequestsContext = createContext<
@@ -35,17 +39,24 @@ export const ExpertRequestsProvider = ({
     totalPage: 1,
   });
 
-  const refreshRequests = useCallback(async (keyword?: string) => {
-    setLoading(true);
-    try {
-      const res = await expertRequestsApi.getRequests({ keyword });
-      setRequests(res);
-    } catch (err) {
-      exceptionHandler(err);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const refreshRequests = useCallback(
+    async (params?: { keyword?: string; page?: number; limit?: number }) => {
+      setLoading(true);
+      try {
+        const res = await expertRequestsApi.getRequests({
+          keyword: params?.keyword,
+          page: params?.page ?? 1,
+          limit: params?.limit ?? 10,
+        });
+        setRequests(res);
+      } catch (err) {
+        exceptionHandler(err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
 
   return (
     <ExpertRequestsContext.Provider

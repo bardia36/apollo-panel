@@ -62,6 +62,23 @@ export default function RequestsTable({ requests, loading }: Props) {
 
   const { refreshRequests } = useExpertRequests();
 
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      setPage(newPage);
+      refreshRequests({ page: newPage, limit: rowsPerPage });
+    },
+    [refreshRequests, rowsPerPage]
+  );
+
+  const handleRowsPerPageChange = useCallback(
+    (perPage: number) => {
+      setRowsPerPage(perPage);
+      setPage(1);
+      refreshRequests({ page: 1, limit: perPage });
+    },
+    [refreshRequests]
+  );
+
   // variables -
   const headerColumns = useMemo(() => {
     if (visibleColumns === "all") return columns;
@@ -108,18 +125,13 @@ export default function RequestsTable({ requests, loading }: Props) {
   // - variables
 
   // top content -
-  const onRowsPerPageChange = useCallback((perPage: number) => {
-    setRowsPerPage(perPage);
-    setPage(1);
-  }, []);
-
   const onSearchChange = useCallback(
     (value: string) => {
       setFilterValue(value);
-      refreshRequests(value);
+      refreshRequests({ keyword: value, page: 1, limit: rowsPerPage });
       setPage(1);
     },
-    [refreshRequests]
+    [refreshRequests, rowsPerPage]
   );
 
   const onSendToArchive = () => {
@@ -139,7 +151,7 @@ export default function RequestsTable({ requests, loading }: Props) {
           onSearchChange={onSearchChange}
           setStatusFilter={setStatusFilter}
           setVisibleColumns={setVisibleColumns}
-          onRowsPerPageChange={setRowsPerPage}
+          onRowsPerPageChange={handleRowsPerPageChange}
           setSelectedKeys={setSelectedKeys}
           onSendToArchive={onSendToArchive}
         />
@@ -149,7 +161,7 @@ export default function RequestsTable({ requests, loading }: Props) {
     filterValue,
     statusFilter,
     visibleColumns,
-    onRowsPerPageChange,
+    handleRowsPerPageChange,
     requests.docs,
     onSearchChange,
   ]);
@@ -161,14 +173,14 @@ export default function RequestsTable({ requests, loading }: Props) {
       <>
         <BottomContent
           page={page}
-          setPage={setPage}
+          setPage={handlePageChange}
           selectedKeys={selectedKeys}
           filteredItems={filteredItems}
           requests={requests}
         />
       </>
     );
-  }, [selectedKeys, items.length, page, requests.totalPage]);
+  }, [selectedKeys, items.length, page, requests.totalPage, handlePageChange]);
   // - bottom content
 
   // table data -
