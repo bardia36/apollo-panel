@@ -31,15 +31,6 @@ export default defineConfig({
             return "animations";
           }
 
-          // Form related
-          if (
-            id.includes("react-hook-form") ||
-            id.includes("@hookform/resolvers") ||
-            id.includes("yup")
-          ) {
-            return "forms";
-          }
-
           // UI Components
           if (id.includes("@heroui/")) {
             return "ui-components";
@@ -48,11 +39,6 @@ export default defineConfig({
           // Data management
           if (id.includes("@tanstack/react-query") || id.includes("zustand")) {
             return "data-management";
-          }
-
-          // i18n
-          if (id.includes("i18next") || id.includes("react-i18next")) {
-            return "i18n";
           }
         },
       },
