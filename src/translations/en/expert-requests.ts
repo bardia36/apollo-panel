@@ -33,11 +33,16 @@ export default {
   randomImages: "Random Images",
   randomImagesDescription:
     "Images related to screen capture video should be random.",
-  reportDescription:"Specify the desired statuses and time range to get the report.",
+  reportDescription:
+    "Specify the desired statuses and time range to get the report.",
   request: "Request",
   requestDetail: "Request Detail",
   requestExpiry: "Request Expiry",
+  requestExpiry24H: "24 hours",
+  requestExpiry48H: "48 hours",
   requestExpiryDescription: "After this time, the request will expire.",
+  requestExpiryUnlimited: "No expiration",
+  requestExpiryUntilDayEnd: "Until end of day",
   requests: "Requests",
   requestsManagement: "Requests Management",
   requestsPageDescription: "View and manage online visit request list",

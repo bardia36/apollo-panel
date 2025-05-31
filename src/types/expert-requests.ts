@@ -300,11 +300,14 @@ export type GetRequestsParams = {
 };
 
 export type RequestsSetting = {
-  expiration_time: "UNTIL_DAY_END" | "24H" | "48H" | "UNLIMITED";
-  photo_deadline: "30" | "40" | "50" | "60" | "120" | "180";
-  random_picture: boolean;
-  more_fields: {
+  expiration_time?: SettingExpirationTime;
+  photo_deadline?: SettingPhotoDeadline;
+  random_picture?: boolean;
+  more_fields?: {
     title: string;
     type: "INPUT" | "SELECT" | "CHECKBOX" | "RADIO" | "DATE" | "TIME";
   }[];
 };
+
+export type SettingExpirationTime = "UNTIL_DAY_END" | "24H" | "48H" | "UNLIMITED"
+export type SettingPhotoDeadline = "30" | "40" | "50" | "60" | "120" | "180";
