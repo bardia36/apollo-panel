@@ -309,5 +309,9 @@ export type RequestsSetting = {
   }[];
 };
 
-export type SettingExpirationTime = "UNTIL_DAY_END" | "24H" | "48H" | "UNLIMITED"
+export type SettingExpirationTime =
+  | "UNTIL_DAY_END"
+  | "24H"
+  | "48H"
+  | "UNLIMITED";
 export type SettingPhotoDeadline = "30" | "40" | "50" | "60" | "120" | "180";
