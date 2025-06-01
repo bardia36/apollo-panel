@@ -52,6 +52,7 @@ export type ExpertRequestInfo = {
 export type ExpertRequestDetail = ExpertRequestInfo & {
   _id: string;
   key: string;
+  req_id: string;
   price: number;
   documents?: {
     img?: RequestCommonInfo[];

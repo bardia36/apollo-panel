@@ -8,6 +8,9 @@ export default {
   carGroup: "Car Group",
   casesDetail: "Cases Detail",
   chooseWayToSend: "Choose Way to Send",
+  code: "Code",
+  confirmRequest: "Confirm Request",
+  content: "Content",
   createRequest: "Create Request",
   createReviewRequest: "Create Review Request",
   createReviewRequestDescription:
@@ -16,8 +19,11 @@ export default {
   deleteTemplate: "Delete Template",
   deleteTemplateDescription:
     "All information will be deleted and cannot be recovered! Are you sure?",
+  details: "Details",
   finalCheck: "Final Check",
   getReport: "Get Report",
+  history: "History",
+  lastUpdate: "Last update at",
   linkData: "Link Data",
   management: "Management",
   moreInfo: "More Info",
