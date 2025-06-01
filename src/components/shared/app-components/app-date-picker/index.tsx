@@ -19,7 +19,7 @@ const convertToValidDate = (date: DateObject | null): string => {
   if (!date) return "";
 
   // Convert to Gregorian date
-  const gregorianDate = date.convert("gregorian");
+  const gregorianDate = date.convert("gregorian" as any);
 
   // Format as YYYY-MM-DD
   const year = gregorianDate.year;

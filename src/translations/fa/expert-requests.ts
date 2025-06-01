@@ -8,6 +8,9 @@ export default {
   carGroup: "گروه خودرو",
   casesDetail: "جزئیات موارد درخواستی",
   chooseWayToSend: "انتخاب نحوه ارسال",
+  code: "کد",
+  confirmRequest: "تایید درخواست",
+  content: "محتویات",
   createRequest: "ایجاد درخواست",
   createReviewRequest: "ایجاد درخواست کارشناسی",
   createReviewRequestDescription:
@@ -16,8 +19,11 @@ export default {
   deleteTemplate: "حذف تمپلیت",
   deleteTemplateDescription:
     "تمام اطلاعات آن حذف خواهد شد و امکان بازگشت وجود ندارد! اطمینان دارید؟",
+  details: "مشخصات",
   finalCheck: "بررسی نهایی",
   getReport: "دریافت گزارش",
+  history: "تاریخچه",
+  lastUpdate: "آخرین آپدیت در تاریخ",
   linkData: "محتویات لینک",
   management: "مدیریت",
   moreInfo: "اطلاعات بیشتر",
@@ -33,7 +39,7 @@ export default {
   randomImagesDescription: "تصاویر مربوط به ویدئوی screen capture تصادفی باشد.",
   reportDescription:
     "برای دریافت گزارش وضعیت‌های مورد نظر و بازه زمانی را مشخص کنید.",
-  request: "درخواست‌",
+  request: "درخواست",
   requestDetail: "مشخصات درخواست",
   requestExpiry: "زمان انقضای درخواست",
   requestExpiry24H: "۲۴ ساعت",
@@ -67,4 +73,8 @@ export default {
   wantedItem: "مورد درخواستی",
   wantedItemTitle: "عنوان مورد درخواستی",
   wantedRequests: "درخواستی‌ها",
+  lackOfEvidence: "نقص مدرک",
+  sendInspectionLink: "ارسال لینک کارشناسی",
+  rejectRequest: "رد درخواست",
+  retrieveRequest: "بازیابی درخواست",
 };

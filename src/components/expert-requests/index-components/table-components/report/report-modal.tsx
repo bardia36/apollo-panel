@@ -21,6 +21,7 @@ import {
 import { statusOptions } from "@/components/expert-requests/constants";
 import { NeutralChip } from "@/components/shared/request-status-chip";
 import { AppDatePicker } from "@/components/shared/app-components/app-date-picker";
+import { exceptionHandler } from "@/apis/exception";
 
 type ReportModalProps = {
   isOpen: boolean;
@@ -48,19 +49,10 @@ export const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
         to_date: toDate,
       };
 
-      const response = await expertRequestsApi.exportReport(params);
-      // response is always a Blob now!
-      const url = window.URL.createObjectURL(response);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `inspection_requests.${fileType}`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      await expertRequestsApi.exportReport(params);
       onClose();
     } catch (error) {
-      console.error("Export failed:", error);
+      exceptionHandler(error);
     } finally {
       setIsLoading(false);
     }
