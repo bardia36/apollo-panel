@@ -19,7 +19,7 @@ export type ApiBody = {
 
 export type ServerType = "AUTHENTICATION_SERVER" | "BASE_SERVER";
 
-export type RequestOption = {
+export type RequestOptions = {
   url?: string;
   adminApi?: boolean;
   tokenLess?: boolean;

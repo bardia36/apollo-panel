@@ -3,9 +3,12 @@ import { expertRequestsApi } from "@/apis/expert-requests";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { EditHeader } from "./edit-header";
+import { RequestTabContent } from "./request-tab-content";
+import { useState } from "react";
 
 export default function () {
   const { id } = useParams();
+  const [activeTab, setActiveTab] = useState("details");
 
   const { data: request, isLoading } = useQuery({
     queryKey: ["expert-request", id],
@@ -23,16 +26,15 @@ export default function () {
 
   return (
     !!request && (
-      <div>
+      <>
         <EditHeader
-          requestData={{
-            _id: request?._id,
-            status: request?.status,
-            key: request?.key,
-            createdAt: request?.createdAt,
-          }}
+          requestData={request}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
         />
-      </div>
+
+        <RequestTabContent activeTab={activeTab} requestData={request} />
+      </>
     )
   );
 }

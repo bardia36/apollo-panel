@@ -14,6 +14,9 @@ import { ExpertRequestInfo } from "@/types/expert-requests";
 import { statusesMap } from "../../constants";
 import { copyToClipboard } from "@/utils/base";
 import { Link } from "react-router-dom";
+import { expertRequestsApi } from "@/apis/expert-requests";
+import { useExpertRequests } from "../context/expert-requests-context";
+import { exceptionHandler } from "@/apis/exception";
 
 export const RenderOrderNumberCell = ({
   orderNumber,
@@ -112,65 +115,78 @@ export const RenderCreatedAtCell = ({
   createdAt: ExpertRequestInfo["createdAt"];
 }) => <DateDisplay isoDate={createdAt} />;
 
-export const RenderActionsCell = ({ id }: { id: ExpertRequestInfo["_id"] }) => (
-  <div className="relative flex justify-end items-center gap-2">
-    <Dropdown>
-      <DropdownTrigger>
-        <Button isIconOnly size="sm" variant="light">
-          <Icon
-            icon="mdi:dots-vertical"
-            width={20}
-            height={20}
-            className="text-default-500"
-          />
-        </Button>
-      </DropdownTrigger>
+export const RenderActionsCell = ({ id }: { id: ExpertRequestInfo["_id"] }) => {
+  const { refreshRequests } = useExpertRequests();
 
-      <DropdownMenu aria-label="Request item actions">
-        <DropdownItem
-          key="discard-selection"
-          startContent={
+  const handleSendToArchive = async () => {
+    try {
+      await expertRequestsApi.deleteRequestById(id);
+      await refreshRequests();
+    } catch (err) {
+      exceptionHandler(err);
+    }
+  };
+
+  return (
+    <div className="relative flex justify-end items-center gap-2">
+      <Dropdown>
+        <DropdownTrigger>
+          <Button isIconOnly size="sm" variant="light">
             <Icon
-              icon="solar:close-square-bold"
-              width={18}
-              height={18}
-              className="text-default-600"
+              icon="mdi:dots-vertical"
+              width={20}
+              height={20}
+              className="text-default-500"
             />
-          }
-          className="hover:bg-default-200 text-default-foreground"
-          onPress={() => console.log("discard")}
-        >
-          {t("shared.discardSelection")}
-        </DropdownItem>
+          </Button>
+        </DropdownTrigger>
 
-        <DropdownItem
-          key="send-to-archive"
-          startContent={
-            <Icon
-              icon="solar:bookmark-circle-bold"
-              width={18}
-              height={18}
-              className="text-default-600"
-            />
-          }
-          className="hover:bg-default-200 text-default-foreground"
-          onPress={() => console.log("send to archive")}
-        >
-          {t("expertRequests.sendToArchive")}
-        </DropdownItem>
-      </DropdownMenu>
-    </Dropdown>
+        <DropdownMenu aria-label="Request item actions">
+          <DropdownItem
+            key="discard-selection"
+            startContent={
+              <Icon
+                icon="solar:close-square-bold"
+                width={18}
+                height={18}
+                className="text-default-600"
+              />
+            }
+            className="hover:bg-default-200 text-default-foreground"
+            onPress={() => console.log("discard")}
+          >
+            {t("shared.discardSelection")}
+          </DropdownItem>
 
-    <Button
-      as={Link}
-      to={`/expert-requests/${id}`}
-      isIconOnly
-      size="sm"
-      variant="solid"
-      radius="full"
-      className="bg-default bg-opacity-40"
-    >
-      <Icon icon="tabler:eye-filled" width={20} height={20} />
-    </Button>
-  </div>
-);
+          <DropdownItem
+            key="send-to-archive"
+            startContent={
+              <Icon
+                icon="solar:bookmark-circle-bold"
+                width={18}
+                height={18}
+                className="text-default-600"
+              />
+            }
+            className="hover:bg-default-200 text-default-foreground"
+            onPress={handleSendToArchive}
+          >
+            {t("expertRequests.sendToArchive")}
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+
+      <Button
+        as={Link}
+        to={`/expert-requests/${id}`}
+        isIconOnly
+        size="sm"
+        variant="solid"
+        radius="full"
+        className="bg-default bg-opacity-40"
+      >
+        <Icon icon="tabler:eye-filled" width={20} height={20} />
+      </Button>
+    </div>
+  );
+};

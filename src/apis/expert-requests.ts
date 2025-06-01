@@ -9,7 +9,6 @@ import {
   RegisterRequestResponse,
   RequestsSetting,
 } from "@/types/expert-requests";
-import { File } from "buffer";
 
 const BASE_URL = "panel/inspection-request";
 
@@ -31,6 +30,13 @@ export const expertRequestsApi = {
     });
   },
 
+  deleteRequestById(id: string) {
+    return axiosHandler<ExpertRequestDetail>(BASE_URL, {
+      action: id,
+      method: RequestMethod.DELETE,
+    });
+  },
+
   registerRequest(id: string, body: RegisterRequestBody) {
     return axiosHandler<RegisterRequestResponse>(BASE_URL, {
       action: id,
@@ -40,7 +46,7 @@ export const expertRequestsApi = {
   },
 
   exportReport(params: ExportReportParams) {
-    return axiosHandler<File>(BASE_URL, {
+    return axiosHandler(BASE_URL, {
       action: "export",
       method: RequestMethod.GET,
       params,
