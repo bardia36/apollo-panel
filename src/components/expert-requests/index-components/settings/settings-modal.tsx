@@ -9,12 +9,247 @@ import {
   DropdownMenu,
   DropdownItem,
   Switch,
+  Skeleton,
 } from "@heroui/react";
 import { t } from "i18next";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { ReactNode, useState } from "react";
-import { FieldChip } from "@/components/shared/field-chip";
-import { TemplateField } from "@/types/templates";
+import { ReactNode, useState, useEffect } from "react";
+// import { FieldChip } from "@/components/shared/field-chip";
+// import { TemplateField } from "@/types/templates";
+import { expertRequestsApi } from "@/apis/expert-requests";
+import {
+  RequestsSetting,
+  SettingExpirationTime,
+  SettingPhotoDeadline,
+} from "@/types/expert-requests";
+
+const REQUEST_EXPIRY_OPTIONS = [
+  {
+    label: t("expertRequests.requestExpiryUntilDayEnd"),
+    value: "UNTIL_DAY_END",
+  },
+  { label: t("expertRequests.requestExpiry24H"), value: "24H" },
+  { label: t("expertRequests.requestExpiry48H"), value: "48H" },
+  { label: t("expertRequests.requestExpiryUnlimited"), value: "UNLIMITED" },
+];
+
+const REQUEST_TIMEOUT_OPTIONS = [
+  { label: `30 ${t("shared.seconds")}`, value: "30" },
+  { label: `40 ${t("shared.seconds")}`, value: "40" },
+  { label: `50 ${t("shared.seconds")}`, value: "50" },
+  { label: `60 ${t("shared.seconds")}`, value: "60" },
+  { label: `120 ${t("shared.seconds")}`, value: "120" },
+  { label: `180 ${t("shared.seconds")}`, value: "180" },
+];
+
+// const DEFAULT_FIELDS: TemplateField[] = [
+//   { _id: "1", title: "آدرس کاربر", type: "OTHER", active: true },
+//   { _id: "2", title: "تاریخ تولد", type: "OTHER", active: true },
+//   { _id: "3", title: "تلفن همراه", type: "OTHER", active: true },
+//   { _id: "4", title: "کد ملی", type: "OTHER", active: true },
+//   { _id: "5", title: "آدرس شرکت بیمه‌نامه", type: "OTHER", active: false },
+// ];
+
+// function filterValidFields(fields: TemplateField[]): {
+//   title: string;
+//   type: "INPUT" | "SELECT" | "CHECKBOX" | "RADIO" | "DATE" | "TIME";
+// }[] {
+//   return fields
+//     .filter((f) =>
+//       ["INPUT", "SELECT", "CHECKBOX", "RADIO", "DATE", "TIME"].includes(f.type)
+//     )
+//     .map((f) => ({ title: f.title, type: f.type }));
+// }
+
+type Props = {
+  isOpen: boolean;
+  onClose: () => void;
+};
+
+export const SettingsModal = ({ isOpen, onClose }: Props) => {
+  const [editExpiry, setEditExpiry] = useState(false);
+  const [editTimeout, setEditTimeout] = useState(false);
+  const [expiry, setExpiry] = useState<SettingExpirationTime>("24H");
+  const [timeout, setTimeout] = useState<SettingPhotoDeadline>("50");
+  const [randomPicture, setRandomPicture] = useState<boolean | undefined>(
+    false
+  );
+  // const [moreInfoEnabled, setMoreInfoEnabled] = useState(false);
+  // const [fields, setFields] = useState<RequestsSetting["more_fields"]>();
+  const [loading, setLoading] = useState(false);
+  const [initLoading, setInitLoading] = useState(false);
+
+  useEffect(() => {
+    getSettings();
+  }, [isOpen]);
+
+  const getSettings = async () => {
+    if (!isOpen) return;
+    setInitLoading(true);
+    expertRequestsApi
+      .getRequestsSetting()
+      .then((settings) => {
+        setExpiry(settings?.expiration_time || "24H");
+        setTimeout(settings?.photo_deadline || "50");
+        setRandomPicture(settings?.random_picture);
+        // setMoreInfoEnabled(!!settings?.more_fields?.length);
+        // if (settings?.more_fields) setFields(settings?.more_fields);
+      })
+      .finally(() => setInitLoading(false));
+  };
+
+  const updateSetting = async (overwriteBody: Partial<RequestsSetting>) => {
+    setLoading(true);
+    try {
+      await expertRequestsApi.updateRequestsSetting({
+        expiration_time: expiry,
+        photo_deadline: timeout,
+        random_picture: randomPicture,
+        // more_fields: moreInfoEnabled ? filterValidFields(fields) : [],
+        ...overwriteBody,
+      });
+      await getSettings();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAcceptExpiry = () => {
+    setEditExpiry(false);
+    updateSetting({ expiration_time: expiry });
+  };
+
+  const handleAcceptTimeout = () => {
+    setEditTimeout(false);
+    updateSetting({ photo_deadline: timeout });
+  };
+
+  const handleRandomPicture = (val: boolean) => {
+    setRandomPicture(val);
+    updateSetting({ random_picture: val });
+  };
+
+  // const handleToggleField = (field: TemplateField) => {
+  //   setFields((prev) => {
+  //     const updated = prev.map((f) =>
+  //       f._id === field._id ? { ...f, active: !f.active } : f
+  //     );
+  //     updateSetting({ more_fields: updated });
+  //     return updated;
+  //   });
+  // };
+
+  const onModalClose = () => {
+    setEditExpiry(false);
+    setEditTimeout(false);
+    onClose();
+  };
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={onModalClose}
+      size="xl"
+      classNames={{ closeButton: "top-[1rem] md:top-[1.25rem] left-[1.5rem]" }}
+      isDismissable={false}
+      isKeyboardDismissDisabled={true}
+    >
+      <ModalContent>
+        <ModalHeader className="flex flex-col gap-1 md:pt-6">
+          <div className="flex items-center gap-2 text-lg font-semibold">
+            <Icon
+              icon="solar:settings-bold"
+              width={20}
+              height={20}
+              className="text-default-foreground"
+            />
+            {t("expertRequests.requestsSettings")}
+          </div>
+        </ModalHeader>
+
+        <ModalBody className="pb-6">
+          {initLoading || loading ? (
+            <div className="w-full space-y-4">
+              <Skeleton className="h-20 rounded-xl bg-default-200" />
+              <Skeleton className="h-20 rounded-xl bg-default-200" />
+              <Skeleton className="h-20 rounded-xl bg-default-200" />
+              <Skeleton className="h-20 rounded-xl bg-default-200" />
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <EditFieldRow
+                label={t("expertRequests.requestExpiry")}
+                description={t("expertRequests.requestExpiryDescription")}
+                editMode={editExpiry}
+                onEdit={() => setEditExpiry(true)}
+                onAccept={handleAcceptExpiry}
+                viewContent={
+                  REQUEST_EXPIRY_OPTIONS.find((o) => o.value === expiry)?.label
+                }
+                editContent={
+                  <SettingsDropdown
+                    options={REQUEST_EXPIRY_OPTIONS}
+                    value={expiry}
+                    ariaLabel="expiry-options"
+                    onChange={(val) => setExpiry(val as SettingExpirationTime)}
+                  />
+                }
+              />
+
+              <EditFieldRow
+                label={t("expertRequests.photoTimeout")}
+                description={t("expertRequests.photoTimeoutDescription")}
+                editMode={editTimeout}
+                onEdit={() => setEditTimeout(true)}
+                onAccept={handleAcceptTimeout}
+                viewContent={
+                  <>
+                    {timeout} {t("shared.seconds")}
+                  </>
+                }
+                editContent={
+                  <SettingsDropdown
+                    options={REQUEST_TIMEOUT_OPTIONS}
+                    value={timeout}
+                    ariaLabel="timeout-options"
+                    onChange={(val) => setTimeout(val as SettingPhotoDeadline)}
+                  />
+                }
+              />
+
+              <div className="flex items-center gap-4 p-4 bg-default-100 rounded-xl">
+                <div className="flex-1">
+                  <div className="text-foreground-700">
+                    {t("expertRequests.randomImages")}
+                  </div>
+
+                  <div className="text-sm text-foreground-500">
+                    {t("expertRequests.randomImagesDescription")}
+                  </div>
+                </div>
+
+                <Switch
+                  isSelected={randomPicture}
+                  disabled={loading}
+                  onChange={(e) => handleRandomPicture(e.target.checked)}
+                />
+              </div>
+
+              {/* <MoreInfoSection
+                enabled={moreInfoEnabled}
+                fields={fields}
+                label={t("expertRequests.moreInfo")}
+                description={t("expertRequests.moreInfoDescription")}
+                onToggle={setMoreInfoEnabled}
+                onToggleField={handleToggleField}
+              /> */}
+            </div>
+          )}
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+};
 
 // EditFieldRow: reusable row for edit/view mode fields
 const EditFieldRow = ({
@@ -81,81 +316,20 @@ const EditFieldRow = ({
   </div>
 );
 
-// MoreInfoSection: modular section for more info fields
-const MoreInfoSection = ({
-  enabled,
-  fields,
-  label,
-  description,
-  onToggle,
-  onToggleField,
-}: {
-  enabled: boolean;
-  fields: TemplateField[];
-  label: string;
-  description: string;
-  onToggle: (v: boolean) => void;
-  onToggleField: (field: TemplateField) => void;
-}) => (
-  <div className="p-4 bg-default-100 rounded-xl">
-    <div className="flex items-center gap-4 ">
-      <div className="flex-1">
-        <div className="text-foreground-700">{label}</div>
-        <div className="text-sm text-foreground-500">{description}</div>
-      </div>
-      <Switch checked={enabled} onChange={(e) => onToggle(e.target.checked)} />
-    </div>
-
-    {enabled && (
-      <div className="flex flex-wrap gap-2 mt-4">
-        {fields.map((field) => (
-          <FieldChip
-            key={field._id}
-            field={field}
-            onClick={() => onToggleField(field)}
-          />
-        ))}
-      </div>
-    )}
-  </div>
-);
-
-const REQUEST_EXPIRY_OPTIONS = [
-  { label: "تا قبل از پایان روز", value: "end_of_day" },
-  { label: "۲۴ ساعت", value: "24h" },
-  { label: "۴۸ ساعت", value: "48h" },
-  { label: "بدون انقضا", value: "no_expiry" },
-];
-
-const REQUEST_TIMEOUT_OPTIONS = [
-  { label: "۵۰ ثانیه", value: "50" },
-  { label: "۱۰۰ ثانیه", value: "100" },
-  { label: "۱۵۰ ثانیه", value: "150" },
-  { label: "۲۰۰ ثانیه", value: "200" },
-];
-
-const DEFAULT_FIELDS: TemplateField[] = [
-  { _id: "1", title: "آدرس کاربر", type: "OTHER", active: true },
-  { _id: "2", title: "تاریخ تولد", type: "OTHER", active: true },
-  { _id: "3", title: "تلفن همراه", type: "OTHER", active: true },
-  { _id: "4", title: "کد ملی", type: "OTHER", active: true },
-  { _id: "5", title: "آدرس شرکت بیمه‌نامه", type: "OTHER", active: false },
-];
-
 type SettingsDropdownProps = {
   options: { label: string; value: string }[];
   value: string;
-  onChange: (value: string) => void;
   ariaLabel: string;
   className?: string;
+  onChange: (value: string) => void;
 };
 
 const SettingsDropdown = ({
   options,
   value,
-  onChange,
   ariaLabel,
-  className = "",
+  className,
+  onChange,
 }: SettingsDropdownProps) => (
   <Dropdown>
     <DropdownTrigger>
@@ -175,6 +349,7 @@ const SettingsDropdown = ({
         {options.find((o) => o.value === value)?.label}
       </Button>
     </DropdownTrigger>
+
     <DropdownMenu
       aria-label={ariaLabel}
       onAction={(key) => onChange(key as string)}
@@ -186,114 +361,41 @@ const SettingsDropdown = ({
   </Dropdown>
 );
 
-type Props = {
-  isOpen: boolean;
-  onClose: () => void;
-};
+// MoreInfoSection: modular section for more info fields
+// const MoreInfoSection = ({
+//   enabled,
+//   fields,
+//   label,
+//   description,
+//   onToggle,
+//   onToggleField,
+// }: {
+//   enabled: boolean;
+//   fields: TemplateField[];
+//   label: string;
+//   description: string;
+//   onToggle: (v: boolean) => void;
+//   onToggleField: (field: TemplateField) => void;
+// }) => (
+//   <div className="p-4 bg-default-100 rounded-xl">
+//     <div className="flex items-center gap-4 ">
+//       <div className="flex-1">
+//         <div className="text-foreground-700">{label}</div>
+//         <div className="text-sm text-foreground-500">{description}</div>
+//       </div>
+//       <Switch checked={enabled} onChange={(e) => onToggle(e.target.checked)} />
+//     </div>
 
-export const SettingsModal = ({ isOpen, onClose }: Props) => {
-  const [editExpiry, setEditExpiry] = useState(false);
-  const [editTimeout, setEditTimeout] = useState(false);
-  const [expiry, setExpiry] = useState("24h");
-  const [timeout, setTimeout] = useState("50");
-  const [randomImages, setRandomImages] = useState(true);
-  const [moreInfoEnabled, setMoreInfoEnabled] = useState(false);
-  const [fields, setFields] = useState<TemplateField[]>(DEFAULT_FIELDS);
-
-  const handleToggleField = (field: TemplateField) => {
-    setFields((prev) =>
-      prev.map((f) => (f._id === field._id ? { ...f, active: !f.active } : f))
-    );
-  };
-
-  return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      size="xl"
-      classNames={{ closeButton: "top-[1rem] md:top-[1.25rem] left-[1.5rem]" }}
-    >
-      <ModalContent>
-        <ModalHeader className="flex flex-col gap-1 md:pt-6">
-          <div className="flex items-center gap-2 text-lg font-semibold">
-            <Icon
-              icon="solar:settings-bold"
-              width={20}
-              height={20}
-              className="text-default-foreground"
-            />
-            {t("expertRequests.requestsSettings")}
-          </div>
-        </ModalHeader>
-
-        <ModalBody className="pb-6">
-          <div className="space-y-4">
-            <EditFieldRow
-              label={t("expertRequests.requestExpiry")}
-              description={t("expertRequests.requestExpiryDescription")}
-              editMode={editExpiry}
-              onEdit={() => setEditExpiry(true)}
-              onAccept={() => setEditExpiry(false)}
-              viewContent={
-                REQUEST_EXPIRY_OPTIONS.find((o) => o.value === expiry)?.label
-              }
-              editContent={
-                <SettingsDropdown
-                  options={REQUEST_EXPIRY_OPTIONS}
-                  value={expiry}
-                  onChange={setExpiry}
-                  ariaLabel="expiry-options"
-                />
-              }
-            />
-
-            <EditFieldRow
-              label={t("expertRequests.photoTimeout")}
-              description={t("expertRequests.photoTimeoutDescription")}
-              editMode={editTimeout}
-              onEdit={() => setEditTimeout(true)}
-              onAccept={() => setEditTimeout(false)}
-              viewContent={
-                <>
-                  {timeout} {t("shared.seconds")}
-                </>
-              }
-              editContent={
-                <SettingsDropdown
-                  options={REQUEST_TIMEOUT_OPTIONS}
-                  value={timeout}
-                  onChange={setTimeout}
-                  ariaLabel="timeout-options"
-                />
-              }
-            />
-
-            <div className="flex items-center gap-4 p-4 bg-default-100 rounded-xl">
-              <div className="flex-1">
-                <div className="text-foreground-700">
-                  {t("expertRequests.randomImages")}
-                </div>
-                <div className="text-sm text-foreground-500">
-                  {t("expertRequests.randomImagesDescription")}
-                </div>
-              </div>
-              <Switch
-                checked={randomImages}
-                onChange={(e) => setRandomImages(e.target.checked)}
-              />
-            </div>
-
-            <MoreInfoSection
-              enabled={moreInfoEnabled}
-              onToggle={setMoreInfoEnabled}
-              fields={fields}
-              onToggleField={handleToggleField}
-              label={t("expertRequests.moreInfo")}
-              description={t("expertRequests.moreInfoDescription")}
-            />
-          </div>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
-  );
-};
+//     {enabled && (
+//       <div className="flex flex-wrap gap-2 mt-4">
+//         {fields.map((field) => (
+//           <FieldChip
+//             key={field._id}
+//             field={field}
+//             onClick={() => onToggleField(field)}
+//           />
+//         ))}
+//       </div>
+//     )}
+//   </div>
+// );

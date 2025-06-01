@@ -5,14 +5,24 @@ import {
   useState,
   useCallback,
 } from "react";
-import { ExpertRequestResponse } from "@/types/expert-requests";
+import {
+  ExpertRequestResponse,
+  GetRequestsParams,
+} from "@/types/expert-requests";
 import { expertRequestsApi } from "@/apis/expert-requests";
 import { exceptionHandler } from "@/apis/exception";
 
 interface ExpertRequestsContextType {
   requests: ExpertRequestResponse;
   loading: boolean;
-  refreshRequests: (keyword?: string) => Promise<void>;
+  refreshRequests: (params?: {
+    keyword?: string;
+    page?: number;
+    limit?: number;
+    sortColumn?: string;
+    sortValue?: GetRequestsParams["sortValue"];
+    is_archive?: boolean;
+  }) => Promise<void>;
 }
 
 const ExpertRequestsContext = createContext<
@@ -35,17 +45,34 @@ export const ExpertRequestsProvider = ({
     totalPage: 1,
   });
 
-  const refreshRequests = useCallback(async (keyword?: string) => {
-    setLoading(true);
-    try {
-      const res = await expertRequestsApi.getRequests({ keyword });
-      setRequests(res);
-    } catch (err) {
-      exceptionHandler(err);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const refreshRequests = useCallback(
+    async (params?: {
+      keyword?: string;
+      page?: number;
+      limit?: number;
+      sortColumn?: string;
+      sortValue?: GetRequestsParams["sortValue"];
+      is_archive?: boolean;
+    }) => {
+      setLoading(true);
+      try {
+        const res = await expertRequestsApi.getRequests({
+          keyword: params?.keyword,
+          page: params?.page ?? 1,
+          limit: params?.limit ?? 10,
+          sortColumn: params?.sortColumn ?? "order_number",
+          sortValue: params?.sortValue ?? "1",
+          is_archive: params?.is_archive ?? false,
+        });
+        setRequests(res);
+      } catch (err) {
+        exceptionHandler(err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
 
   return (
     <ExpertRequestsContext.Provider

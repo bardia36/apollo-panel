@@ -1,5 +1,5 @@
 // modules
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import { t } from "i18next";
 // components
 import {
@@ -29,7 +29,7 @@ import { AddOrReplaceKey } from "@/utils/base";
 import { TopContent } from "./top-content";
 import { BottomContent } from "./bottom-content";
 import { columns, statusOptions } from "../../constants";
-import { Key } from "@react-types/shared";
+import { Key, SortDescriptor } from "@react-types/shared";
 import { useExpertRequests } from "../context/expert-requests-context";
 
 type Props = {
@@ -40,7 +40,6 @@ type Props = {
 // TODO:
 // 1. Add archived requests needs to the table
 // 2. Change Table content by changing table-type-tabs component
-// 3. Check filters and sort with backend
 export default function RequestsTable({ requests, loading }: Props) {
   // states -
   const [filterValue, setFilterValue] = useState("");
@@ -61,6 +60,46 @@ export default function RequestsTable({ requests, loading }: Props) {
   // - states
 
   const { refreshRequests } = useExpertRequests();
+
+  // Reset states when requests change (tab change)
+  useEffect(() => {
+    setPage(1);
+    setRowsPerPage(10);
+    setFilterValue("");
+    setSelectedKeys(new Set([]));
+    setStatusFilter("all");
+    setSortDescriptor({
+      column: "order_number",
+      direction: "ascending",
+    });
+  }, [requests.docs]);
+
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      setPage(newPage);
+      refreshRequests({
+        page: newPage,
+        limit: rowsPerPage,
+        is_archive:
+          requests.docs.length > 0 && requests.docs[0].status === "ARCHIVED",
+      });
+    },
+    [refreshRequests, rowsPerPage, requests.docs]
+  );
+
+  const handleRowsPerPageChange = useCallback(
+    (perPage: number) => {
+      setRowsPerPage(perPage);
+      setPage(1);
+      refreshRequests({
+        page: 1,
+        limit: perPage,
+        is_archive:
+          requests.docs.length > 0 && requests.docs[0].status === "ARCHIVED",
+      });
+    },
+    [refreshRequests, requests.docs]
+  );
 
   // variables -
   const headerColumns = useMemo(() => {
@@ -92,34 +131,16 @@ export default function RequestsTable({ requests, loading }: Props) {
 
     return filteredItems.slice(start, end);
   }, [page, filteredItems, rowsPerPage]);
-
-  const sortedItems = useMemo(() => {
-    if (items) {
-      return [...items].sort((a, b) => {
-        const first = a[sortDescriptor.column];
-        const second = b[sortDescriptor.column];
-        const cmp =
-          first && second ? (first < second ? -1 : first > second ? 1 : 0) : 0;
-
-        return sortDescriptor.direction === "descending" ? -cmp : cmp;
-      });
-    }
-  }, [sortDescriptor, items]);
   // - variables
 
   // top content -
-  const onRowsPerPageChange = useCallback((perPage: number) => {
-    setRowsPerPage(perPage);
-    setPage(1);
-  }, []);
-
   const onSearchChange = useCallback(
     (value: string) => {
       setFilterValue(value);
-      refreshRequests(value);
+      refreshRequests({ keyword: value, page: 1, limit: rowsPerPage });
       setPage(1);
     },
-    [refreshRequests]
+    [refreshRequests, rowsPerPage]
   );
 
   const onSendToArchive = () => {
@@ -139,7 +160,7 @@ export default function RequestsTable({ requests, loading }: Props) {
           onSearchChange={onSearchChange}
           setStatusFilter={setStatusFilter}
           setVisibleColumns={setVisibleColumns}
-          onRowsPerPageChange={setRowsPerPage}
+          onRowsPerPageChange={handleRowsPerPageChange}
           setSelectedKeys={setSelectedKeys}
           onSendToArchive={onSendToArchive}
         />
@@ -149,7 +170,7 @@ export default function RequestsTable({ requests, loading }: Props) {
     filterValue,
     statusFilter,
     visibleColumns,
-    onRowsPerPageChange,
+    handleRowsPerPageChange,
     requests.docs,
     onSearchChange,
   ]);
@@ -161,14 +182,14 @@ export default function RequestsTable({ requests, loading }: Props) {
       <>
         <BottomContent
           page={page}
-          setPage={setPage}
+          setPage={handlePageChange}
           selectedKeys={selectedKeys}
           filteredItems={filteredItems}
           requests={requests}
         />
       </>
     );
-  }, [selectedKeys, items.length, page, requests.totalPage]);
+  }, [selectedKeys, items.length, page, requests.totalPage, handlePageChange]);
   // - bottom content
 
   // table data -
@@ -226,6 +247,23 @@ export default function RequestsTable({ requests, loading }: Props) {
     []
   );
 
+  const handleSortChange = useCallback(
+    (descriptor: SortDescriptor) => {
+      const column = descriptor.column as string;
+      setSortDescriptor({
+        column: column as keyof ExpertRequestInfo,
+        direction: descriptor.direction,
+      });
+      refreshRequests({
+        page: page,
+        limit: rowsPerPage,
+        sortColumn: column,
+        sortValue: descriptor.direction === "ascending" ? "1" : "-1",
+      });
+    },
+    [refreshRequests, page, rowsPerPage]
+  );
+
   return (
     <Table
       isHeaderSticky
@@ -236,12 +274,7 @@ export default function RequestsTable({ requests, loading }: Props) {
       selectedKeys={selectedKeys}
       sortDescriptor={sortDescriptor}
       onSelectionChange={(keys) => setSelectedKeys(keys as Set<string>)}
-      onSortChange={(descriptor) =>
-        setSortDescriptor({
-          column: descriptor.column as keyof ExpertRequestInfo,
-          direction: descriptor.direction,
-        })
-      }
+      onSortChange={handleSortChange}
     >
       <TableHeader columns={headerColumns}>
         {(column) => (
@@ -258,7 +291,7 @@ export default function RequestsTable({ requests, loading }: Props) {
       <TableBody
         isLoading={loading}
         emptyContent={t("expertRequests.noRequestFound")}
-        items={sortedItems}
+        items={filteredItems}
       >
         {(item) => (
           <TableRow key={`${item.order_number} - ${item.createdAt}`}>
