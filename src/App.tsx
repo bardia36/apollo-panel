@@ -13,12 +13,15 @@ import { RouterProvider, RouteTitleHandler } from "@/routes/RouterProvider";
 // Contexts
 import { BreadcrumbProvider } from "@/contexts/breadcrumbContext";
 import { CookieValues } from "./types/auth";
+import { useLocalizedDigits } from "@/hooks/useLocalizedDigits";
 
 function App() {
   const [cookie] = useCookies<"AUTH", CookieValues>(["AUTH"]);
   const [initializing, setInitializing] = useState(true);
   const { setTheme } = useTheme();
   const { setAuth } = useAuthStore();
+
+  useLocalizedDigits();
 
   useEffect(() => {
     setAccount();
