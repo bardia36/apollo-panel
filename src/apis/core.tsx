@@ -1,4 +1,4 @@
-import type { ErrorExceptions, RequestOption, ServerType } from "@/types/api";
+import type { ErrorExceptions, RequestOptions, ServerType } from "@/types/api";
 import { stringify } from "qs";
 import axios, { AxiosError, type AxiosRequestConfig } from "axios";
 import useAuthStore from "@/stores/auth-store";
@@ -15,7 +15,7 @@ const statusConfig = {
 
 function requestConfig(
   endpointBaseUrl: string,
-  options: RequestOption
+  options: RequestOptions
 ): AxiosRequestConfig {
   const restUrl: string = [endpointBaseUrl, options.action]
     .filter((item) => !!item)
@@ -44,7 +44,7 @@ function requestConfig(
 
 export async function axiosHandler<T>(
   url: string,
-  options: RequestOption
+  options: RequestOptions
 ): Promise<T> {
   const req = requestConfig(url, options);
 
@@ -72,7 +72,7 @@ function getBaseUrl(serverType?: ServerType) {
 async function errorHandler(
   err: AxiosError<ErrorExceptions>,
   url: string,
-  options: RequestOption
+  options: RequestOptions
 ): Promise<ErrorExceptions> {
   if (
     err.message.includes("ENETUNREACH") ||

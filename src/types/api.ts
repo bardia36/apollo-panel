@@ -1,4 +1,4 @@
-import type { GenericAbortSignal, Method, ResponseType } from "axios";
+import type { GenericAbortSignal, Method } from "axios";
 
 export enum RequestMethod {
   POST = "POST",
@@ -19,7 +19,7 @@ export type ApiBody = {
 
 export type ServerType = "AUTHENTICATION_SERVER" | "BASE_SERVER";
 
-export type RequestOption = {
+export type RequestOptions = {
   url?: string;
   adminApi?: boolean;
   tokenLess?: boolean;
@@ -30,7 +30,6 @@ export type RequestOption = {
   token?: string;
   signal?: GenericAbortSignal;
   serverType?: ServerType;
-  responseType?: ResponseType;
 };
 
 export interface RequestError {

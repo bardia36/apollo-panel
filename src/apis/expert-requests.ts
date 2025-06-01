@@ -50,7 +50,6 @@ export const expertRequestsApi = {
       action: "export",
       method: RequestMethod.GET,
       params,
-      responseType: "blob",
     });
   },
 
