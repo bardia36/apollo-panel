@@ -18,9 +18,9 @@ import {
   ExportReportParams,
   ExpertRequestStatus,
 } from "@/types/expert-requests";
-import { AppInput } from "@/components/shared/app-components/app-input";
 import { statusOptions } from "@/components/expert-requests/constants";
 import { NeutralChip } from "@/components/shared/request-status-chip";
+import { AppDatePicker } from "@/components/shared/app-components/app-date-picker";
 
 type ReportModalProps = {
   isOpen: boolean;
@@ -49,23 +49,15 @@ export const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
       };
 
       const response = await expertRequestsApi.exportReport(params);
-
-      // Create a blob from the response and trigger download
-      const blob = new Blob([response.toString()], {
-        type:
-          fileType === "xlsx"
-            ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            : "text/csv",
-      });
-      const url = window.URL.createObjectURL(blob);
+      // response is always a Blob now!
+      const url = window.URL.createObjectURL(response);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `report-${new Date().toISOString()}.${fileType}`;
+      link.download = `inspection_requests.${fileType}`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-
       onClose();
     } catch (error) {
       console.error("Export failed:", error);
@@ -126,7 +118,12 @@ export const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
                   <div className="flex flex-wrap gap-2">
                     {items.map(
                       (status) =>
-                        status.data && <NeutralChip status={status.data} />
+                        status.data && (
+                          <NeutralChip
+                            status={status.data}
+                            key={status.data.uid}
+                          />
+                        )
                     )}
                   </div>
                 );
@@ -139,51 +136,29 @@ export const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
             </Select>
 
             <div className="grid grid-cols-2 gap-4 md:gap-6">
-              <div>
-                <AppInput
-                  value={fromDate}
-                  type="text"
-                  placeholder="1403/01/01"
-                  label={t("shared.fromDate")}
-                  labelPlacement="outside"
-                  classNames={{
-                    label: "text-xs !text-default-600",
-                  }}
-                  onChange={(e) => setFromDate(e.target.value)}
-                  className="w-full"
-                  endContent={
-                    <Icon
-                      icon="solar:calendar-date-outline"
-                      width={20}
-                      height={20}
-                      className="text-default-400"
-                    />
-                  }
-                />
-              </div>
+              <AppDatePicker
+                value={fromDate}
+                onChange={setFromDate}
+                placeholder="1403/01/01"
+                label={t("shared.fromDate")}
+                labelPlacement="outside"
+                classNames={{
+                  label: "text-xs !text-default-600",
+                }}
+                className="w-full"
+              />
 
-              <div>
-                <AppInput
-                  value={toDate}
-                  type="text"
-                  placeholder="1403/06/30"
-                  label={t("shared.toDate")}
-                  labelPlacement="outside"
-                  classNames={{
-                    label: "text-xs !text-default-600",
-                  }}
-                  className="w-full"
-                  onChange={(e) => setToDate(e.target.value)}
-                  endContent={
-                    <Icon
-                      icon="solar:calendar-date-outline"
-                      width={20}
-                      height={20}
-                      className="text-default-400"
-                    />
-                  }
-                />
-              </div>
+              <AppDatePicker
+                value={toDate}
+                onChange={setToDate}
+                placeholder="1403/06/30"
+                label={t("shared.toDate")}
+                labelPlacement="outside"
+                classNames={{
+                  label: "text-xs !text-default-600",
+                }}
+                className="w-full"
+              />
             </div>
 
             <div>

@@ -9,7 +9,6 @@ import {
   RegisterRequestResponse,
   RequestsSetting,
 } from "@/types/expert-requests";
-import { File } from "buffer";
 
 const BASE_URL = "panel/inspection-request";
 
@@ -40,10 +39,11 @@ export const expertRequestsApi = {
   },
 
   exportReport(params: ExportReportParams) {
-    return axiosHandler<File>(BASE_URL, {
+    return axiosHandler(BASE_URL, {
       action: "export",
       method: RequestMethod.GET,
       params,
+      responseType: "blob",
     });
   },
 

@@ -1,4 +1,4 @@
-import type { GenericAbortSignal, Method } from "axios";
+import type { GenericAbortSignal, Method, ResponseType } from "axios";
 
 export enum RequestMethod {
   POST = "POST",
@@ -30,6 +30,7 @@ export type RequestOption = {
   token?: string;
   signal?: GenericAbortSignal;
   serverType?: ServerType;
+  responseType?: ResponseType;
 };
 
 export interface RequestError {
