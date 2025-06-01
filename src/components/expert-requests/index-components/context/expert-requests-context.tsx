@@ -21,6 +21,7 @@ interface ExpertRequestsContextType {
     limit?: number;
     sortColumn?: string;
     sortValue?: GetRequestsParams["sortValue"];
+    is_archive?: boolean;
   }) => Promise<void>;
 }
 
@@ -51,6 +52,7 @@ export const ExpertRequestsProvider = ({
       limit?: number;
       sortColumn?: string;
       sortValue?: GetRequestsParams["sortValue"];
+      is_archive?: boolean;
     }) => {
       setLoading(true);
       try {
@@ -58,8 +60,9 @@ export const ExpertRequestsProvider = ({
           keyword: params?.keyword,
           page: params?.page ?? 1,
           limit: params?.limit ?? 10,
-          sortColumn: params?.sortColumn?? 'order_number',
-          sortValue: params?.sortValue?? '1',
+          sortColumn: params?.sortColumn ?? "order_number",
+          sortValue: params?.sortValue ?? "1",
+          is_archive: params?.is_archive ?? false,
         });
         setRequests(res);
       } catch (err) {

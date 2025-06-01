@@ -30,6 +30,13 @@ export const expertRequestsApi = {
     });
   },
 
+  deleteRequestById(id: string) {
+    return axiosHandler<ExpertRequestDetail>(BASE_URL, {
+      action: id,
+      method: RequestMethod.DELETE,
+    });
+  },
+
   registerRequest(id: string, body: RegisterRequestBody) {
     return axiosHandler<RegisterRequestResponse>(BASE_URL, {
       action: id,

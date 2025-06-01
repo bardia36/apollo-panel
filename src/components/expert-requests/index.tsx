@@ -26,6 +26,13 @@ function ExpertRequestsContent() {
   function onTabChange(key: Key | null) {
     if (key === null) setActiveTab("current");
     else setActiveTab(key as string);
+
+    // Reset pagination and refresh with new archive status
+    refreshRequests({
+      page: 1,
+      limit: 10,
+      is_archive: key === "archive",
+    });
   }
 
   return (

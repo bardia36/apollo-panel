@@ -1,5 +1,5 @@
 // modules
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import { t } from "i18next";
 // components
 import {
@@ -61,22 +61,44 @@ export default function RequestsTable({ requests, loading }: Props) {
 
   const { refreshRequests } = useExpertRequests();
 
+  // Reset states when requests change (tab change)
+  useEffect(() => {
+    setPage(1);
+    setRowsPerPage(10);
+    setFilterValue("");
+    setSelectedKeys(new Set([]));
+    setStatusFilter("all");
+    setSortDescriptor({
+      column: "order_number",
+      direction: "ascending",
+    });
+  }, [requests.docs]);
+
   const handlePageChange = useCallback(
     (newPage: number) => {
       setPage(newPage);
-      refreshRequests({ page: newPage, limit: rowsPerPage });
+      refreshRequests({
+        page: newPage,
+        limit: rowsPerPage,
+        is_archive:
+          requests.docs.length > 0 && requests.docs[0].status === "ARCHIVED",
+      });
     },
-    [refreshRequests, rowsPerPage]
+    [refreshRequests, rowsPerPage, requests.docs]
   );
 
-  // TODO: when change perPage to a smaller number and the page is greater than 1, the pagination will be broken
   const handleRowsPerPageChange = useCallback(
     (perPage: number) => {
       setRowsPerPage(perPage);
       setPage(1);
-      refreshRequests({ page: 1, limit: perPage });
+      refreshRequests({
+        page: 1,
+        limit: perPage,
+        is_archive:
+          requests.docs.length > 0 && requests.docs[0].status === "ARCHIVED",
+      });
     },
-    [refreshRequests]
+    [refreshRequests, requests.docs]
   );
 
   // variables -

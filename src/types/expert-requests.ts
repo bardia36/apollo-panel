@@ -290,6 +290,7 @@ export type GetRequestsParams = {
   order_number?: string;
   reference_id?: string;
   key?: string;
+  is_archive?: boolean;
   price?: number;
   keyword?: string;
   page?: number;
