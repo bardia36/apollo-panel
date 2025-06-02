@@ -1,5 +1,10 @@
 import CollapsableCards from "@/components/shared/collapsable-cards";
+import { NeutralChip } from "@/components/shared/request-status-chip";
 import { ExpertRequestDetail } from "@/types/expert-requests";
+import { Button, Chip } from "@heroui/react";
+import { statusesMap } from "../../constants";
+import { t } from "i18next";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 interface RequestDetailsProps {
   requestData: ExpertRequestDetail;
@@ -9,59 +14,109 @@ export default function RequestDetails({ requestData }: RequestDetailsProps) {
   return (
     <div className="grid lg:grid-cols-12 gap-4">
       <div className="col-span-12 grid lg:grid-cols-12 gap-12 bg-default-50 p-4 rounded-large">
-        <div className="flex flex-col bg-content1 shadow-md rounded-3xl lg:col-span-8 p-6">
-          <div className="min-h-[156px] w-full flex items-center justify-center">
-            <CollapsableCards
-              items={[
-                {
-                  title: "test",
-                  path: null,
-                  name: "test",
-                  isLicense: true,
-                },
-                {
-                  title: "test2",
-                  path: null,
-                  name: "test2",
-                },
-                {
-                  title: "test3",
-                  path: "test3",
-                  name: "test3",
-                },
-                {
-                  title: "test4",
-                  path: "test4",
-                  name: "test4",
-                },
-              ]}
-            />
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-2 text-right">
-              <span>در انتظار بررسی</span>
-              <div className="w-5 h-5 bg-primary-500 rounded-full" />
-              <span>که</span>
-              <span>روز و ۴ ساعت ۲</span>
-              <span>این درخواست</span>
-              <span>است.</span>
+        <div className="flex flex-col items-center bg-content1 shadow-md rounded-3xl lg:col-span-8 p-6">
+          {!!requestData.documents?.img?.length && (
+            <div className="min-h-[156px] w-full flex items-center justify-center">
+              {/* TODO: handle if img is less and more than 4, handle license */}
+              <CollapsableCards items={requestData.documents?.img} />
             </div>
+          )}
 
-            <p className="text-right">
-              لطفاً پس از مشاهده محتویات و بررسی آن، درخواست را تأیید یا رد
-              کنید.
-            </p>
+          <div className="flex flex-col items-center gap-6">
+            <div className="flex flex-col items-center gap-2">
+              <div className="flex items-center gap-2 text-right text-xl font-light">
+                <span>این درخواست</span>
+                <Chip variant="flat" radius="full">
+                  {requestData.createdAt}
+                </Chip>
+                <span>است که</span>
+                <NeutralChip
+                  status={{
+                    uid: requestData.status,
+                    label: statusesMap[requestData.status].label,
+                  }}
+                />
+                <span>است.</span>
+              </div>
 
-            <div className="flex items-center gap-4 mt-2">
-              <button className="bg-primary-500 text-white px-6 py-2 rounded-lg flex items-center gap-2">
-                <span>▶</span>
-                مشاهده محتویات
-              </button>
-              <button className="border border-default-200 px-6 py-2 rounded-lg flex items-center gap-2">
-                <span>⬇</span>
-                دانلود
-              </button>
+              {["COMPLETED", "REVIEWED"].includes(requestData.status) && (
+                <p className="text-xl font-light">
+                  لطفاً پس از مشاهده محتویات و بررسی آن، درخواست را تأیید یا رد
+                  کنید.
+                </p>
+              )}
+
+              {requestData.status === "DRAFT" && (
+                <p className="text-xl font-light">
+                  لطفاً محتویات کارشناسی را مشخص و لینک آن را به کاربر ارسال
+                  کنید.
+                </p>
+              )}
+
+              {requestData.status === "ACCEPTED" && (
+                <p className="text-xl font-light">
+                  می‌توانید محتویات را مشاهده یا دانلود کنید.
+                </p>
+              )}
+
+              {["PENDING", "OPENED", "IN_PROGRESS"].includes(
+                requestData.status
+              ) && (
+                <p className="text-xl font-light">
+                  لطفاً محتویات کارشناسی را مشخص و لینک آن را به کاربر ارسال
+                  کنید.
+                </p>
+              )}
+
+              {["CANCELED", "EXPIRED", "REJECTED", "FAILED"].includes(
+                requestData.status
+              ) && (
+                <>
+                  <p className="text-xl font-light">
+                    درصورت نیاز، درخواست جدید ایجاد کنید.
+                  </p>
+
+                  <Button
+                    variant="flat"
+                    radius="lg"
+                    className="text-default-foreground mt-4"
+                  >
+                    <Icon
+                      icon="solar:document-medicine-bold"
+                      className="min-w-5 h-5"
+                    />
+                    {t("expertRequests.createRequest")}
+                  </Button>
+                </>
+              )}
+
+              {["COMPLETED", "REVIEWED", "ACCEPTED"].includes(
+                requestData.status
+              ) && (
+                <div className="flex items-center gap-2 mt-2">
+                  <Button
+                    variant="light"
+                    radius="lg"
+                    className="text-default-foreground"
+                  >
+                    دانلود
+                    <Icon
+                      icon="solar:archive-down-minimlistic-bold-duotone"
+                      className="min-w-5 h-5"
+                    />
+                  </Button>
+
+                  <Button
+                    variant="shadow"
+                    radius="lg"
+                    size="lg"
+                    color="primary"
+                  >
+                    مشاهده محتویات
+                    <Icon icon="solar:play-bold" className="min-w-5 h-5" />
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>
