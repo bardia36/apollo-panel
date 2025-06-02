@@ -28,6 +28,8 @@ export default {
   excelFile: "Excel file",
   expired: "Expired",
   files: "Files",
+  isThat: "is that",
+  is: "is",
   fileType: "File type",
   fromDate: "From date",
   images: "Images",

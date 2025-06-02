@@ -32,6 +32,8 @@ export default {
   fromDate: "از تاریخ",
   images: "تصاویر",
   inProgress: "در حال تکمیل",
+  is: "است",
+  isThat: "است که",
   item: "مورد",
   mobile: "تلفن همراه",
   model: "مدل",
