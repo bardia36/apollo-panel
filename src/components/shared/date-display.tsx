@@ -1,13 +1,14 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { FC } from "react";
-import { formatDateTime } from "@/utils/base";
+import { formatDate } from "@/utils/base";
 
 type Props = {
   isoDate: string;
+  className?: string;
 };
 
-const DateDisplay: FC<Props> = ({ isoDate }) => {
-  const { formattedDate, formattedTime } = formatDateTime(isoDate);
+export const TwoLineDateDisplay: FC<Pick<Props, "isoDate">> = ({ isoDate }) => {
+  const { formattedDate, formattedTime } = formatDate(isoDate);
 
   return (
     <div className="w-fit text-default-500">
@@ -23,4 +24,13 @@ const DateDisplay: FC<Props> = ({ isoDate }) => {
   );
 };
 
-export default DateDisplay;
+export const OneLineDateDisplay: FC<Props> = ({ isoDate, className }) => {
+  const { formattedDate, formattedTime, formattedWeekDay } =
+    formatDate(isoDate);
+
+  return (
+    <span className={className}>
+      {formattedWeekDay} {formattedDate} - {formattedTime}
+    </span>
+  );
+};

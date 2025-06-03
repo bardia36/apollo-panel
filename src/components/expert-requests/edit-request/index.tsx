@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { EditHeader } from "./edit-header";
 import { RequestTabContent } from "./request-tab-content";
 import { useState } from "react";
+import RequestLoadingSkeleton from "./edit-skeleton";
 
 export default function () {
   const { id } = useParams();
@@ -22,7 +23,7 @@ export default function () {
     enabled: !!id,
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <RequestLoadingSkeleton />;
 
   return (
     !!request && (

@@ -4,7 +4,7 @@ import { Chip } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
-import { FieldChip } from "@/components/shared/field-chip";
+import { FieldChip } from "@/components/shared/templates/field-chip";
 
 const getFieldsInfo = (requestData: RegisterRequestResponse) => {
   const templateFields = requestData.template_id.fields.map((f) => f.title);

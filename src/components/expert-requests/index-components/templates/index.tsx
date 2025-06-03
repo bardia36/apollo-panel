@@ -24,7 +24,7 @@ import { exceptionHandler } from "@/apis/exception.tsx";
 import { Template, Templates } from "@/types/templates";
 // components
 import { AvailableTemplates } from "./available-templates.tsx";
-import { TemplateFields } from "./components/template-fields.tsx";
+import { TemplateFields } from "@/components/shared/templates/template-fields.tsx";
 import { TemplatesLoadingSkeleton } from "./components/loading-component.tsx";
 import { TemplateDetailsHeader } from "./components/template-details-header.tsx";
 import { useTemplateFields } from "./components/useTemplateFields.tsx";

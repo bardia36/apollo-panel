@@ -11,7 +11,7 @@ import {
 import { ExpertRequestDetail } from "@/types/expert-requests";
 import { statusesMap } from "../constants";
 import { Icon } from "@iconify/react";
-import { formatDateTime, truncateString } from "@/utils/base";
+import { formatDate, truncateString } from "@/utils/base";
 import { t } from "i18next";
 import { NeutralChip } from "@/components/shared/request-status-chip";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
@@ -26,7 +26,7 @@ export const EditHeader = ({
   onTabChange: (key: string) => void;
 }) => {
   const statusMap = statusesMap[requestData.status];
-  const { formattedTime, formattedDate } = formatDateTime(
+  const { formattedTime, formattedDate } = formatDate(
     requestData.createdAt
   );
   const { isMdAndUp } = useBreakpoint();

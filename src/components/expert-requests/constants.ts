@@ -53,7 +53,7 @@ export const statusOptions: StatusOption[] = [
 
 export const statusesMap: StatusesMap = {
   DRAFT: {
-    fadedBg: "foreground-50",
+    fadedBg: "default-50",
     bg: "foreground-50 border border-foreground-200 border-dashed",
     text: "default-500",
     label: t("shared.draft"),

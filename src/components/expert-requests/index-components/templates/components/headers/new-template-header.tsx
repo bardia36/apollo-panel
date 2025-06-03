@@ -1,6 +1,6 @@
 import { t } from "i18next";
 import { ChangeEvent, useEffect, useState } from "react";
-import FieldsCountChip from "../fields-count-chip";
+import FieldsCountChip from "@/components/shared/templates/fields-count-chip";
 import { ImageUploader } from "@/components/shared/uploader";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import { useTemplateFields } from "../useTemplateFields";
