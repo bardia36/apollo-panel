@@ -1,7 +1,7 @@
 import { ExpertRequestDetail } from "@/types/expert-requests";
 import { formatDate } from "@/utils/base";
 import { t } from "i18next";
-import CopyButton from "../../../../shared/copy-button";
+import CopyButton from "@/components/shared/copy-button";
 import { Select, SelectItem } from "@heroui/react";
 
 type RequestLocationProps = {
@@ -23,11 +23,12 @@ export default function RequestLocation({ locations }: RequestLocationProps) {
           <Select
             defaultSelectedKeys={["1"]}
             size="sm"
+            aria-label={`${formattedTime} - ${formattedDate}`}
             variant="flat"
             fullWidth
           >
             {/* {times.map((time) => ( */}
-            <SelectItem key={"1"}>
+            <SelectItem key={"1"} aria-label={`${formattedTime} - ${formattedDate}`}>
               {formattedTime} - {formattedDate}
             </SelectItem>
             {/* ))} */}
@@ -39,7 +40,6 @@ export default function RequestLocation({ locations }: RequestLocationProps) {
             <CopyButton
               value={location.address}
               btnFit
-              size="3"
               iconSize="12"
               iconClassName="text-content4-foreground"
             />
