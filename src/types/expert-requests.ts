@@ -63,7 +63,6 @@ export type ExpertRequestDetail = ExpertRequestInfo & {
     sequence: RequestCommonInfo[];
   };
   required_fields: TemplateField[];
-  // request_log
   locations: {
     lat: string;
     lng: string;
@@ -73,7 +72,6 @@ export type ExpertRequestDetail = ExpertRequestInfo & {
   }[];
   template_fields_count: number;
   template_id: Omit<Template, "_id">;
-  // previous_inspection;
   reviewers: {
     owner: {
       userName: string;
@@ -96,15 +94,17 @@ export type ExpertRequestDetail = ExpertRequestInfo & {
       code: string;
       color: string;
     };
+    vin?: string;
     // vehicle_fuel;
     // vehicle_category
     // vehicle_usage;
     // license_plate_number
     // motor_code
     // chassis_number
-    vin?: string;
     // fanavaran_vin
   };
+  // request_log
+  // previous_inspection;
 };
 
 export type RequestCommonInfo = {

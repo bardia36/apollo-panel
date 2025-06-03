@@ -5,12 +5,14 @@ import ImagesStatusAlertSkeleton from "./loadings/images-status-alert-skeleton";
 import RequestUserSpecialistSkeleton from "./loadings/request-user-specialist-skeleton";
 import RequestLocationSkeleton from "./loadings/request-location-skeleton";
 import RequestTemplateSkeleton from "./loadings/request-template-skeleton";
+import RequestContentSkeleton from "./loadings/request-content-skeleton";
 
 const RequestStatus = lazy(() => import("./request-status"));
 const ImagesStatusAlert = lazy(() => import("./images-status-alert"));
 const RequestUserSpecialist = lazy(() => import("./request-user-specialist"));
 const RequestLocation = lazy(() => import("./request-location"));
 const RequestTemplate = lazy(() => import("./request-template"));
+const RequestContent = lazy(() => import("./request-content"));
 
 interface RequestDetailsProps {
   requestData: ExpertRequestDetail;
@@ -71,7 +73,11 @@ export default function RequestDetails({ requestData }: RequestDetailsProps) {
           </Suspense>
         </div>
 
-        <div className="lg:col-span-7 p-4 bg-content1 rounded-3xl">detail</div>
+        <div className="lg:col-span-7">
+          <Suspense fallback={<RequestContentSkeleton />}>
+            <RequestContent fields={requestData.required_fields}  />
+          </Suspense>
+        </div>
       </div>
     </div>
   );

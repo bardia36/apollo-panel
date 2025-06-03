@@ -42,6 +42,7 @@ export default {
   rejectRequest: "رد درخواست",
   reportDescription:    "برای دریافت گزارش وضعیت‌های مورد نظر و بازه زمانی را مشخص کنید.",
   request: "درخواست",
+  requestContent: "محتویات درخواست",
   requestDetail: "مشخصات درخواست",
   requestExpiry: "زمان انقضای درخواست",
   requestExpiry24H: "۲۴ ساعت",

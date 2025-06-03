@@ -40,6 +40,7 @@ export default {
   randomImagesDescription:    "Images related to screen capture video should be random.",
   reportDescription:    "Specify the desired statuses and time range to get the report.",
   request: "Request",
+  requestContent: "Request Content",
   requestDetail: "Request Detail",
   requestExpiry: "Request Expiry",
   requestExpiry24H: "24 hours",

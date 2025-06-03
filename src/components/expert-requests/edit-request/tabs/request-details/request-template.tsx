@@ -18,12 +18,12 @@ export default function RequestTemplate({
   price,
 }: RequestTemplateProps) {
   return (
-    <div>
-      <h6 className="text-xs mb-2.5 text-default-600">
+    <div className="h-full flex flex-col gap-2.5">
+      <h6 className="text-xs text-default-600">
         {t("expertRequests.requestTemplate")}
       </h6>
 
-      <div className="flex flex-col bg-content1 rounded-3xl gap-4 p-4">
+      <div className="flex-1 flex flex-col bg-content1 rounded-3xl gap-4 p-4">
         <div className="flex items-center gap-2">
           <Avatar
             className="bg-foreground-200 rounded-large"
