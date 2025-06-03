@@ -1,6 +1,8 @@
 export default {
   activateAndUseOtherTemplates: "Activate and Use Other Templates",
   addReqStepperDescription:    "Enter user information, expert case, and request details. Finally, the request link will be created and sent to the user.",
+  approximatePrice: "Approximate Price",
+  approximatePricePlaceholder: "Enter approximate price...",
   archive: "Archive",
   availableTemplates: "Available Templates",
   branch: "Branch",
@@ -52,6 +54,7 @@ export default {
   requestsSettings: "Requests Settings",
   requestStatus: "Request Status",
   requestSummary: "Request Summary",
+  requestTemplate: "Request Template",
   responsibleSpecialist: "Responsible Specialist",
   reviewAndConfirmMessage:    "Please review the content and confirm or reject the request.",
   reviewBySpecialist: "Review by Specialist",

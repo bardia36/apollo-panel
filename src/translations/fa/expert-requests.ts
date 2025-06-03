@@ -1,6 +1,8 @@
 export default {
   activateAndUseOtherTemplates: "فعال‌سازی و استفاده از سایر قالب‌ها",
   addReqStepperDescription:    "اطلاعات کاربر، مورد کارشناسی و جزئیات موارد درخواستی را وارد کنید. در انتها لینک درخواست ایجاد شده و برای کاربر ارسال می‌شود.",
+  approximatePrice: "ارزش تقریبی",
+  approximatePricePlaceholder: "مقدار ارزش تقریبی را وارد کنید...",
   archive: "بایگانی",
   availableTemplates: "تمپلیت‌های موجود",
   branch: "نمایندگی",
@@ -54,6 +56,7 @@ export default {
   requestsSettings: "تنظیمات درخواست‌ها",
   requestStatus: "وضعیت درخواست",
   requestSummary: "خلاصه درخواست",
+  requestTemplate: "قالب درخواست",
   responsibleSpecialist: "کارشناس مسئول",
   retrieveRequest: "بازیابی درخواست",
   reviewAndConfirmMessage:    "لطفاً پس از مشاهده محتویات و بررسی آن، درخواست را تأیید یا رد کنید.",
