@@ -9,7 +9,7 @@ import {
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { Template } from "@/types/templates";
-import FieldsCountChip from "../fields-count-chip";
+import FieldsCountChip from "@/components/shared/templates/fields-count-chip";
 import { useTemplateFields } from "../useTemplateFields";
 
 type ExistedTemplateDetailsHeaderProps = {

@@ -6,14 +6,26 @@ import { TemplateField } from "@/types/templates";
 type FieldChipProps = {
   field: TemplateField;
   className?: string;
+  readonly?: boolean;
   onClick?: () => void;
 };
-export const FieldChip = ({ field, className, onClick }: FieldChipProps) => {
+export const FieldChip = ({
+  field,
+  className,
+  readonly = false,
+  onClick,
+}: FieldChipProps) => {
   return (
     <Button
       variant="light"
-      className={cn("p-0 w-fit h-fit min-w-fit", className)}
-      onPress={onClick}
+      disableAnimation={readonly}
+      disableRipple={readonly}
+      className={cn(
+        "p-0 w-fit h-fit min-w-fit",
+        className,
+        readonly && "cursor-default"
+      )}
+      onPress={() => !readonly && onClick?.()}
     >
       <Chip
         isDisabled={!field.active}
