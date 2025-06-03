@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { TemplateCard } from "@/components/expert-requests/index-components/templates/available-templates";
-import { TemplateFields } from "@/components/expert-requests/index-components/templates/components/template-fields";
 import { Templates, TemplateField } from "@/types/templates";
 import { exceptionHandler } from "@/apis/exception";
 import { templatesApi } from "@/apis/templates";
 import { t } from "i18next";
-import FieldsCountChip from "@/components/expert-requests/index-components/templates/components/fields-count-chip";
+import { TemplateFields } from "@/components/shared/templates/template-fields";
+import FieldsCountChip from "@/components/shared/templates/fields-count-chip";
 import { StepperButtons } from "./stepper-buttons";
 import { expertRequestsApi } from "@/apis/expert-requests";
 import { StepTwoLoading } from "./loadings/step-two-loading";
