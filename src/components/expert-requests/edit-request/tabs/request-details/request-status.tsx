@@ -5,7 +5,7 @@ import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 
-export default function StatusFlowSteps({
+export default function RequestStatus({
   orderNumber,
   status,
 }: {

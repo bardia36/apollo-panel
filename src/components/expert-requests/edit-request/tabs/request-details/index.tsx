@@ -1,9 +1,9 @@
 import { Suspense, lazy } from "react";
 import { ExpertRequestDetail } from "@/types/expert-requests";
-import StatusFlowStepsSkeleton from "./loadings/images-status-alert-skeleton";
+import RequestStatusSkeleton from "./loadings/request-status-skeleton";
 import ImagesStatusAlertSkeleton from "./loadings/images-status-alert-skeleton";
 
-const StatusFlowSteps = lazy(() => import("./status-flow-steps"));
+const RequestStatus = lazy(() => import("./request-status"));
 const ImagesStatusAlert = lazy(() => import("./images-status-alert"));
 
 interface RequestDetailsProps {
@@ -23,8 +23,8 @@ export default function RequestDetails({ requestData }: RequestDetailsProps) {
         </Suspense>
 
         <div className="lg:col-span-4">
-          <Suspense fallback={<StatusFlowStepsSkeleton />}>
-            <StatusFlowSteps
+          <Suspense fallback={<RequestStatusSkeleton />}>
+            <RequestStatus
               orderNumber={requestData.order_number}
               status={requestData.status}
             />
