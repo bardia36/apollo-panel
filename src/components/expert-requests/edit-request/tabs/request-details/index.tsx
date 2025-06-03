@@ -15,12 +15,19 @@ export default function RequestDetails({ requestData }: RequestDetailsProps) {
     <div className="grid lg:grid-cols-12 gap-4">
       <div className="col-span-12 grid lg:grid-cols-12 gap-12 bg-default-50 p-4 rounded-large">
         <Suspense fallback={<ImagesStatusAlertSkeleton />}>
-          <ImagesStatusAlert requestData={requestData} />
+          <ImagesStatusAlert
+            documents={requestData.documents}
+            status={requestData.status}
+            createdAt={requestData.createdAt}
+          />
         </Suspense>
 
         <div className="lg:col-span-4">
           <Suspense fallback={<StatusFlowStepsSkeleton />}>
-            <StatusFlowSteps />
+            <StatusFlowSteps
+              orderNumber={requestData.order_number}
+              status={requestData.status}
+            />
           </Suspense>
         </div>
       </div>

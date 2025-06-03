@@ -9,65 +9,65 @@ import { t } from "i18next";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
 export default function ImagesStatusAlert({
-  requestData,
+  documents,
+  status,
+  createdAt,
 }: {
-  requestData: ExpertRequestDetail;
+  documents: ExpertRequestDetail["documents"];
+  status: ExpertRequestDetail["status"];
+  createdAt: ExpertRequestDetail["createdAt"];
 }) {
   return (
-    <div className="flex flex-col items-center bg-content1 shadow-md rounded-3xl lg:col-span-8 p-6">
-      {!!requestData.documents?.img?.length && (
+    <div className="flex flex-col items-center justify-center bg-content1 shadow-md rounded-3xl lg:col-span-8 p-6">
+      {!!documents?.img?.length && (
         <div className="min-h-[156px] w-full flex items-center justify-center">
           {/* TODO: handle if img is less and more than 4, handle license */}
-          <CollapsableCards items={requestData.documents?.img} />
+          <CollapsableCards items={documents?.img} />
         </div>
       )}
 
-      <div className="flex flex-col items-center gap-6">
-        <div className="flex flex-col items-center gap-2">
-          <div className="flex items-center gap-2 text-right text-xl font-light">
+      <div className="flex flex-col items-center gap-8 lg:gap-6">
+        <div className="flex flex-col items-center gap-2 text-center">
+          <div className="flex items-center justify-center flex-wrap gap-2 text-right text-xl font-light">
             <span>{t("expertRequests.thisRequest")}</span>
             <Chip variant="flat" radius="full">
-              {requestData.createdAt}
+              {createdAt}
             </Chip>
             <span>{t("shared.isThat")}</span>
             <NeutralChip
               status={{
-                uid: requestData.status,
-                label: statusesMap[requestData.status].label,
+                uid: status,
+                label: statusesMap[status].label,
               }}
             />
             <span>{t("shared.is")}</span>
           </div>
 
-          {["COMPLETED", "REVIEWED"].includes(requestData.status) && (
+          {["COMPLETED", "REVIEWED"].includes(status) && (
             <p className="text-xl font-light">
               {t("expertRequests.reviewAndConfirmMessage")}
             </p>
           )}
 
-          {requestData.status === "DRAFT" && (
+          {status === "DRAFT" && (
             <p className="text-xl font-light">
               {t("expertRequests.specifyContentAndSendLink")}
             </p>
           )}
 
-          {requestData.status === "ACCEPTED" && (
+          {status === "ACCEPTED" && (
             <p className="text-xl font-light">
               {t("expertRequests.viewOrDownloadContent")}
             </p>
           )}
 
-          {["PENDING", "OPENED", "IN_PROGRESS"].includes(
-            requestData.status
-          ) && (
+          {["PENDING", "OPENED", "IN_PROGRESS"].includes(status) && (
             <p className="text-xl font-light">
               {t("expertRequests.specifyContentAndSendLink")}
             </p>
           )}
 
-          {["CANCELED", "EXPIRED", "REJECTED", "FAILED"].includes(
-            requestData.status
-          ) && (
+          {["CANCELED", "EXPIRED", "REJECTED", "FAILED"].includes(status) && (
             <>
               <p className="text-xl font-light">
                 {t("expertRequests.createNewRequestIfNeeded")}
@@ -87,9 +87,7 @@ export default function ImagesStatusAlert({
             </>
           )}
 
-          {["COMPLETED", "REVIEWED", "ACCEPTED"].includes(
-            requestData.status
-          ) && (
+          {["COMPLETED", "REVIEWED", "ACCEPTED"].includes(status) && (
             <div className="flex items-center gap-2 mt-2">
               <Button
                 variant="light"
