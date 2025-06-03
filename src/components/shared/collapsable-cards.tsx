@@ -2,8 +2,6 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import { LazyImage } from "./lazy-image";
 import { RequestCommonInfo } from "@/types/expert-requests";
-import carPlaceholder from "@/assets/images/expert-requests/car-img-placeholder.webp";
-import licensePlaceholder from "@/assets/images/expert-requests/license-card-placeholder.webp";
 
 // Animation configurations
 const SPRING_CONFIG = { type: "spring", stiffness: 300, damping: 30 } as const;
@@ -52,7 +50,6 @@ type CardItemProps = {
 
 const CardItem = ({ itemsLength, item, index, isRevealed }: CardItemProps) => {
   const angles = getCardAngles(index, itemsLength, isRevealed);
-  const placeholder = item.isLicense ? licensePlaceholder : carPlaceholder;
 
   return (
     <motion.div
@@ -80,7 +77,6 @@ const CardItem = ({ itemsLength, item, index, isRevealed }: CardItemProps) => {
           height="100%"
           fit="cover"
           className="h-full"
-          placeholder={placeholder}
         />
       </div>
     </motion.div>
@@ -103,7 +99,7 @@ const CardStack = ({ items, isRevealed }: CardStackProps) => (
   >
     {items?.map((item, index) => (
       <CardItem
-        key={item.title + index}
+        key={item._id}
         item={item}
         itemsLength={items.length}
         index={index}

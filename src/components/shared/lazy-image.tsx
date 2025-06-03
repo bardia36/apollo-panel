@@ -41,7 +41,7 @@ export const LazyImage = ({
     };
   }, []);
 
-  const imageSrc = src ? `${fileServerUrl}${src}` : placeholder;
+  const imageSrc = src ? `${fileServerUrl}/${src}` : placeholder;
 
   return (
     <div ref={imageRef} className={className}>

@@ -130,6 +130,7 @@ export default function RequestUserSpecialist({
           <AvatarGroup>
             {reviewers.map((reviewer) => (
               <Tooltip
+                key={reviewer.owner.email}
                 content={`${reviewer.owner.userName} - ${reviewer.unit.title}`}
               >
                 <Avatar

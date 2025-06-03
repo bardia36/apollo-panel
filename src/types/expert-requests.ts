@@ -105,6 +105,7 @@ export type RequestCommonInfo = {
   name: string;
   title: string;
   path: string;
+  _id: string;
 };
 
 export type InspectionType =
