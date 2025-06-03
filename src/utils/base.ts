@@ -99,14 +99,26 @@ export function convertPersianToEnglishNumbers(input: string): string {
 export interface FormattedDateTime {
   formattedDate: string; // YYYY/MM/DD
   formattedTime: string; // HH:mm
+  formattedWeekDay: string; // Persian weekday name
 }
 
+const PERSIAN_WEEKDAYS = [
+  "یکشنبه",
+  "دوشنبه",
+  "سه‌شنبه",
+  "چهارشنبه",
+  "پنجشنبه",
+  "جمعه",
+  "شنبه",
+];
+
+// TODO: Support English and Arabic later
 /**
  * Formats an ISO date string to Jalali date and time
  * @param isoDate ISO date string
- * @returns Object containing formatted date (YYYY/MM/DD) and time (HH:mm)
+ * @returns Object containing formatted date (YYYY/MM/DD), time (HH:mm), and weekday name in Persian
  */
-export const formatDateTime = (isoDate: string): FormattedDateTime => {
+export const formatDate = (isoDate: string): FormattedDateTime => {
   const date = new Date(isoDate);
 
   // Convert to Jalali
@@ -118,8 +130,12 @@ export const formatDateTime = (isoDate: string): FormattedDateTime => {
   // Format time (HH:mm)
   const formattedTime = `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
 
+  // Get weekday name
+  const formattedWeekDay = PERSIAN_WEEKDAYS[date.getDay()];
+
   return {
     formattedDate,
     formattedTime,
+    formattedWeekDay,
   };
 };

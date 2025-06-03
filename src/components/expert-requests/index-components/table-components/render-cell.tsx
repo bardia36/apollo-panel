@@ -8,7 +8,7 @@ import {
   User,
   Button,
 } from "@heroui/react";
-import DateDisplay from "@/components/shared/date-display";
+import { TwoLineDateDisplay } from "@/components/shared/date-display";
 import { t } from "i18next";
 import { ExpertRequestInfo } from "@/types/expert-requests";
 import { statusesMap } from "../../constants";
@@ -113,7 +113,7 @@ export const RenderCreatedAtCell = ({
   createdAt,
 }: {
   createdAt: ExpertRequestInfo["createdAt"];
-}) => <DateDisplay isoDate={createdAt} />;
+}) => <TwoLineDateDisplay isoDate={createdAt} />;
 
 export const RenderActionsCell = ({ id }: { id: ExpertRequestInfo["_id"] }) => {
   const { refreshRequests } = useExpertRequests();

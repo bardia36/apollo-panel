@@ -14,7 +14,7 @@ import { Key } from "@react-types/shared";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import { exportToExcel } from "@/utils/excel";
 import { columns, statusesMap, statusOptions } from "../../constants";
-import { formatDateTime } from "@/utils/base";
+import { formatDate } from "@/utils/base";
 import { ReportModal } from "./report/report-modal";
 
 type TopContentProps = {
@@ -54,7 +54,7 @@ export const TopContent = ({
         doc.inspection_data?.vehicle_model?.name_en || "",
       [t("shared.status")]: statusesMap[doc.status].label,
       [t("shared.user")]: doc.owner?.userName || "",
-      [t("shared.createdAt")]: formatDateTime(doc.createdAt).formattedDate,
+      [t("shared.createdAt")]: formatDate(doc.createdAt).formattedDate,
       [t("expertRequests.branch")]: doc.unit?.title || "",
     }));
 
