@@ -1,11 +1,10 @@
 import { Suspense, lazy } from "react";
 import { ExpertRequestDetail } from "@/types/expert-requests";
 import Loading from "@/components/shared/loading";
+import RequestDetailsSkeleton from "./tabs/request-details/request-details-skeleton";
 
 // Lazy load tab content components
-const RequestDetails = lazy(
-  () => import("./tabs/request-details")
-);
+const RequestDetails = lazy(() => import("./tabs/request-details"));
 const RequestContent = lazy(() => import("./tabs/request-content"));
 const RequestHistory = lazy(() => import("./tabs/request-history"));
 
@@ -32,7 +31,11 @@ export const RequestTabContent = ({
   };
 
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense
+      fallback={
+        activeTab === "details" ? <RequestDetailsSkeleton /> : <Loading />
+      }
+    >
       <div className="mt-4">{renderContent()}</div>
     </Suspense>
   );
