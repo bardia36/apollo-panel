@@ -2,11 +2,13 @@ import { Suspense, lazy } from "react";
 import { ExpertRequestDetail } from "@/types/expert-requests";
 import RequestStatusSkeleton from "./loadings/request-status-skeleton";
 import ImagesStatusAlertSkeleton from "./loadings/images-status-alert-skeleton";
-import RequestUserSpecialist from "./request-user-specialist";
 import RequestUserSpecialistSkeleton from "./loadings/request-user-specialist-skeleton";
+import RequestLocationSkeleton from "./loadings/request-location-skeleton";
 
 const RequestStatus = lazy(() => import("./request-status"));
 const ImagesStatusAlert = lazy(() => import("./images-status-alert"));
+const RequestUserSpecialist = lazy(() => import("./request-user-specialist"));
+const RequestLocation = lazy(() => import("./request-location"));
 
 interface RequestDetailsProps {
   requestData: ExpertRequestDetail;
@@ -46,7 +48,13 @@ export default function RequestDetails({ requestData }: RequestDetailsProps) {
           </Suspense>
         </div>
 
-        <div className="lg:col-span-4">location</div>
+        {!!requestData.locations?.length && (
+          <div className="lg:col-span-4">
+            <Suspense fallback={<RequestLocationSkeleton />}>
+              <RequestLocation locations={requestData.locations} />
+            </Suspense>
+          </div>
+        )}
       </div>
 
       <div className="col-span-12 grid lg:grid-cols-12 gap-4 lg:col-span-8 bg-default-50 rounded-large p-4">

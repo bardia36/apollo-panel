@@ -64,7 +64,13 @@ export type ExpertRequestDetail = ExpertRequestInfo & {
   };
   required_fields: TemplateField[];
   // request_log
-  // locations
+  locations: {
+    lat: string;
+    lng: string;
+    address: string;
+    createdAt: string;
+    updatedAt: string;
+  }[];
   template_fields_count: number;
   template_id: Omit<Template, "_id">;
   // previous_inspection;

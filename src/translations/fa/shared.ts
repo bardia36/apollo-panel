@@ -35,6 +35,7 @@ export default {
   is: "است",
   isThat: "است که",
   item: "مورد",
+  location: "موقعیت",
   mobile: "تلفن همراه",
   model: "مدل",
   nextPage: "صفحه بعد",
