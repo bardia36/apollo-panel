@@ -43,7 +43,6 @@ export default function RequestUserSpecialist({
                 <div className="flex items-center gap-2">
                   <CopyButton
                     value={owner.phoneNumber}
-                    size="3"
                     btnFit
                     iconSize="12"
                     iconClassName="text-content4-foreground"
@@ -58,7 +57,6 @@ export default function RequestUserSpecialist({
                 <div className="flex items-center gap-2">
                   <CopyButton
                     value={owner.email}
-                    size="3"
                     btnFit
                     iconSize="12"
                     iconClassName="text-content4-foreground"

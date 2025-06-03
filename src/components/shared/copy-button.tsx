@@ -24,7 +24,7 @@ export default function CopyButton({
       isIconOnly
       variant="light"
       className={cn(
-        `w-${size} h-${size}`,
+        `w-${btnFit ? "fit" : size} h-${btnFit ? "fit" : size}`,
         btnFit && "min-w-fit min-h-fit",
         btnClassName
       )}
