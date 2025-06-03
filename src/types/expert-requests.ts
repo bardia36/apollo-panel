@@ -68,7 +68,22 @@ export type ExpertRequestDetail = ExpertRequestInfo & {
   template_fields_count: number;
   template_id: Omit<Template, "_id">;
   // previous_inspection;
-  // reviewers
+  reviewers: {
+    owner: {
+      userName: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      phoneNumber: string;
+    };
+    unit: {
+      title: string;
+      level: {
+        name: string;
+        level_number: number;
+      };
+    };
+  }[];
   inspection_data: ExpertRequestInfo["inspection_data"] & {
     color?: {
       name: string;

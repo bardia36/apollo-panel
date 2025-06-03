@@ -260,7 +260,7 @@ export default function StepThree({
             name="lead_specialist"
             render={({ field, fieldState: { error } }) => (
               <AppSelect
-                label={t("expertRequests.specialist")}
+                label={t("expertRequests.responsibleSpecialist")}
                 labelPlacement="outside"
                 placeholder={t("shared.choose")}
                 error={error}
