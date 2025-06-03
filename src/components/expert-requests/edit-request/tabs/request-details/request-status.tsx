@@ -1,6 +1,6 @@
+import CopyButton from "@/components/shared/copy-button";
 import { OneLineDateDisplay } from "@/components/shared/date-display";
 import { ExpertRequestDetail } from "@/types/expert-requests";
-import { copyToClipboard } from "@/utils/base";
 import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
@@ -97,19 +97,12 @@ export default function RequestStatus({
 
               <div className="flex items-center justify-between gap-2">
                 <span className="text-foreground">{orderNumber}</span>
-                <Button
-                  isIconOnly
-                  variant="light"
-                  className="min-w-6 w-6 h-6"
-                  onPress={copyToClipboard(orderNumber)}
-                >
-                  <Icon
-                    icon="solar:copy-linear"
-                    width={12}
-                    height={12}
-                    className="min-w-3 text-content4-foreground"
-                  />
-                </Button>
+                <CopyButton
+                  value={orderNumber}
+                  size="6"
+                  iconSize="12"
+                  iconClassName="text-content4-foreground"
+                />
               </div>
             </div>
           )}
