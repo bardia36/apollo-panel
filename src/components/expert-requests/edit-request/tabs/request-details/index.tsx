@@ -14,9 +14,9 @@ const RequestLocation = lazy(() => import("./request-location"));
 const RequestTemplate = lazy(() => import("./request-template"));
 const RequestContent = lazy(() => import("./request-content"));
 
-interface RequestDetailsProps {
+type RequestDetailsProps = {
   requestData: ExpertRequestDetail;
-}
+};
 
 export default function RequestDetails({ requestData }: RequestDetailsProps) {
   return (
@@ -75,7 +75,7 @@ export default function RequestDetails({ requestData }: RequestDetailsProps) {
 
         <div className="lg:col-span-7">
           <Suspense fallback={<RequestContentSkeleton />}>
-            <RequestContent fields={requestData.required_fields}  />
+            <RequestContent fields={requestData.required_fields} />
           </Suspense>
         </div>
       </div>

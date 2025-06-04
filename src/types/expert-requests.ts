@@ -103,7 +103,25 @@ export type ExpertRequestDetail = ExpertRequestInfo & {
     // chassis_number
     // fanavaran_vin
   };
-  // request_log
+  request_log: {
+    admin: {
+      userName: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      phoneNumber: string;
+    };
+    operation: string;
+    browser: string;
+    os: string;
+    platform: string;
+    source: string;
+    ip: string;
+    beforeStatus: ExpertRequestStatus;
+    status: ExpertRequestStatus;
+    createdAt: string;
+    updatedAt: string;
+  }[];
   // previous_inspection;
 };
 
