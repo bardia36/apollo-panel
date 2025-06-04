@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { FC } from "react";
-import { formatDateTime } from "@/utils/base";
+import { formatDate } from "@/utils/base";
 import { cn } from "@heroui/react";
 
 type Props = {
@@ -9,8 +9,8 @@ type Props = {
   className?: string;
 };
 
-const DateDisplay: FC<Props> = ({ isoDate, showTime = true, className }) => {
-  const { formattedDate, formattedTime } = formatDateTime(isoDate);
+export const DateDisplay: FC<Props> = ({ isoDate, showTime = true, className }) => {
+  const { formattedDate, formattedTime } = formatDate(isoDate);
 
   return (
     <div className={cn("w-fit text-default-500", className)}>
@@ -28,4 +28,13 @@ const DateDisplay: FC<Props> = ({ isoDate, showTime = true, className }) => {
   );
 };
 
-export default DateDisplay;
+export const OneLineDateDisplay: FC<Props> = ({ isoDate, className }) => {
+  const { formattedDate, formattedTime, formattedWeekDay } =
+    formatDate(isoDate);
+
+  return (
+    <span className={className}>
+      {formattedWeekDay} {formattedDate} - {formattedTime}
+    </span>
+  );
+};

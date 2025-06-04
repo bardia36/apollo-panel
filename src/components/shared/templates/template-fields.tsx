@@ -4,16 +4,18 @@ import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { useEffect, useRef, useState } from "react";
-import { FieldChip } from "@/components/shared/field-chip";
+import { FieldChip } from "@/components/shared/templates/field-chip";
 
 type Props = {
   templateFields: TemplateField[];
-  onFieldsActiveCountChange: (count: number) => void;
-  onFieldsChange: (fields: TemplateField[]) => void;
+  readonly?: boolean;
+  onFieldsActiveCountChange?: (count: number) => void;
+  onFieldsChange?: (fields: TemplateField[]) => void;
 };
 
 export const TemplateFields = ({
   templateFields,
+  readonly = false,
   onFieldsActiveCountChange,
   onFieldsChange,
 }: Props) => {
@@ -47,8 +49,9 @@ export const TemplateFields = ({
   ) => {
     const allFields = [...newImageFields, ...newFileFields, ...newAddedFields];
     const activeFields = allFields.filter((field) => field.active);
-    onFieldsActiveCountChange(activeFields.length);
-    onFieldsChange(allFields);
+    if (onFieldsActiveCountChange)
+      onFieldsActiveCountChange(activeFields.length);
+    if (onFieldsChange) onFieldsChange(allFields);
   };
 
   function checkChipTitleOverflows(title: string) {
@@ -81,6 +84,8 @@ export const TemplateFields = ({
     field: TemplateField,
     fieldType: "image" | "file" | "added"
   ) {
+    if (readonly) return;
+
     const stateSetters = {
       image: setImageFields,
       file: setFileFields,
@@ -121,6 +126,7 @@ export const TemplateFields = ({
               <FieldChip
                 key={`${field._id}-${field.title}`}
                 field={field}
+                readonly={readonly}
                 className={
                   checkChipTitleOverflows(field.title) ? "col-span-2" : ""
                 }
@@ -141,6 +147,7 @@ export const TemplateFields = ({
               <FieldChip
                 key={`${field._id}-${field.title}`}
                 field={field}
+                readonly={readonly}
                 className={
                   checkChipTitleOverflows(field.title) ? "col-span-2" : ""
                 }
@@ -161,6 +168,7 @@ export const TemplateFields = ({
               <FieldChip
                 key={`${field._id}-${field.title}`}
                 field={field}
+                readonly={readonly}
                 className={
                   checkChipTitleOverflows(field.title) ? "col-span-2" : ""
                 }
@@ -171,31 +179,33 @@ export const TemplateFields = ({
         </div>
       )}
 
-      <div>
-        <h6 className="text-xs text-default-600 mb-2 ps-2 ">
-          {t("shared.addNewItem")}
-        </h6>
+      {!readonly && (
+        <div>
+          <h6 className="text-xs text-default-600 mb-2 ps-2 ">
+            {t("shared.addNewItem")}
+          </h6>
 
-        <AppInput
-          value={newFieldTitle}
-          variant="bordered"
-          autoFocus
-          placeholder={t("expertRequests.wantedItemTitle")}
-          classNames={{
-            inputWrapper: "pe-1",
-          }}
-          endContent={
-            <AddFieldButton
-              disabled={!newFieldTitle?.length}
-              onAdd={addField}
-            />
-          }
-          onValueChange={setNewFieldTitle}
-          onKeyUp={(e) => {
-            if (e.key === "Enter") addField();
-          }}
-        />
-      </div>
+          <AppInput
+            value={newFieldTitle}
+            variant="bordered"
+            autoFocus
+            placeholder={t("expertRequests.wantedItemTitle")}
+            classNames={{
+              inputWrapper: "pe-1",
+            }}
+            endContent={
+              <AddFieldButton
+                disabled={!newFieldTitle?.length}
+                onAdd={addField}
+              />
+            }
+            onValueChange={setNewFieldTitle}
+            onKeyUp={(e) => {
+              if (e.key === "Enter") addField();
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };

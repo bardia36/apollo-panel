@@ -3,12 +3,13 @@ import { Image } from "@heroui/react";
 import useAppConfig from "@/config/app-config";
 
 type LazyImageProps = {
-  src: string;
+  src?: string;
   alt: string;
-  width?: number;
-  height?: number;
+  width?: number | string;
+  height?: number | string;
   className?: string;
   fit?: "cover" | "contain";
+  placeholder?: string;
 };
 
 export const LazyImage = ({
@@ -18,6 +19,7 @@ export const LazyImage = ({
   height,
   className,
   fit = "contain",
+  placeholder,
 }: LazyImageProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const imageRef = useRef<HTMLDivElement | null>(null);
@@ -39,15 +41,17 @@ export const LazyImage = ({
     };
   }, []);
 
+  const imageSrc = src ? `${fileServerUrl}/${src}` : placeholder;
+
   return (
     <div ref={imageRef} className={className}>
-      {isVisible && (
+      {isVisible && imageSrc && (
         <Image
-          src={`${fileServerUrl}${src}`}
+          src={imageSrc}
           alt={alt}
           width={width}
           height={height}
-          classNames={{ img: `object-${fit}` }}
+          classNames={{ img: `object-${fit}`, wrapper: "h-full" }}
         />
       )}
     </div>

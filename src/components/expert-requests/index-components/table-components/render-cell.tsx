@@ -8,15 +8,15 @@ import {
   User,
   Button,
 } from "@heroui/react";
-import DateDisplay from "@/components/shared/date-display";
+import { TwoLineDateDisplay } from "@/components/shared/date-display";
 import { t } from "i18next";
 import { ExpertRequestInfo } from "@/types/expert-requests";
 import { statusesMap } from "../../constants";
-import { copyToClipboard } from "@/utils/base";
 import { Link } from "react-router-dom";
 import { expertRequestsApi } from "@/apis/expert-requests";
 import { useExpertRequests } from "../context/expert-requests-context";
 import { exceptionHandler } from "@/apis/exception";
+import CopyButton from "@/components/shared/copy-button";
 
 export const RenderOrderNumberCell = ({
   orderNumber,
@@ -25,19 +25,12 @@ export const RenderOrderNumberCell = ({
 }) => (
   <div className="flex items-center gap-2">
     <span className="text-default-500">{orderNumber}</span>
-    <Button
-      isIconOnly
-      variant="light"
-      className="min-w-6 w-6 h-6"
-      onPress={copyToClipboard(orderNumber)}
-    >
-      <Icon
-        icon="solar:copy-linear"
-        width={20}
-        height={20}
-        className="text-default-400"
-      />
-    </Button>
+    <CopyButton
+      value={orderNumber}
+      size="6"
+      iconSize="20"
+      iconClassName="text-default-400"
+    />
   </div>
 );
 
@@ -113,7 +106,7 @@ export const RenderCreatedAtCell = ({
   createdAt,
 }: {
   createdAt: ExpertRequestInfo["createdAt"];
-}) => <DateDisplay isoDate={createdAt} />;
+}) => <TwoLineDateDisplay isoDate={createdAt} />;
 
 export const RenderActionsCell = ({ id }: { id: ExpertRequestInfo["_id"] }) => {
   const { refreshRequests } = useExpertRequests();

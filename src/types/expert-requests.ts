@@ -63,33 +63,55 @@ export type ExpertRequestDetail = ExpertRequestInfo & {
     sequence: RequestCommonInfo[];
   };
   required_fields: TemplateField[];
-  // request_log
-  // locations
+  locations: {
+    lat: string;
+    lng: string;
+    address: string;
+    createdAt: string;
+    updatedAt: string;
+  }[];
   template_fields_count: number;
   template_id: Omit<Template, "_id">;
-  // previous_inspection;
-  // reviewers
+  reviewers: {
+    owner: {
+      userName: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      phoneNumber: string;
+    };
+    unit: {
+      title: string;
+      level: {
+        name: string;
+        level_number: number;
+      };
+    };
+  }[];
   inspection_data: ExpertRequestInfo["inspection_data"] & {
     color?: {
       name: string;
       code: string;
       color: string;
     };
+    vin?: string;
     // vehicle_fuel;
     // vehicle_category
     // vehicle_usage;
     // license_plate_number
     // motor_code
     // chassis_number
-    vin?: string;
     // fanavaran_vin
   };
+  // request_log
+  // previous_inspection;
 };
 
 export type RequestCommonInfo = {
   name: string;
   title: string;
   path: string;
+  _id: string;
 };
 
 export type InspectionType =
