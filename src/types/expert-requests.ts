@@ -270,6 +270,11 @@ export type RegisterRequestResponse = {
       name_local: string;
       _id: string;
     };
+    vehicle_category: {
+      name: string;
+      name_local: string;
+      _id: string;
+    };
     color: {
       name: string;
       _id: string;

@@ -20,6 +20,7 @@ import { expertRequestsApi } from "@/apis/expert-requests";
 import { exceptionHandler } from "@/apis/exception";
 import { InspectionFormatDetailCard } from "./inspection-format-detail-card";
 import { useCreateRequest } from "../../context/create-request-context";
+import useWorkspaceStore from "@/stores/workspace-store";
 
 const StepOneHeader = lazy(() => import("./step-one-header"));
 
@@ -42,6 +43,7 @@ const transformRequestData = (
       ? {
           vehicle_brand: data.inspection_data.vehicle_brand?._id,
           vehicle_model: data.inspection_data.vehicle_model?._id,
+          vehicle_category: data.inspection_data.vehicle_category?._id,
           vehicle_company: data.inspection_data.vehicle_company?._id,
           color: data.inspection_data.color?._id,
           vin: data.inspection_data.vin,
@@ -63,7 +65,8 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
     activeFormat,
     setActiveFormat,
   } = useCreateRequest();
-
+  
+  const { workspace } = useWorkspaceStore();
   const msgs = useValidationMessages();
 
   const validationSchema = object({
@@ -79,6 +82,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
       vehicle_brand: string(),
       vehicle_model: string(),
       vehicle_company: string(),
+      vehicle_category: string(),
       vin: string().length(17, msgs.length(t("expertRequests.vinNumber"), 17)),
       color: string(),
     }).optional(),
@@ -129,7 +133,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
       const data = getValues();
       const response = await expertRequestsApi.registerRequest(
         requestId ? requestId : "0",
-        { ...data, step: "INFO", workspace_id: "68383efb8e88a63a100ccafa" }
+        { ...data, step: "INFO", workspace_id: workspace?._id }
       );
       setRequestData(response);
       if (!requestId) setRequestId(response._id);
@@ -146,7 +150,7 @@ export default function StepOne({ onStepComplete }: StepOneProps) {
       {isMdAndUp && <StepOneHeader />}
 
       <Form onSubmit={handleSubmit(submit)}>
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-4">
+        <div className="gap-x-3 gap-y-4 grid grid-cols-1 md:grid-cols-2 w-full">
           <Controller
             control={control}
             name="username"

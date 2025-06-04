@@ -10,4 +10,5 @@ export default {
   resetPassword: "Reset Password",
   signUp: "Sign Up",
   userManagement: "User Management",
+  workspaces: "Workspaces",
 };

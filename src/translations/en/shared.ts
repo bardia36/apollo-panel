@@ -1,6 +1,9 @@
 export default {
   accepted: "Accepted",
   addedItems: "Added items",
+  active: "Active",
+  trial: "Trial",
+  suspended: "Suspended",
   addIt: "Add it",
   addNewItem: "Add new item",
   apolloLogo: "Apollo Logo",
@@ -24,6 +27,7 @@ export default {
   discardSelections: "Discard selections",
   draft: "Draft",
   edit: "Edit",
+  editInformation: "Edit information",
   email: "Email",
   excelFile: "Excel file",
   expired: "Expired",

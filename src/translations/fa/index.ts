@@ -4,6 +4,7 @@ import expertRequests from "./expert-requests";
 import shared from "./shared";
 import title from "./title";
 import validations from "./validations";
+import workspaces from "./workspaces";
 
 export default {
   auth,
@@ -12,4 +13,5 @@ export default {
   shared,
   title,
   validations,
+  workspaces,
 };

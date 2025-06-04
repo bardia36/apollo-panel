@@ -27,6 +27,7 @@ const ResetPasswordPage = lazy(() => import("@/pages/reset-password"));
 const DashboardPage = lazy(() => import("@/pages/dashboard"));
 const ExpertRequestsPage = lazy(() => import("@/pages/expert-requests"));
 const EditExpertRequestPage = lazy(() => import("@/pages/edit-request"));
+const WorkspacesPage = lazy(() => import("@/pages/workspaces"));
 const Page404 = lazy(() => import("@/components/shared/page-404"));
 
 export type AppRoute = RouteObject & {
@@ -78,7 +79,7 @@ export const privateRoutes: AppRoute[] = [
     element: <AuthGuard />,
     children: [
       {
-        path: "/",
+        path: "/:workspace",
         element: <DefaultLayout />,
         children: [
           {
@@ -103,6 +104,12 @@ export const privateRoutes: AppRoute[] = [
                 breadcrumb: "Edit Expert Request",
               },
             ],
+          },
+          {
+            path: "workspaces",
+            element: <WorkspacesPage />,
+            title: t("title.workspaces"),
+            breadcrumb: "Workspaces",
           },
           {
             path: "",

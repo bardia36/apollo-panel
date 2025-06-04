@@ -20,11 +20,11 @@ export const InspectionFormatDetailCard = ({
   control,
 }: InspectionFormatDetailCardProps) => {
   return (
-    <div className="bg-default-50 rounded-[20px] p-4 mt-4 shadow-md">
+    <div className="bg-default-50 shadow-md mt-4 p-4 rounded-[20px]">
       <div className="flex items-center gap-2 mb-8">
         <Avatar
           showFallback
-          className="w-12 h-12 rounded-large bg-default-100"
+          className="bg-default-100 rounded-large w-12 h-12"
           fallback={
             <LazyImage
               src={activeFormat.logo}
@@ -40,16 +40,16 @@ export const InspectionFormatDetailCard = ({
           <h6 className="font-semibold text-foreground-700">
             {activeFormat.label}
           </h6>
-          <p className="text-sm text-foreground-500 line-clamp-1">
+          <p className="text-foreground-500 text-sm line-clamp-1">
             {activeFormat.description}
           </p>
         </div>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-x-3 gap-y-4 mb-4">
+      <div className="gap-x-3 gap-y-4 grid md:grid-cols-3 mb-4">
         <Controller
           control={control}
-          name="inspection_data.vehicle_company"
+          name="inspection_data.vehicle_category"
           render={({ field, fieldState: { error } }) => (
             <AppSelect
               label={t("expertRequests.carGroup")}
@@ -114,7 +114,7 @@ export const InspectionFormatDetailCard = ({
         />
       </div>
 
-      <div className="grid md:grid-cols-2 gap-x-3 gap-y-4">
+      <div className="gap-x-3 gap-y-4 grid md:grid-cols-2">
         <Controller
           control={control}
           name="inspection_data.vin"

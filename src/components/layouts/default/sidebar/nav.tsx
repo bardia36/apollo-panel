@@ -2,12 +2,18 @@ import { Link, useLocation } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import { nav } from "@/layouts/nav";
 import { cn } from "@heroui/react";
+import useWorkspaceStore from "@/stores/workspace-store";
 
 export default function Nav() {
+  const { workspace } = useWorkspaceStore();
+
   return (
-    <div className="w-full relative flex flex-col overflow-clip list-none">
-      <nav className="w-full flex flex-col gap-0.5 outline-none items-center" role="navigation">
-        {nav.map((item) => (
+    <div className="relative flex flex-col w-full overflow-clip list-none">
+      <nav
+        className="flex flex-col items-center gap-0.5 outline-none w-full"
+        role="navigation"
+      >
+        {nav(workspace?.slug!).map((item) => (
           <Link
             key={item.label}
             to={item.href}

@@ -10,4 +10,5 @@ export default {
   resetPassword: "بازیابی رمز عبور",
   signUp: "ثبت نام",
   userManagement: "مدیریت کاربران",
+  workspaces: "فضاها",
 };
