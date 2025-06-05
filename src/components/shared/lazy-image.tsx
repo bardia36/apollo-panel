@@ -8,6 +8,7 @@ type LazyImageProps = {
   width?: number | string;
   height?: number | string;
   className?: string;
+  externalImg?: boolean;
   fit?: "cover" | "contain";
   placeholder?: string;
 };
@@ -18,6 +19,7 @@ export const LazyImage = ({
   width,
   height,
   className,
+  externalImg,
   fit = "contain",
   placeholder,
 }: LazyImageProps) => {
@@ -41,7 +43,7 @@ export const LazyImage = ({
     };
   }, []);
 
-  const imageSrc = src ? `${fileServerUrl}/${src}` : placeholder;
+  const imageSrc = src ? externalImg ? src : `${fileServerUrl}/${src}` : placeholder;
 
   return (
     <div ref={imageRef} className={className}>
@@ -51,7 +53,7 @@ export const LazyImage = ({
           alt={alt}
           width={width}
           height={height}
-          classNames={{ img: `object-${fit}`, wrapper: "h-full" }}
+          classNames={{ img: `object-${fit} h-full`, wrapper: "h-full" }}
         />
       )}
     </div>

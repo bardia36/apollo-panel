@@ -1,6 +1,7 @@
 export default {
   accepted: "Accepted",
   addedItems: "Added items",
+  addImage: "Add image",
   addIt: "Add it",
   addNewItem: "Add new item",
   apolloLogo: "Apollo Logo",
@@ -22,6 +23,8 @@ export default {
   delete: "Delete",
   discardSelection: "Discard selection",
   discardSelections: "Discard selections",
+  download: "Download",
+  downloadPdfFile: "Download PDF file",
   draft: "Draft",
   edit: "Edit",
   email: "Email",
@@ -52,7 +55,9 @@ export default {
   saveAndSubmit: "Save and submit",
   search: "Search",
   seconds: "seconds",
+  selectedItem: "Selected item",
   selectedItemsCount: "{{selectedItems}} items selected",
+  sendAgainRequest: "Send again request",
   sendEmail: "Send email",
   sendingDate: "Sending date",
   sendSMS: "Send SMS",
@@ -65,4 +70,5 @@ export default {
   userName: "Username",
   waitingToSend: "Waiting to send",
   yesDelete: "Yes, delete!",
+  zipFileContent: "Zip file content",
 };

@@ -1,6 +1,7 @@
 export default {
   accepted: "تایید شده",
   addedItems: "موارد اضافه شده",
+  addImage: "افزودن تصویر",
   addIt: "اضافه کن",
   addNewItem: "افزودن مورد جدید",
   apolloLogo: "لوگوی آپولو",
@@ -22,6 +23,8 @@ export default {
   delete: "حذف",
   discardSelection: "لغو درخواست",
   discardSelections: "لغو انتخاب شده‌ها",
+  download: "دانلود",
+  downloadPdfFile: "دریافت فایل PDF",
   draft: "پیش‌نویس",
   edit: "ویرایش",
   email: "ایمیل",
@@ -52,7 +55,9 @@ export default {
   saveAndSubmit: "ثبت و ذخیره",
   search: "جستجو",
   seconds: "ثانیه",
+  selectedItem: "مورد انتخاب شده",
   selectedItemsCount: "{{selectedItems}} مورد انتخاب شده‌",
+  sendAgainRequest: "ارسال درخواست مجدد",
   sendEmail: "ارسال ایمیل",
   sendingDate: "زمان ارسال",
   sendSMS: "ارسال پیامک",
@@ -65,4 +70,5 @@ export default {
   userName: "نام کاربر",
   waitingToSend: "در انتظار ارسال",
   yesDelete: "بله، حذف کن!",
+  zipFileContent: "فایل zip محتویات",
 };

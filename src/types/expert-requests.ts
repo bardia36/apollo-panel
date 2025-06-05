@@ -58,7 +58,7 @@ export type ExpertRequestDetail = ExpertRequestInfo & {
     img?: RequestCommonInfo[];
     video?: RequestCommonInfo[];
   };
-  car_info: {
+  file_info: {
     img?: RequestCommonInfo[];
     sequence: RequestCommonInfo[];
   };
