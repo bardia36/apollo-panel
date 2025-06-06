@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Image } from "@heroui/react";
 import useAppConfig from "@/config/app-config";
+import noImage from "@/assets/images/base/image-thumbnail.svg";
 
 type LazyImageProps = {
   src?: string;
@@ -43,13 +44,19 @@ export const LazyImage = ({
     };
   }, []);
 
-  const imageSrc = src ? externalImg ? src : `${fileServerUrl}/${src}` : placeholder;
+  const imageSrc = src
+    ? externalImg
+      ? src
+      : `${fileServerUrl}/${src}`
+    : placeholder;
 
   return (
     <div ref={imageRef} className={className}>
       {isVisible && imageSrc && (
         <Image
           src={imageSrc}
+          fallbackSrc={noImage}
+          removeWrapper
           alt={alt}
           width={width}
           height={height}
