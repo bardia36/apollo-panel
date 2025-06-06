@@ -9,3 +9,11 @@ body {
 .otp-error-message {
   direction: rtl;
 }
+
+.rtl {
+  direction: rtl;
+}
+
+.ltr {
+  direction: ltr;
+}

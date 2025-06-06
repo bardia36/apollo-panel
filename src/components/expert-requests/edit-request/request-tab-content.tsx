@@ -33,6 +33,7 @@ export const RequestTabContent = ({
   return (
     <Suspense
       fallback={
+        // TODO: add other tabs loading
         activeTab === "details" ? <RequestDetailsSkeleton /> : <Loading />
       }
     >
