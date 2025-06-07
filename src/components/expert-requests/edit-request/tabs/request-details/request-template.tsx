@@ -4,6 +4,7 @@ import carVector from "@/assets/images/expert-requests/car-vector.svg";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { ExpertRequestDetail } from "@/types/expert-requests";
 import CopyButton from "@/components/shared/copy-button";
+import IranLicensePlate from "@/components/shared/iran-license-plate";
 
 type RequestTemplateProps = {
   template: ExpertRequestDetail["template_id"];
@@ -96,9 +97,7 @@ export default function RequestTemplate({
             )}
 
             {/* TODO: get plate from backend */}
-            {/* <Suspense fallback={<Skeleton className="w-full h-16" />}>
-          <LicensePlate plate="IR15-546T55" />
-        </Suspense> */}
+            <IranLicensePlate />
 
             {(!!inspectionData.color || !!inspectionData.vin) && (
               <div className="flex items-center justify-between flex-wrap gap-2 text-content2-foreground text-sm">
