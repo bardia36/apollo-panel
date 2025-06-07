@@ -62,7 +62,7 @@ export const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      classNames={{ closeButton: "top-[1rem] md:top-[1rem] left-[1.5rem]" }}
+      classNames={{ closeButton: "top-[1rem] left-[1.5rem]" }}
       size="xl"
       scrollBehavior="inside"
     >
@@ -112,7 +112,7 @@ export const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
                       (status) =>
                         status.data && (
                           <NeutralChip
-                            status={status.data}
+                            status={status.data.uid as ExpertRequestStatus}
                             key={status.data.uid}
                           />
                         )

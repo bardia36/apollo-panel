@@ -1,6 +1,5 @@
 import { Button } from "@heroui/react";
 
-import { statusesMap } from "@/components/expert-requests/constants";
 import CollapsableCards from "@/components/shared/collapsable-cards";
 import { NeutralChip } from "@/components/shared/request-status-chip";
 import { ExpertRequestDetail } from "@/types/expert-requests";
@@ -34,12 +33,7 @@ export default function ImagesStatusAlert({
               {createdAt}
             </Chip>
             <span>{t("shared.isThat")}</span>
-            <NeutralChip
-              status={{
-                uid: status,
-                label: statusesMap[status].label,
-              }}
-            />
+            <NeutralChip status={status} />
             <span>{t("shared.is")}</span>
           </div>
 

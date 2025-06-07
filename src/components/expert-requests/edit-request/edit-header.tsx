@@ -63,9 +63,7 @@ export const EditHeader = ({
                 </span>
               </span>
 
-              <NeutralChip
-                status={{ uid: requestData.status, label: statusMap.label }}
-              />
+              <NeutralChip status={requestData.status} />
             </div>
 
             <span className="text-sm">
@@ -135,7 +133,10 @@ export const EditHeader = ({
             )}
 
           {/* {requestData.status === "ARCHIVED" && ( */}
-          <RetrieveRequestModal />
+          <RetrieveRequestModal
+            status={requestData.status}
+            code={requestData.req_id}
+          />
           {/* )} */}
 
           {[

@@ -134,7 +134,7 @@ export default function RequestContent({ requestData }: RequestContentProps) {
                       classNames={{
                         base: "max-w-full w-full",
                         label: "w-full",
-                        wrapper: "absolute top-4 start-4 z-[100] me-0",
+                        wrapper: "absolute top-4 start-4 z-[11] me-0",
                       }}
                     >
                       <LazyImage
@@ -167,7 +167,7 @@ export default function RequestContent({ requestData }: RequestContentProps) {
                         base: "max-w-full w-full",
                         label: "w-full",
                         hiddenInput: "w-fit",
-                        wrapper: "absolute top-4 right-4 z-[100] me-0",
+                        wrapper: "absolute top-4 right-4 z-[11] me-0",
                       }}
                     >
                       <LazyImage
@@ -187,7 +187,7 @@ export default function RequestContent({ requestData }: RequestContentProps) {
       )}
 
       {!!selectedMedias.length && (
-        <div className="bg-default-50 p-4 md:px-5 md:py-4 flex justify-between items-center flex-wrap gap-2 rounded-full md:gap-16 shadow-2xl shadow-neutral absolute start-4 end-4 md:start-auto md:end-10 bottom-4 z-[1000]">
+        <div className="bg-default-50 p-4 md:px-5 md:py-4 flex justify-between items-center flex-wrap gap-2 rounded-full md:gap-16 shadow-2xl shadow-neutral absolute start-4 end-4 md:start-auto md:end-10 bottom-4 z-[12]">
           <Chip
             variant="light"
             size={isMdAndUp ? "lg" : "md"}

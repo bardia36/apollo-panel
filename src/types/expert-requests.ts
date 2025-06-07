@@ -162,8 +162,6 @@ export type TableColumns = {
   label?: string;
 }[];
 
-export type StatusOption = { uid: string; label: string };
-
 export type StatusesMap = {
   [key in ExpertRequestStatus]: {
     fadedBg: string;
