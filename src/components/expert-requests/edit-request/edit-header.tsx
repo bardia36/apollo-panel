@@ -17,6 +17,7 @@ import { NeutralChip } from "@/components/shared/request-status-chip";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { RetrieveRequestModal } from "./actions/retrieve";
 import { ChangeStatusModal } from "./actions/change-status";
+import { SendInspectionLinkModal } from "./actions/send-inspection-link";
 
 export const EditHeader = ({
   requestData,
@@ -209,18 +210,7 @@ export const EditHeader = ({
           )}
 
           {requestData.status === "DRAFT" && (
-            <Button
-              variant="shadow"
-              className="bg-foreground-900 text-foreground-50 ms-1"
-            >
-              <Icon
-                icon="solar:check-circle-bold"
-                width={20}
-                height={20}
-                className="text-foreground-50 min-w-5"
-              />
-              {t("expertRequests.sendInspectionLink")}
-            </Button>
+            <SendInspectionLinkModal requestData={requestData} />
           )}
         </div>
       </div>
@@ -254,6 +244,7 @@ export const EditHeader = ({
             </div>
           }
         />
+
         <Tab
           key="content"
           title={
@@ -276,6 +267,7 @@ export const EditHeader = ({
             </div>
           }
         />
+
         <Tab
           key="history"
           title={
