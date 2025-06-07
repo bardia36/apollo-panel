@@ -26,7 +26,7 @@ export default function RequestUserSpecialist({
 }: RequestUserSpecialistProps) {
   return (
     <div className="grid grid-cols-2 gap-4">
-      <div className="col-span-2 lg:col-span-1">
+      <div className="col-span-2 xl:col-span-1">
         <h6 className="text-default-600 text-xs mb-2">{t("shared.user")}</h6>
 
         <div className="p-4 flex flex-wrap items-center gap-4 bg-content1 rounded-3xl mb-2">
@@ -87,7 +87,7 @@ export default function RequestUserSpecialist({
         </div>
       </div>
 
-      <div className="col-span-2 lg:col-span-1">
+      <div className="col-span-2 xl:col-span-1">
         <h6 className="text-default-600 text-xs mb-2">
           {t("expertRequests.specialist")}
         </h6>
