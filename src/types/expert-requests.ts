@@ -356,4 +356,49 @@ export type SettingExpirationTime =
   | "24H"
   | "48H"
   | "UNLIMITED";
+
 export type SettingPhotoDeadline = "30" | "40" | "50" | "60" | "120" | "180";
+
+export type AcceptRequestBody = {
+  vehicle_fuel: string;
+  color: string;
+  motor_code: string;
+  vin: string;
+  chassis_number: string;
+  right_number: string;
+  left_number: string;
+  letter: string;
+  province_code: string;
+  notify_user: boolean;
+  tags: string[];
+};
+
+export type ChangeStatusRequestBody = {
+  status: ExpertRequestStatus;
+  change_mind: boolean;
+  send_notification: boolean;
+  cant_send_notification: boolean;
+  tags: string[];
+};
+
+export type SendExportLinkBody = {
+  send_sms: boolean;
+  send_email: boolean;
+  lead_specialist: string;
+  tags: string[];
+  forwarding_time: string;
+};
+
+export type RejectRequestBody = {
+  reasons: string[];
+  send_notification: boolean;
+};
+
+export type RetrieveRequestBody = {
+  status: ExpertRequestStatus;
+};
+
+export type RequestEvidenceLackBody = {
+  required_fields: TemplateField[];
+  tags: string[];
+};

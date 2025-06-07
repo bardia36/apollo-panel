@@ -15,6 +15,7 @@ import { formatDate, truncateString } from "@/utils/base";
 import { t } from "i18next";
 import { NeutralChip } from "@/components/shared/request-status-chip";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
+import { RetrieveRequestModal } from "./actions/retrieve";
 
 export const EditHeader = ({
   requestData,
@@ -26,9 +27,7 @@ export const EditHeader = ({
   onTabChange: (key: string) => void;
 }) => {
   const statusMap = statusesMap[requestData.status];
-  const { formattedTime, formattedDate } = formatDate(
-    requestData.createdAt
-  );
+  const { formattedTime, formattedDate } = formatDate(requestData.createdAt);
   const { isMdAndUp } = useBreakpoint();
 
   return (
@@ -135,22 +134,9 @@ export const EditHeader = ({
               </Dropdown>
             )}
 
-          {requestData.status === "ARCHIVED" && (
-            <Button
-              variant="flat"
-              size="sm"
-              className="text-default-foreground"
-            >
-              <Icon
-                icon="solar:undo-left-round-bold"
-                width={20}
-                height={20}
-                className="text-foreground min-w-5"
-              />
-
-              {t("expertRequests.retrieveRequest")}
-            </Button>
-          )}
+          {/* {requestData.status === "ARCHIVED" && ( */}
+          <RetrieveRequestModal />
+          {/* )} */}
 
           {[
             "CANCELED",
@@ -161,6 +147,7 @@ export const EditHeader = ({
             "COMPLETED",
             "REVIEWED",
             "IN_PROGRESS",
+            "OPENED",
             "PENDING",
             "DRAFT",
           ].includes(requestData.status) && (
