@@ -16,6 +16,7 @@ import { t } from "i18next";
 import { NeutralChip } from "@/components/shared/request-status-chip";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { RetrieveRequestModal } from "./actions/retrieve";
+import { ChangeStatusModal } from "./actions/change-status";
 
 export const EditHeader = ({
   requestData,
@@ -152,20 +153,10 @@ export const EditHeader = ({
             "PENDING",
             "DRAFT",
           ].includes(requestData.status) && (
-            <Button
-              variant="flat"
-              size="sm"
-              className="text-default-foreground"
-            >
-              <Icon
-                icon="bx:sort"
-                width={20}
-                height={20}
-                className="text-foreground min-w-5"
-              />
-
-              {t("shared.changeStatus")}
-            </Button>
+            <ChangeStatusModal
+              status={requestData.status}
+              code={requestData.req_id}
+            />
           )}
 
           {requestData.status === "REVIEWED" && (

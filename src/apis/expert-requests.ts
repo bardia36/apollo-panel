@@ -74,7 +74,7 @@ export const expertRequestsApi = {
     });
   },
 
-  acceptRequest(id: string, body: AcceptRequestBody) {
+  accept(id: string, body: AcceptRequestBody) {
     return axiosHandler<RequestsSetting>(BASE_URL, {
       action: `${id}/accept`,
       method: RequestMethod.PATCH,
@@ -82,7 +82,7 @@ export const expertRequestsApi = {
     });
   },
 
-  changeStatusRequest(id: string, body: ChangeStatusRequestBody) {
+  changeStatus(id: string, body: ChangeStatusRequestBody) {
     return axiosHandler<RequestsSetting>(BASE_URL, {
       action: `${id}/change-status`,
       method: RequestMethod.PATCH,
@@ -90,7 +90,7 @@ export const expertRequestsApi = {
     });
   },
 
-  sendExportLinkRequest(id: string, body: SendExportLinkBody) {
+  sendExportLink(id: string, body: SendExportLinkBody) {
     return axiosHandler<RequestsSetting>(BASE_URL, {
       action: `${id}/send-export-link`,
       method: RequestMethod.PATCH,
@@ -98,7 +98,7 @@ export const expertRequestsApi = {
     });
   },
 
-  rejectRequest(id: string, body: RejectRequestBody) {
+  reject(id: string, body: RejectRequestBody) {
     return axiosHandler<RequestsSetting>(BASE_URL, {
       action: `${id}/send-export-link`,
       method: RequestMethod.PATCH,
@@ -106,7 +106,7 @@ export const expertRequestsApi = {
     });
   },
 
-  retrieveRequest(id: string, body: RetrieveRequestBody) {
+  retrieve(id: string, body: RetrieveRequestBody) {
     return axiosHandler<RequestsSetting>(BASE_URL, {
       action: `${id}/retrieval`,
       method: RequestMethod.PATCH,

@@ -1,6 +1,7 @@
 export default {
   activateAndUseOtherTemplates: "Activate and Use Other Templates",
-  addReqStepperDescription:    "Enter user information, expert case, and request details. Finally, the request link will be created and sent to the user.",
+  addReqStepperDescription:
+    "Enter user information, expert case, and request details. Finally, the request link will be created and sent to the user.",
   approximatePrice: "Approximate Price",
   approximatePricePlaceholder: "Enter approximate price...",
   archive: "Archive",
@@ -16,10 +17,12 @@ export default {
   createNewRequestIfNeeded: "If needed, create a new request.",
   createRequest: "Create Request",
   createReviewRequest: "Create Review Request",
-  createReviewRequestDescription:    "Or link form to send information for online visit",
+  createReviewRequestDescription:
+    "Or link form to send information for online visit",
   currentCases: "Current Cases",
   deleteTemplate: "Delete Template",
-  deleteTemplateDescription:    "All information will be deleted and cannot be recovered! Are you sure?",
+  deleteTemplateDescription:
+    "All information will be deleted and cannot be recovered! Are you sure?",
   details: "Details",
   documentsAndFiles: "Documents and Files",
   download: "Download",
@@ -31,18 +34,22 @@ export default {
   linkData: "Link Data",
   management: "Management",
   moreInfo: "More Info",
-  moreInfoDescription:    "If you need information from the user, you can select from the following items:",
+  moreInfoDescription:
+    "If you need information from the user, you can select from the following items:",
   newTemplate: "New Template",
   noRequestFound: "No Request Found",
   notifyExpert: "Notify Expert",
   orderNumber: "Order Number",
   orderNumberPlaceholder: "Reference order code or number",
   photoTimeout: "Photo Timeout",
-  photoTimeoutDescription:    "Delay in taking each photo with mobile phone camera",
+  photoTimeoutDescription:
+    "Delay in taking each photo with mobile phone camera",
   previousStatus: "Previous Status",
   randomImages: "Random Images",
-  randomImagesDescription:    "Images related to screen capture video should be random.",
-  reportDescription:    "Specify the desired statuses and time range to get the report.",
+  randomImagesDescription:
+    "Images related to screen capture video should be random.",
+  reportDescription:
+    "Specify the desired statuses and time range to get the report.",
   request: "Request",
   requestContent: "Request Content",
   requestDetail: "Request Detail",
@@ -62,7 +69,8 @@ export default {
   requestTemplate: "Request Template",
   responsibleSpecialist: "Responsible Specialist",
   retrieveIt: "Retrieve It",
-  reviewAndConfirmMessage:    "Please review the content and confirm or reject the request.",
+  reviewAndConfirmMessage:
+    "Please review the content and confirm or reject the request.",
   reviewBySpecialist: "Review by Specialist",
   reviewType: "Review Type",
   sendInspectionLink: "Send Inspection Link",
@@ -70,7 +78,8 @@ export default {
   sendReminderMessage: "Send Reminder Message",
   sendToArchive: "Send to Archive",
   specialist: "Specialist",
-  specifyContentAndSendLink:    "Please specify the expert content and send the link to the user.",
+  specifyContentAndSendLink:
+    "Please specify the expert content and send the link to the user.",
   step1: "Step One",
   step2: "Step Two",
   step3: "Step Three",
@@ -93,4 +102,16 @@ export default {
   wantedItem: "Wanted Item",
   wantedItemTitle: "Wanted Item Title",
   wantedRequests: "Wanted Requests",
+  changeStatus: "Change Status",
+  newStatus: "New Status",
+  statusChangeReason: "Status Change Reason",
+  changeMind: "Change of Mind",
+  canSendNotification: "Can Send Notification to User",
+  reasonDescription: "Reason Description",
+  writeReasonHere: "Write your reason here...",
+  statusChangeWarning: "This Change is Not Reversible!",
+  statusChangeWarningDescription:
+    "Note that after changing the status, there is no possibility to return to the previous status.",
+  notifyUser: "Notify User",
+  saveAndSubmit: "Save and Submit",
 };
