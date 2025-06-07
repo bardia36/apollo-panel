@@ -257,6 +257,11 @@ export type RegisterRequestBody = (
   workspace_id?: string;
 };
 
+export type RequiredFields = {
+  type: TemplateFieldType;
+  title: string;
+};
+
 export type RegisterRequestResponse = {
   _id: string;
   username: string;
@@ -272,12 +277,7 @@ export type RegisterRequestResponse = {
     name: string;
     _id: string;
   };
-  required_fields: [
-    {
-      type: TemplateFieldType;
-      title: string;
-    },
-  ];
+  required_fields: RequiredFields[];
   created_at: string;
   updated_at: string;
   lead_specialist: {
@@ -380,11 +380,13 @@ export type ChangeStatusRequestBody = {
 };
 
 export type SendExportLinkBody = {
-  send_sms: boolean;
-  send_email: boolean;
   lead_specialist: string;
-  tags: string[];
   forwarding_time: string;
+  send_sms?: boolean;
+  send_email?: boolean;
+  tags?: string[];
+  mobile?: string;
+  email?: string;
 };
 
 export type RejectRequestBody = {

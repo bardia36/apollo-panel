@@ -11,8 +11,8 @@ import { useMutation } from "@tanstack/react-query";
 import { t } from "i18next";
 import { useParams } from "react-router-dom";
 import { useRef, useState } from "react";
-import { ActionsHeader } from "./actions-header";
-import { RequestCode } from "./request-code";
+import { ActionsHeader } from "./components/actions-header";
+import { RequestCode } from "./components/request-code";
 import { AppStatusSelect } from "@/components/shared/app-components/app-status-select";
 import { TagInput } from "@/components/shared/tag-input";
 

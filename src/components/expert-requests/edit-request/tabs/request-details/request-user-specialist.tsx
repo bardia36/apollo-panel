@@ -103,13 +103,13 @@ export default function RequestUserSpecialist({
           <div className="flex-1">
             <h6 className="mb-2 font-semibold">{lead_specialist.userName}</h6>
             <div className="flex items-center flex-wrap gap-2 md:gap-6 text-sm text-content2-foreground">
-              <div className="flex items-center gap-2">
+              {/* <div className="flex items-center gap-2">
                 <Icon
                   icon="solar:user-id-linear"
                   className="text-content4-foreground min-w-[18px] h-[18px]"
                 />
                 <p>{t("expertRequests.responsibleSpecialist")}</p>
-              </div>
+              </div> */}
 
               {/* TODO: get from backend */}
               {/* <p></p> */}
@@ -120,9 +120,10 @@ export default function RequestUserSpecialist({
         <div className="flex flex-wrap justify-between gap-2">
           <div>
             <p className="text-default-foreground text-xs">{unit.title}</p>
-            <p className="text-content4-foreground text-xs">
+            {/* TODO: get from backend */}
+            {/* <p className="text-content4-foreground text-xs">
               {unit.level.name}
-            </p>
+            </p> */}
           </div>
 
           <AvatarGroup>
@@ -142,7 +143,7 @@ export default function RequestUserSpecialist({
             ))}
           </AvatarGroup>
 
-          {/* TODO: get from backend when the creator is different from the lead specialist */}
+          {/* TODO: get from backend when the owner is different from the lead specialist */}
           {/* <Tooltip
             content={`${} - ${}`}
           >

@@ -12,8 +12,8 @@ import { useMutation } from "@tanstack/react-query";
 import { t } from "i18next";
 import { useParams } from "react-router-dom";
 import { useRef } from "react";
-import { ActionsHeader } from "./actions-header";
-import { RequestCode } from "./request-code";
+import { ActionsHeader } from "./components/actions-header";
+import { RequestCode } from "./components/request-code";
 
 type Props = {
   status: ExpertRequestStatus;
