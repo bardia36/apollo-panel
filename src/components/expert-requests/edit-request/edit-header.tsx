@@ -132,12 +132,12 @@ export const EditHeader = ({
               </Dropdown>
             )}
 
-          {/* {requestData.status === "ARCHIVED" && ( */}
-          <RetrieveRequestModal
-            status={requestData.status}
-            code={requestData.req_id}
-          />
-          {/* )} */}
+          {requestData.status === "ARCHIVED" && (
+            <RetrieveRequestModal
+              status={requestData.status}
+              code={requestData.req_id}
+            />
+          )}
 
           {[
             "CANCELED",
