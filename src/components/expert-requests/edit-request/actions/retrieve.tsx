@@ -12,6 +12,8 @@ import { useMutation } from "@tanstack/react-query";
 import { t } from "i18next";
 import { useParams } from "react-router-dom";
 import { useRef } from "react";
+import { ActionsHeader } from "./actions-header";
+import { RequestCode } from "./request-code";
 
 type Props = {
   status: ExpertRequestStatus;
@@ -24,7 +26,7 @@ export const RetrieveRequestModal = ({ status, code }: Props) => {
 
   const { mutate: retrieveRequest, isPending } = useMutation({
     mutationFn: async () =>
-      expertRequestsApi.retrieveRequest(id as string, {
+      expertRequestsApi.retrieve(id as string, {
         status,
       }),
     onSuccess: () => modalRef.current?.onClose(),
@@ -50,22 +52,14 @@ export const RetrieveRequestModal = ({ status, code }: Props) => {
       hideCloseButton={false}
     >
       <AppModal.Header>
-        <div className="flex items-center gap-2">
-          <Icon icon="solar:undo-left-round-bold" className="min-w-6 h-6" />
-
-          <h6 className="text-lg font-semibold text-default-foreground">
-            {t("expertRequests.retrieveRequest")}
-          </h6>
-        </div>
+        <ActionsHeader
+          title={t("expertRequests.retrieveRequest")}
+          icon="solar:undo-left-round-bold"
+        />
       </AppModal.Header>
 
       <div className="flex flex-col gap-6">
-        <h5 className="text-default-foreground text-3xl font-bold">
-          <span className="hidden md:inline-block">
-            {t("expertRequests.request")}
-          </span>
-          {t("expertRequests.code")} {code}
-        </h5>
+        <RequestCode code={code} />
 
         <div className="bg-foreground-50 border-2 border-default-100 shadow-sm shadow-neutral rounded-3xl p-[14px]">
           <h6 className="text-default-600 mb-2">
