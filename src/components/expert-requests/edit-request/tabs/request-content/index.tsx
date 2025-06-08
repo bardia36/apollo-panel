@@ -1,7 +1,7 @@
 import { LazyImage } from "@/components/shared/lazy-image";
 import Slider from "@/components/shared/slider";
 import { ExpertRequestDetail } from "@/types/expert-requests";
-import { Button, Checkbox, CheckboxGroup, Chip } from "@heroui/react";
+import { Button, Checkbox, CheckboxGroup, Chip, cn } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useState } from "react";
 import { t } from "i18next";
@@ -47,22 +47,27 @@ export default function RequestContent({ requestData }: RequestContentProps) {
     <div className="flex flex-col gap-4">
       <div className="bg-default-50 rounded-large p-4">
         <div className="grid grid-cols-2 gap-4">
-          <div className="order-1 md:order-0 col-span-2 lg:col-span-1">
-            <h6 className="text-xs py-2 mb-6">
-              {t("expertRequests.aroundCarImages")}
-            </h6>
+          {!!requestData.file_info?.sequence?.length && (
+            <div className="order-1 md:order-0 col-span-2 lg:col-span-1">
+              <h6 className="text-xs py-2 mb-6">
+                {t("expertRequests.aroundCarImages")}
+              </h6>
 
-            {!!requestData.file_info?.sequence?.length && (
               <Slider
                 images={requestData.file_info.sequence.map((img) => ({
                   path: `${fileServerUrl}/${img.path}`,
                   title: img.title,
                 }))}
               />
-            )}
-          </div>
+            </div>
+          )}
 
-          <div className="md:order-1 col-span-2 lg:col-span-1 flex flex-col gap-6">
+          <div
+            className={cn(
+              "md:order-1 col-span-2 lg:col-span-1 flex flex-col gap-6",
+              !requestData.file_info?.sequence?.length && "lg:col-span-2"
+            )}
+          >
             <div className="flex items-center md:justify-end flex-wrap gap-2">
               {/* TODO: Handle responsive ui */}
               <Button
@@ -100,9 +105,11 @@ export default function RequestContent({ requestData }: RequestContentProps) {
               </Button>
             </div>
 
-            <div className="px-4 py-6 bg-content1 rounded-large ltr">
-              <FileCollectionChart fileData={fileData} />
-            </div>
+            {fileData.filter((file) => !!file.count).length > 0 && (
+              <div className="px-4 py-6 bg-content1 rounded-large ltr">
+                <FileCollectionChart fileData={fileData} />
+              </div>
+            )}
 
             {/*  TODO: load video lazy */}
             {!!requestData.documents?.video?.length && (
