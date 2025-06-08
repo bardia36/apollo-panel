@@ -137,13 +137,14 @@ export const ChangeStatusModal = ({ status, code, tags }: Props) => {
                 />
                 {t("expertRequests.notifyUser")}
               </div>
+
               <Switch
                 isSelected={sendNotification}
                 onValueChange={setSendNotification}
                 isDisabled={cantSendNotification}
                 size="sm"
                 className="flex-1"
-              ></Switch>
+              />
             </div>
 
             <div className="flex-1">

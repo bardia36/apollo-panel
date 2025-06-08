@@ -1,4 +1,6 @@
 export default {
+  acceptWithoutSupplemental:
+    "I accept this request without supplemental information.",
   activateAndUseOtherTemplates: "Activate and Use Other Templates",
   addReqStepperDescription:
     "Enter user information, expert case, and request details. Finally, the request link will be created and sent to the user.",
@@ -10,6 +12,12 @@ export default {
   branch: "Branch",
   carGroup: "Car Group",
   casesDetail: "Cases Detail",
+  canSendNotification: "Can Send Notification to User",
+  changeMind: "Change of Mind",
+  changeStatus: "Change Status",
+  chassisNumber: "Chassis Number",
+  checkYourCartForFillingThisForm:
+    "You can match the required information with your vehicle card.",
   chooseWayToSend: "Choose Way to Send",
   code: "Code",
   confirmRequest: "Confirm Request",
@@ -27,6 +35,7 @@ export default {
   documentsAndFiles: "Documents and Files",
   download: "Download",
   finalCheck: "Final Check",
+  fuelType: "Fuel Type",
   getReport: "Get Report",
   history: "History",
   inspectionImages: "Inspection Images",
@@ -36,9 +45,12 @@ export default {
   moreInfo: "More Info",
   moreInfoDescription:
     "If you need information from the user, you can select from the following items:",
+  motorNumber: "Motor Number",
+  newStatus: "New Status",
   newTemplate: "New Template",
   noRequestFound: "No Request Found",
   notifyExpert: "Notify Expert",
+  notifyUser: "Notify User",
   orderNumber: "Order Number",
   orderNumberPlaceholder: "Reference order code or number",
   photoTimeout: "Photo Timeout",
@@ -48,6 +60,15 @@ export default {
   randomImages: "Random Images",
   randomImagesDescription:
     "Images related to screen capture video should be random.",
+  reasonDescription: "Reason Description",
+  rejectReasons: [
+    "By expert's opinion, this request is not approved!",
+    "User changed their mind.",
+    "It is not possible to send to the user.",
+    "The document deficiency issue was not resolved!",
+    "The required images were not sent within the deadline.",
+  ],
+  rejectRequest: "Reject Request",
   reportDescription:
     "Specify the desired statuses and time range to get the report.",
   request: "Request",
@@ -59,6 +80,7 @@ export default {
   requestExpiryDescription: "After this time, the request will expire.",
   requestExpiryUnlimited: "No expiration",
   requestExpiryUntilDayEnd: "Until end of day",
+  requestRejectReason: "Request rejection reason",
   requests: "Requests",
   requestsManagement: "Requests Management",
   requestsPageDescription: "View and manage online visit request list",
@@ -69,10 +91,12 @@ export default {
   requestTemplate: "Request Template",
   responsibleSpecialist: "Responsible Specialist",
   retrieveIt: "Retrieve It",
+  retrieveRequest: "Retrieve Request",
   reviewAndConfirmMessage:
     "Please review the content and confirm or reject the request.",
   reviewBySpecialist: "Review by Specialist",
   reviewType: "Review Type",
+  saveAndSubmit: "Save and Submit",
   sendInspectionLink: "Send Inspection Link",
   sendLinkToUser: "Send Link to User",
   sendReminderMessage: "Send Reminder Message",
@@ -80,6 +104,10 @@ export default {
   specialist: "Specialist",
   specifyContentAndSendLink:
     "Please specify the expert content and send the link to the user.",
+  statusChangeReason: "Status Change Reason",
+  statusChangeWarning: "This Change is Not Reversible!",
+  statusChangeWarningDescription:
+    "Note that after changing the status, there is no possibility to return to the previous status.",
   step1: "Step One",
   step2: "Step Two",
   step3: "Step Three",
@@ -103,16 +131,5 @@ export default {
   wantedItems: "Wanted Items",
   wantedItemTitle: "Wanted Item Title",
   wantedRequests: "Wanted Requests",
-  changeStatus: "Change Status",
-  newStatus: "New Status",
-  statusChangeReason: "Status Change Reason",
-  changeMind: "Change of Mind",
-  canSendNotification: "Can Send Notification to User",
-  reasonDescription: "Reason Description",
   writeReasonHere: "Write your reason here...",
-  statusChangeWarning: "This Change is Not Reversible!",
-  statusChangeWarningDescription:
-    "Note that after changing the status, there is no possibility to return to the previous status.",
-  notifyUser: "Notify User",
-  saveAndSubmit: "Save and Submit",
 };
