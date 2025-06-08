@@ -100,6 +100,7 @@ export default {
   vinNumber: "VIN Number",
   vinNumberPlaceholder: "17-digit vehicle identification number",
   wantedItem: "Wanted Item",
+  wantedItems: "Wanted Items",
   wantedItemTitle: "Wanted Item Title",
   wantedRequests: "Wanted Requests",
   changeStatus: "Change Status",

@@ -107,7 +107,6 @@ export default function RequestContent({ requestData }: RequestContentProps) {
             {/*  TODO: load video lazy */}
             {!!requestData.documents?.video?.length && (
               <video
-                // src={sampleVideo}
                 src={`${fileServerUrl}/${requestData.documents?.video[0]?.path}`}
                 controls
                 className="flex-1 max-h-[200px] md:max-h-[360px] rounded-large border-4 border-content1 shadow-md shadow-neutral"

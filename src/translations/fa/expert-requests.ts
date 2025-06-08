@@ -101,6 +101,7 @@ export default {
   vinNumber: "شماره VIN",
   vinNumberPlaceholder: "شماره شناسایی ۱۷ رقمی خودرو",
   wantedItem: "مورد درخواستی",
+  wantedItems: "موارد درخواستی",
   wantedItemTitle: "عنوان مورد درخواستی",
   wantedRequests: "درخواستی‌ها",
   changeStatus: "تغییر وضعیت",

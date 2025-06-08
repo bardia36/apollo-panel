@@ -58,6 +58,7 @@ export default {
   return: "Return",
   reviewed: "Under review",
   saveAndSubmit: "Save and submit",
+  saveAndSend: "Save and send",
   search: "Search",
   seconds: "seconds",
   selectedItem: "Selected item",

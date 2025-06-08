@@ -74,7 +74,7 @@ export const SendInspectionLinkModal = ({ requestData }: Props) => {
       forwarding_time: new Date().toISOString(),
       send_sms: false,
       send_email: false,
-      tags: [],
+      tags: requestData?.tags || [],
       mobile: requestData?.owner?.phoneNumber || "",
       email: requestData?.owner?.email || "",
     },

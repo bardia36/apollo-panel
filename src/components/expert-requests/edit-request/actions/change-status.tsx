@@ -19,16 +19,17 @@ import { TagInput } from "@/components/shared/tag-input";
 type Props = {
   status: ExpertRequestStatus;
   code: string;
+  tags: string[];
 };
 
-export const ChangeStatusModal = ({ status, code }: Props) => {
+export const ChangeStatusModal = ({ status, code, tags }: Props) => {
   const { id } = useParams();
   const modalRef = useRef<AppModalRef>(null);
 
   const [selectedStatus, setSelectedStatus] = useState<ExpertRequestStatus[]>(
     []
   );
-  const [tags, setTags] = useState<string[]>([]);
+  const [reqTags, setReqTags] = useState<string[]>(tags);
   const [changeMind, setChangeMind] = useState(false);
   const [sendNotification, setSendNotification] = useState(true);
   const [cantSendNotification, setCantSendNotification] = useState(false);
@@ -41,7 +42,7 @@ export const ChangeStatusModal = ({ status, code }: Props) => {
         change_mind: changeMind,
         send_notification: sendNotification,
         cant_send_notification: cantSendNotification,
-        tags,
+        tags: reqTags,
       }),
     onSuccess: () => modalRef.current?.onClose(),
     onError: (err) => exceptionHandler(err),
@@ -148,8 +149,8 @@ export const ChangeStatusModal = ({ status, code }: Props) => {
             <div className="flex-1">
               <TagInput
                 label={t("expertRequests.tag")}
-                value={tags}
-                onChange={setTags}
+                value={reqTags}
+                onChange={setReqTags}
               />
             </div>
           </div>

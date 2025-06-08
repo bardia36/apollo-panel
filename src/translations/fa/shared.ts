@@ -58,6 +58,7 @@ export default {
   return: "بازگشت",
   reviewed: "در حال بررسی",
   saveAndSubmit: "ثبت و ذخیره",
+  saveAndSend: "ثبت و ارسال",
   search: "جستجو",
   seconds: "ثانیه",
   selectedItem: "مورد انتخاب شده",
