@@ -20,6 +20,7 @@ import { ChangeStatusModal } from "./actions/change-status";
 import { SendInspectionLinkModal } from "./actions/send-inspection-link";
 import { AcceptRequestModal } from "./actions/accept";
 import { LackOfEvidenceModal } from "./actions/lack-of-evidence";
+import { RejectRequestModal } from "./actions/reject";
 
 export const EditHeader = ({
   requestData,
@@ -41,7 +42,7 @@ export const EditHeader = ({
         <div className="flex items-center gap-4 order-1 md:order-none">
           <div
             className={cn(
-              "hidden md:flex items-center justify-center w-16 h-16 rounded-large",
+              "hidden md:flex items-center justify-center min-w-16 h-16 rounded-large",
               `bg-${statusMap.fadedBg}`
             )}
           >
@@ -99,38 +100,23 @@ export const EditHeader = ({
                 <DropdownMenu aria-label="More Actions">
                   <DropdownItem key="rejectRequest">
                     {requestData.status === "REVIEWED" && (
-                      <Button
-                        variant="light"
-                        size="sm"
-                        className="hidden md:flex text-default-foreground"
-                      >
-                        <Icon
-                          icon="solar:clipboard-remove-bold"
-                          width={20}
-                          height={20}
-                          className="text-foreground min-w-5"
-                        />
-
-                        {t("expertRequests.rejectRequest")}
-                      </Button>
+                      <RejectRequestModal
+                        code={requestData.req_id}
+                        tags={requestData.tags || []}
+                      />
                     )}
                   </DropdownItem>
 
                   <DropdownItem key="lackOfEvidence">
-                    <Button
-                      variant="flat"
-                      size="sm"
-                      className="hidden md:flex text-default-foreground"
-                    >
-                      <Icon
-                        icon="mdi:plus-circle"
-                        width={20}
-                        height={20}
-                        className="text-foreground min-w-5"
-                      />
-
-                      {t("expertRequests.lackOfEvidence")}
-                    </Button>
+                    <LackOfEvidenceModal
+                      code={requestData.req_id}
+                      tags={requestData.tags || []}
+                      fields={requestData.required_fields || []}
+                      activatorVariant="flat"
+                      activatorSize="sm"
+                      activatorClassName="hidden md:flex text-default-foreground"
+                      activatorIconClassName="text-foreground"
+                    />
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
@@ -164,32 +150,25 @@ export const EditHeader = ({
           )}
 
           {requestData.status === "REVIEWED" && (
-            <Button
-              variant="light"
-              size="sm"
-              className="hidden md:flex text-default-foreground"
-            >
-              <Icon
-                icon="solar:clipboard-remove-bold"
-                width={20}
-                height={20}
-                className="text-foreground min-w-5"
-              />
-
-              {t("expertRequests.rejectRequest")}
-            </Button>
+            <RejectRequestModal
+              code={requestData.req_id}
+              tags={requestData.tags || []}
+            />
           )}
 
-          {/* {["COMPLETED", "REVIEWED"].includes(requestData.status) && ( */}
+          {["COMPLETED", "REVIEWED"].includes(requestData.status) && (
             <LackOfEvidenceModal
               code={requestData.req_id}
               tags={requestData.tags || []}
               fields={requestData.required_fields || []}
+              activatorVariant="shadow"
+              activatorClassName="bg-foreground-900 text-foreground-50 ms-1"
+              activatorIconClassName="text-foreground-50"
             />
-          {/* )} */}
+          )}
 
           {["COMPLETED", "REVIEWED"].includes(requestData.status) && (
-            <AcceptRequestModal code={requestData.req_id} />
+            <AcceptRequestModal requestData={requestData} />
           )}
 
           {requestData.status === "DRAFT" && (

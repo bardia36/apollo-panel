@@ -391,6 +391,8 @@ export type SendExportLinkBody = {
 
 export type RejectRequestBody = {
   reasons: string[];
+  tags?: string[];
+  other_reason?: string;
   send_notification: boolean;
 };
 
