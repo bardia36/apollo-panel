@@ -31,7 +31,7 @@ export const RejectRequestModal = ({ code, tags }: Props) => {
   const [sendNotification, setSendNotification] = useState(true);
   const [requestTags, setRequestTags] = useState<string[]>(tags || []);
   const [reasons, setReasons] = useState<string[]>([]);
-  const [otherReason, setOtherReason] = useState<string>();
+  const [otherReason, setOtherReason] = useState("");
 
   const REJECTION_REASONS = t("expertRequests.rejectReasons", {
     returnObjects: true,
@@ -40,8 +40,7 @@ export const RejectRequestModal = ({ code, tags }: Props) => {
   const { mutate: rejectRequest, isPending } = useMutation({
     mutationFn: async () =>
       expertRequestsApi.reject(id as string, {
-        reasons,
-        other_reason: otherReason,
+        reasons: otherReason ? [...reasons, otherReason] : reasons,
         tags: requestTags,
         send_notification: sendNotification,
       }),
