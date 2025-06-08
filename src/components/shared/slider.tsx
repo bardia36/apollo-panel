@@ -1,107 +1,96 @@
-// import React, { useState, useEffect } from "react";
-// import Swiper from "react-id-swiper";
-// import SlideItem from "./slideItem";
-// import {
-//   Pagination,
-//   Navigation,
-//   Lazy,
-//   Controller,
-// } from "swiper/dist/js/swiper.esm";
+import { useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode, Navigation, Thumbs } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
+import { Icon } from "@iconify/react";
+import { LazyImage } from "./lazy-image";
 
-// const images = [
-//   {
-//     src: "https://picsum.photos/320/240?v1",
-//   },
-//   {
-//     src: "https://picsum.photos/320/240?v2",
-//   },
-//   {
-//     src: "https://picsum.photos/320/240?v3",
-//   },
-//   {
-//     src: "https://picsum.photos/320/240?v4",
-//   },
-// ];
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/navigation";
+import "swiper/css/thumbs";
 
-// const ManipulatingSwiper = () => {
-//   // Swiper instance
-//   const [swiper, updateSwiper] = useState(null);
-//   // Swiper thumbsinstance
-//   const [swiperThumbs, updateSwiperThumbs] = useState(null);
-//   // Params definition
-//   let params = {
-//     modules: [Controller, Pagination, Navigation, Lazy],
-//     preloadImages: false,
-//     lazy: true,
-//     pagination: {
-//       el: ".swiper-pagination",
-//       type: "bullets",
-//       clickable: true,
-//     },
-//     navigation: {
-//       nextEl: ".swiper-button-next",
-//       prevEl: ".swiper-button-prev",
-//     },
-//     loop: false,
-//     spaceBetween: 30,
-//     getSwiper: updateSwiper, // Get swiper instance callback
-//   };
-//   let thumbsParams = {
-//     modules: [Controller],
-//     slideToClickedSlide: true,
-//     slidesPerView: "auto",
-//     centeredSlides: true,
-//     spaceBetween: 10,
-//     getSwiper: updateSwiperThumbs, // Get swiper instance callback
-//     style: {
-//       width: "100px",
-//     },
-//   };
+interface SliderWithThumbsProps {
+  images: Array<{
+    path: string;
+    title?: string;
+  }>;
+  className?: string;
+}
 
-//   // Bind swiper and swiper thumbs
-//   useEffect(() => {
-//     if (swiper && swiperThumbs) {
-//       swiper.controller.control = swiperThumbs;
-//       swiperThumbs.controller.control = swiper;
-//     }
-//   }, [swiper, swiperThumbs]);
+export default function Slider({
+  images,
+  className = "",
+}: SliderWithThumbsProps) {
+  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
 
-//   return (
-//     <div>
-//       <Swiper {...params}>
-//         {images.map((image, idx) => (
-//           <SlideItem key={`slide_${idx}`} style={{ width: "100px" }}>
-//             <img
-//               // @note w/o unique key the image won't be updated when the image set updates.
-//               key={image.src}
-//               className="swiper-lazy"
-//               data-src={image.src}
-//             />
-//           </SlideItem>
-//         ))}
-//       </Swiper>
+  if (!images?.length) return null;
 
-//       <Swiper {...thumbsParams}>
-//         {images.map((image, idx) => (
-//           <SlideItem key={`slide_${idx}`} className="swiper-slide-auto">
-//             <img
-//               // @note w/o unique key the image won't be updated when the image set updates.
-//               key={image.src}
-//               className="swiper-lazy"
-//               // @note Ignore that the images aren't matching
-//               src={image.src.replace("320/240", "100/100")}
-//             />
-//           </SlideItem>
-//         ))}
-//       </Swiper>
-//     </div>
-//   );
-// };
+  return (
+    <div className={`slider-with-thumbs ltr ${className}`}>
+      <div className="mb-4">
+        <Swiper
+          onSwiper={setThumbsSwiper}
+          spaceBetween={10}
+          slidesPerView="auto"
+          freeMode={true}
+          watchSlidesProgress={true}
+          modules={[FreeMode, Navigation, Thumbs]}
+          className="thumbs-slider"
+          wrapperClass="!grid grid-cols-4 gap-2 lg:gap-4 justify-center"
+        >
+          {images.map((image, index) => (
+            <SwiperSlide key={index} className="col-span-1">
+              <LazyImage
+                src={image.path}
+                alt={image.title || `Thumb ${index + 1}`}
+                externalImg
+                height={60}
+                imgClassName="w-full"
+                className="h-full rounded-md cursor-pointer"
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
 
-// const SlideItem = ({ children, ...params }) => (
-//   <div className="swiper-slide" {...params}>
-//     <span>{children}</span>
-//   </div>
-// );
+      <div className="relative">
+        <Swiper
+          spaceBetween={10}
+          navigation={{
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+          }}
+          thumbs={{ swiper: thumbsSwiper }}
+          modules={[FreeMode, Navigation, Thumbs]}
+          className="main-slider"
+        >
+          {images.map((image, index) => (
+            <SwiperSlide key={index}>
+              <LazyImage
+                src={image.path}
+                alt={image.title || `Image ${index + 1}`}
+                externalImg
+                imgClassName="w-full"
+                className="h-[200px] lg:h-[360px] rounded-large"
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
 
-// export default ManipulatingSwiper;
+        <button className="swiper-button-prev absolute left-4 top-1/2 !m-0 -translate-y-1/2 z-10 bg-white/80 hover:bg-white shadow-sm min-w-9 max-w-9 max-h-9 w-9 h-9 p-2 rounded-full">
+          <Icon
+            icon="tabler:chevron-left"
+            className="min-w-5 max-h-5 text-default-foreground"
+          />
+        </button>
+        <button className="swiper-button-next absolute right-4 top-1/2 !m-0 -translate-y-1/2 z-10 bg-white/80 hover:bg-white shadow-sm min-w-9 max-w-9 max-h-9 w-9 h-9 p-2 rounded-full transition-colors">
+          <Icon
+            icon="tabler:chevron-right"
+            className="min-w-5 max-h-5 text-default-foreground"
+          />
+        </button>
+      </div>
+    </div>
+  );
+}

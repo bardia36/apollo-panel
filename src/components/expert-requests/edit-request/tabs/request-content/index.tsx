@@ -1,4 +1,5 @@
 import { LazyImage } from "@/components/shared/lazy-image";
+import Slider from "@/components/shared/slider";
 import { ExpertRequestDetail } from "@/types/expert-requests";
 import { Button, Checkbox, CheckboxGroup, Chip } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -7,8 +8,9 @@ import { t } from "i18next";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
 import useAppConfig from "@/config/app-config";
 import { FileCollectionChart } from "./file-type-chart";
-// import sampleVideo from "@/assets/images/base/sample-video.mp4";
-// import { SwiperSlider } from "@/components/shared/slider-nova";
+
+// Import slider styles
+import "@/styles/slider.css";
 
 type RequestContentProps = {
   requestData: ExpertRequestDetail;
@@ -45,23 +47,22 @@ export default function RequestContent({ requestData }: RequestContentProps) {
     <div className="flex flex-col gap-4">
       <div className="bg-default-50 rounded-large p-4">
         <div className="grid grid-cols-2 gap-4">
-          {/* <div className="col-span-2 lg:col-span-1">
+          <div className="order-1 md:order-0 col-span-2 lg:col-span-1">
             <h6 className="text-xs py-2 mb-6">
               {t("expertRequests.aroundCarImages")}
             </h6>
 
             {!!requestData.file_info?.sequence?.length && (
-              <SwiperSlider
-                items={requestData.file_info.sequence}
-                renderItem={(img) => {
-                  return <img src={img.path} alt={img.title} />;
-                }}
-                keyExtractor={(img) => img._id}
+              <Slider
+                images={requestData.file_info.sequence.map((img) => ({
+                  path: `${fileServerUrl}/${img.path}`,
+                  title: img.title,
+                }))}
               />
             )}
-          </div> */}
+          </div>
 
-          <div className="col-span-2 lg:col-span-1 flex flex-col gap-6">
+          <div className="md:order-1 col-span-2 lg:col-span-1 flex flex-col gap-6">
             <div className="flex items-center md:justify-end flex-wrap gap-2">
               {/* TODO: Handle responsive ui */}
               <Button
