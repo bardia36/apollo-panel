@@ -64,7 +64,7 @@ export default function RequestHistory({ requestData }: RequestHistoryProps) {
                     }
                     className="bg-foreground-100 text-default-800 text-sm px-2"
                   >
-                    {log.ip}
+                    IP: {log.ip}
                   </Chip>
                 )}
 

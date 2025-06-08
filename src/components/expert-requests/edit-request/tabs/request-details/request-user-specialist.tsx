@@ -119,7 +119,7 @@ export default function RequestUserSpecialist({
 
         <div className="flex flex-wrap justify-between gap-2">
           <div>
-            <p className="text-default-foreground text-xs">{unit.title}</p>
+            <p className="text-default-foreground text-xs">{unit?.title}</p>
             {/* TODO: get from backend */}
             {/* <p className="text-content4-foreground text-xs">
               {unit.level.name}
@@ -130,7 +130,7 @@ export default function RequestUserSpecialist({
             {reviewers.map((reviewer) => (
               <Tooltip
                 key={reviewer.owner.email}
-                content={`${reviewer.owner.userName} - ${reviewer.unit.title}`}
+                content={`${reviewer.owner.userName} - ${reviewer.unit?.title}`}
               >
                 <Avatar
                   key={reviewer.owner.email}
