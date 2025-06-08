@@ -7,7 +7,7 @@ export default function RequestLoadingSkeleton() {
       <div className="flex flex-col gap-4 pt-3 md:px-4">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-center gap-4 order-1 md:order-none">
-            <div className="hidden md:flex items-center justify-center w-16 h-16 rounded-large bg-default-100">
+            <div className="hidden md:flex items-center justify-center min-w-16 h-16 rounded-large bg-default-100">
               <Skeleton className="w-6 h-6 rounded" />
             </div>
 

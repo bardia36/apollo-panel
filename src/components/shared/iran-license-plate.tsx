@@ -67,7 +67,7 @@ export default function IranLicensePlate({
   return (
     <div
       className={cn(
-        "ltr flex items-center rounded-xl overflow-hidden shadow-sm shadow-neutral w-fit bg-default-50",
+        "ltr flex items-center justify-between rounded-xl overflow-hidden shadow-sm shadow-neutral w-full bg-default-50",
         isSelected && "ring-2 ring-blue-500",
         isInvalid && "ring-2 ring-red-500"
       )}
