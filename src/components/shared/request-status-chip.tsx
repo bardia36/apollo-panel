@@ -1,32 +1,34 @@
 import { Chip } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { statusesMap } from "../expert-requests/constants";
-import { StatusesMap, StatusOption } from "@/types/expert-requests";
+import { ExpertRequestStatus, StatusesMap } from "@/types/expert-requests";
 
-export const NeutralChip = ({ status }: { status: StatusOption }) => {
+export const NeutralChip = ({ status }: { status: ExpertRequestStatus }) => {
+  const statusMap = statusesMap[status as keyof StatusesMap];
+
   return (
     <Chip
-      key={status.uid}
+      key={status}
       className="bg-default-100 text-default-700 h-10 gap-1"
       classNames={{
         content: "flex gap-1",
         base: "rounded-large",
       }}
     >
-      <StatusShadowIcon uid={status.uid} />
-      <span className="font-semibold">{status.label}</span>
+      <StatusShadowIcon status={status} />
+      <span className="font-semibold">{statusMap.label}</span>
     </Chip>
   );
 };
 
 const StatusShadowIcon = ({
-  uid,
+  status,
   size = 20,
 }: {
-  uid: StatusOption["uid"];
+  status: string;
   size?: number;
 }) => {
-  const statusMap = statusesMap[uid as keyof StatusesMap];
+  const statusMap = statusesMap[status as keyof StatusesMap];
 
   return (
     <Icon

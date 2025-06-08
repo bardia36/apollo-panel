@@ -61,8 +61,8 @@ export default function RequestDetails({ requestData }: RequestDetailsProps) {
         )}
       </div>
 
-      <div className="col-span-12 grid lg:grid-cols-12 gap-4 lg:col-span-8 bg-default-50 rounded-large p-4">
-        <div className="lg:col-span-5">
+      <div className="col-span-12 grid xl:grid-cols-12 gap-4 xl:col-span-8 bg-default-50 rounded-large p-4">
+        <div className="xl:col-span-5">
           <Suspense fallback={<RequestTemplateSkeleton />}>
             <RequestTemplate
               template={requestData.template_id}
@@ -73,7 +73,7 @@ export default function RequestDetails({ requestData }: RequestDetailsProps) {
           </Suspense>
         </div>
 
-        <div className="lg:col-span-7">
+        <div className="xl:col-span-7">
           <Suspense fallback={<RequestContentSkeleton />}>
             <RequestContent fields={requestData.required_fields} />
           </Suspense>

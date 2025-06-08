@@ -26,7 +26,7 @@ export default function RequestUserSpecialist({
 }: RequestUserSpecialistProps) {
   return (
     <div className="grid grid-cols-2 gap-4">
-      <div className="col-span-2 lg:col-span-1">
+      <div className="col-span-2 xl:col-span-1">
         <h6 className="text-default-600 text-xs mb-2">{t("shared.user")}</h6>
 
         <div className="p-4 flex flex-wrap items-center gap-4 bg-content1 rounded-3xl mb-2">
@@ -87,7 +87,7 @@ export default function RequestUserSpecialist({
         </div>
       </div>
 
-      <div className="col-span-2 lg:col-span-1">
+      <div className="col-span-2 xl:col-span-1">
         <h6 className="text-default-600 text-xs mb-2">
           {t("expertRequests.specialist")}
         </h6>
@@ -103,13 +103,13 @@ export default function RequestUserSpecialist({
           <div className="flex-1">
             <h6 className="mb-2 font-semibold">{lead_specialist.userName}</h6>
             <div className="flex items-center flex-wrap gap-2 md:gap-6 text-sm text-content2-foreground">
-              <div className="flex items-center gap-2">
+              {/* <div className="flex items-center gap-2">
                 <Icon
                   icon="solar:user-id-linear"
                   className="text-content4-foreground min-w-[18px] h-[18px]"
                 />
                 <p>{t("expertRequests.responsibleSpecialist")}</p>
-              </div>
+              </div> */}
 
               {/* TODO: get from backend */}
               {/* <p></p> */}
@@ -120,9 +120,10 @@ export default function RequestUserSpecialist({
         <div className="flex flex-wrap justify-between gap-2">
           <div>
             <p className="text-default-foreground text-xs">{unit.title}</p>
-            <p className="text-content4-foreground text-xs">
+            {/* TODO: get from backend */}
+            {/* <p className="text-content4-foreground text-xs">
               {unit.level.name}
-            </p>
+            </p> */}
           </div>
 
           <AvatarGroup>
@@ -142,7 +143,7 @@ export default function RequestUserSpecialist({
             ))}
           </AvatarGroup>
 
-          {/* TODO: get from backend when the creator is different from the lead specialist */}
+          {/* TODO: get from backend when the owner is different from the lead specialist */}
           {/* <Tooltip
             content={`${} - ${}`}
           >

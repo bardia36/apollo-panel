@@ -1,4 +1,5 @@
 import { LazyImage } from "@/components/shared/lazy-image";
+import Slider from "@/components/shared/slider";
 import { ExpertRequestDetail } from "@/types/expert-requests";
 import { Button, Checkbox, CheckboxGroup, Chip } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -7,8 +8,9 @@ import { t } from "i18next";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
 import useAppConfig from "@/config/app-config";
 import { FileCollectionChart } from "./file-type-chart";
-// import sampleVideo from "@/assets/images/base/sample-video.mp4";
-// import { SwiperSlider } from "@/components/shared/slider-nova";
+
+// Import slider styles
+import "@/styles/slider.css";
 
 type RequestContentProps = {
   requestData: ExpertRequestDetail;
@@ -45,23 +47,22 @@ export default function RequestContent({ requestData }: RequestContentProps) {
     <div className="flex flex-col gap-4">
       <div className="bg-default-50 rounded-large p-4">
         <div className="grid grid-cols-2 gap-4">
-          {/* <div className="col-span-2 lg:col-span-1">
+          <div className="order-1 md:order-0 col-span-2 lg:col-span-1">
             <h6 className="text-xs py-2 mb-6">
               {t("expertRequests.aroundCarImages")}
             </h6>
 
             {!!requestData.file_info?.sequence?.length && (
-              <SwiperSlider
-                items={requestData.file_info.sequence}
-                renderItem={(img) => {
-                  return <img src={img.path} alt={img.title} />;
-                }}
-                keyExtractor={(img) => img._id}
+              <Slider
+                images={requestData.file_info.sequence.map((img) => ({
+                  path: `${fileServerUrl}/${img.path}`,
+                  title: img.title,
+                }))}
               />
             )}
-          </div> */}
+          </div>
 
-          <div className="col-span-2 lg:col-span-1 flex flex-col gap-6">
+          <div className="md:order-1 col-span-2 lg:col-span-1 flex flex-col gap-6">
             <div className="flex items-center md:justify-end flex-wrap gap-2">
               {/* TODO: Handle responsive ui */}
               <Button
@@ -106,7 +107,6 @@ export default function RequestContent({ requestData }: RequestContentProps) {
             {/*  TODO: load video lazy */}
             {!!requestData.documents?.video?.length && (
               <video
-                // src={sampleVideo}
                 src={`${fileServerUrl}/${requestData.documents?.video[0]?.path}`}
                 controls
                 className="flex-1 max-h-[200px] md:max-h-[360px] rounded-large border-4 border-content1 shadow-md shadow-neutral"
@@ -134,7 +134,7 @@ export default function RequestContent({ requestData }: RequestContentProps) {
                       classNames={{
                         base: "max-w-full w-full",
                         label: "w-full",
-                        wrapper: "absolute top-4 start-4 z-[100] me-0",
+                        wrapper: "absolute top-4 start-4 z-[11] me-0",
                       }}
                     >
                       <LazyImage
@@ -167,7 +167,7 @@ export default function RequestContent({ requestData }: RequestContentProps) {
                         base: "max-w-full w-full",
                         label: "w-full",
                         hiddenInput: "w-fit",
-                        wrapper: "absolute top-4 right-4 z-[100] me-0",
+                        wrapper: "absolute top-4 right-4 z-[11] me-0",
                       }}
                     >
                       <LazyImage
@@ -187,7 +187,7 @@ export default function RequestContent({ requestData }: RequestContentProps) {
       )}
 
       {!!selectedMedias.length && (
-        <div className="bg-default-50 p-4 md:px-5 md:py-4 flex justify-between items-center flex-wrap gap-2 rounded-full md:gap-16 shadow-2xl shadow-neutral absolute start-4 end-4 md:start-auto md:end-10 bottom-4 z-[1000]">
+        <div className="bg-default-50 p-4 md:px-5 md:py-4 flex justify-between items-center flex-wrap gap-2 rounded-full md:gap-16 shadow-2xl shadow-neutral absolute start-4 end-4 md:start-auto md:end-10 bottom-4 z-[12]">
           <Chip
             variant="light"
             size={isMdAndUp ? "lg" : "md"}

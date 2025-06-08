@@ -1,6 +1,5 @@
 import { Button } from "@heroui/react";
-
-import { statusesMap } from "@/components/expert-requests/constants";
+import { getTimeDistance } from "@/utils/base";
 import CollapsableCards from "@/components/shared/collapsable-cards";
 import { NeutralChip } from "@/components/shared/request-status-chip";
 import { ExpertRequestDetail } from "@/types/expert-requests";
@@ -31,15 +30,11 @@ export default function ImagesStatusAlert({
           <div className="flex items-center justify-center flex-wrap gap-2 text-right text-xl font-light">
             <span>{t("expertRequests.thisRequest")}</span>
             <Chip variant="flat" radius="full">
-              {createdAt}
+              {/* TODO: change it to updatedAt whenever backend is ready */}
+              {getTimeDistance(createdAt)}
             </Chip>
             <span>{t("shared.isThat")}</span>
-            <NeutralChip
-              status={{
-                uid: status,
-                label: statusesMap[status].label,
-              }}
-            />
+            <NeutralChip status={status} />
             <span>{t("shared.is")}</span>
           </div>
 

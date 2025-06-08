@@ -6,7 +6,6 @@ import { EditHeader } from "./edit-header";
 import { RequestTabContent } from "./request-tab-content";
 import { useState } from "react";
 import RequestLoadingSkeleton from "./edit-skeleton";
-// import data from "../data";
 
 export default function () {
   const { id } = useParams();
@@ -25,8 +24,6 @@ export default function () {
   });
 
   if (isLoading) return <RequestLoadingSkeleton />;
-
-  // const request = data;
 
   return (
     !!request && (

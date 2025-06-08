@@ -1,21 +1,10 @@
 import { RegisterRequestResponse } from "@/types/expert-requests";
-import { truncateString } from "@/utils/base";
+import { getFieldsInfo, truncateString } from "@/utils/base";
 import { Chip } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { FieldChip } from "@/components/shared/templates/field-chip";
-
-const getFieldsInfo = (requestData: RegisterRequestResponse) => {
-  const templateFields = requestData.template_id.fields.map((f) => f.title);
-  const commonFields = requestData.required_fields.filter((f) =>
-    templateFields.includes(f.title)
-  );
-  const addedFields = requestData.required_fields.filter(
-    (f) => !templateFields.includes(f.title)
-  );
-  return { commonFields, addedFields };
-};
 
 type RequestSummaryProps = {
   requestData: RegisterRequestResponse;
@@ -23,6 +12,10 @@ type RequestSummaryProps = {
 
 export const RequestSummary = ({ requestData }: RequestSummaryProps) => {
   const { isSmAndDown } = useBreakpoint();
+  const { commonFields, addedFields } = getFieldsInfo({
+    template_id: requestData.template_id,
+    required_fields: requestData.required_fields,
+  });
 
   return (
     <div className="mb-6">
@@ -130,32 +123,28 @@ export const RequestSummary = ({ requestData }: RequestSummaryProps) => {
 
           <div className="text-end ms-auto text-sm">
             <h6 className="text-foreground-500">
-              {getFieldsInfo(requestData).commonFields.length}{" "}
-              {t("expertRequests.wantedItem")}
+              {commonFields.length} {t("expertRequests.wantedItem")}
             </h6>
 
-            {!!getFieldsInfo(requestData).addedFields.length && (
+            {!!addedFields.length && (
               <div className="flex items-center justify-end gap-2 mt-1">
                 <FieldChip
                   field={{
-                    _id: getFieldsInfo(requestData).addedFields[0].title,
-                    ...getFieldsInfo(requestData).addedFields[0],
-                    title: truncateString(
-                      getFieldsInfo(requestData).addedFields[0].title,
-                      20
-                    ),
+                    _id: addedFields[0].title,
+                    ...addedFields[0],
+                    title: truncateString(addedFields[0].title, 20),
                     active: true,
                   }}
                 />
 
-                {getFieldsInfo(requestData).addedFields.length > 1 && (
+                {addedFields.length > 1 && (
                   <Chip
                     classNames={{
                       base: "text-default-foreground bg-default bg-opacity-40",
                       content: "flex items-center",
                     }}
                   >
-                    +{getFieldsInfo(requestData).addedFields.length - 1}
+                    +{addedFields.length - 1}
                   </Chip>
                 )}
               </div>

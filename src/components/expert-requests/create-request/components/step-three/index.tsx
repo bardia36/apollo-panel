@@ -1,23 +1,24 @@
 import { t } from "i18next";
-import { StepperButtons } from "../stepper-buttons";
-import { Icon } from "@iconify/react/dist/iconify.js";
 import { useEffect, useState } from "react";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import { Switch, Form } from "@heroui/react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Controller, useForm } from "react-hook-form";
+import { array, boolean, object, string } from "yup";
+import { StepperButtons } from "../stepper-buttons";
 import { expertRequestsApi } from "@/apis/expert-requests";
 import { exceptionHandler } from "@/apis/exception";
 import { UpdateRequestFinalBody } from "@/types/expert-requests";
-import { Switch, Form } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
-import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { array, boolean, object, string } from "yup";
 import { formOptions } from "@/utils/validations";
 import { accountApi } from "@/apis/auth";
 import { AppSelect } from "@/components/shared/app-components/app-select";
 import { StepThreeLoading } from "../loadings/step-three-loading";
-import { RequestSummary } from "./request-summary";
+import { RequestSummary } from "@/components/expert-requests/create-request/components/step-three/request-summary";
 import { TagInput } from "@/components/shared/tag-input";
 import { useCreateRequest } from "../../context/create-request-context";
 import { useValidationMessages, validationRegex } from "@/utils/rules";
+import { dateOfNow } from "@/utils/base";
 
 type StepThreeProps = {
   onStepComplete: () => void;
@@ -83,25 +84,6 @@ export default function StepThree({
   useEffect(() => {
     if (stepThreeData) reset(stepThreeData);
   }, [stepThreeData, reset]);
-
-  const dateOfNow = () => {
-    const now = new Date();
-    const dateOptions: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    };
-    const timeOptions: Intl.DateTimeFormatOptions = {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    };
-
-    const datePart = now.toLocaleDateString("fa-IR", dateOptions);
-    const timePart = now.toLocaleTimeString("fa-IR", timeOptions);
-
-    return `${datePart} - ${timePart}`;
-  };
 
   const submit = async () => {
     if (!requestId) return;
