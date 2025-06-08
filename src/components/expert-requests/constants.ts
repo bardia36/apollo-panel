@@ -1,6 +1,5 @@
 import {
   StatusesMap,
-  StatusOption,
   TableColumns,
 } from "@/types/expert-requests";
 import { t } from "i18next";
@@ -36,7 +35,7 @@ export const columns: TableColumns = [
 ];
 
 // TODO: make it from statusesMap inside renderCell
-export const statusOptions: StatusOption[] = [
+export const statusOptions = [
   { uid: "DRAFT", label: t("shared.draft") },
   { uid: "PENDING", label: t("shared.waitingToSend") },
   { uid: "OPENED", label: t("shared.opened") },

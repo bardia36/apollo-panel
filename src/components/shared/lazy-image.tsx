@@ -12,6 +12,7 @@ type LazyImageProps = {
   externalImg?: boolean;
   fit?: "cover" | "contain";
   placeholder?: string;
+  imgClassName?: string;
 };
 
 export const LazyImage = ({
@@ -23,6 +24,7 @@ export const LazyImage = ({
   externalImg,
   fit = "contain",
   placeholder,
+  imgClassName,
 }: LazyImageProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const imageRef = useRef<HTMLDivElement | null>(null);
@@ -61,6 +63,7 @@ export const LazyImage = ({
           width={width}
           height={height}
           classNames={{ img: `object-${fit} h-full`, wrapper: "h-full" }}
+          className={imgClassName}
         />
       )}
     </div>

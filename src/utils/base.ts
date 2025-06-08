@@ -1,3 +1,6 @@
+import { RequiredFields } from "@/types/expert-requests";
+import { TemplateField } from "@/types/templates";
+import { t } from "i18next";
 import jalaali from "jalaali-js";
 
 export function fancyTimeFormat(duration: number) {
@@ -138,4 +141,59 @@ export const formatDate = (isoDate: string): FormattedDateTime => {
     formattedTime,
     formattedWeekDay,
   };
+};
+
+export function getTimeDistance(date: Date | string) {
+  const now = new Date();
+  const targetDate = typeof date === "string" ? new Date(date) : date;
+
+  const diffInMinutes = Math.floor(
+    (now.getTime() - targetDate.getTime()) / (1000 * 60)
+  );
+  const days = Math.floor(diffInMinutes / (24 * 60));
+  const hours = Math.floor((diffInMinutes % (24 * 60)) / 60);
+  const minutes = diffInMinutes % 60;
+
+  if (days === 0 && hours === 0 && minutes === 0) return t("shared.justNow");
+
+  const parts: string[] = [];
+
+  if (days > 0) parts.push(`${days} ${t("shared.day")}`);
+  if (hours > 0) parts.push(`${hours} ${t("shared.hour")}`);
+  if (minutes > 0 && days === 0) parts.push(`${minutes} ${t("shared.minute")}`);
+
+  return parts.join(` ${t("shared.and")} `);
+}
+
+export const dateOfNow = () => {
+  const now = new Date();
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  };
+  const timeOptions: Intl.DateTimeFormatOptions = {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  };
+
+  const datePart = now.toLocaleDateString("fa-IR", dateOptions);
+  const timePart = now.toLocaleTimeString("fa-IR", timeOptions);
+
+  return `${datePart} - ${timePart}`;
+};
+
+export const getFieldsInfo = (requestData: {
+  template_id: { fields: TemplateField[] };
+  required_fields: RequiredFields[];
+}) => {
+  const templateFields = requestData.template_id.fields.map((f) => f.title);
+  const commonFields = requestData.required_fields.filter((f) =>
+    templateFields.includes(f.title)
+  );
+  const addedFields = requestData.required_fields.filter(
+    (f) => !templateFields.includes(f.title)
+  );
+  return { commonFields, addedFields };
 };
