@@ -4,7 +4,7 @@ import {
   AppModal,
   AppModalRef,
 } from "@/components/shared/app-components/app-modal";
-import { Button } from "@heroui/react";
+import { Button, ButtonProps, cn } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useMutation } from "@tanstack/react-query";
 import { t } from "i18next";
@@ -21,12 +21,20 @@ type Props = {
   code: string;
   tags?: string[];
   fields?: TemplateField[];
+  activatorVariant?: ButtonProps["variant"];
+  activatorClassName?: ButtonProps["className"];
+  activatorSize?: ButtonProps["size"];
+  activatorIconClassName?: string;
 };
 
 export const LackOfEvidenceModal = ({
   code,
   tags = [],
   fields = [],
+  activatorVariant,
+  activatorClassName,
+  activatorSize = "md",
+  activatorIconClassName,
 }: Props) => {
   const { id } = useParams();
   const modalRef = useRef<AppModalRef>(null);
@@ -48,14 +56,15 @@ export const LackOfEvidenceModal = ({
       ref={modalRef}
       activator={
         <Button
-          variant="shadow"
-          className="bg-foreground-900 text-foreground-50 ms-1"
+          variant={activatorVariant}
+          className={activatorClassName}
+          size={activatorSize}
         >
           <Icon
             icon="mdi:plus-circle"
             width={20}
             height={20}
-            className="text-foreground-50 min-w-5"
+            className={cn(activatorIconClassName, "min-w-5 h-5")}
           />
           {t("expertRequests.lackOfEvidence")}
         </Button>
