@@ -1,5 +1,5 @@
 import { AppInput } from "@/components/shared/app-components/app-input";
-import { TemplateField } from "@/types/templates";
+import { TemplateField, TemplateType } from "@/types/templates";
 import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
@@ -9,6 +9,9 @@ import { FieldChip } from "@/components/shared/templates/field-chip";
 type Props = {
   templateFields: TemplateField[];
   readonly?: boolean;
+  generalFieldsTitle?: string;
+  documentFieldsTitle?: string;
+  customFieldsTitle?: string;
   onFieldsActiveCountChange?: (count: number) => void;
   onFieldsChange?: (fields: TemplateField[]) => void;
 };
@@ -16,26 +19,31 @@ type Props = {
 export const TemplateFields = ({
   templateFields,
   readonly = false,
+  generalFieldsTitle = t("shared.images"),
+  documentFieldsTitle = t("shared.files"),
+  customFieldsTitle = t("shared.addedItems"),
   onFieldsActiveCountChange,
   onFieldsChange,
 }: Props) => {
-  const [imageFields, setImageFields] = useState<TemplateField[]>([]);
-  const [fileFields, setFileFields] = useState<TemplateField[]>([]);
-  const [addedFields, setAddedFields] = useState<TemplateField[]>([]);
+  const [generalFields, setGeneralFields] = useState<TemplateField[]>([]);
+  const [documentFields, setDocumentFields] = useState<TemplateField[]>([]);
+  const [customFields, setCustomFields] = useState<TemplateField[]>([]);
   const [newFieldTitle, setNewFieldTitle] = useState<string>("");
   const initialized = useRef(false);
 
   // Initialize fields only once when templateFields prop changes and not initialized yet
   useEffect(() => {
     if (!initialized.current) {
-      setImageFields(
-        templateFields.filter((field) => field.type === "IMAGE") || []
+      setGeneralFields(
+        templateFields.filter(
+          (field) => field.type === "GALLERY" || field.type === "GENERAL"
+        ) || []
       );
-      setFileFields(
-        templateFields.filter((field) => field.type === "FILE") || []
+      setDocumentFields(
+        templateFields.filter((field) => field.type === "DOCUMENT") || []
       );
-      setAddedFields(
-        templateFields.filter((field) => field.type === "OTHER") || []
+      setCustomFields(
+        templateFields.filter((field) => field.type === "CUSTOM") || []
       );
       initialized.current = true;
     }
@@ -43,11 +51,15 @@ export const TemplateFields = ({
 
   // Update counts and notify parent when fields change
   const updateParent = (
-    newImageFields = imageFields,
-    newFileFields = fileFields,
-    newAddedFields = addedFields
+    newGeneralFields = generalFields,
+    newDocumentFields = documentFields,
+    newCustomFields = customFields
   ) => {
-    const allFields = [...newImageFields, ...newFileFields, ...newAddedFields];
+    const allFields = [
+      ...newGeneralFields,
+      ...newDocumentFields,
+      ...newCustomFields,
+    ];
     const activeFields = allFields.filter((field) => field.active);
     if (onFieldsActiveCountChange)
       onFieldsActiveCountChange(activeFields.length);
@@ -60,7 +72,7 @@ export const TemplateFields = ({
 
   function addField() {
     if (!newFieldTitle) return;
-    if (addedFields.some((field) => field.title === newFieldTitle)) {
+    if (customFields.some((field) => field.title === newFieldTitle)) {
       setNewFieldTitle("");
       return;
     }
@@ -68,31 +80,32 @@ export const TemplateFields = ({
     const field: TemplateField = {
       _id: `-1`,
       title: newFieldTitle,
-      type: "OTHER",
+      type: "CUSTOM",
       active: true,
     };
 
-    const newAddedFields = [...addedFields, field];
-    setAddedFields(newAddedFields);
+    const newCustomFields = [...customFields, field];
+    setCustomFields(newCustomFields);
     setNewFieldTitle("");
 
     // Update parent with new fields
-    setTimeout(() => updateParent(imageFields, fileFields, newAddedFields), 0);
+    setTimeout(
+      () => updateParent(generalFields, documentFields, newCustomFields),
+      0
+    );
   }
 
-  function toggleFieldActive(
-    field: TemplateField,
-    fieldType: "image" | "file" | "added"
-  ) {
+  function toggleFieldActive(field: TemplateField, fieldType: TemplateType) {
     if (readonly) return;
 
     const stateSetters = {
-      image: setImageFields,
-      file: setFileFields,
-      added: setAddedFields,
+      GALLERY: setGeneralFields,
+      GENERAL: setGeneralFields,
+      DOCUMENT: setDocumentFields,
+      CUSTOM: setCustomFields,
     };
 
-    stateSetters[fieldType]((prev) => {
+    stateSetters[fieldType]((prev: TemplateField[]) => {
       const newFields = prev.map((f) =>
         `${f._id}-${f.title}` === `${field._id}-${field.title}`
           ? { ...f, active: !f.active }
@@ -101,13 +114,11 @@ export const TemplateFields = ({
 
       // Update parent with the correct set of fields
       setTimeout(() => {
-        if (fieldType === "image") {
-          updateParent(newFields, fileFields, addedFields);
-        } else if (fieldType === "file") {
-          updateParent(imageFields, newFields, addedFields);
-        } else {
-          updateParent(imageFields, fileFields, newFields);
-        }
+        if (fieldType === "GENERAL" || fieldType === "GALLERY")
+          updateParent(newFields, documentFields, customFields);
+        else if (fieldType === "DOCUMENT")
+          updateParent(generalFields, newFields, customFields);
+        else updateParent(generalFields, documentFields, newFields);
       }, 0);
 
       return newFields;
@@ -116,13 +127,13 @@ export const TemplateFields = ({
 
   return (
     <div className="flex flex-col gap-4">
-      {!!imageFields.length && (
+      {!!generalFields.length && (
         <div>
           <h6 className="text-xs text-default-600 mb-2 ps-2">
-            {t("shared.images")}
+            {generalFieldsTitle}
           </h6>
           <div className="grid grid-cols-2 gap-1">
-            {imageFields.map((field) => (
+            {generalFields.map((field) => (
               <FieldChip
                 key={`${field._id}-${field.title}`}
                 field={field}
@@ -130,20 +141,20 @@ export const TemplateFields = ({
                 className={
                   checkChipTitleOverflows(field.title) ? "col-span-2" : ""
                 }
-                onClick={() => toggleFieldActive(field, "image")}
+                onClick={() => toggleFieldActive(field, "GENERAL")}
               />
             ))}
           </div>
         </div>
       )}
 
-      {!!fileFields.length && (
+      {!!documentFields.length && (
         <div>
           <h6 className="text-xs text-default-600 mb-2 ps-2">
-            {t("shared.files")}
+            {documentFieldsTitle}
           </h6>
           <div className="grid grid-cols-2 gap-1">
-            {fileFields.map((field) => (
+            {documentFields.map((field) => (
               <FieldChip
                 key={`${field._id}-${field.title}`}
                 field={field}
@@ -151,20 +162,20 @@ export const TemplateFields = ({
                 className={
                   checkChipTitleOverflows(field.title) ? "col-span-2" : ""
                 }
-                onClick={() => toggleFieldActive(field, "file")}
+                onClick={() => toggleFieldActive(field, "DOCUMENT")}
               />
             ))}
           </div>
         </div>
       )}
 
-      {!!addedFields.length && (
+      {!!customFields.length && (
         <div>
           <h6 className="text-xs text-default-600 mb-2 ps-2">
-            {t("shared.addedItems")}
+            {customFieldsTitle}
           </h6>
           <div className="grid grid-cols-2 gap-1">
-            {addedFields.map((field) => (
+            {customFields.map((field) => (
               <FieldChip
                 key={`${field._id}-${field.title}`}
                 field={field}
@@ -172,7 +183,7 @@ export const TemplateFields = ({
                 className={
                   checkChipTitleOverflows(field.title) ? "col-span-2" : ""
                 }
-                onClick={() => toggleFieldActive(field, "added")}
+                onClick={() => toggleFieldActive(field, "CUSTOM")}
               />
             ))}
           </div>

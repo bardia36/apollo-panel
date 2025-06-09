@@ -1,5 +1,5 @@
 import { CommonListResponse, NameEnFa } from "./common";
-import { Template, TemplateField, TemplateFieldType } from "./templates";
+import { Template, TemplateField } from "./templates";
 
 export type ExpertRequestResponse = {
   docs: ExpertRequestInfo[];
@@ -49,60 +49,28 @@ export type ExpertRequestInfo = {
   };
 };
 
-export type ExpertRequestDetail = ExpertRequestInfo & {
+export type ExpertRequestDetail = {
   _id: string;
-  key: string;
+  status: ExpertRequestStatus;
   req_id: string;
-  price: number;
-  documents?: {
-    img?: RequestCommonInfo[];
-    video?: RequestCommonInfo[];
-  };
-  file_info: {
-    img?: RequestCommonInfo[];
-    sequence: RequestCommonInfo[];
-  };
-  required_fields: TemplateField[];
-  locations: {
-    lat: string;
-    lng: string;
-    address: string;
-    createdAt: string;
-    updatedAt: string;
-  }[];
-  template_fields_count: number;
-  template_id: Omit<Template, "_id">;
-  reviewers: {
-    owner: {
-      userName: string;
-      firstName: string;
-      lastName: string;
-      email: string;
-      phoneNumber: string;
+  order_number: string;
+  tags: string[];
+  unit: {
+    title: string;
+    level: {
+      name: string;
+      level_number: number;
     };
-    unit: {
+    parent: {
       title: string;
       level: {
         name: string;
         level_number: number;
       };
     };
-  }[];
-  inspection_data: ExpertRequestInfo["inspection_data"] & {
-    color?: {
-      name: string;
-      code: string;
-      color: string;
-    };
-    vin?: string;
-    // vehicle_fuel;
-    // vehicle_category
-    // vehicle_usage;
-    // license_plate_number
-    // motor_code
-    // chassis_number
-    // fanavaran_vin
   };
+  key: string;
+  price: number;
   request_log: {
     admin: {
       userName: string;
@@ -122,8 +90,119 @@ export type ExpertRequestDetail = ExpertRequestInfo & {
     createdAt: string;
     updatedAt: string;
   }[];
-  // previous_inspection;
+  last_location: {
+    lat: string;
+    lng: string;
+    address: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+  locations: {
+    lat: string;
+    lng: string;
+    address: string;
+    createdAt: string;
+    updatedAt: string;
+  }[];
+  template_id: Omit<Template, "fields">;
+  previous_inspection: string;
+  previous_inspections: [
+    {
+      inspection_request_id: string;
+      createdAt: string;
+      updatedAt: string;
+    },
+  ];
+  lead_specialist: {
+    email: string;
+    phoneNumber: string;
+    unit: string;
+    userName: string;
+    _id: string;
+  };
+  createdAt: string;
+  inspection_format: {
+    _id: string;
+    name: string;
+    type: "PRE_INSURANCE_BODY_INSPECTION";
+  };
+  video: string[];
+  gallery: TemplateField[]; // fields and images
+  owner: {
+    userName: string;
+    email: string;
+    phoneNumber: string;
+    _id: string;
+  };
+  reviewers: {
+    owner: {
+      userName: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      phoneNumber: string;
+    };
+    unit: {
+      title: string;
+      level: {
+        name: string;
+        level_number: number;
+      };
+    };
+  }[];
+  status_history: {
+    admin: string;
+    createdAt: string;
+    description: string;
+    status: ExpertRequestStatus;
+    updatedAt: string;
+  }[];
+  inspection_data: {
+    vehicle_brand?: NameEnFa;
+    vehicle_model?: NameEnFa;
+    vehicle_company?: NameEnFa & { _id: string };
+    color: {
+      name: string;
+      code: string;
+      color: string;
+    };
+    vehicle_fuel: {
+      name: string;
+      fuelType: FuelType;
+      unit: string;
+    };
+    vehicle_category: {
+      name: string;
+      code: string;
+      description: string;
+    };
+    vehicle_usage: {
+      name: string;
+      code: string;
+      description: string;
+    };
+    license_plate_number: LicensePlateNumber;
+    motor_code: string;
+    chassis_number: string;
+    vin: string;
+    fanavaran_vin: string;
+  };
 };
+
+export type LicensePlateNumber = {
+  left_number: string;
+  right_number: string;
+  letter: string;
+  province_code: string;
+};
+
+export type FuelType =
+  | "GASOLINE"
+  | "DIESEL"
+  | "LPG"
+  | "CNG"
+  | "ELECTRIC"
+  | "HYBRID";
 
 export type RequestCommonInfo = {
   name: string;
@@ -258,7 +337,7 @@ export type RegisterRequestBody = (
 };
 
 export type RequiredFields = {
-  type: TemplateFieldType;
+  type: "IMAGE" | "FILE" | "OTHER"; // OTHER is for ui usages;
   title: string;
 };
 
@@ -402,4 +481,9 @@ export type RetrieveRequestBody = {
 export type RequestEvidenceLackBody = {
   required_fields: TemplateField[];
   tags: string[];
+};
+
+export type ReminderBody = {
+  send_sms?: boolean;
+  send_email?: boolean;
 };

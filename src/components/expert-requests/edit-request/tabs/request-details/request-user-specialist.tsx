@@ -10,6 +10,10 @@ import { t } from "i18next";
 import { ExpertRequestDetail } from "@/types/expert-requests";
 import CopyButton from "@/components/shared/copy-button";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { useState } from "react";
+import { expertRequestsApi } from "@/apis/expert-requests";
+import { useParams } from "react-router-dom";
+import { exceptionHandler } from "@/apis/exception";
 
 type RequestUserSpecialistProps = {
   lead_specialist: ExpertRequestDetail["lead_specialist"];
@@ -24,6 +28,26 @@ export default function RequestUserSpecialist({
   unit,
   reviewers,
 }: RequestUserSpecialistProps) {
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const { id } = useParams();
+
+  const handleReminderClick = async () => {
+    if (!selectedOptions.length) return;
+
+    try {
+      setIsLoading(true);
+      await expertRequestsApi.reminder(id!, {
+        send_sms: selectedOptions.includes("sms"),
+        send_email: selectedOptions.includes("email"),
+      });
+    } catch (error) {
+      exceptionHandler(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="grid grid-cols-2 gap-4">
       <div className="col-span-2 xl:col-span-1">
@@ -71,16 +95,24 @@ export default function RequestUserSpecialist({
         </div>
 
         <div className="flex justify-between items-center flex-wrap gap-2">
-          {/* TODO: make checkbox required to send reminder message */}
           <Button
             variant="flat"
             size="sm"
             startContent={<Icon icon="mingcute:send-fill" />}
+            isLoading={isLoading}
+            isDisabled={isLoading || !selectedOptions.length}
+            onPress={handleReminderClick}
           >
             {t("expertRequests.sendReminderMessage")}
           </Button>
 
-          <CheckboxGroup orientation="horizontal" size="sm" dir="ltr">
+          <CheckboxGroup
+            orientation="horizontal"
+            size="sm"
+            dir="ltr"
+            value={selectedOptions}
+            onChange={setSelectedOptions}
+          >
             <Checkbox value="sms">SMS</Checkbox>
             <Checkbox value="email">Email</Checkbox>
           </CheckboxGroup>
@@ -101,9 +133,10 @@ export default function RequestUserSpecialist({
           />
 
           <div className="flex-1">
-            <h6 className="mb-2 font-semibold">{lead_specialist.userName}</h6>
-            <div className="flex items-center flex-wrap gap-2 md:gap-6 text-sm text-content2-foreground">
-              {/* <div className="flex items-center gap-2">
+            <h6 className="font-semibold">{lead_specialist.userName}</h6>
+            {!!lead_specialist.unit && (
+              <div className="mt-2 flex items-center flex-wrap gap-2 md:gap-6 text-sm text-content2-foreground">
+                {/* <div className="flex items-center gap-2">
                 <Icon
                   icon="solar:user-id-linear"
                   className="text-content4-foreground min-w-[18px] h-[18px]"
@@ -111,51 +144,57 @@ export default function RequestUserSpecialist({
                 <p>{t("expertRequests.responsibleSpecialist")}</p>
               </div> */}
 
-              {/* TODO: get from backend */}
-              {/* <p></p> */}
-            </div>
+                <p>{lead_specialist.unit}</p>
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-between gap-2">
-          <div>
-            <p className="text-default-foreground text-xs">{unit?.title}</p>
-            {/* TODO: get from backend */}
-            {/* <p className="text-content4-foreground text-xs">
-              {unit.level.name}
-            </p> */}
+        {(!!unit || !!reviewers?.length) && (
+          <div className="flex flex-wrap justify-between gap-2">
+            {unit && (
+              <div>
+                <p className="text-default-foreground text-xs">{unit.title}</p>
+                <p className="text-content4-foreground text-xs">
+                  {unit.parent?.title}
+                </p>
+              </div>
+            )}
+
+            {!!reviewers?.length && (
+              <div className="flex items-center gap-2 ms-auto">
+                <AvatarGroup>
+                  {reviewers.map((reviewer) => (
+                    <Tooltip
+                      key={reviewer.owner.email}
+                      content={`${reviewer.owner.userName} - ${reviewer.unit?.title}`}
+                    >
+                      <Avatar
+                        key={reviewer.owner.email}
+                        size="sm"
+                        radius="full"
+                        classNames={{ icon: "text-content1" }}
+                        className="bg-foreground-200"
+                      />
+                    </Tooltip>
+                  ))}
+                </AvatarGroup>
+
+                {owner.userName !== lead_specialist.userName && (
+                  <Tooltip content={owner.userName}>
+                    <Avatar
+                      key={owner.email}
+                      size="sm"
+                      radius="full"
+                      classNames={{ icon: "text-foreground-400" }}
+                      className="bg-foreground-200"
+                    />
+                  </Tooltip>
+                )}
+              </div>
+            )}
           </div>
-
-          <AvatarGroup>
-            {reviewers.map((reviewer) => (
-              <Tooltip
-                key={reviewer.owner.email}
-                content={`${reviewer.owner.userName} - ${reviewer.unit?.title}`}
-              >
-                <Avatar
-                  key={reviewer.owner.email}
-                  size="sm"
-                  radius="full"
-                  classNames={{ icon: "text-content1" }}
-                  className="bg-foreground-200"
-                />
-              </Tooltip>
-            ))}
-          </AvatarGroup>
-
-          {/* TODO: get from backend when the owner is different from the lead specialist */}
-          {/* <Tooltip
-            content={`${} - ${}`}
-          >
-            <Avatar
-              key={}
-              size="sm"
-              radius="full"
-              classNames={{ icon: "text-foreground-400" }}
-              className="bg-foreground-200"
-            />
-          </Tooltip> */}
-        </div>
+        )}
       </div>
     </div>
   );

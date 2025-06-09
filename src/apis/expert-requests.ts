@@ -14,6 +14,7 @@ import {
   RejectRequestBody,
   RetrieveRequestBody,
   RequestEvidenceLackBody,
+  ReminderBody,
 } from "@/types/expert-requests";
 
 const BASE_URL = "panel/inspection-request";
@@ -118,6 +119,14 @@ export const expertRequestsApi = {
     return axiosHandler<RequestsSetting>(BASE_URL, {
       action: `${id}/more-info`,
       method: RequestMethod.PATCH,
+      body,
+    });
+  },
+
+  reminder(id: string, body: ReminderBody) {
+    return axiosHandler<RequestsSetting>(BASE_URL, {
+      action: `${id}/reminder`,
+      method: RequestMethod.POST,
       body,
     });
   },

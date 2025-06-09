@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Input, Select, SelectItem, Button, cn } from "@heroui/react";
 import { LazyImage } from "./lazy-image";
 import IranFlag from "@/assets/images/expert-requests/iran-flag.svg";
+import { LicensePlateNumber } from "@/types/expert-requests";
 
 const persianLetters = [
   "الف",
@@ -18,41 +19,34 @@ const persianLetters = [
   "س",
 ];
 
-type PlateState = {
-  part1: string;
-  letter: string;
-  part2: string;
-  iranCode: string;
-};
-
-interface IranLicensePlateProps {
-  defaultValue?: PlateState;
-  onChange?: (value: PlateState) => void;
+type IranLicensePlateProps = {
+  licensePlate: LicensePlateNumber;
   isDisabled?: boolean;
   isInvalid?: boolean;
   isSelected?: boolean;
-}
+  onChange?: (value: LicensePlateNumber) => void;
+};
 
 export default function IranLicensePlate({
-  defaultValue,
-  onChange,
+  licensePlate,
   isDisabled = false,
   isInvalid = false,
   isSelected = false,
+  onChange,
 }: IranLicensePlateProps) {
   const [editMode, setEditMode] = useState(false);
-  const [plate, setPlate] = useState<PlateState>(
-    defaultValue || {
-      part1: "12",
-      letter: "س",
-      part2: "345",
-      iranCode: "67",
+  const [plate, setPlate] = useState<LicensePlateNumber>(
+    licensePlate || {
+      left_number: "",
+      right_number: "",
+      letter: "",
+      province_code: "",
     }
   );
 
   const isReadOnly = isDisabled || !editMode;
 
-  const handleChange = (key: keyof PlateState, value: string) => {
+  const handleChange = (key: keyof LicensePlateNumber, value: string) => {
     if (isReadOnly) return;
 
     const newPlate = { ...plate, [key]: value };
@@ -92,12 +86,12 @@ export default function IranLicensePlate({
         <Input
           size="sm"
           isDisabled={isReadOnly}
-          value={plate.part1}
+          value={plate.left_number}
           placeholder="--"
           aria-label="Plate Part 2"
           className="w-fit"
           onValueChange={(value) => {
-            if (validateInput(value, 2)) handleChange("part1", value);
+            if (validateInput(value, 2)) handleChange("left_number", value);
           }}
           classNames={{
             base: "opacity-100",
@@ -139,12 +133,12 @@ export default function IranLicensePlate({
         <Input
           size="sm"
           isDisabled={isReadOnly}
-          value={plate.part2}
+          value={plate.right_number}
           placeholder="---"
           className="w-fit"
           aria-label="Plate Part 2"
           onValueChange={(value) => {
-            if (validateInput(value, 3)) handleChange("part2", value);
+            if (validateInput(value, 3)) handleChange("right_number", value);
           }}
           classNames={{
             base: "opacity-100",
@@ -177,12 +171,12 @@ export default function IranLicensePlate({
         <Input
           size="sm"
           isDisabled={isReadOnly}
-          value={plate.iranCode}
+          value={plate.province_code}
           placeholder="--"
           className="w-fit"
           aria-label="Plate Iran Code"
           onValueChange={(value) => {
-            if (validateInput(value, 2)) handleChange("iranCode", value);
+            if (validateInput(value, 2)) handleChange("province_code", value);
           }}
           classNames={{
             base: "opacity-100",

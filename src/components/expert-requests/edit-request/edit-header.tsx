@@ -160,7 +160,7 @@ export const EditHeader = ({
             <LackOfEvidenceModal
               code={requestData.req_id}
               tags={requestData.tags || []}
-              fields={requestData.required_fields || []}
+              fields={requestData.gallery || []}
               activatorVariant="shadow"
               activatorClassName="bg-foreground-900 text-foreground-50 ms-1"
               activatorIconClassName="text-foreground-50"

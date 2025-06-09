@@ -1,45 +1,24 @@
 import CopyButton from "@/components/shared/copy-button";
 import { OneLineDateDisplay } from "@/components/shared/date-display";
-import { ExpertRequestDetail } from "@/types/expert-requests";
+import {
+  ExpertRequestDetail,
+  ExpertRequestStatus,
+} from "@/types/expert-requests";
 import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 
+type Props = {
+  orderNumber: ExpertRequestDetail["order_number"];
+  status: ExpertRequestStatus;
+  statusHistory: ExpertRequestDetail["status_history"];
+};
+
 export default function RequestStatus({
   orderNumber,
   status,
-}: {
-  orderNumber: ExpertRequestDetail["order_number"];
-  status: ExpertRequestDetail["status"];
-}) {
-  const sampleData = [
-    {
-      id: 1,
-      title: t("expertRequests.sendLinkToUser"),
-      createdAt: "2025-05-31T09:22:24.218Z",
-      isCompleted: true,
-    },
-    {
-      id: 2,
-      title: t("expertRequests.uploadAndSendItems"),
-      createdAt: "2025-05-31T09:22:24.218Z",
-      isCompleted: false,
-      active: true,
-    },
-    {
-      id: 3,
-      title: t("expertRequests.reviewBySpecialist"),
-      createdAt: "2025-05-31T09:22:24.218Z",
-      isCompleted: false,
-    },
-    {
-      id: 4,
-      title: t("expertRequests.notifyExpert"),
-      createdAt: "2025-05-31T09:22:24.218Z",
-      isCompleted: false,
-    },
-  ];
-
+  statusHistory,
+}: Props) {
   return (
     <div className="flex flex-col gap-4">
       <h6 className="text-xs text-default-600">
@@ -47,15 +26,14 @@ export default function RequestStatus({
       </h6>
 
       <div>
-        {/* TODO: Handle it from request data */}
-        {sampleData.map((item, index) => (
+        {statusHistory.map((item, index) => (
           <div
-            key={item.id}
+            key={item.updatedAt + item.createdAt}
             className={`flex items-center gap-4 px-3 py-2 rounded-large ${
-              item.active && "bg-content1 shadow-md"
+              item.status === "COMPLETED" && "bg-content1 shadow-md"
             }`}
           >
-            {item.isCompleted ? (
+            {item.status === "COMPLETED" ? (
               <div className="p-1.5 rounded-full bg-primary shadow-lg shadow-primary">
                 <Icon
                   icon="humbleicons:check"
@@ -65,7 +43,7 @@ export default function RequestStatus({
             ) : (
               <div
                 className={`rounded-full border-2 w-9 h-9 flex items-center justify-center ${
-                  item.active
+                  item.status === "ACCEPTED"
                     ? "text-primary border-primary"
                     : "text-primary-300 border-primary-300"
                 }`}
@@ -76,10 +54,10 @@ export default function RequestStatus({
 
             <div>
               <h6 className="text-sm font-semibold text-default-foreground">
-                {item.title}
+                {item.description}
               </h6>
               <OneLineDateDisplay
-                isoDate={item.createdAt}
+                isoDate={item.updatedAt}
                 className="text-default-500"
               />
             </div>

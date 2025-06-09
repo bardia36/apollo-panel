@@ -24,9 +24,9 @@ export default function RequestDetails({ requestData }: RequestDetailsProps) {
       <div className="col-span-12 grid lg:grid-cols-12 gap-12 bg-default-50 p-4 rounded-large">
         <Suspense fallback={<ImagesStatusAlertSkeleton />}>
           <ImagesStatusAlert
-            documents={requestData.documents}
+            gallery={requestData.gallery}
             status={requestData.status}
-            createdAt={requestData.createdAt}
+            updatedAt={requestData.previous_inspections?.[0]?.updatedAt}
           />
         </Suspense>
 
@@ -35,6 +35,7 @@ export default function RequestDetails({ requestData }: RequestDetailsProps) {
             <RequestStatus
               orderNumber={requestData.order_number}
               status={requestData.status}
+              statusHistory={requestData.status_history}
             />
           </Suspense>
         </div>
@@ -55,7 +56,10 @@ export default function RequestDetails({ requestData }: RequestDetailsProps) {
         {!!requestData.locations?.length && (
           <div className="lg:col-span-4">
             <Suspense fallback={<RequestLocationSkeleton />}>
-              <RequestLocation locations={requestData.locations} />
+              <RequestLocation
+                locations={requestData.locations}
+                lastLocation={requestData.last_location}
+              />
             </Suspense>
           </div>
         )}
@@ -73,11 +77,13 @@ export default function RequestDetails({ requestData }: RequestDetailsProps) {
           </Suspense>
         </div>
 
-        <div className="xl:col-span-7">
-          <Suspense fallback={<RequestContentSkeleton />}>
-            <RequestContent fields={requestData.required_fields} />
-          </Suspense>
-        </div>
+        {!!requestData.gallery?.length && (
+          <div className="xl:col-span-7">
+            <Suspense fallback={<RequestContentSkeleton />}>
+              <RequestContent fields={requestData.gallery} />
+            </Suspense>
+          </div>
+        )}
       </div>
     </div>
   );
