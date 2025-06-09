@@ -22,6 +22,7 @@ import { statusOptions } from "@/components/expert-requests/constants";
 import { NeutralChip } from "@/components/shared/request-status-chip";
 import { AppDatePicker } from "@/components/shared/app-components/app-date-picker";
 import { exceptionHandler } from "@/apis/exception";
+import useAppConfig from "@/config/app-config";
 
 type ReportModalProps = {
   isOpen: boolean;
@@ -38,6 +39,7 @@ export const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
   ]);
   const [fileType, setFileType] = useState<"xlsx" | "csv">("xlsx");
   const [isLoading, setIsLoading] = useState(false);
+  const { staticServerUrl } = useAppConfig();
 
   const handleExport = async () => {
     try {
@@ -49,13 +51,27 @@ export const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
         to_date: toDate,
       };
 
-      await expertRequestsApi.exportReport(params);
-      onClose();
+      const { url } = await expertRequestsApi.exportReport(params);
+      downloadFileFromURL(url, "inspection_requests.xlsx");
     } catch (error) {
       exceptionHandler(error);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const downloadFileFromURL = (fileUrl: string, filename = "file") => {
+    const link = document.createElement("a");
+    link.href = `${staticServerUrl}${fileUrl}`;
+
+    console.log(link);
+
+    // This tells browser to download instead of open if possible
+    link.setAttribute("download", filename);
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -85,7 +101,7 @@ export const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
                   className="text-default-foreground"
                 />
 
-                <span className="text-sm text-foreground">
+                <span className="text-foreground text-sm">
                   {t("expertRequests.reportDescription")}
                 </span>
               </div>
@@ -127,7 +143,7 @@ export const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
               {(status) => <SelectItem key={status.uid} title={status.label} />}
             </Select>
 
-            <div className="grid grid-cols-2 gap-4 md:gap-6">
+            <div className="gap-4 md:gap-6 grid grid-cols-2">
               <AppDatePicker
                 value={fromDate}
                 onChange={setFromDate}
@@ -154,7 +170,7 @@ export const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
             </div>
 
             <div>
-              <label className="block text-xs text-default-600 mb-2">
+              <label className="block mb-2 text-default-600 text-xs">
                 {t("shared.fileType")}
               </label>
 
