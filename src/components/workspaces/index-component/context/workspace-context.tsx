@@ -31,7 +31,7 @@ export const WorkspaceProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       exceptionHandler(error);
     } finally {
-      setLoading(false);
+      setLoading(true);
     }
   }, []);
 

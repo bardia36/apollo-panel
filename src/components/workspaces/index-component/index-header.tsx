@@ -2,7 +2,7 @@ import { NeutralChip } from "@/components/shared/workspace-status-chip";
 import { Workspace } from "@/types/workspace";
 import { statusesMap } from "@/components/workspaces/constants";
 import { t } from "i18next";
-import DateDisplay from "@/components/shared/date-display";
+import { JustDateDisplay } from "@/components/shared/date-display";
 import {
   Button,
   Dropdown,
@@ -26,7 +26,7 @@ const IndexHeader = ({
           <NeutralChip
             status={{
               uid: workspaceData?.status!,
-              label: statusesMap[workspaceData?.status!].label,
+              label: statusesMap[workspaceData?.status!]?.label,
             }}
           />
         </div>
@@ -36,9 +36,8 @@ const IndexHeader = ({
             {t("workspaces.active_at")}:{" "}
           </p>
 
-          <DateDisplay
+          <JustDateDisplay
             isoDate={workspaceData?.active_at!}
-            showTime={false}
             className="text-default-600"
           />
         </div>

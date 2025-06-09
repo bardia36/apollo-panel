@@ -1,10 +1,10 @@
-import { Key, lazy, Suspense, useEffect, useState } from "react";
+import { Key, lazy, useEffect, useState } from "react";
 import {
   useWorkspace,
   WorkspaceProvider,
 } from "./index-component/context/workspace-context";
-import Loading from "@/components/shared/loading";
 import useWorkspaceStore from "@/stores/workspace-store";
+import WorkspaceSkeleton from "./index-component/workspace-skeleton";
 
 const IndexHeader = lazy(() => import("./index-component/index-header"));
 const WorkspaceTabs = lazy(() => import("./index-component/workspace-tabs"));
@@ -26,22 +26,18 @@ function WorkspacesContent() {
     else setActiveTab(key as string);
   }
 
+  if (loading) return <WorkspaceSkeleton />;
+
   return (
-    <div className="lg:px-4">
-      <Suspense fallback={<Loading />}>
-        {loading ? (
-          <Loading />
-        ) : (
-          <div>
-            <IndexHeader workspaceData={workspace} />
+    !!workspace && (
+      <div className="lg:px-4">
+        <IndexHeader workspaceData={workspace} />
 
-            <WorkspaceTabs activeTab={activeTab} onChange={onTabChange} />
+        <WorkspaceTabs activeTab={activeTab} onChange={onTabChange} />
 
-            <WorkspaceTabContent activeTab={activeTab} />
-          </div>
-        )}
-      </Suspense>
-    </div>
+        <WorkspaceTabContent activeTab={activeTab} />
+      </div>
+    )
   );
 }
 
