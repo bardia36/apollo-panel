@@ -144,14 +144,14 @@ export default function RequestUserSpecialist({
                 <p>{t("expertRequests.responsibleSpecialist")}</p>
               </div> */}
 
-                <p>{lead_specialist.unit}</p>
+                <p>{lead_specialist.unit?.title}</p>
               </div>
             )}
           </div>
         </div>
 
         {(!!unit || !!reviewers?.length) && (
-          <div className="flex flex-wrap justify-between gap-2">
+          <div className="flex flex-wrap justify-between items-center gap-2">
             {unit && (
               <div>
                 <p className="text-default-foreground text-xs">{unit.title}</p>

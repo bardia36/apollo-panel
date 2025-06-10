@@ -35,10 +35,7 @@ export type ExpertRequestInfo = {
   };
   unit: {
     title: string;
-    level: {
-      name: string;
-      level_number: number;
-    };
+    level: UnitLevel;
   };
   tags?: string[];
   createdAt: string;
@@ -57,16 +54,10 @@ export type ExpertRequestDetail = {
   tags: string[];
   unit: {
     title: string;
-    level: {
-      name: string;
-      level_number: number;
-    };
+    level: UnitLevel;
     parent: {
       title: string;
-      level: {
-        name: string;
-        level_number: number;
-      };
+      level: UnitLevel;
     };
   };
   key: string;
@@ -116,7 +107,11 @@ export type ExpertRequestDetail = {
   lead_specialist: {
     email: string;
     phoneNumber: string;
-    unit: string;
+    unit: {
+      level: UnitLevel;
+      title: string;
+      _id: string;
+    };
     userName: string;
     _id: string;
   };
@@ -144,10 +139,7 @@ export type ExpertRequestDetail = {
     };
     unit: {
       title: string;
-      level: {
-        name: string;
-        level_number: number;
-      };
+      level: UnitLevel;
     };
   }[];
   status_history: {
@@ -187,6 +179,12 @@ export type ExpertRequestDetail = {
     vin: string;
     fanavaran_vin: string;
   };
+};
+
+export type UnitLevel = {
+  _id?: string;
+  name: string;
+  level_number: number;
 };
 
 export type LicensePlateNumber = {

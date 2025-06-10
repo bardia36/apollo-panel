@@ -68,7 +68,7 @@ export default function RequestStatus({
       {["COMPLETED", "REVIEWED"].includes(status) && (
         <div className="grid grid-cols-6 gap-2.5">
           {orderNumber && (
-            <div className="col-span-2 bg-default-100 rounded-lg shadow-sm shadow-neutral px-4 py-1">
+            <div className="col-span-2 lg:col-span-3 xl:col-span-2 bg-default-100 rounded-lg shadow-sm shadow-neutral px-4 py-1">
               <p className="text-xs text-default-600 mb-1">
                 {t("expertRequests.orderNumber")}
               </p>
@@ -88,7 +88,7 @@ export default function RequestStatus({
           <Button
             variant="flat"
             size="sm"
-            className={`h-12 ${orderNumber ? "col-span-4" : "col-span-6"}`}
+            className={`h-12 ${orderNumber ? "col-span-4 lg:col-span-3 xl:col-span-4" : "col-span-6 lg:col-span-4 xl:col-span-3"}`}
             startContent={
               <Icon
                 icon="solar:upload-square-bold"

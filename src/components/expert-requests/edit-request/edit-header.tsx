@@ -38,7 +38,7 @@ export const EditHeader = ({
   return (
     // TODO: FIX TABLET AND SMALL DESKTOPS RESPONSIVENESS
     <div className="flex flex-col gap-4 pt-3 md:px-4">
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-4 order-1 md:order-none">
           <div
             className={cn(
@@ -82,7 +82,7 @@ export const EditHeader = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5 w-full md:w-auto">
+        <div className="flex items-center gap-2.5 w-full md:w-auto ms-auto">
           {["COMPLETED", "REVIEWED"].includes(requestData.status) &&
             !isMdAndUp && (
               <Dropdown>
@@ -111,7 +111,7 @@ export const EditHeader = ({
                     <LackOfEvidenceModal
                       code={requestData.req_id}
                       tags={requestData.tags || []}
-                      fields={requestData.required_fields || []}
+                      fields={requestData.gallery || []}
                       activatorVariant="flat"
                       activatorSize="sm"
                       activatorClassName="hidden md:flex text-default-foreground"

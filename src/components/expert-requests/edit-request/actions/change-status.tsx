@@ -52,7 +52,12 @@ export const ChangeStatusModal = ({ status, code, tags }: Props) => {
     <AppModal
       ref={modalRef}
       activator={
-        <Button variant="flat" size="sm" className="text-default-foreground">
+        <Button
+          variant={status === "REVIEWED" ? "light" : "flat"}
+          size="sm"
+          isIconOnly={status === "REVIEWED"}
+          className="text-default-foreground"
+        >
           <Icon
             icon="bx:sort"
             width={20}

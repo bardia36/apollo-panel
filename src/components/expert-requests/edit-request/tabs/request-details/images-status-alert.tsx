@@ -29,7 +29,7 @@ export default function ImagesStatusAlert({
   }));
 
   return (
-    <div className="flex flex-col items-center justify-center bg-content1 shadow-md rounded-3xl lg:col-span-8 p-6">
+    <div className="flex flex-col items-center justify-center bg-content1 shadow-md rounded-3xl lg:col-span-7 xl:col-span-8 p-6">
       {!!gallery?.length && (
         <div className="min-h-[156px] w-full flex items-center justify-center">
           <CollapsableCards items={mappedImages} />

@@ -35,14 +35,12 @@ export default function IranLicensePlate({
   onChange,
 }: IranLicensePlateProps) {
   const [editMode, setEditMode] = useState(false);
-  const [plate, setPlate] = useState<LicensePlateNumber>(
-    licensePlate || {
-      left_number: "",
-      right_number: "",
-      letter: "",
-      province_code: "",
-    }
-  );
+  const [plate, setPlate] = useState<LicensePlateNumber>({
+    left_number: licensePlate.left_number || "",
+    right_number: licensePlate.right_number || "",
+    letter: licensePlate.letter || "",
+    province_code: licensePlate.province_code || "",
+  });
 
   const isReadOnly = isDisabled || !editMode;
 

@@ -30,7 +30,7 @@ export default function RequestDetails({ requestData }: RequestDetailsProps) {
           />
         </Suspense>
 
-        <div className="lg:col-span-4">
+        <div className="lg:col-span-5 xl:col-span-4">
           <Suspense fallback={<RequestStatusSkeleton />}>
             <RequestStatus
               orderNumber={requestData.order_number}
