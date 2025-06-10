@@ -27,7 +27,7 @@ import { AvailableTemplates } from "./available-templates.tsx";
 import { TemplateFields } from "@/components/shared/templates/template-fields.tsx";
 import { TemplatesLoadingSkeleton } from "./components/loading-component.tsx";
 import { TemplateDetailsHeader } from "./components/template-details-header.tsx";
-import { useTemplateFields } from "./components/useTemplateFields.tsx";
+import { useTemplateFields } from "@/hooks/use-template-fields.tsx";
 
 type Props = {
   activator: ReactNode;

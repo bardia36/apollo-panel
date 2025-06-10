@@ -31,7 +31,7 @@ export type ExpertRequestInfo = {
     _id?: string;
   };
   order_number: string;
-  owner: Owner;
+  owner: Owner & { image?: string };
   status: ExpertRequestStatus;
   tags?: string[];
   unit?: {
@@ -186,7 +186,7 @@ export type RegisterRequestResponse = {
     name: string;
     _id: string;
   };
-  required_fields: RequiredFields[];
+  gallery: TemplateField[]; // fields and images
   created_at: string;
   updated_at: string;
   lead_specialist: {
@@ -201,17 +201,9 @@ export type RegisterRequestResponse = {
   step: RegisterRequestStep;
   unit: string;
   inspection_data: {
-    vin: string;
-    vehicle_brand: {
-      name_en: string;
-      name_fa: string;
-      _id: string;
-    };
-    vehicle_model: {
-      name_en: string;
-      name_fa: string;
-      _id: string;
-    };
+    vehicle_category: NameEnFa & { _id: string };
+    vehicle_brand: NameEnFa & { _id: string };
+    vehicle_model: NameEnFa & { _id: string };
     vehicle_company: {
       name: string;
       name_local: string;
@@ -221,6 +213,7 @@ export type RegisterRequestResponse = {
       name: string;
       _id: string;
     };
+    vin: string;
   };
 };
 

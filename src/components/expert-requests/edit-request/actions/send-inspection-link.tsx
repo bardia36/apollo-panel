@@ -25,11 +25,10 @@ import { array, boolean, object, string, ObjectSchema } from "yup";
 import { useValidationMessages } from "@/utils/rules";
 import { formOptions } from "@/utils/validations";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { dateOfNow, getFieldsInfo } from "@/utils/base";
+import { dateOfNow } from "@/utils/base";
 import { truncateString } from "@/utils/base";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
-import { Chip } from "@heroui/react";
-import { FieldChip } from "@/components/shared/templates/field-chip";
+import { SecondRow, ThirdRow } from "@/components/shared/request-summary";
 
 type Props = {
   requestData: ExpertRequestDetail;
@@ -378,7 +377,6 @@ export const SendInspectionLinkModal = ({ requestData }: Props) => {
 
 const ExpertRequestSummary = ({ requestData }: Props) => {
   const { isSmAndDown } = useBreakpoint();
-  const { defaultFields, customFields } = getFieldsInfo(requestData.gallery);
 
   return (
     <div className="mb-6">
@@ -439,80 +437,23 @@ const ExpertRequestSummary = ({ requestData }: Props) => {
         </div>
 
         {!!requestData.inspection_data && (
-          <div className="flex items-center flex-wrap gap-2">
-            <div className="p-3.5">
-              <Icon
-                icon="lineicons:search-1"
-                className="text-default-400"
-                width={20}
-                height={20}
-              />
-            </div>
-
-            <div>
-              <h6 className="font-semibold text-foreground-700">
-                {requestData.inspection_data.vehicle_model?.name_fa}
-              </h6>
-              <p className="text-foreground-500 text-sm">
-                {requestData.inspection_data.vehicle_brand?.name_fa}
-              </p>
-            </div>
-
-            <div className="ms-auto text-end text-foreground-500 text-sm">
-              <h6>{requestData.inspection_data.color?.name}</h6>
-              <p>VIN: {requestData.inspection_data.vin}</p>
-            </div>
-          </div>
+          <SecondRow
+            vehicleModelName={
+              requestData.inspection_data.vehicle_model?.name_fa
+            }
+            vehicleBrandName={
+              requestData.inspection_data.vehicle_brand?.name_fa
+            }
+            colorName={requestData.inspection_data.color?.name}
+            vin={requestData.inspection_data.vin}
+          />
         )}
 
-        <div className="flex items-center flex-wrap gap-2">
-          <div className="p-3.5">
-            <Icon
-              icon="solar:folder-linear"
-              className="text-default-400"
-              width={20}
-              height={20}
-            />
-          </div>
-
-          <div>
-            <h6 className="font-semibold text-foreground-700">
-              {requestData.template_id.name}
-            </h6>
-            <p className="text-foreground-500 text-sm">
-              {requestData.inspection_format.name}
-            </p>
-          </div>
-
-          <div className="text-end ms-auto text-sm">
-            <h6 className="text-foreground-500">
-              {defaultFields.length} {t("expertRequests.wantedItem")}
-            </h6>
-
-            {!!customFields.length && (
-              <div className="flex items-center justify-end gap-2 mt-1">
-                <FieldChip
-                  field={{
-                    ...customFields[0],
-                    title: truncateString(customFields[0].title, 20),
-                    active: true,
-                  }}
-                />
-
-                {customFields.length > 1 && (
-                  <Chip
-                    classNames={{
-                      base: "text-default-foreground bg-default bg-opacity-40",
-                      content: "flex items-center",
-                    }}
-                  >
-                    +{customFields.length - 1}
-                  </Chip>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
+        <ThirdRow
+          gallery={requestData.gallery}
+          templateName={requestData.template_id.name}
+          inspectionFormatName={requestData.inspection_format.name}
+        />
       </div>
     </div>
   );
