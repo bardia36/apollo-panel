@@ -1,4 +1,3 @@
-import { RequiredFields } from "@/types/expert-requests";
 import { TemplateField } from "@/types/templates";
 import { t } from "i18next";
 import jalaali from "jalaali-js";
@@ -184,16 +183,9 @@ export const dateOfNow = () => {
   return `${datePart} - ${timePart}`;
 };
 
-export const getFieldsInfo = (requestData: {
-  template_id: { fields: TemplateField[] };
-  required_fields: RequiredFields[];
-}) => {
-  const templateFields = requestData.template_id.fields.map((f) => f.title);
-  const commonFields = requestData.required_fields.filter((f) =>
-    templateFields.includes(f.title)
-  );
-  const addedFields = requestData.required_fields.filter(
-    (f) => !templateFields.includes(f.title)
-  );
-  return { commonFields, addedFields };
+export const getFieldsInfo = (fields: TemplateField[]) => {
+  const defaultFields = fields.filter((f) => f.type !== "CUSTOM");
+  const customFields = fields.filter((f) => f.type === "CUSTOM");
+
+  return { defaultFields, customFields };
 };

@@ -80,6 +80,7 @@ export function useTemplateFields() {
         _id: template._id,
         name: template.name,
         logo: template.logo,
+        default: template.default,
         fields: (modifiedTemplateFields[template._id] || template.fields || [])
           .filter((field) => field.active) // Filter out inactive fields
           .map((field) => ({

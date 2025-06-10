@@ -7,7 +7,7 @@ import {
 import { ExpertRequestStatus } from "@/types/expert-requests";
 import { Button, Checkbox, Switch, Textarea } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { t } from "i18next";
 import { useParams } from "react-router-dom";
 import { useRef, useState } from "react";
@@ -25,6 +25,7 @@ type Props = {
 export const ChangeStatusModal = ({ status, code, tags }: Props) => {
   const { id } = useParams();
   const modalRef = useRef<AppModalRef>(null);
+  const queryClient = useQueryClient();
 
   const [selectedStatus, setSelectedStatus] = useState<ExpertRequestStatus[]>(
     []
@@ -33,7 +34,7 @@ export const ChangeStatusModal = ({ status, code, tags }: Props) => {
   const [changeMind, setChangeMind] = useState(false);
   const [sendNotification, setSendNotification] = useState(true);
   const [cantSendNotification, setCantSendNotification] = useState(false);
-  const [reason, setReason] = useState("");
+  const [reason, setReason] = useState<string | undefined>();
 
   const { mutate: changeStatus, isPending } = useMutation({
     mutationFn: async () =>
@@ -42,9 +43,13 @@ export const ChangeStatusModal = ({ status, code, tags }: Props) => {
         change_mind: changeMind,
         send_notification: sendNotification,
         cant_send_notification: cantSendNotification,
+        change_status_reason: reason ? [reason] : [],
         tags: reqTags,
       }),
-    onSuccess: () => modalRef.current?.onClose(),
+    onSuccess: () => {
+      modalRef.current?.onClose();
+      queryClient.invalidateQueries({ queryKey: ["expert-request", id] });
+    },
     onError: (err) => exceptionHandler(err),
   });
 
@@ -97,10 +102,10 @@ export const ChangeStatusModal = ({ status, code, tags }: Props) => {
                 {t("expertRequests.changeMind")}
               </Checkbox>
               <Checkbox
-                isSelected={!cantSendNotification}
+                isSelected={cantSendNotification}
                 onValueChange={(checked) => {
-                  setCantSendNotification(!checked);
-                  if (!checked) setSendNotification(false);
+                  setCantSendNotification(checked);
+                  if (checked) setSendNotification(false);
                 }}
               >
                 {t("expertRequests.canSendNotification")}

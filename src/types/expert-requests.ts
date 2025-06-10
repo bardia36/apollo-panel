@@ -1,7 +1,7 @@
 import { CommonListResponse, NameEnFa } from "./common";
 import { Template, TemplateField } from "./templates";
 
-export type ExpertRequestResponse = {
+export type AllExpertRequestsResponse = {
   docs: ExpertRequestInfo[];
   hasNextPage: boolean;
   hasPrevPage: boolean;
@@ -12,19 +12,16 @@ export type ExpertRequestResponse = {
 };
 
 export type ExpertRequestInfo = {
-  _id: string;
-  status: ExpertRequestStatus;
+  createdAt: string;
+  inspection_data: {
+    vehicle_brand?: NameEnFa;
+    vehicle_model?: NameEnFa;
+    vehicle_company?: NameEnFa;
+  };
   inspection_format: {
     name: string;
     logo: string;
     description: string;
-  };
-  order_number: string;
-  owner: {
-    image?: string;
-    userName: string;
-    phoneNumber?: string;
-    email?: string;
   };
   lead_specialist: {
     image?: string;
@@ -33,17 +30,19 @@ export type ExpertRequestInfo = {
     email?: string;
     _id?: string;
   };
-  unit: {
+  order_number: string;
+  owner: Owner;
+  status: ExpertRequestStatus;
+  tags?: string[];
+  unit?: {
+    city: string;
+    description: string;
+    province: string;
     title: string;
+    _id: string;
     level: UnitLevel;
   };
-  tags?: string[];
-  createdAt: string;
-  inspection_data: {
-    vehicle_brand?: NameEnFa;
-    vehicle_model?: NameEnFa;
-    vehicle_company?: NameEnFa;
-  };
+  _id: string;
 };
 
 export type ExpertRequestDetail = {
@@ -125,20 +124,9 @@ export type ExpertRequestDetail = {
   };
   video: string[];
   gallery: TemplateField[]; // fields and images
-  owner: {
-    userName: string;
-    email: string;
-    phoneNumber: string;
-    _id: string;
-  };
+  owner: Owner;
   reviewers: {
-    owner: {
-      userName: string;
-      firstName: string;
-      lastName: string;
-      email: string;
-      phoneNumber: string;
-    };
+    owner: Owner;
     unit: {
       title: string;
       level: UnitLevel;
@@ -180,6 +168,59 @@ export type ExpertRequestDetail = {
     chassis_number: string;
     vin: string;
     fanavaran_vin: string;
+  };
+};
+
+export type RegisterRequestResponse = {
+  _id: string;
+  username: string;
+  mobile: string;
+  email: string;
+  order_number: string;
+  inspection_format: {
+    name: string;
+    _id: string;
+  };
+  template_id: {
+    fields: TemplateField[];
+    name: string;
+    _id: string;
+  };
+  required_fields: RequiredFields[];
+  created_at: string;
+  updated_at: string;
+  lead_specialist: {
+    image?: string;
+    userName: string;
+    phoneNumber?: string;
+    email?: string;
+    _id?: string;
+  };
+  owner: Owner;
+  status: ExpertRequestStatus;
+  step: RegisterRequestStep;
+  unit: string;
+  inspection_data: {
+    vin: string;
+    vehicle_brand: {
+      name_en: string;
+      name_fa: string;
+      _id: string;
+    };
+    vehicle_model: {
+      name_en: string;
+      name_fa: string;
+      _id: string;
+    };
+    vehicle_company: {
+      name: string;
+      name_local: string;
+      _id: string;
+    };
+    color: {
+      name: string;
+      _id: string;
+    };
   };
 };
 
@@ -341,57 +382,12 @@ export type RequiredFields = {
   title: string;
 };
 
-export type RegisterRequestResponse = {
-  _id: string;
-  username: string;
+export type Owner = {
+  userName: string;
   mobile: string;
-  email: string;
-  order_number: string;
-  inspection_format: {
-    name: string;
-    _id: string;
-  };
-  template_id: {
-    fields: TemplateField[];
-    name: string;
-    _id: string;
-  };
-  required_fields: RequiredFields[];
-  created_at: string;
-  updated_at: string;
-  lead_specialist: {
-    image?: string;
-    userName: string;
-    phoneNumber?: string;
-    email?: string;
-    _id?: string;
-  };
-  owner: string;
-  status: ExpertRequestStatus;
-  step: RegisterRequestStep;
-  unit: string;
-  inspection_data: {
-    vin: string;
-    vehicle_brand: {
-      name_en: string;
-      name_fa: string;
-      _id: string;
-    };
-    vehicle_model: {
-      name_en: string;
-      name_fa: string;
-      _id: string;
-    };
-    vehicle_company: {
-      name: string;
-      name_local: string;
-      _id: string;
-    };
-    color: {
-      name: string;
-      _id: string;
-    };
-  };
+  email?: string;
+  phoneNumber?: string;
+  _id: string;
 };
 
 export type ExportReportParams = {
@@ -436,6 +432,7 @@ export type SettingExpirationTime =
 
 export type SettingPhotoDeadline = "30" | "40" | "50" | "60" | "120" | "180";
 
+// request bodies
 export type AcceptRequestBody = {
   vehicle_fuel: string;
   color: string;
@@ -455,6 +452,7 @@ export type ChangeStatusRequestBody = {
   change_mind: boolean;
   send_notification: boolean;
   cant_send_notification: boolean;
+  change_status_reason: string[];
   tags: string[];
 };
 

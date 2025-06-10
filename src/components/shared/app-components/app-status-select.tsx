@@ -19,18 +19,39 @@ type AppStatusSelectProps = {
 };
 
 const statusFlow: Record<ExpertRequestStatus, ExpertRequestStatus[]> = {
-  DRAFT: ["PENDING"],
-  PENDING: ["OPENED", "EXPIRED", "CANCELED"],
-  OPENED: ["IN_PROGRESS", "EXPIRED", "CANCELED"],
-  IN_PROGRESS: ["REVIEWED", "FAILED", "EXPIRED", "CANCELED"],
-  REVIEWED: ["ACCEPTED", "REJECTED"],
+  DRAFT: ["CANCELED", "ARCHIVED"],
+  PENDING: [
+    "OPENED",
+    "IN_PROGRESS",
+    "EXPIRED",
+    "CANCELED",
+    "FAILED",
+    "ARCHIVED",
+  ],
+  OPENED: [
+    "IN_PROGRESS",
+    "PENDING",
+    "EXPIRED",
+    "CANCELED",
+    "FAILED",
+    "ARCHIVED",
+  ],
+  IN_PROGRESS: [
+    "OPENED",
+    "PENDING",
+    "EXPIRED",
+    "CANCELED",
+    "FAILED",
+    "ARCHIVED",
+  ],
+  COMPLETED: ["REVIEWED", "ARCHIVED"],
+  REVIEWED: ["ACCEPTED", "REJECTED", "CANCELED", "ARCHIVED"],
   ACCEPTED: ["ARCHIVED"],
   REJECTED: ["ARCHIVED"],
   FAILED: ["ARCHIVED"],
   EXPIRED: ["ARCHIVED"],
   CANCELED: ["ARCHIVED"],
   ARCHIVED: [],
-  COMPLETED: ["REVIEWED", "FAILED", "EXPIRED", "CANCELED"],
 };
 
 export const AppStatusSelect = ({

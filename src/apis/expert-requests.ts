@@ -2,7 +2,7 @@ import { axiosHandler } from "./core";
 import { RequestMethod } from "@/types/api";
 import {
   ExpertRequestDetail,
-  ExpertRequestResponse,
+  AllExpertRequestsResponse,
   ExportReportParams,
   GetRequestsParams,
   RegisterRequestBody,
@@ -21,7 +21,7 @@ const BASE_URL = "panel/inspection-request";
 
 export const expertRequestsApi = {
   getRequests(params?: GetRequestsParams) {
-    return axiosHandler<ExpertRequestResponse>(BASE_URL, {
+    return axiosHandler<AllExpertRequestsResponse>(BASE_URL, {
       method: RequestMethod.GET,
       params: {
         ...params,
@@ -101,7 +101,7 @@ export const expertRequestsApi = {
 
   reject(id: string, body: RejectRequestBody) {
     return axiosHandler<RequestsSetting>(BASE_URL, {
-      action: `${id}/send-export-link`,
+      action: `${id}/reject`,
       method: RequestMethod.PATCH,
       body,
     });

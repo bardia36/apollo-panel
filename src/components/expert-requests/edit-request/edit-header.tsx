@@ -129,19 +129,7 @@ export const EditHeader = ({
             />
           )}
 
-          {[
-            "CANCELED",
-            "EXPIRED",
-            "FAILED",
-            "REJECTED",
-            "ACCEPTED",
-            "COMPLETED",
-            "REVIEWED",
-            "IN_PROGRESS",
-            "OPENED",
-            "PENDING",
-            "DRAFT",
-          ].includes(requestData.status) && (
+          {requestData.status !== "ARCHIVED" && (
             <ChangeStatusModal
               status={requestData.status}
               code={requestData.req_id}

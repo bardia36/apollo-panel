@@ -46,6 +46,7 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
     setActiveFieldsCount,
     handleFieldsChange,
     resetTemplateFields,
+    prepareTemplatesForSubmission,
   } = useTemplateFields();
   // Reference to the new template header component to access its name and logo
   const newTemplateRef = useRef<{ name: string; logo: string }>({
@@ -106,7 +107,7 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
     try {
       if (!templates) return;
 
-      const updatedDocs = [...templates.docs];
+      const updatedDocs: Template[] = [...templates.docs];
       // Update existing templates with modified fields
       updatedDocs.forEach((template, index) => {
         if (modifiedTemplateFields[template._id]) {
@@ -130,22 +131,9 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
         updatedDocs.push(newTemplate);
       }
 
-      const finalTemplates: Template[] = updatedDocs.map((template) => ({
-        _id: template._id,
-        name: template.name,
-        logo: template.logo,
-        default: template.default || false,
-        fields: (template.fields || [])
-          .filter((field) => field.active) // Filter out inactive fields
-          .map((field) => ({
-            _id: field._id,
-            type: field.type,
-            title: field.title,
-            // active property was frontend usage only
-          })),
-      }));
-
-      await templatesApi.updateTemplates(finalTemplates);
+      await templatesApi.updateTemplates(
+        prepareTemplatesForSubmission(updatedDocs)
+      );
       handleModalClose();
     } catch (err) {
       exceptionHandler(err);

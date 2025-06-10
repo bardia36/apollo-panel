@@ -19,26 +19,41 @@ type RequestDetailsProps = {
 };
 
 export default function RequestDetails({ requestData }: RequestDetailsProps) {
+  const isRequestStatusVisible =
+    !!requestData.status_history?.length ||
+    (!!requestData.order_number &&
+      ["COMPLETED", "REVIEWED"].includes(requestData.status));
+
   return (
     <div className="grid lg:grid-cols-12 gap-4">
       <div className="col-span-12 grid lg:grid-cols-12 gap-12 bg-default-50 p-4 rounded-large">
         <Suspense fallback={<ImagesStatusAlertSkeleton />}>
-          <ImagesStatusAlert
-            gallery={requestData.gallery}
-            status={requestData.status}
-            updatedAt={requestData.previous_inspections?.[0]?.updatedAt}
-          />
+          <div
+            className={
+              isRequestStatusVisible
+                ? "lg:col-span-5 xl:col-span-4"
+                : "lg:col-span-12"
+            }
+          >
+            <ImagesStatusAlert
+              gallery={requestData.gallery}
+              status={requestData.status}
+              updatedAt={requestData.previous_inspections?.[0]?.updatedAt}
+            />
+          </div>
         </Suspense>
 
-        <div className="lg:col-span-5 xl:col-span-4">
-          <Suspense fallback={<RequestStatusSkeleton />}>
-            <RequestStatus
-              orderNumber={requestData.order_number}
-              status={requestData.status}
-              statusHistory={requestData.status_history}
-            />
-          </Suspense>
-        </div>
+        {isRequestStatusVisible && (
+          <div className="lg:col-span-5 xl:col-span-4">
+            <Suspense fallback={<RequestStatusSkeleton />}>
+              <RequestStatus
+                orderNumber={requestData.order_number}
+                status={requestData.status}
+                statusHistory={requestData.status_history}
+              />
+            </Suspense>
+          </div>
+        )}
       </div>
 
       <div className="col-span-12 grid lg:grid-cols-12 gap-4">

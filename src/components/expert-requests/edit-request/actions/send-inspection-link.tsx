@@ -7,7 +7,7 @@ import {
 } from "@/components/shared/app-components/app-modal";
 import { Button, Switch, Form } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { t } from "i18next";
 import { useRef, useState } from "react";
 import { ActionsHeader } from "./components/actions-header";
@@ -37,6 +37,7 @@ type Props = {
 
 export const SendInspectionLinkModal = ({ requestData }: Props) => {
   const modalRef = useRef<AppModalRef>(null);
+  const queryClient = useQueryClient();
   const [smsEnabled, setSmsEnabled] = useState(false);
   const [emailEnabled, setEmailEnabled] = useState(false);
 
@@ -83,7 +84,12 @@ export const SendInspectionLinkModal = ({ requestData }: Props) => {
   const { mutate: submit, isPending } = useMutation({
     mutationFn: (data: SendExportLinkBody) =>
       expertRequestsApi.sendExportLink(requestData._id, data),
-    onSuccess: () => modalRef.current?.onClose(),
+    onSuccess: () => {
+      modalRef.current?.onClose();
+      queryClient.invalidateQueries({
+        queryKey: ["expert-request", requestData._id],
+      });
+    },
     onError: (err) => exceptionHandler(err),
   });
 
@@ -179,7 +185,7 @@ export const SendInspectionLinkModal = ({ requestData }: Props) => {
 
           <Form onSubmit={handleSubmit(onSubmit)} className="gap-0">
             {(!!smsEnabled || !!emailEnabled) && (
-              <div className="grid md:grid-cols-2 max-md:flex-col w-full gap-4 py-2 mt-4">
+              <div className="grid md:grid-cols-6 max-md:flex-col w-full gap-4 py-2 mt-4">
                 {!!smsEnabled && (
                   <Controller
                     control={control}
@@ -196,6 +202,11 @@ export const SendInspectionLinkModal = ({ requestData }: Props) => {
                         placeholder="876 54 321 0912"
                         isInvalid={!!error}
                         errorMessage={error?.message}
+                        className={
+                          emailEnabled
+                            ? "md:col-span-3"
+                            : "md:col-span-4 md:col-start-2"
+                        }
                         classNames={{
                           inputWrapper: "bg-background",
                           input:
@@ -231,6 +242,11 @@ export const SendInspectionLinkModal = ({ requestData }: Props) => {
                         placeholder="test@customer.com"
                         isInvalid={!!error}
                         errorMessage={error?.message}
+                        className={
+                          smsEnabled
+                            ? "md:col-span-3"
+                            : "md:col-span-4 md:col-start-2"
+                        }
                         classNames={{
                           inputWrapper: "bg-background",
                           input:
@@ -362,10 +378,7 @@ export const SendInspectionLinkModal = ({ requestData }: Props) => {
 
 const ExpertRequestSummary = ({ requestData }: Props) => {
   const { isSmAndDown } = useBreakpoint();
-  const { commonFields, addedFields } = getFieldsInfo({
-    template_id: requestData.template_id,
-    required_fields: requestData.required_fields,
-  });
+  const { defaultFields, customFields } = getFieldsInfo(requestData.gallery);
 
   return (
     <div className="mb-6">
@@ -401,7 +414,7 @@ const ExpertRequestSummary = ({ requestData }: Props) => {
           <div className="ms-auto text-end">
             {!!requestData.order_number && (
               <div className="flex items-center justify-end gap-2">
-                <h6 className="text-foreground-700">
+                <h6 className="text-foreground-700 text-sm">
                   {isSmAndDown
                     ? truncateString(requestData.order_number, 20)
                     : requestData.order_number}
@@ -473,28 +486,27 @@ const ExpertRequestSummary = ({ requestData }: Props) => {
 
           <div className="text-end ms-auto text-sm">
             <h6 className="text-foreground-500">
-              {commonFields.length} {t("expertRequests.wantedItem")}
+              {defaultFields.length} {t("expertRequests.wantedItem")}
             </h6>
 
-            {!!addedFields.length && (
+            {!!customFields.length && (
               <div className="flex items-center justify-end gap-2 mt-1">
                 <FieldChip
                   field={{
-                    _id: addedFields[0].title,
-                    ...addedFields[0],
-                    title: truncateString(addedFields[0].title, 20),
+                    ...customFields[0],
+                    title: truncateString(customFields[0].title, 20),
                     active: true,
                   }}
                 />
 
-                {addedFields.length > 1 && (
+                {customFields.length > 1 && (
                   <Chip
                     classNames={{
                       base: "text-default-foreground bg-default bg-opacity-40",
                       content: "flex items-center",
                     }}
                   >
-                    +{addedFields.length - 1}
+                    +{customFields.length - 1}
                   </Chip>
                 )}
               </div>
