@@ -51,6 +51,8 @@ export type ExpertRequestDetail = {
   status: ExpertRequestStatus;
   req_id: string;
   order_number: string;
+  all_file: number;
+  received_file: number;
   tags: string[];
   unit: {
     title: string;

@@ -8,6 +8,7 @@ import { t } from "i18next";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
 import useAppConfig from "@/config/app-config";
 import { FileCollectionChart } from "./file-type-chart";
+import carPlaceholder from "@/assets/images/expert-requests/car-img-placeholder.webp";
 
 // Import slider styles
 import "@/styles/slider.css";
@@ -20,26 +21,37 @@ export default function RequestContent({ requestData }: RequestContentProps) {
   const [selectedMedias, setSelectedMedias] = useState<string[]>([]);
   const { isMdAndUp } = useBreakpoint();
   const { fileServerUrl } = useAppConfig();
+
+  const aroundCarImages = requestData.gallery?.find(
+    (item) => item.type === "GENERAL"
+  )?.children;
+
+  const inspectionImages = requestData.gallery?.filter((item) =>
+    ["GALLERY", "CUSTOM"].includes(item.type)
+  );
+
+  const documents = requestData.gallery?.filter(
+    (item) => item.type === "DOCUMENT"
+  );
+
   const fileData = [
     {
       type: "Videos",
-      count: requestData.documents?.video?.length || 0,
+      count: requestData.video?.length || 0,
       color: "#F54180",
     },
     {
       type: "Photos",
-      count: requestData.file_info?.img?.length || 0,
+      count:
+        requestData.gallery?.filter((item) =>
+          ["GALLERY", "DOCUMENT", "CUSTOM"].includes(item.type)
+        ).length || 0,
       color: "#338EF7",
     },
     {
       type: "Car Photos",
-      count: requestData.file_info?.sequence?.length || 0,
+      count: aroundCarImages?.length || 0,
       color: "#45D483",
-    },
-    {
-      type: "Other",
-      count: requestData.documents?.img?.length || 0,
-      color: "#000000",
     },
   ].filter((file) => !!file.count);
 
@@ -47,15 +59,17 @@ export default function RequestContent({ requestData }: RequestContentProps) {
     <div className="flex flex-col gap-4">
       <div className="bg-default-50 rounded-large p-4">
         <div className="grid grid-cols-2 gap-4">
-          {!!requestData.file_info?.sequence?.length && (
+          {!!aroundCarImages?.length && (
             <div className="order-1 md:order-0 col-span-2 lg:col-span-1">
               <h6 className="text-xs py-2 mb-6">
                 {t("expertRequests.aroundCarImages")}
               </h6>
 
               <Slider
-                images={requestData.file_info.sequence.map((img) => ({
-                  path: `${fileServerUrl}/${img.path}`,
+                images={aroundCarImages.map((img) => ({
+                  path: !!img.path?.length
+                    ? `${fileServerUrl}/${img.path[img.path.length - 1]}`
+                    : "",
                   title: img.title,
                 }))}
               />
@@ -65,7 +79,7 @@ export default function RequestContent({ requestData }: RequestContentProps) {
           <div
             className={cn(
               "md:order-1 col-span-2 lg:col-span-1 flex flex-col gap-6",
-              !requestData.file_info?.sequence?.length && "lg:col-span-2"
+              !aroundCarImages?.length && "lg:col-span-2"
             )}
           >
             <div className="flex items-center md:justify-end flex-wrap gap-2">
@@ -77,7 +91,7 @@ export default function RequestContent({ requestData }: RequestContentProps) {
                   <Icon icon="solar:play-circle-bold" className="min-w-5 h-5" />
                 }
               >
-                {t("shared.addImage")}
+                {t("expertRequests.viewContent")}
               </Button>
 
               <Button
@@ -106,15 +120,19 @@ export default function RequestContent({ requestData }: RequestContentProps) {
             </div>
 
             {fileData.filter((file) => !!file.count).length > 0 && (
-              <div className="px-4 py-6 bg-content1 rounded-large ltr">
-                <FileCollectionChart fileData={fileData} />
+              <div className="px-4 py-6 bg-content1 rounded-large">
+                <FileCollectionChart
+                  fileData={fileData}
+                  allFiles={requestData.all_file}
+                  receivedFiles={requestData.received_file}
+                />
               </div>
             )}
 
             {/*  TODO: load video lazy */}
-            {!!requestData.documents?.video?.length && (
+            {!!requestData.video?.length && (
               <video
-                src={`${fileServerUrl}/${requestData.documents?.video[0]?.path}`}
+                src={`${fileServerUrl}/${requestData.video[requestData.video.length - 1]}`}
                 controls
                 className="flex-1 max-h-[200px] md:max-h-[360px] rounded-large border-4 border-content1 shadow-md shadow-neutral"
               ></video>
@@ -123,17 +141,16 @@ export default function RequestContent({ requestData }: RequestContentProps) {
         </div>
       </div>
 
-      {(!!requestData.documents?.img?.length ||
-        !!requestData.file_info?.img?.length) && (
+      {(!!inspectionImages?.length || !!documents?.length) && (
         <CheckboxGroup value={selectedMedias} onChange={setSelectedMedias}>
-          {!!requestData.file_info?.img?.length && (
+          {!!inspectionImages?.length && (
             <div className="bg-default-50 rounded-large p-4 mb-20">
               <h6 className="text-xs mb-4 text-default-600">
                 {t("expertRequests.inspectionImages")}
               </h6>
 
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {requestData.file_info?.img?.map((img) => (
+                {inspectionImages?.map((img) => (
                   <div className="col-span-1" key={img._id}>
                     <Checkbox
                       aria-label={img.title}
@@ -145,10 +162,16 @@ export default function RequestContent({ requestData }: RequestContentProps) {
                       }}
                     >
                       <LazyImage
-                        src={img.path}
+                        src={
+                          !!img.path?.length
+                            ? img.path[img.path.length - 1]
+                            : ""
+                        }
                         alt={img.title}
                         externalImg
+                        placeholder={carPlaceholder}
                         fit="cover"
+                        imgClassName="w-full"
                         className="h-24 md:h-44 w-full rounded-large border-2 border-content1 shadow-md shadow-neutral"
                       />
                     </Checkbox>
@@ -158,14 +181,14 @@ export default function RequestContent({ requestData }: RequestContentProps) {
             </div>
           )}
 
-          {!!requestData.documents?.img?.length && (
+          {!!documents?.length && (
             <div className="bg-default-50 rounded-large p-4">
               <h6 className="text-xs mb-4 text-default-600">
                 {t("expertRequests.documentsAndFiles")}
               </h6>
 
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {requestData.documents?.img?.map((img) => (
+                {documents?.map((img) => (
                   <div className="col-span-1" key={img._id}>
                     <Checkbox
                       aria-label={img.title}
@@ -178,10 +201,16 @@ export default function RequestContent({ requestData }: RequestContentProps) {
                       }}
                     >
                       <LazyImage
-                        src={img.path}
+                        src={
+                          !!img.path?.length
+                            ? img.path[img.path.length - 1]
+                            : ""
+                        }
                         alt={img.title}
                         externalImg
+                        placeholder={carPlaceholder}
                         fit="cover"
+                        imgClassName="w-full"
                         className="h-24 md:h-44 w-full rounded-large border-2 border-content1 shadow-md shadow-neutral"
                       />
                     </Checkbox>

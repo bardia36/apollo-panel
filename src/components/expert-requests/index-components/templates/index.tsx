@@ -139,7 +139,7 @@ export const TemplatesModal: FC<Props> = ({ activator }) => {
           .filter((field) => field.active) // Filter out inactive fields
           .map((field) => ({
             _id: field._id,
-            type: field.type === "OTHER" ? "IMAGE" : field.type,
+            type: field.type,
             title: field.title,
             // active property was frontend usage only
           })),
