@@ -1,36 +1,46 @@
-import { Tooltip } from "@heroui/react";
+import { Chip, Tooltip } from "@heroui/react";
+import { t } from "i18next";
 import { FC } from "react";
 
-interface FileType {
+type FileType = {
   type: string;
   count: number;
   color: string;
-}
+};
 
-interface FileCollectionChartProps {
+type FileCollectionChartProps = {
   fileData: FileType[];
-}
+  allFiles: number;
+  receivedFiles: number;
+};
 
 export const FileCollectionChart: FC<FileCollectionChartProps> = ({
   fileData,
+  allFiles,
+  receivedFiles,
 }) => {
-  const totalFiles = fileData.reduce((sum, item) => sum + item.count, 0);
-
   return (
     <div className="flex flex-col gap-2">
-      {/* <div className="flex justify-between items-center">
-        <span className="text-default-500 text-sm">
-          {totalFiles} total files
+      <div className="flex items-center">
+        <span className="text-default-foreground text-xs">
+          <Chip variant="flat" radius="full" size="sm" className="me-1">
+            {receivedFiles}
+          </Chip>
+          {t("shared.receivedFilesFrom")}
+          <Chip variant="flat" radius="full" size="sm" className="mx-1">
+            {allFiles}
+          </Chip>
+          {t("shared.wantedFiles")}
         </span>
-      </div> */}
+      </div>
 
-      <div className="relative h-12 rounded-lg overflow-hidden">
+      <div className="relative h-12 rounded-lg overflow-hidden ltr">
         {fileData.map((file, index, array) => {
           // Calculate the percentage width and position
-          const percentage = (file.count / totalFiles) * 100;
+          const percentage = (file.count / receivedFiles) * 100;
           const previousWidth = array
             .slice(0, index)
-            .reduce((sum, item) => sum + (item.count / totalFiles) * 100, 0);
+            .reduce((sum, item) => sum + (item.count / receivedFiles) * 100, 0);
 
           return (
             <Tooltip
@@ -51,7 +61,7 @@ export const FileCollectionChart: FC<FileCollectionChartProps> = ({
         })}
       </div>
 
-      <div className="flex flex-wrap gap-4 mt-2">
+      <div className="flex flex-wrap gap-4 mt-2 ltr">
         {fileData.map((file) => (
           <div key={file.type} className="flex items-center gap-2">
             <div

@@ -6,11 +6,17 @@ import { Select, SelectItem } from "@heroui/react";
 
 type RequestLocationProps = {
   locations: ExpertRequestDetail["locations"];
+  lastLocation: ExpertRequestDetail["last_location"];
 };
 
-export default function RequestLocation({ locations }: RequestLocationProps) {
-  const location = locations[0];
-  const { formattedDate, formattedTime } = formatDate(location.createdAt);
+export default function RequestLocation({
+  locations,
+  lastLocation,
+}: RequestLocationProps) {
+  function formatLocationTime(updatedAt: string) {
+    const { formattedDate, formattedTime } = formatDate(updatedAt);
+    return `${formattedTime} - ${formattedDate}`;
+  }
 
   return (
     <div className="relative">
@@ -21,37 +27,42 @@ export default function RequestLocation({ locations }: RequestLocationProps) {
           </div>
 
           <Select
-            defaultSelectedKeys={["1"]}
+            selectedKeys={[lastLocation.updatedAt]}
             size="sm"
-            aria-label={`${formattedTime} - ${formattedDate}`}
+            aria-label="locations creation time"
             variant="flat"
             fullWidth
           >
-            {/* {times.map((time) => ( */}
-            <SelectItem key={"1"} aria-label={`${formattedTime} - ${formattedDate}`}>
-              {formattedTime} - {formattedDate}
-            </SelectItem>
-            {/* ))} */}
+            {locations.reverse().map((location) => (
+              <SelectItem
+                hideSelectedIcon
+                key={location.updatedAt}
+                aria-label={formatLocationTime(location.updatedAt)}
+                isReadOnly
+              >
+                {formatLocationTime(location.updatedAt)}
+              </SelectItem>
+            ))}
           </Select>
         </div>
 
-        {!!location.address && (
+        {!!lastLocation.address && (
           <div className="bg-content1 rounded-3xl px-4 py-2 flex items-center gap-2">
             <CopyButton
-              value={location.address}
+              value={lastLocation.address}
               btnFit
               iconSize="12"
               iconClassName="text-content4-foreground"
             />
             <p className="text-sm text-content2-foreground line-clamp-1">
-              {location.address}
+              {lastLocation.address}
             </p>
           </div>
         )}
       </div>
 
       <iframe
-        src={`https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d12956.384573161538!2d${location.lng}!3d${location.lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2s!4v1748949620144!5m2!1sen!2s`}
+        src={`https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d12956.384573161538!2d${lastLocation.lng}!3d${lastLocation.lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2s!4v1748949620144!5m2!1sen!2s`}
         width="100%"
         height="184px"
         className="rounded-large"

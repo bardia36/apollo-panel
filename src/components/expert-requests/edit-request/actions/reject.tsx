@@ -12,7 +12,7 @@ import {
   Textarea,
 } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { t } from "i18next";
 import { useParams } from "react-router-dom";
 import { useRef, useState } from "react";
@@ -28,6 +28,7 @@ type Props = {
 export const RejectRequestModal = ({ code, tags }: Props) => {
   const { id } = useParams();
   const modalRef = useRef<AppModalRef>(null);
+  const queryClient = useQueryClient();
   const [sendNotification, setSendNotification] = useState(true);
   const [requestTags, setRequestTags] = useState<string[]>(tags || []);
   const [reasons, setReasons] = useState<string[]>([]);
@@ -44,7 +45,10 @@ export const RejectRequestModal = ({ code, tags }: Props) => {
         tags: requestTags,
         send_notification: sendNotification,
       }),
-    onSuccess: () => modalRef.current?.onClose(),
+    onSuccess: () => {
+      modalRef.current?.onClose();
+      queryClient.invalidateQueries({ queryKey: ["expert-request", id] });
+    },
     onError: (err) => exceptionHandler(err),
   });
 

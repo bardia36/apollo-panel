@@ -55,6 +55,7 @@ export default {
   phoneNumber: "شماره تماس",
   previousPage: "صفحه قبل",
   producer: "سازنده",
+  receivedFilesFrom: "فایل‌ دریافت شده از",
   rejected: "رد شده",
   return: "بازگشت",
   reviewed: "در حال بررسی",
@@ -78,6 +79,7 @@ export default {
   user: "کاربر",
   userName: "نام کاربر",
   waitingToSend: "در انتظار ارسال",
+  wantedFiles: "فایل‌ درخواستی",
   yesDelete: "بله، حذف کن!",
   zipFileContent: "فایل zip محتویات",
 };

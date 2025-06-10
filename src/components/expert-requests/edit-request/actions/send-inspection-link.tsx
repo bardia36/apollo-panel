@@ -7,7 +7,7 @@ import {
 } from "@/components/shared/app-components/app-modal";
 import { Button, Switch, Form } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { t } from "i18next";
 import { useRef, useState } from "react";
 import { ActionsHeader } from "./components/actions-header";
@@ -25,11 +25,10 @@ import { array, boolean, object, string, ObjectSchema } from "yup";
 import { useValidationMessages } from "@/utils/rules";
 import { formOptions } from "@/utils/validations";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { dateOfNow, getFieldsInfo } from "@/utils/base";
+import { dateOfNow } from "@/utils/base";
 import { truncateString } from "@/utils/base";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
-import { Chip } from "@heroui/react";
-import { FieldChip } from "@/components/shared/templates/field-chip";
+import { SecondRow, ThirdRow } from "@/components/shared/request-summary";
 
 type Props = {
   requestData: ExpertRequestDetail;
@@ -37,6 +36,7 @@ type Props = {
 
 export const SendInspectionLinkModal = ({ requestData }: Props) => {
   const modalRef = useRef<AppModalRef>(null);
+  const queryClient = useQueryClient();
   const [smsEnabled, setSmsEnabled] = useState(false);
   const [emailEnabled, setEmailEnabled] = useState(false);
 
@@ -83,7 +83,12 @@ export const SendInspectionLinkModal = ({ requestData }: Props) => {
   const { mutate: submit, isPending } = useMutation({
     mutationFn: (data: SendExportLinkBody) =>
       expertRequestsApi.sendExportLink(requestData._id, data),
-    onSuccess: () => modalRef.current?.onClose(),
+    onSuccess: () => {
+      modalRef.current?.onClose();
+      queryClient.invalidateQueries({
+        queryKey: ["expert-request", requestData._id],
+      });
+    },
     onError: (err) => exceptionHandler(err),
   });
 
@@ -179,7 +184,7 @@ export const SendInspectionLinkModal = ({ requestData }: Props) => {
 
           <Form onSubmit={handleSubmit(onSubmit)} className="gap-0">
             {(!!smsEnabled || !!emailEnabled) && (
-              <div className="grid md:grid-cols-2 max-md:flex-col w-full gap-4 py-2 mt-4">
+              <div className="grid md:grid-cols-6 max-md:flex-col w-full gap-4 py-2 mt-4">
                 {!!smsEnabled && (
                   <Controller
                     control={control}
@@ -196,6 +201,11 @@ export const SendInspectionLinkModal = ({ requestData }: Props) => {
                         placeholder="876 54 321 0912"
                         isInvalid={!!error}
                         errorMessage={error?.message}
+                        className={
+                          emailEnabled
+                            ? "md:col-span-3"
+                            : "md:col-span-4 md:col-start-2"
+                        }
                         classNames={{
                           inputWrapper: "bg-background",
                           input:
@@ -231,6 +241,11 @@ export const SendInspectionLinkModal = ({ requestData }: Props) => {
                         placeholder="test@customer.com"
                         isInvalid={!!error}
                         errorMessage={error?.message}
+                        className={
+                          smsEnabled
+                            ? "md:col-span-3"
+                            : "md:col-span-4 md:col-start-2"
+                        }
                         classNames={{
                           inputWrapper: "bg-background",
                           input:
@@ -362,10 +377,6 @@ export const SendInspectionLinkModal = ({ requestData }: Props) => {
 
 const ExpertRequestSummary = ({ requestData }: Props) => {
   const { isSmAndDown } = useBreakpoint();
-  const { commonFields, addedFields } = getFieldsInfo({
-    template_id: requestData.template_id,
-    required_fields: requestData.required_fields,
-  });
 
   return (
     <div className="mb-6">
@@ -401,7 +412,7 @@ const ExpertRequestSummary = ({ requestData }: Props) => {
           <div className="ms-auto text-end">
             {!!requestData.order_number && (
               <div className="flex items-center justify-end gap-2">
-                <h6 className="text-foreground-700">
+                <h6 className="text-foreground-700 text-sm">
                   {isSmAndDown
                     ? truncateString(requestData.order_number, 20)
                     : requestData.order_number}
@@ -426,81 +437,23 @@ const ExpertRequestSummary = ({ requestData }: Props) => {
         </div>
 
         {!!requestData.inspection_data && (
-          <div className="flex items-center flex-wrap gap-2">
-            <div className="p-3.5">
-              <Icon
-                icon="lineicons:search-1"
-                className="text-default-400"
-                width={20}
-                height={20}
-              />
-            </div>
-
-            <div>
-              <h6 className="font-semibold text-foreground-700">
-                {requestData.inspection_data.vehicle_model?.name_fa}
-              </h6>
-              <p className="text-foreground-500 text-sm">
-                {requestData.inspection_data.vehicle_brand?.name_fa}
-              </p>
-            </div>
-
-            <div className="ms-auto text-end text-foreground-500 text-sm">
-              <h6>{requestData.inspection_data.color?.name}</h6>
-              <p>VIN: {requestData.inspection_data.vin}</p>
-            </div>
-          </div>
+          <SecondRow
+            vehicleModelName={
+              requestData.inspection_data.vehicle_model?.name_fa
+            }
+            vehicleBrandName={
+              requestData.inspection_data.vehicle_brand?.name_fa
+            }
+            colorName={requestData.inspection_data.color?.name}
+            vin={requestData.inspection_data.vin}
+          />
         )}
 
-        <div className="flex items-center flex-wrap gap-2">
-          <div className="p-3.5">
-            <Icon
-              icon="solar:folder-linear"
-              className="text-default-400"
-              width={20}
-              height={20}
-            />
-          </div>
-
-          <div>
-            <h6 className="font-semibold text-foreground-700">
-              {requestData.template_id.name}
-            </h6>
-            <p className="text-foreground-500 text-sm">
-              {requestData.inspection_format.name}
-            </p>
-          </div>
-
-          <div className="text-end ms-auto text-sm">
-            <h6 className="text-foreground-500">
-              {commonFields.length} {t("expertRequests.wantedItem")}
-            </h6>
-
-            {!!addedFields.length && (
-              <div className="flex items-center justify-end gap-2 mt-1">
-                <FieldChip
-                  field={{
-                    _id: addedFields[0].title,
-                    ...addedFields[0],
-                    title: truncateString(addedFields[0].title, 20),
-                    active: true,
-                  }}
-                />
-
-                {addedFields.length > 1 && (
-                  <Chip
-                    classNames={{
-                      base: "text-default-foreground bg-default bg-opacity-40",
-                      content: "flex items-center",
-                    }}
-                  >
-                    +{addedFields.length - 1}
-                  </Chip>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
+        <ThirdRow
+          gallery={requestData.gallery}
+          templateName={requestData.template_id.name}
+          inspectionFormatName={requestData.inspection_format.name}
+        />
       </div>
     </div>
   );

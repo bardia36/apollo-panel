@@ -6,14 +6,14 @@ import {
   useCallback,
 } from "react";
 import {
-  ExpertRequestResponse,
+  AllExpertRequestsResponse,
   GetRequestsParams,
 } from "@/types/expert-requests";
 import { expertRequestsApi } from "@/apis/expert-requests";
 import { exceptionHandler } from "@/apis/exception";
 
 interface ExpertRequestsContextType {
-  requests: ExpertRequestResponse;
+  requests: AllExpertRequestsResponse;
   loading: boolean;
   refreshRequests: (params?: {
     keyword?: string;
@@ -35,7 +35,7 @@ export const ExpertRequestsProvider = ({
   children: ReactNode;
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [requests, setRequests] = useState<ExpertRequestResponse>({
+  const [requests, setRequests] = useState<AllExpertRequestsResponse>({
     docs: [],
     hasNextPage: false,
     hasPrevPage: false,

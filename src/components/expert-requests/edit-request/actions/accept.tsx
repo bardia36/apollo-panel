@@ -6,7 +6,7 @@ import {
 } from "@/components/shared/app-components/app-modal";
 import { Button, Switch, Checkbox } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { t } from "i18next";
 import { useParams } from "react-router-dom";
 import { useRef, useState } from "react";
@@ -25,6 +25,7 @@ type Props = {
 export const AcceptRequestModal = ({ requestData }: Props) => {
   const { id } = useParams();
   const modalRef = useRef<AppModalRef>(null);
+  const queryClient = useQueryClient();
   const [sendNotification, setSendNotification] = useState(true);
   const [tags, setTags] = useState<string[]>(requestData.tags || []);
   const [disableSupplemental, setDisableSupplemental] = useState(false);
@@ -57,7 +58,10 @@ export const AcceptRequestModal = ({ requestData }: Props) => {
         notify_user: sendNotification,
         tags,
       }),
-    onSuccess: () => modalRef.current?.onClose(),
+    onSuccess: () => {
+      modalRef.current?.onClose();
+      queryClient.invalidateQueries({ queryKey: ["expert-request", id] });
+    },
     onError: (err) => exceptionHandler(err),
   });
 
@@ -144,11 +148,12 @@ export const AcceptRequestModal = ({ requestData }: Props) => {
               />
 
               <IranLicensePlate
+                licensePlate={requestData.inspection_data.license_plate_number}
                 onChange={(val) => {
-                  setRightNumber(val.part1);
-                  setLeftNumber(val.part2);
+                  setRightNumber(val.right_number);
+                  setLeftNumber(val.left_number);
                   setLetter(val.letter);
-                  setProvinceCode(val.iranCode);
+                  setProvinceCode(val.province_code);
                 }}
                 isDisabled={disableSupplemental}
               />

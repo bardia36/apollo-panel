@@ -4,6 +4,7 @@ import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
 import { Icon } from "@iconify/react";
 import { LazyImage } from "./lazy-image";
+import carPlaceholder from "@/assets/images/expert-requests/car-img-placeholder.webp";
 
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -45,6 +46,8 @@ export default function Slider({
                 src={image.path}
                 alt={image.title || `Thumb ${index + 1}`}
                 externalImg
+                fit="cover"
+                placeholder={carPlaceholder}
                 height={60}
                 imgClassName="w-full"
                 className="h-full rounded-md cursor-pointer"
@@ -71,6 +74,8 @@ export default function Slider({
                 src={image.path}
                 alt={image.title || `Image ${index + 1}`}
                 externalImg
+                fit="cover"
+                placeholder={carPlaceholder}
                 imgClassName="w-full"
                 className="h-[200px] lg:h-[360px] rounded-large"
               />
