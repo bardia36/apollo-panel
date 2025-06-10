@@ -10,7 +10,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { Template } from "@/types/templates";
 import FieldsCountChip from "@/components/shared/templates/fields-count-chip";
-import { useTemplateFields } from "../useTemplateFields";
+import { useTemplateFields } from "@/hooks/use-template-fields";
 
 type ExistedTemplateDetailsHeaderProps = {
   template?: { name: Template["name"]; default: Template["default"] };

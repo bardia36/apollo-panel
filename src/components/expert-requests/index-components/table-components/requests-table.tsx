@@ -23,7 +23,7 @@ import {
 // other
 import {
   ExpertRequestInfo,
-  ExpertRequestResponse,
+  AllExpertRequestsResponse,
 } from "@/types/expert-requests";
 import { AddOrReplaceKey } from "@/utils/base";
 import { TopContent } from "./top-content";
@@ -34,7 +34,7 @@ import { useExpertRequests } from "../context/expert-requests-context";
 
 type Props = {
   loading: boolean;
-  requests: ExpertRequestResponse;
+  requests: AllExpertRequestsResponse;
 };
 
 // TODO:

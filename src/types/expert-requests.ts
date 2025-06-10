@@ -1,7 +1,7 @@
 import { CommonListResponse, NameEnFa } from "./common";
-import { Template, TemplateField, TemplateFieldType } from "./templates";
+import { Template, TemplateField } from "./templates";
 
-export type ExpertRequestResponse = {
+export type AllExpertRequestsResponse = {
   docs: ExpertRequestInfo[];
   hasNextPage: boolean;
   hasPrevPage: boolean;
@@ -12,19 +12,16 @@ export type ExpertRequestResponse = {
 };
 
 export type ExpertRequestInfo = {
-  _id: string;
-  status: ExpertRequestStatus;
+  createdAt: string;
+  inspection_data: {
+    vehicle_brand?: NameEnFa;
+    vehicle_model?: NameEnFa;
+    vehicle_company?: NameEnFa;
+  };
   inspection_format: {
     name: string;
     logo: string;
     description: string;
-  };
-  order_number: string;
-  owner: {
-    image?: string;
-    userName: string;
-    phoneNumber?: string;
-    email?: string;
   };
   lead_specialist: {
     image?: string;
@@ -33,76 +30,39 @@ export type ExpertRequestInfo = {
     email?: string;
     _id?: string;
   };
-  unit: {
-    title: string;
-    level: {
-      name: string;
-      level_number: number;
-    };
-  };
+  order_number: string;
+  owner: Owner & { image?: string };
+  status: ExpertRequestStatus;
   tags?: string[];
-  createdAt: string;
-  inspection_data: {
-    vehicle_brand?: NameEnFa;
-    vehicle_model?: NameEnFa;
-    vehicle_company?: NameEnFa;
+  unit?: {
+    city: string;
+    description: string;
+    province: string;
+    title: string;
+    _id: string;
+    level: UnitLevel;
   };
+  _id: string;
 };
 
-export type ExpertRequestDetail = ExpertRequestInfo & {
+export type ExpertRequestDetail = {
   _id: string;
-  key: string;
+  status: ExpertRequestStatus;
   req_id: string;
-  price: number;
-  documents?: {
-    img?: RequestCommonInfo[];
-    video?: RequestCommonInfo[];
-  };
-  file_info: {
-    img?: RequestCommonInfo[];
-    sequence: RequestCommonInfo[];
-  };
-  required_fields: TemplateField[];
-  locations: {
-    lat: string;
-    lng: string;
-    address: string;
-    createdAt: string;
-    updatedAt: string;
-  }[];
-  template_fields_count: number;
-  template_id: Omit<Template, "_id">;
-  reviewers: {
-    owner: {
-      userName: string;
-      firstName: string;
-      lastName: string;
-      email: string;
-      phoneNumber: string;
-    };
-    unit: {
+  order_number: string;
+  all_file: number;
+  received_file: number;
+  tags: string[];
+  unit: {
+    title: string;
+    level: UnitLevel;
+    parent: {
       title: string;
-      level: {
-        name: string;
-        level_number: number;
-      };
+      level: UnitLevel;
     };
-  }[];
-  inspection_data: ExpertRequestInfo["inspection_data"] & {
-    color?: {
-      name: string;
-      code: string;
-      color: string;
-    };
-    vin?: string;
-    // vehicle_fuel;
-    // vehicle_category
-    // vehicle_usage;
-    // license_plate_number
-    // motor_code
-    // chassis_number
-    // fanavaran_vin
   };
+  key: string;
+  price: number;
   request_log: {
     admin: {
       userName: string;
@@ -122,8 +82,161 @@ export type ExpertRequestDetail = ExpertRequestInfo & {
     createdAt: string;
     updatedAt: string;
   }[];
-  // previous_inspection;
+  last_location: {
+    lat: string;
+    lng: string;
+    address: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+  locations: {
+    lat: string;
+    lng: string;
+    address: string;
+    createdAt: string;
+    updatedAt: string;
+  }[];
+  template_id: Omit<Template, "fields">;
+  previous_inspection: string;
+  previous_inspections: [
+    {
+      inspection_request_id: string;
+      createdAt: string;
+      updatedAt: string;
+    },
+  ];
+  lead_specialist: {
+    email: string;
+    phoneNumber: string;
+    unit: {
+      level: UnitLevel;
+      title: string;
+      _id: string;
+    };
+    userName: string;
+    _id: string;
+  };
+  createdAt: string;
+  inspection_format: {
+    _id: string;
+    name: string;
+    type: "PRE_INSURANCE_BODY_INSPECTION";
+  };
+  video: string[];
+  gallery: TemplateField[]; // fields and images
+  owner: Owner;
+  reviewers: {
+    owner: Owner;
+    unit: {
+      title: string;
+      level: UnitLevel;
+    };
+  }[];
+  status_history: {
+    admin: string;
+    createdAt: string;
+    description: string;
+    status: ExpertRequestStatus;
+    updatedAt: string;
+  }[];
+  inspection_data: {
+    vehicle_brand?: NameEnFa;
+    vehicle_model?: NameEnFa;
+    vehicle_company?: NameEnFa & { _id: string };
+    color: {
+      name: string;
+      code: string;
+      color: string;
+    };
+    vehicle_fuel: {
+      name: string;
+      fuelType: FuelType;
+      unit: string;
+    };
+    vehicle_category: {
+      name: string;
+      code: string;
+      description: string;
+    };
+    vehicle_usage: {
+      name: string;
+      code: string;
+      description: string;
+    };
+    license_plate_number: LicensePlateNumber;
+    motor_code: string;
+    chassis_number: string;
+    vin: string;
+    fanavaran_vin: string;
+  };
 };
+
+export type RegisterRequestResponse = {
+  _id: string;
+  username: string;
+  mobile: string;
+  email: string;
+  order_number: string;
+  inspection_format: {
+    name: string;
+    _id: string;
+  };
+  template_id: {
+    fields: TemplateField[];
+    name: string;
+    _id: string;
+  };
+  gallery: TemplateField[]; // fields and images
+  created_at: string;
+  updated_at: string;
+  lead_specialist: {
+    image?: string;
+    userName: string;
+    phoneNumber?: string;
+    email?: string;
+    _id?: string;
+  };
+  owner: Owner;
+  status: ExpertRequestStatus;
+  step: RegisterRequestStep;
+  unit: string;
+  inspection_data: {
+    vehicle_category: NameEnFa & { _id: string };
+    vehicle_brand: NameEnFa & { _id: string };
+    vehicle_model: NameEnFa & { _id: string };
+    vehicle_company: {
+      name: string;
+      name_local: string;
+      _id: string;
+    };
+    color: {
+      name: string;
+      _id: string;
+    };
+    vin: string;
+  };
+};
+
+export type UnitLevel = {
+  _id?: string;
+  name: string;
+  level_number: number;
+};
+
+export type LicensePlateNumber = {
+  left_number: string;
+  right_number: string;
+  letter: string;
+  province_code: string;
+};
+
+export type FuelType =
+  | "GASOLINE"
+  | "DIESEL"
+  | "LPG"
+  | "CNG"
+  | "ELECTRIC"
+  | "HYBRID";
 
 export type RequestCommonInfo = {
   name: string;
@@ -258,61 +371,16 @@ export type RegisterRequestBody = (
 };
 
 export type RequiredFields = {
-  type: TemplateFieldType;
+  type: "IMAGE" | "FILE" | "OTHER"; // OTHER is for ui usages;
   title: string;
 };
 
-export type RegisterRequestResponse = {
-  _id: string;
-  username: string;
+export type Owner = {
+  userName: string;
   mobile: string;
-  email: string;
-  order_number: string;
-  inspection_format: {
-    name: string;
-    _id: string;
-  };
-  template_id: {
-    fields: TemplateField[];
-    name: string;
-    _id: string;
-  };
-  required_fields: RequiredFields[];
-  created_at: string;
-  updated_at: string;
-  lead_specialist: {
-    image?: string;
-    userName: string;
-    phoneNumber?: string;
-    email?: string;
-    _id?: string;
-  };
-  owner: string;
-  status: ExpertRequestStatus;
-  step: RegisterRequestStep;
-  unit: string;
-  inspection_data: {
-    vin: string;
-    vehicle_brand: {
-      name_en: string;
-      name_fa: string;
-      _id: string;
-    };
-    vehicle_model: {
-      name_en: string;
-      name_fa: string;
-      _id: string;
-    };
-    vehicle_company: {
-      name: string;
-      name_local: string;
-      _id: string;
-    };
-    color: {
-      name: string;
-      _id: string;
-    };
-  };
+  email?: string;
+  phoneNumber?: string;
+  _id: string;
 };
 
 export type ExportReportParams = {
@@ -357,6 +425,7 @@ export type SettingExpirationTime =
 
 export type SettingPhotoDeadline = "30" | "40" | "50" | "60" | "120" | "180";
 
+// request bodies
 export type AcceptRequestBody = {
   vehicle_fuel: string;
   color: string;
@@ -376,6 +445,7 @@ export type ChangeStatusRequestBody = {
   change_mind: boolean;
   send_notification: boolean;
   cant_send_notification: boolean;
+  change_status_reason: string[];
   tags: string[];
 };
 
@@ -402,4 +472,9 @@ export type RetrieveRequestBody = {
 export type RequestEvidenceLackBody = {
   required_fields: TemplateField[];
   tags: string[];
+};
+
+export type ReminderBody = {
+  send_sms?: boolean;
+  send_email?: boolean;
 };

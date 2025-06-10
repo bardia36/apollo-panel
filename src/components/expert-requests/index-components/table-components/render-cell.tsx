@@ -98,7 +98,7 @@ export const RenderUnitCell = ({
       height={20}
       className="text-default-200"
     />
-    {unit.title}
+    {unit?.title}
   </div>
 );
 

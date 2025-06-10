@@ -1,7 +1,6 @@
 import { motion } from "motion/react";
 import { useState } from "react";
 import { LazyImage } from "./lazy-image";
-import { RequestCommonInfo } from "@/types/expert-requests";
 
 // Animation configurations
 const SPRING_CONFIG = { type: "spring", stiffness: 300, damping: 30 } as const;
@@ -38,8 +37,10 @@ const cn = (...classes: (string | undefined)[]) =>
 
 // Components
 type CardItem = {
-  isLicense?: boolean;
-} & RequestCommonInfo;
+  _id: string;
+  title: string;
+  path: string | string[];
+};
 
 type CardItemProps = {
   item: CardItem;
@@ -71,7 +72,7 @@ const CardItem = ({ itemsLength, item, index, isRevealed }: CardItemProps) => {
     >
       <div className="size-full rounded-xl relative">
         <LazyImage
-          src={item.path}
+          src={Array.isArray(item.path) ? item.path[0] : item.path}
           alt={item.title}
           width="100%"
           height="100%"

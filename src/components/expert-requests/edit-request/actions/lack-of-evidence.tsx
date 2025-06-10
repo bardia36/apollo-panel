@@ -6,7 +6,7 @@ import {
 } from "@/components/shared/app-components/app-modal";
 import { Button, ButtonProps, cn } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { t } from "i18next";
 import { useParams } from "react-router-dom";
 import { useRef, useState } from "react";
@@ -38,6 +38,7 @@ export const LackOfEvidenceModal = ({
 }: Props) => {
   const { id } = useParams();
   const modalRef = useRef<AppModalRef>(null);
+  const queryClient = useQueryClient();
   const [selectedFields, setSelectedFields] = useState<TemplateField[]>(fields);
   const [selectedTags, setSelectedTags] = useState<string[]>(tags);
 
@@ -47,7 +48,10 @@ export const LackOfEvidenceModal = ({
         required_fields: selectedFields.filter((field) => field.active),
         tags: selectedTags,
       }),
-    onSuccess: () => modalRef.current?.onClose(),
+    onSuccess: () => {
+      modalRef.current?.onClose();
+      queryClient.invalidateQueries({ queryKey: ["expert-request", id] });
+    },
     onError: (err) => exceptionHandler(err),
   });
 

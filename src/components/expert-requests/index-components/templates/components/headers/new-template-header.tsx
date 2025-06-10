@@ -3,7 +3,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import FieldsCountChip from "@/components/shared/templates/fields-count-chip";
 import { ImageUploader } from "@/components/shared/uploader";
 import { AppInput } from "@/components/shared/app-components/app-input";
-import { useTemplateFields } from "../useTemplateFields";
+import { useTemplateFields } from "@/hooks/use-template-fields";
 
 type Props = {
   onPropertyChange?: (property: "name" | "logo", value: string) => void;

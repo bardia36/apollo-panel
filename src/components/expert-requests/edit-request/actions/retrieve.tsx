@@ -8,7 +8,7 @@ import { NeutralChip } from "@/components/shared/request-status-chip";
 import { ExpertRequestStatus } from "@/types/expert-requests";
 import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { t } from "i18next";
 import { useParams } from "react-router-dom";
 import { useRef } from "react";
@@ -23,13 +23,17 @@ type Props = {
 export const RetrieveRequestModal = ({ status, code }: Props) => {
   const { id } = useParams();
   const modalRef = useRef<AppModalRef>(null);
+  const queryClient = useQueryClient();
 
   const { mutate: retrieveRequest, isPending } = useMutation({
     mutationFn: async () =>
       expertRequestsApi.retrieve(id as string, {
         status,
       }),
-    onSuccess: () => modalRef.current?.onClose(),
+    onSuccess: () => {
+      modalRef.current?.onClose();
+      queryClient.invalidateQueries({ queryKey: ["expert-request", id] });
+    },
     onError: (err) => exceptionHandler(err),
   });
 

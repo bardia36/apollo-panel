@@ -55,6 +55,7 @@ export default {
   phoneNumber: "Phone number",
   previousPage: "Previous page",
   producer: "Producer",
+  receivedFilesFrom: "Received files from",
   rejected: "Rejected",
   return: "Return",
   reviewed: "Under review",
@@ -78,6 +79,7 @@ export default {
   user: "User",
   userName: "Username",
   waitingToSend: "Waiting to send",
+  wantedFiles: "Wanted files",
   yesDelete: "Yes, delete!",
   zipFileContent: "Zip file content",
 };
