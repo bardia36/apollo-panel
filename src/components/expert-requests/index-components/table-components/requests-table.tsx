@@ -38,8 +38,7 @@ type Props = {
 };
 
 // TODO:
-// 1. Add archived requests needs to the table
-// 2. Change Table content by changing table-type-tabs component
+// Add archived requests needs to the table
 export default function RequestsTable({ requests, loading }: Props) {
   // states -
   const [filterValue, setFilterValue] = useState("");
