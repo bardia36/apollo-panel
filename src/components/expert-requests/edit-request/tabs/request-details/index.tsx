@@ -31,7 +31,7 @@ export default function RequestDetails({ requestData }: RequestDetailsProps) {
           <div
             className={
               isRequestStatusVisible
-                ? "lg:col-span-5 xl:col-span-4"
+                ? "lg:col-span-5 xl:col-span-8"
                 : "lg:col-span-12"
             }
           >

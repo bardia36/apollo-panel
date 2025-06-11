@@ -95,7 +95,7 @@ export default function ImagesStatusAlert({
           )}
 
           {["COMPLETED", "REVIEWED", "ACCEPTED"].includes(status) && (
-            <div className="flex items-center gap-2 mt-2">
+            <div className="flex items-center flex-wrap gap-2 mt-2">
               <Button
                 variant="light"
                 radius="lg"

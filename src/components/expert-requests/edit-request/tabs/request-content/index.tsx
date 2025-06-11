@@ -168,7 +168,6 @@ export default function RequestContent({ requestData }: RequestContentProps) {
                             : ""
                         }
                         alt={img.title}
-                        externalImg
                         placeholder={carPlaceholder}
                         fit="cover"
                         imgClassName="w-full"
@@ -207,7 +206,6 @@ export default function RequestContent({ requestData }: RequestContentProps) {
                             : ""
                         }
                         alt={img.title}
-                        externalImg
                         placeholder={carPlaceholder}
                         fit="cover"
                         imgClassName="w-full"
