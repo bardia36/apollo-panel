@@ -1,10 +1,10 @@
 import type { UserExist } from "@/types/auth";
 
 type Props = {
-  userName: string;
-  setUserName: (userName: string) => void;
-  setAccountUserName: Dispatch<SetStateAction<string>>;
-  setCurrentComponent: (component: "userName" | "password" | "otp") => void;
+  username: string;
+  setUsername: (username: string) => void;
+  setAccountUsername: Dispatch<SetStateAction<string>>;
+  setCurrentComponent: (component: "username" | "password" | "otp") => void;
 };
 
 import { object, string } from "yup";
@@ -36,7 +36,7 @@ export default function Username(props: Props) {
   const msgs = useValidationMessages();
 
   const validationSchema = object({
-    userName: string()
+    username: string()
       .required(msgs.required(t("auth.emailOrPhoneNumber")))
       .test(
         "email-or-phone",
@@ -56,14 +56,14 @@ export default function Username(props: Props) {
   const { handleSubmit, control } = useForm<UserExist>({
     ...formOptions,
     defaultValues: {
-      userName: "",
+      username: "",
     },
     resolver: yupResolver(validationSchema),
   });
 
   async function submit(data: UserExist) {
     setProgressing(true);
-    props.setUserName(data.userName);
+    props.setUsername(data.username);
     const exist = await userExist(data);
 
     if (exist) {
@@ -96,11 +96,11 @@ export default function Username(props: Props) {
 
   async function userExist(data: UserExist) {
     try {
-      const { userName } = data;
+      const { username } = data;
 
-      const { exist, profile } = await accountApi.userExist({ userName });
+      const { exist, profile } = await accountApi.userExist({ username });
 
-      if (exist) props.setAccountUserName(profile.userName);
+      if (exist) props.setAccountUsername(profile.username);
 
       return exist;
     } catch (err) {
@@ -110,9 +110,9 @@ export default function Username(props: Props) {
 
   async function havePassword(data: UserExist) {
     try {
-      const { userName } = data;
+      const { username } = data;
 
-      const { exist } = await accountApi.havePassword({ userName });
+      const { exist } = await accountApi.havePassword({ username });
 
       return exist;
     } catch (err) {
@@ -123,8 +123,8 @@ export default function Username(props: Props) {
   return (
     <Form className="gap-0" onSubmit={handleSubmit(submit)}>
       <Controller
-        name="userName"
-        key="userName"
+        name="username"
+        key="username"
         control={control}
         render={({ field, fieldState: { error } }) => (
           <AppInput
@@ -156,10 +156,10 @@ export default function Username(props: Props) {
         {t("shared.continue")}
       </Button>
 
-      <div className="flex items-center w-full gap-4 py-2">
+      <div className="flex items-center gap-4 py-2 w-full">
         <Divider className="flex-1" />
 
-        <p className="shrink-0 text-tiny text-default-500">{t("shared.or")}</p>
+        <p className="text-default-500 text-tiny shrink-0">{t("shared.or")}</p>
 
         <Divider className="flex-1" />
       </div>
@@ -170,7 +170,7 @@ export default function Username(props: Props) {
         <p className="text-small">
           {t("auth.needToCreateAnAccount")}
 
-          <Link to="/signup" className="text-primary ms-1">
+          <Link to="/signup" className="ms-1 text-primary">
             {t("auth.register")}
           </Link>
         </p>

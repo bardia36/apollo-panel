@@ -25,7 +25,7 @@ export type ExpertRequestInfo = {
   };
   lead_specialist: {
     image?: string;
-    userName: string;
+    username: string;
     phoneNumber?: string;
     email?: string;
     _id?: string;
@@ -65,7 +65,7 @@ export type ExpertRequestDetail = {
   price: number;
   request_log: {
     admin: {
-      userName: string;
+      username: string;
       firstName: string;
       lastName: string;
       email: string;
@@ -113,7 +113,7 @@ export type ExpertRequestDetail = {
       title: string;
       _id: string;
     };
-    userName: string;
+    username: string;
     _id: string;
   };
   createdAt: string;
@@ -376,7 +376,7 @@ export type RequiredFields = {
 };
 
 export type Owner = {
-  userName: string;
+  username: string;
   mobile: string;
   email?: string;
   phoneNumber?: string;

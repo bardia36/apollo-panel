@@ -21,14 +21,12 @@ export default function Account() {
   const { t } = useTranslation();
   const { auth, removeAuth } = useAuthStore();
   const navigate = useNavigate();
-  const [cookie, _, removeCookie] = useCookies(["AUTH"]);
 
   async function logout() {
     try {
       await accountApi.logout();
 
       removeAuth();
-      if (cookie.AUTH) removeCookie("AUTH");
       navigate("/login");
       toast({ color: "success", title: t("auth.logoutSuccessfully") });
     } catch (err) {
@@ -37,19 +35,19 @@ export default function Account() {
   }
 
   return (
-    <div className="mt-6 flex flex-wrap justify-between items-center gap-4">
+    <div className="flex flex-wrap justify-between items-center gap-4 mt-6">
       <div className="flex items-center">
         <UserImage imgClass="min-w-10 w-10 min-h-10 h-10" />
 
         <div>
-          {auth?.profile.userName && (
-            <p className="text-small text-foreground">
-              {truncateString(auth?.profile.userName, 15)}
+          {auth?.username && (
+            <p className="text-foreground text-small">
+              {truncateString(auth?.username, 15)}
             </p>
           )}
-          {auth?.profile?.role?.name && (
-            <p className="text-tiny font-bold text-foreground-400">
-              {auth?.profile?.role?.name}
+          {auth?.role?.name && (
+            <p className="font-bold text-foreground-400 text-tiny">
+              {auth?.role?.name}
             </p>
           )}
         </div>
