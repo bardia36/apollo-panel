@@ -22,12 +22,10 @@ export type ServerType = "AUTHENTICATION_SERVER" | "BASE_SERVER";
 export type RequestOptions = {
   url?: string;
   adminApi?: boolean;
-  tokenLess?: boolean;
   method: Method;
   action?: string | number;
   params?: unknown;
   body?: unknown;
-  token?: string;
   signal?: GenericAbortSignal;
   serverType?: ServerType;
 };

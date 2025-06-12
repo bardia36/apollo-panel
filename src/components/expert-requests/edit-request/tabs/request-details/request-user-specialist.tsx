@@ -25,20 +25,20 @@ export default function RequestUserSpecialist({
   reviewers,
 }: RequestUserSpecialistProps) {
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="gap-4 grid grid-cols-2">
       <div className="col-span-2 xl:col-span-1">
-        <h6 className="text-default-600 text-xs mb-2">{t("shared.user")}</h6>
+        <h6 className="mb-2 text-default-600 text-xs">{t("shared.user")}</h6>
 
-        <div className="p-4 flex flex-wrap items-center gap-4 bg-content1 rounded-3xl mb-2">
+        <div className="flex flex-wrap items-center gap-4 bg-content1 mb-2 p-4 rounded-3xl">
           <Avatar
             size="lg"
-            className="rounded-large bg-foreground-200 text-primary-foreground"
+            className="bg-foreground-200 rounded-large text-primary-foreground"
             classNames={{ icon: "drop-shadow-lg" }}
           />
 
           <div className="flex-1">
-            <h6 className="mb-2 font-semibold">{owner.userName}</h6>
-            <div className="flex items-center justify-between flex-wrap gap-2">
+            <h6 className="mb-2 font-semibold">{owner.username}</h6>
+            <div className="flex flex-wrap justify-between items-center gap-2">
               {owner.phoneNumber && (
                 <div className="flex items-center gap-2">
                   <CopyButton
@@ -47,7 +47,7 @@ export default function RequestUserSpecialist({
                     iconSize="12"
                     iconClassName="text-content4-foreground"
                   />
-                  <p className="text-sm text-content2-foreground">
+                  <p className="text-content2-foreground text-sm">
                     {owner.phoneNumber}
                   </p>
                 </div>
@@ -61,7 +61,7 @@ export default function RequestUserSpecialist({
                     iconSize="12"
                     iconClassName="text-content4-foreground"
                   />
-                  <p className="text-sm text-content2-foreground">
+                  <p className="text-content2-foreground text-sm">
                     {owner.email}
                   </p>
                 </div>
@@ -70,7 +70,7 @@ export default function RequestUserSpecialist({
           </div>
         </div>
 
-        <div className="flex justify-between items-center flex-wrap gap-2">
+        <div className="flex flex-wrap justify-between items-center gap-2">
           {/* TODO: make checkbox required to send reminder message */}
           <Button
             variant="flat"
@@ -88,11 +88,11 @@ export default function RequestUserSpecialist({
       </div>
 
       <div className="col-span-2 xl:col-span-1">
-        <h6 className="text-default-600 text-xs mb-2">
+        <h6 className="mb-2 text-default-600 text-xs">
           {t("expertRequests.specialist")}
         </h6>
 
-        <div className="p-4 flex flex-wrap items-center gap-4 bg-content1 rounded-3xl mb-2">
+        <div className="flex flex-wrap items-center gap-4 bg-content1 mb-2 p-4 rounded-3xl">
           <Avatar
             size="lg"
             radius="full"
@@ -101,12 +101,12 @@ export default function RequestUserSpecialist({
           />
 
           <div className="flex-1">
-            <h6 className="mb-2 font-semibold">{lead_specialist.userName}</h6>
-            <div className="flex items-center flex-wrap gap-2 md:gap-6 text-sm text-content2-foreground">
+            <h6 className="mb-2 font-semibold">{lead_specialist.username}</h6>
+            <div className="flex flex-wrap items-center gap-2 md:gap-6 text-content2-foreground text-sm">
               {/* <div className="flex items-center gap-2">
                 <Icon
                   icon="solar:user-id-linear"
-                  className="text-content4-foreground min-w-[18px] h-[18px]"
+                  className="min-w-[18px] h-[18px] text-content4-foreground"
                 />
                 <p>{t("expertRequests.responsibleSpecialist")}</p>
               </div> */}
@@ -130,7 +130,7 @@ export default function RequestUserSpecialist({
             {reviewers.map((reviewer) => (
               <Tooltip
                 key={reviewer.owner.email}
-                content={`${reviewer.owner.userName} - ${reviewer.unit?.title}`}
+                content={`${reviewer.owner.username} - ${reviewer.unit?.title}`}
               >
                 <Avatar
                   key={reviewer.owner.email}

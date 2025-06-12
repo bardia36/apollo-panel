@@ -97,13 +97,13 @@ export const SendInspectionLinkModal = ({ requestData }: Props) => {
       activator={
         <Button
           variant="shadow"
-          className="bg-foreground-900 text-foreground-50 ms-1"
+          className="bg-foreground-900 ms-1 text-foreground-50"
         >
           <Icon
             icon="solar:check-circle-bold"
             width={20}
             height={20}
-            className="text-foreground-50 min-w-5"
+            className="min-w-5 text-foreground-50"
           />
           {t("expertRequests.sendInspectionLink")}
         </Button>
@@ -123,7 +123,7 @@ export const SendInspectionLinkModal = ({ requestData }: Props) => {
         <div className="flex flex-col h-full">
           <ExpertRequestSummary requestData={requestData} />
 
-          <div className="bg-default-50 px-4 py-3.5 flex items-center rounded-medium mb-2">
+          <div className="flex items-center bg-default-50 mb-2 px-4 py-3.5 rounded-medium">
             <Icon
               icon="solar:chat-line-outline"
               width={20}
@@ -150,7 +150,7 @@ export const SendInspectionLinkModal = ({ requestData }: Props) => {
             />
           </div>
 
-          <div className="bg-default-50 px-4 py-3.5 flex items-center rounded-medium">
+          <div className="flex items-center bg-default-50 px-4 py-3.5 rounded-medium">
             <Icon
               icon="solar:letter-outline"
               width={20}
@@ -179,7 +179,7 @@ export const SendInspectionLinkModal = ({ requestData }: Props) => {
 
           <Form onSubmit={handleSubmit(onSubmit)} className="gap-0">
             {(!!smsEnabled || !!emailEnabled) && (
-              <div className="grid md:grid-cols-2 max-md:flex-col w-full gap-4 py-2 mt-4">
+              <div className="max-md:flex-col gap-4 grid md:grid-cols-2 mt-4 py-2 w-full">
                 {!!smsEnabled && (
                   <Controller
                     control={control}
@@ -252,7 +252,7 @@ export const SendInspectionLinkModal = ({ requestData }: Props) => {
               </div>
             )}
 
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 w-full mb-4">
+            <div className="gap-4 grid grid-cols-1 md:grid-cols-2 mt-6 mb-4 w-full">
               <Controller
                 control={control}
                 name="lead_specialist"
@@ -267,10 +267,10 @@ export const SendInspectionLinkModal = ({ requestData }: Props) => {
                     itemLabel="label"
                     defaultSelection={
                       requestData?.lead_specialist._id &&
-                      requestData?.lead_specialist.userName
+                      requestData?.lead_specialist.username
                         ? {
                             key: requestData?.lead_specialist._id,
-                            label: requestData?.lead_specialist.userName,
+                            label: requestData?.lead_specialist.username,
                           }
                         : undefined
                     }
@@ -337,7 +337,7 @@ export const SendInspectionLinkModal = ({ requestData }: Props) => {
           onPress={() => modalRef.current?.onClose()}
           isLoading={isPending}
           variant="light"
-          className="text-default-foreground me-2"
+          className="me-2 text-default-foreground"
           startContent={
             <Icon icon="mynaui:arrow-right" className="min-w-5 h-5" />
           }
@@ -369,12 +369,12 @@ const ExpertRequestSummary = ({ requestData }: Props) => {
 
   return (
     <div className="mb-6">
-      <h6 className="text-xs text-default-600 mb-2">
+      <h6 className="mb-2 text-default-600 text-xs">
         {t("expertRequests.requestSummary")}
       </h6>
 
-      <div className="p-4 flex flex-col gap-4 bg-default-50 shadow-md rounded-[20px] border-dashed border-2 border-default-200">
-        <div className="flex items-center flex-wrap gap-2">
+      <div className="flex flex-col gap-4 bg-default-50 shadow-md p-4 border-2 border-default-200 border-dashed rounded-[20px]">
+        <div className="flex flex-wrap items-center gap-2">
           <div className="p-3.5">
             <Icon
               icon="solar:user-linear"
@@ -387,8 +387,8 @@ const ExpertRequestSummary = ({ requestData }: Props) => {
           <div>
             <h6 className="font-semibold text-foreground-700">
               {isSmAndDown
-                ? truncateString(requestData.owner.userName, 15)
-                : requestData.owner.userName}
+                ? truncateString(requestData.owner.username, 15)
+                : requestData.owner.username}
             </h6>
 
             {!!requestData.owner.phoneNumber && (
@@ -400,7 +400,7 @@ const ExpertRequestSummary = ({ requestData }: Props) => {
 
           <div className="ms-auto text-end">
             {!!requestData.order_number && (
-              <div className="flex items-center justify-end gap-2">
+              <div className="flex justify-end items-center gap-2">
                 <h6 className="text-foreground-700">
                   {isSmAndDown
                     ? truncateString(requestData.order_number, 20)
@@ -426,7 +426,7 @@ const ExpertRequestSummary = ({ requestData }: Props) => {
         </div>
 
         {!!requestData.inspection_data && (
-          <div className="flex items-center flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <div className="p-3.5">
               <Icon
                 icon="lineicons:search-1"
@@ -445,14 +445,14 @@ const ExpertRequestSummary = ({ requestData }: Props) => {
               </p>
             </div>
 
-            <div className="ms-auto text-end text-foreground-500 text-sm">
+            <div className="ms-auto text-foreground-500 text-sm text-end">
               <h6>{requestData.inspection_data.color?.name}</h6>
               <p>VIN: {requestData.inspection_data.vin}</p>
             </div>
           </div>
         )}
 
-        <div className="flex items-center flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <div className="p-3.5">
             <Icon
               icon="solar:folder-linear"
@@ -471,13 +471,13 @@ const ExpertRequestSummary = ({ requestData }: Props) => {
             </p>
           </div>
 
-          <div className="text-end ms-auto text-sm">
+          <div className="ms-auto text-sm text-end">
             <h6 className="text-foreground-500">
               {commonFields.length} {t("expertRequests.wantedItem")}
             </h6>
 
             {!!addedFields.length && (
-              <div className="flex items-center justify-end gap-2 mt-1">
+              <div className="flex justify-end items-center gap-2 mt-1">
                 <FieldChip
                   field={{
                     _id: addedFields[0].title,

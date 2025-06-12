@@ -34,7 +34,7 @@ export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
   const [progressing, setProgressing] = useState(false);
 
   const validationSchema = object({
-    userName: string().required(msgs.required(t("auth.name"))),
+    username: string().required(msgs.required(t("auth.name"))),
     email: string()
       .email(msgs.isNotValid(t("auth.email")))
       .required(msgs.required(t("auth.email"))),
@@ -53,7 +53,7 @@ export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
   const { handleSubmit, control } = useForm<RegisterEntity>({
     ...formOptions,
     defaultValues: {
-      userName: "",
+      username: "",
       email: "",
       password: "",
       phoneNumber: "",
@@ -84,7 +84,7 @@ export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
   return (
     <Form className="gap-0" onSubmit={handleSubmit(submit)}>
       <Controller
-        name="userName"
+        name="username"
         key="username"
         control={control}
         render={({ field, fieldState: { error } }) => (
@@ -219,20 +219,20 @@ export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
         {t("auth.signUp")}
       </Button>
 
-      <div className="flex items-center w-full gap-4 py-2">
+      <div className="flex items-center gap-4 py-2 w-full">
         <Divider className="flex-1" />
 
-        <p className="shrink-0 text-tiny text-default-500">{t("shared.or")}</p>
+        <p className="text-default-500 text-tiny shrink-0">{t("shared.or")}</p>
 
         <Divider className="flex-1" />
       </div>
 
       <GoogleButton />
 
-      <p className="w-full text-center text-small">
+      <p className="w-full text-small text-center">
         {t("auth.haveYouAlreadyRegistered")}
 
-        <Link to="/login" className="text-primary ms-1">
+        <Link to="/login" className="ms-1 text-primary">
           {t("auth.login")}
         </Link>
       </p>

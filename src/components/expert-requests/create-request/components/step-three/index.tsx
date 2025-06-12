@@ -111,7 +111,7 @@ export default function StepThree({
     <div className="flex flex-col h-full">
       <RequestSummary requestData={requestData} />
 
-      <div className="bg-default-50 px-4 py-3.5 flex items-center rounded-medium mb-2">
+      <div className="flex items-center bg-default-50 mb-2 px-4 py-3.5 rounded-medium">
         <Icon
           icon="solar:chat-line-outline"
           width={20}
@@ -138,7 +138,7 @@ export default function StepThree({
         />
       </div>
 
-      <div className="bg-default-50 px-4 py-3.5 flex items-center rounded-medium">
+      <div className="flex items-center bg-default-50 px-4 py-3.5 rounded-medium">
         <Icon
           icon="solar:letter-outline"
           width={20}
@@ -167,7 +167,7 @@ export default function StepThree({
 
       <Form onSubmit={handleSubmit(submit)} className="gap-0">
         {(!!smsEnabled || !!emailEnabled) && (
-          <div className="grid md:grid-cols-2 max-md:flex-col w-full gap-4 py-2 mt-4">
+          <div className="max-md:flex-col gap-4 grid md:grid-cols-2 mt-4 py-2 w-full">
             {!!smsEnabled && (
               <Controller
                 control={control}
@@ -236,7 +236,7 @@ export default function StepThree({
           </div>
         )}
 
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 w-full mb-4">
+        <div className="gap-4 grid grid-cols-1 md:grid-cols-2 mt-6 mb-4 w-full">
           <Controller
             control={control}
             name="lead_specialist"
@@ -251,10 +251,10 @@ export default function StepThree({
                 itemLabel="label"
                 defaultSelection={
                   requestData?.lead_specialist._id &&
-                  requestData?.lead_specialist.userName
+                  requestData?.lead_specialist.username
                     ? {
                         key: requestData?.lead_specialist._id,
-                        label: requestData?.lead_specialist.userName,
+                        label: requestData?.lead_specialist.username,
                       }
                     : undefined
                 }

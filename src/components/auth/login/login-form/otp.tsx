@@ -1,9 +1,9 @@
 import type { CookieValues, LoginByOtpEntity } from "@/types/auth";
 
 type Props = {
-  userName: string;
-  setUserName: (userName: string) => void;
-  setCurrentComponent: (component: "userName" | "password" | "otp") => void;
+  username: string;
+  setUsername: (username: string) => void;
+  setCurrentComponent: (component: "username" | "password" | "otp") => void;
 };
 
 import { v4 } from "uuid";
@@ -30,7 +30,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import GoogleButton from "./google-button";
 
-export default function Otp({ userName, setCurrentComponent }: Props) {
+export default function Otp({ username, setCurrentComponent }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { setAuth } = useAuthStore();
@@ -43,7 +43,7 @@ export default function Otp({ userName, setCurrentComponent }: Props) {
 
   async function getSendCode() {
     try {
-      await accountApi.sendCode({ userName });
+      await accountApi.sendCode({ username });
     } catch (err) {
       exceptionHandler(err);
     }
@@ -56,7 +56,7 @@ export default function Otp({ userName, setCurrentComponent }: Props) {
   const msgs = useValidationMessages();
 
   const validationSchema = object({
-    userName: string().required(msgs.required(t("auth.emailOrPhoneNumber"))),
+    username: string().required(msgs.required(t("auth.emailOrPhoneNumber"))),
     code: string()
       .min(5, msgs.min(t("auth.otp"), 5))
       .required(msgs.required(t("auth.otp"))),
@@ -65,7 +65,7 @@ export default function Otp({ userName, setCurrentComponent }: Props) {
   const { handleSubmit, control, getValues } = useForm<LoginByOtpEntity>({
     ...formOptions,
     defaultValues: {
-      userName: userName,
+      username: username,
       code: "",
       uniqueId: v4(),
     },
@@ -82,19 +82,21 @@ export default function Otp({ userName, setCurrentComponent }: Props) {
     try {
       setProgressing(true);
 
-      const auth = await accountApi.loginByOtp(data);
-
-      setAuth(auth);
-      navigate("/dashboard");
+      await accountApi.loginByOtp(data);
+      await getAccount();
 
       toast({ title: t("auth.youLoginSuccessfully"), color: "success" });
-
-      setCookie("AUTH", auth, { path: "/", maxAge: auth.tokenExpireTime });
     } catch (err) {
       exceptionHandler(err);
     } finally {
       setProgressing(false);
     }
+  }
+
+  async function getAccount() {
+    const account = await accountApi.getAccount();
+    setAuth(account);
+    navigate("/dashboard");
   }
 
   return (
@@ -139,19 +141,19 @@ export default function Otp({ userName, setCurrentComponent }: Props) {
         {t("auth.enterWithPassword")}
       </Button>
 
-      <div className="flex items-center w-full gap-4 py-2">
+      <div className="flex items-center gap-4 py-2 w-full">
         <Divider className="flex-1" />
 
-        <p className="shrink-0 text-tiny text-default-500">{t("shared.or")}</p>
+        <p className="text-default-500 text-tiny shrink-0">{t("shared.or")}</p>
 
         <Divider className="flex-1" />
       </div>
 
       <GoogleButton />
 
-      <p className="w-full text-center text-small">
+      <p className="w-full text-small text-center">
         {t("auth.needToCreateAnAccount")}
-        <Link to="/signup" className="text-primary ms-1">
+        <Link to="/signup" className="ms-1 text-primary">
           {t("auth.register")}
         </Link>
       </p>

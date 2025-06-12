@@ -22,13 +22,13 @@ export type ExpertRequestInfo = {
   order_number: string;
   owner: {
     image?: string;
-    userName: string;
+    username: string;
     phoneNumber?: string;
     email?: string;
   };
   lead_specialist: {
     image?: string;
-    userName: string;
+    username: string;
     phoneNumber?: string;
     email?: string;
     _id?: string;
@@ -74,7 +74,7 @@ export type ExpertRequestDetail = ExpertRequestInfo & {
   template_id: Omit<Template, "_id">;
   reviewers: {
     owner: {
-      userName: string;
+      username: string;
       firstName: string;
       lastName: string;
       email: string;
@@ -105,7 +105,7 @@ export type ExpertRequestDetail = ExpertRequestInfo & {
   };
   request_log: {
     admin: {
-      userName: string;
+      username: string;
       firstName: string;
       lastName: string;
       email: string;
@@ -282,7 +282,7 @@ export type RegisterRequestResponse = {
   updated_at: string;
   lead_specialist: {
     image?: string;
-    userName: string;
+    username: string;
     phoneNumber?: string;
     email?: string;
     _id?: string;

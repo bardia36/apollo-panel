@@ -1,9 +1,9 @@
-import { ActhDto } from "@/types/auth";
+import { Auth } from "@/types/auth";
 import { create } from "zustand";
 
 type AuthStore = {
-  auth: ActhDto | null;
-  setAuth: (value?: ActhDto) => void;
+  auth: Auth | null;
+  setAuth: (value?: Auth) => void;
   removeAuth: () => void;
 };
 
