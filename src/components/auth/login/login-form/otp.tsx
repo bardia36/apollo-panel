@@ -1,4 +1,4 @@
-import type { CookieValues, LoginByOtpEntity } from "@/types/auth";
+import type { LoginByOtpEntity } from "@/types/auth";
 
 type Props = {
   username: string;
