@@ -9,7 +9,7 @@ interface RequestHistoryProps {
 
 export default function RequestHistory({ requestData }: RequestHistoryProps) {
   return (
-    <div className="xl:p-4 bg-content1">
+    <div className="bg-content1 xl:p-4">
       {requestData.request_log.map((log, index) => (
         <div key={index + log.createdAt} className="flex gap-6">
           <div className="flex flex-col items-center">
@@ -17,11 +17,11 @@ export default function RequestHistory({ requestData }: RequestHistoryProps) {
               radius="full"
               variant="solid"
               classNames={{ content: "px-0 flex justify-center" }}
-              className="bg-content4 min-w-8 h-8 shadow-lg"
+              className="bg-content4 shadow-lg min-w-8 h-8"
             >
               <Icon
                 icon="solar:info-circle-bold"
-                className="text-default-foreground min-w-5 h-5"
+                className="min-w-5 h-5 text-default-foreground"
               />
             </Chip>
             <Divider className="flex-1 bg-content3 w-[1px]" />
@@ -36,7 +36,7 @@ export default function RequestHistory({ requestData }: RequestHistoryProps) {
               startContent={
                 <Icon
                   icon="solar:calendar-minimalistic-outline"
-                  className="text-default-400 min-w-4 h-4 me-1"
+                  className="me-1 min-w-4 h-4 text-default-400"
                 />
               }
             >
@@ -59,10 +59,10 @@ export default function RequestHistory({ requestData }: RequestHistoryProps) {
                     startContent={
                       <Icon
                         icon="solar:gps-outline"
-                        className="text-default-400 min-w-4 h-4"
+                        className="min-w-4 h-4 text-default-400"
                       />
                     }
-                    className="bg-foreground-100 text-default-800 text-sm px-2"
+                    className="bg-foreground-100 px-2 text-default-800 text-sm"
                   >
                     IP: {log.ip}
                   </Chip>
@@ -75,10 +75,10 @@ export default function RequestHistory({ requestData }: RequestHistoryProps) {
                     startContent={
                       <Icon
                         icon="solar:iphone-outline"
-                        className="text-default-400 min-w-4 h-4"
+                        className="min-w-4 h-4 text-default-400"
                       />
                     }
-                    className="bg-foreground-100 text-default-800 text-sm px-2"
+                    className="bg-foreground-100 px-2 text-default-800 text-sm"
                   >
                     {log.os}
                   </Chip>
@@ -91,10 +91,10 @@ export default function RequestHistory({ requestData }: RequestHistoryProps) {
                     startContent={
                       <Icon
                         icon="hugeicons:browser"
-                        className="text-default-400 min-w-4 h-4"
+                        className="min-w-4 h-4 text-default-400"
                       />
                     }
-                    className="bg-foreground-100 text-default-800 text-sm px-2"
+                    className="bg-foreground-100 px-2 text-default-800 text-sm"
                   >
                     {log.browser}
                   </Chip>
@@ -110,7 +110,7 @@ export default function RequestHistory({ requestData }: RequestHistoryProps) {
                 />
                 <div>
                   <p className="text-default-800 text-sm">
-                    {log.admin?.userName}
+                    {log.admin?.username}
                   </p>
                   {/* TODO: Backend <p className="text-default-500 text-xs">{log.admin.role}</p> */}
                 </div>

@@ -53,7 +53,7 @@ export const TopContent = ({
       [t("expertRequests.vehicleModel")]:
         doc.inspection_data?.vehicle_model?.name_en || "",
       [t("shared.status")]: statusesMap[doc.status].label,
-      [t("shared.user")]: doc.owner?.userName || "",
+      [t("shared.user")]: doc.owner?.username || "",
       [t("shared.createdAt")]: formatDate(doc.createdAt).formattedDate,
       [t("expertRequests.branch")]: doc.unit?.title || "",
     }));
@@ -70,7 +70,7 @@ export const TopContent = ({
       <div className="flex justify-between">
         <div className="flex gap-4">
           <AppInput
-            className="w-full sm:max-w-[44%] lg:max-w-[100%] lg:min-w-[272px]"
+            className="w-full lg:min-w-[272px] sm:max-w-[44%] lg:max-w-[100%]"
             classNames={{
               input:
                 "bg-transparent text-default-500 dark:text-default-500 placeholder:text-default-500 dark:placeholder:text-default-500",
@@ -91,7 +91,7 @@ export const TopContent = ({
               <DropdownTrigger className="hidden sm:flex">
                 <Button
                   variant="flat"
-                  className="px-3 gap-3 text-default-800 bg-default-100"
+                  className="gap-3 bg-default-100 px-3 text-default-800"
                   startContent={
                     <Icon
                       icon="mdi:chevron-down"
@@ -123,7 +123,7 @@ export const TopContent = ({
               <DropdownTrigger className="hidden sm:flex">
                 <Button
                   variant="flat"
-                  className="px-3 gap-3 text-default-800 bg-default-100"
+                  className="gap-3 bg-default-100 px-3 text-default-800"
                   startContent={
                     <Icon
                       icon="solar:sort-horizontal-linear"
@@ -162,7 +162,7 @@ export const TopContent = ({
             <DropdownTrigger className="hidden sm:flex">
               <Button
                 variant="flat"
-                className="px-3 gap-3 text-default-800 bg-default-100"
+                className="gap-3 bg-default-100 px-3 text-default-800"
                 startContent={
                   <Icon
                     icon="mdi:chevron-down"
@@ -264,13 +264,13 @@ export const TopContent = ({
               <Button
                 variant="light"
                 isIconOnly
-                className="text-foreground ms-2"
+                className="ms-2 text-foreground"
                 endContent={
                   <Icon
                     icon="mdi:chevron-down"
                     width={16}
                     height={16}
-                    className="text-foreground ms-2"
+                    className="ms-2 text-foreground"
                   />
                 }
               >

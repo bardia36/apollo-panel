@@ -40,15 +40,8 @@ export type Auth = {
   firstName: string;
   lastName: string;
   image: string;
-  userName: string;
+  username: string;
   email: string;
-  defaultWorkspace?: {
-    _id: string;
-    name: string;
-    slug: string;
-    image: string;
-    plane: "FREE" | "PRO";
-  };
   confirmEmail: string;
   phoneNumber: string;
   suspended: boolean;
@@ -56,7 +49,7 @@ export type Auth = {
 };
 
 export type RegisterEntity = {
-  userName: string;
+  username: string;
   email: string;
   phoneNumber: string;
   password: string;
@@ -81,13 +74,14 @@ export type ConfirmEmail = {
 };
 
 export type LoginEntity = {
-  userName: string;
+  username: string;
   password: string;
   uniqueId?: string;
+  rememberMe?: boolean;
 };
 
 export type LoginByOtpEntity = {
-  userName: string;
+  username: string;
   code: string;
   uniqueId?: string;
 };
@@ -95,7 +89,7 @@ export type LoginByOtpEntity = {
 export type ActhDto = {
   profile: Pick<
     Auth,
-    "firstName" | "lastName" | "phoneNumber" | "email" | "userName" | "role"
+    "firstName" | "lastName" | "phoneNumber" | "email" | "username" | "role"
   >;
   token: string;
   refreshToken: string;
@@ -103,7 +97,7 @@ export type ActhDto = {
   refreshTokenExpireTime: number;
 };
 
-export type UserExist = Pick<Auth, "userName">;
+export type UserExist = Pick<Auth, "username">;
 
 export type CookieValues = {
   AUTH?: ActhDto;

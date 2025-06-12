@@ -11,16 +11,16 @@ import PasswordComponent from "./password";
 
 const components = {
   otp: OtpComponent,
-  userName: UsernameComponent,
+  username: UsernameComponent,
   password: PasswordComponent,
 };
 
 export default function LoginForm() {
   const { t } = useTranslation();
 
-  const [userName, setUserName] = useState("");
-  const [accountUserName, setAccountUserName] = useState("");
-  const [currentComponent, setCurrentComponent] = useState("userName");
+  const [username, setUsername] = useState("");
+  const [accountUsername, setAccountUsername] = useState("");
+  const [currentComponent, setCurrentComponent] = useState("username");
   const Component =
     components[currentComponent as keyof typeof components] ||
     (() => <div>Not Found</div>);
@@ -28,10 +28,10 @@ export default function LoginForm() {
   return (
     <Card
       fullWidth
-      className="w-full max-w-sm border border-default-100 rounded-large shadow-small"
+      className="shadow-small border border-default-100 rounded-large w-full max-w-sm"
     >
       <CardBody className="px-8 pt-6 pb-10">
-        <h1 className="mb-2 text-xl text-content3-foreground text-start">
+        <h1 className="mb-2 text-content3-foreground text-xl text-start">
           {(currentComponent as keyof typeof components) === "otp"
             ? t("auth.otpCode")
             : t("auth.login")}
@@ -40,22 +40,22 @@ export default function LoginForm() {
         {(currentComponent as keyof typeof components) === "otp" ||
         (currentComponent as keyof typeof components) === "password" ? (
           <div
-            className="px-3 mt-4 border border-default-200 grid grid-cols-12 cursor-pointer rounded-large h-[66px] justify-between items-center"
-            onClick={() => setCurrentComponent("userName")}
+            className="justify-between items-center grid grid-cols-12 mt-4 px-3 border border-default-200 rounded-large h-[66px] cursor-pointer"
+            onClick={() => setCurrentComponent("username")}
           >
             <div className="col-span-2"></div>
 
-            <div className="flex items-center w-full col-span-8">
+            <div className="flex items-center col-span-8 w-full">
               <p
                 dir="auto"
-                className="overflow-hidden text-lg align-middle text-ellipsis whitespace-nowrap"
+                className="overflow-hidden text-lg text-ellipsis align-middle whitespace-nowrap"
               >
-                {accountUserName}
+                {accountUsername}
               </p>
             </div>
 
-            <div className="flex items-center justify-end col-span-2">
-              <div className="flex items-center h-5 p-1 rounded-lg max-w-5 min-w-min bg-default-50 justify-normal">
+            <div className="flex justify-end items-center col-span-2">
+              <div className="flex justify-normal items-center bg-default-50 p-1 rounded-lg min-w-min max-w-5 h-5">
                 <Icon
                   icon="solar:undo-right-round-linear"
                   className="text-content1-foreground"
@@ -68,9 +68,9 @@ export default function LoginForm() {
         ) : null}
 
         <Component
-          userName={userName}
-          setUserName={setUserName}
-          setAccountUserName={setAccountUserName}
+          username={username}
+          setUsername={setUsername}
+          setAccountUsername={setAccountUsername}
           setCurrentComponent={setCurrentComponent}
         />
       </CardBody>
