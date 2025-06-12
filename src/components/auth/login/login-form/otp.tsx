@@ -15,7 +15,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { formOptions } from "@/utils/validations";
 import { toast } from "@/utils/toast";
 import { accountApi } from "@/apis/auth";
-import { useCookies } from "react-cookie";
 import useAuthStore from "@/stores/auth-store";
 import { useValidationMessages } from "@/utils/rules";
 import { exceptionHandler } from "@/apis/exception";
@@ -34,7 +33,6 @@ export default function Otp({ username, setCurrentComponent }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { setAuth } = useAuthStore();
-  const [_, setCookie] = useCookies<"AUTH", CookieValues>(["AUTH"]);
   const [progressing, setProgressing] = useState(false);
 
   useEffect(() => {
