@@ -1,3 +1,8 @@
+import { RequiredFields } from "@/types/expert-requests";
+import { TemplateField } from "@/types/templates";
+import { t } from "i18next";
+import jalaali from "jalaali-js";
+
 export function fancyTimeFormat(duration: number) {
   // Hours, minutes and seconds
   const hrs = ~~(duration / 3600);
@@ -59,3 +64,136 @@ export function truncateString(str: string, maxLength: number) {
   if (str.length <= maxLength) return str;
   return str.slice(0, maxLength) + "...";
 }
+
+export function copyToClipboard(text: string) {
+  return () => {
+    navigator.clipboard.writeText(text);
+  };
+}
+
+/**
+ * Converts Persian/Arabic numbers to English numbers
+ * @param input String containing Persian/Arabic numbers
+ * @returns String with converted English numbers
+ */
+export function convertPersianToEnglishNumbers(input: string): string {
+  if (!input) return input;
+
+  const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+  const arabicDigits = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
+
+  let result = input;
+
+  // Replace Persian digits
+  for (let i = 0; i < 10; i++) {
+    const regex = new RegExp(persianDigits[i], "g");
+    result = result.replace(regex, i.toString());
+  }
+
+  // Replace Arabic digits
+  for (let i = 0; i < 10; i++) {
+    const regex = new RegExp(arabicDigits[i], "g");
+    result = result.replace(regex, i.toString());
+  }
+
+  return result;
+}
+
+export interface FormattedDateTime {
+  formattedDate: string; // YYYY/MM/DD
+  formattedTime: string; // HH:mm
+  formattedWeekDay: string; // Persian weekday name
+}
+
+const PERSIAN_WEEKDAYS = [
+  "یکشنبه",
+  "دوشنبه",
+  "سه‌شنبه",
+  "چهارشنبه",
+  "پنجشنبه",
+  "جمعه",
+  "شنبه",
+];
+
+// TODO: Support English and Arabic later
+/**
+ * Formats an ISO date string to Jalali date and time
+ * @param isoDate ISO date string
+ * @returns Object containing formatted date (YYYY/MM/DD), time (HH:mm), and weekday name in Persian
+ */
+export const formatDate = (isoDate: string): FormattedDateTime => {
+  const date = new Date(isoDate);
+
+  // Convert to Jalali
+  const jDate = jalaali.toJalaali(date);
+
+  // Format date (YYYY/MM/DD)
+  const formattedDate = `${jDate.jy}/${jDate.jm.toString().padStart(2, "0")}/${jDate.jd.toString().padStart(2, "0")}`;
+
+  // Format time (HH:mm)
+  const formattedTime = `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
+
+  // Get weekday name
+  const formattedWeekDay = PERSIAN_WEEKDAYS[date.getDay()];
+
+  return {
+    formattedDate,
+    formattedTime,
+    formattedWeekDay,
+  };
+};
+
+export function getTimeDistance(date: Date | string) {
+  const now = new Date();
+  const targetDate = typeof date === "string" ? new Date(date) : date;
+
+  const diffInMinutes = Math.floor(
+    (now.getTime() - targetDate.getTime()) / (1000 * 60)
+  );
+  const days = Math.floor(diffInMinutes / (24 * 60));
+  const hours = Math.floor((diffInMinutes % (24 * 60)) / 60);
+  const minutes = diffInMinutes % 60;
+
+  if (days === 0 && hours === 0 && minutes === 0) return t("shared.justNow");
+
+  const parts: string[] = [];
+
+  if (days > 0) parts.push(`${days} ${t("shared.day")}`);
+  if (hours > 0) parts.push(`${hours} ${t("shared.hour")}`);
+  if (minutes > 0 && days === 0) parts.push(`${minutes} ${t("shared.minute")}`);
+
+  return parts.join(` ${t("shared.and")} `);
+}
+
+export const dateOfNow = () => {
+  const now = new Date();
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  };
+  const timeOptions: Intl.DateTimeFormatOptions = {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  };
+
+  const datePart = now.toLocaleDateString("fa-IR", dateOptions);
+  const timePart = now.toLocaleTimeString("fa-IR", timeOptions);
+
+  return `${datePart} - ${timePart}`;
+};
+
+export const getFieldsInfo = (requestData: {
+  template_id: { fields: TemplateField[] };
+  required_fields: RequiredFields[];
+}) => {
+  const templateFields = requestData.template_id.fields.map((f) => f.title);
+  const commonFields = requestData.required_fields.filter((f) =>
+    templateFields.includes(f.title)
+  );
+  const addedFields = requestData.required_fields.filter(
+    (f) => !templateFields.includes(f.title)
+  );
+  return { commonFields, addedFields };
+};

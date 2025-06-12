@@ -1,0 +1,25 @@
+export default {
+  400: "درخواست نامعتبر است",
+  401: "دسترسی غیرمجاز",
+  500: "خطای سرور",
+
+  ACCOUNT_NOT_FOUND: "این حساب کاربری پیدا نشد !",
+  CODE_IS_EXPIRED: "این کد منقضی شده است !",
+  CODE_IS_NOT_CORRECT: "کد وارد شده صحیح نمی باشد !",
+  CODE_IS_NOT_FOUND: "این کد پیدا نشد !",
+  EMAIL_IS_REQUIRED: "ایمیل الزامی است !",
+  EMAIL_NOT_SEND: "ایمیل ارسال نشد !",
+  EMAIL_OR_PHONE_NUMBER_IS_NOT_CORRECT: "ایمیل یا شماره تلفن اشتباه است !",
+  OTP_NOT_FOUND: "کد ارسال نشده است !",
+  PACKAGE_ID_IS_REQUIRED: "پکیج الزامی است !",
+  PASSWORD_IS_WRONG: "رمز عبور اشتباه است !",
+  THIS_EMAIL_IS_ALREADY_USED: "این ایمیل قبلاً استفاده شده است !",
+  THIS_PHONE_NUMBER_IS_ALREADY_USED: "این شماره تلفن قبلاً استفاده شده است !",
+  TOKEN_IS_NOT_CORRECT: "توکن صحیح نمی باشد !",
+  USER_ACCOUNT_IS_REQUIRED: "حساب کاربری الزامی است !",
+  USER_ALREADY_EXIST: "این حساب کاربری قبلاً وجود دارد !",
+  USER_IS_SUSPENDED: "این حساب کاربری غیرفعال شده است !",
+  USER_NOT_FOUND: "این کاربر پیدا نشد !",
+
+  unhandled: "خطای ناشناخته رخ داده است !",
+};

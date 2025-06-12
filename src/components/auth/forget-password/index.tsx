@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 //components
-import { Card, CardBody } from "@heroui/card";
+import { Card, CardBody } from "@heroui/react";
 
 import ForgetPasswordForm from "./components/forget-password-form";
 import ConfirmEmail from "./components/confirm-email";
@@ -26,7 +26,7 @@ export default function ForgetPassword() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
-      <FullLogo classNames={{ wrapper: "mb-6 mt-6 mt-md-0" }} />
+      <FullLogo classNames={{ wrapper: "w-40 mb-6 mt-6 mt-md-0" }} />
 
       <Card
         fullWidth

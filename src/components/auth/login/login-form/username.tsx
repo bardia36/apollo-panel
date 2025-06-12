@@ -15,15 +15,16 @@ import { Controller, useForm } from "react-hook-form";
 import { formOptions } from "@/utils/validations";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useValidationMessages } from "@/utils/rules";
-import { accountApi } from "@/services/api";
-import { exceptionHandler } from "@/services/api/exception";
+import { accountApi } from "@/apis/auth";
+import { exceptionHandler } from "@/apis/exception";
+import { validationRegex } from "@/utils/rules";
 
 // Components
 import { Link, useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { Button } from "@heroui/button";
-import { Divider } from "@heroui/divider";
-import { Form } from "@heroui/form";
+import { Button } from "@heroui/react";
+import { Divider } from "@heroui/react";
+import { Form } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
 import GoogleButton from "./google-button";
 
@@ -32,10 +33,24 @@ export default function Username(props: Props) {
   const [progressing, setProgressing] = useState(false);
   const navigate = useNavigate();
 
+  const msgs = useValidationMessages();
+
   const validationSchema = object({
-    userName: string().required(
-      useValidationMessages().required(t("auth.emailOrPhoneNumber"))
-    ),
+    userName: string()
+      .required(msgs.required(t("auth.emailOrPhoneNumber")))
+      .test(
+        "email-or-phone",
+        msgs.isNotValid(t("auth.emailOrPhoneNumber")),
+        (value) => {
+          if (!value) return false;
+          try {
+            string().email().validateSync(value);
+            return true;
+          } catch {
+            return validationRegex.mobile.test(value);
+          }
+        }
+      ),
   }).required();
 
   const { handleSubmit, control } = useForm<UserExist>({
@@ -109,7 +124,7 @@ export default function Username(props: Props) {
     <Form className="gap-0" onSubmit={handleSubmit(submit)}>
       <Controller
         name="userName"
-        key="username"
+        key="userName"
         control={control}
         render={({ field, fieldState: { error } }) => (
           <AppInput

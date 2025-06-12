@@ -1,19 +1,19 @@
 import { Outlet } from "react-router-dom";
 import { useTheme } from "@heroui/use-theme";
-import useIsMobile from "@/hook/useIsMobile";
-import { Image } from "@heroui/image";
+import { useBreakpoint } from "@/hooks/useBreakpoint";
+import { Image } from "@heroui/react";
 import NewRelease from "@/components/layouts/auth/new-release";
-import authLightImg from "@/assets/images/auth/auth-light.png";
-import authDarkImg from "@/assets/images/auth/auth-dark.png";
+import authLightImg from "@/assets/images/auth/auth-light.webp";
+import authDarkImg from "@/assets/images/auth/auth-dark.webp";
 
 export default function AuthLayout() {
-  const isMobile = useIsMobile();
+  const { isMdAndDown } = useBreakpoint();
   const { theme } = useTheme();
 
   return (
     <div className="overflow-auto h-dvh">
       <div className="grid h-full grid-cols-12">
-        {!isMobile && (
+        {!isMdAndDown && (
           <div className="col-span-4 xl:col-span-3">
             <div className="relative p-4 h-dvh">
               <Image
@@ -29,11 +29,11 @@ export default function AuthLayout() {
         )}
 
         <div
-          className={`col-span-12 px-4 md:col-span-8 xl:col-span-9 md:px-0 h-full ${(isMobile && "flex flex-col justify-center") || ""}`}
+          className={`col-span-12 px-4 md:col-span-8 xl:col-span-9 md:px-0 h-full ${(isMdAndDown && "flex flex-col justify-center") || ""}`}
         >
           <Outlet />
 
-          {isMobile && <NewRelease />}
+          {isMdAndDown && <NewRelease />}
         </div>
       </div>
     </div>

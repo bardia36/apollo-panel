@@ -11,5 +11,9 @@ export default function useAppConfig() {
     get authenticationServerUrl(): string {
       return `${this.protocol}${import.meta.env.VITE_APP_AUTHENTICATION_API_SERVER || "localhost:8080"}/api`;
     },
+
+    get fileServerUrl(): string {
+      return `${this.protocol}${import.meta.env.VITE_APP_FILE_SERVER || "localhost:8080"}/unsafe`;
+    },
   };
 }

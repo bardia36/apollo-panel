@@ -1,0 +1,26 @@
+export type Template = {
+  _id: string;
+  name: string;
+  logo: string;
+  default: boolean;
+  fields: TemplateField[];
+};
+
+export type TemplateField = {
+  type: TemplateFieldType;
+  title: string;
+  _id: string;
+  active?: boolean; // front-end usage only
+};
+
+export type TemplateFieldType = "IMAGE" | "FILE" | "OTHER"; // OTHER is for ui usages
+
+export type Templates = {
+  docs: Template[];
+  limit: number;
+  page: number;
+  totalPage: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+  totalDocs: number;
+};

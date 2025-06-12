@@ -5,10 +5,15 @@ export const useValidationMessages = () => {
 
   return {
     required: (label: string) => t("validations.required", { label }),
-    email: (label: string) => t("validations.email", { label }),
-    phoneNumber: (label: string) => t("validations.phoneNumber", { label }),
+    isNotValid: (label: string) => t("validations.isNotValid", { label }),
+    length: (label: string, length: number) =>
+      t("validations.length", { label, length }),
     min: (label: string, min: number) => t("validations.min", { label, min }),
     max: (label: string, max: number) => t("validations.max", { label, max }),
     confirmPassword: () => t("validations.confirmPass"),
   };
+};
+
+export const validationRegex = {
+  mobile: /(?:\+98|0098|0)?9\d{9}/,
 };

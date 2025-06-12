@@ -11,47 +11,43 @@ import { useTranslation } from "react-i18next";
 import { useValidationMessages } from "@/utils/rules";
 import { formOptions } from "@/utils/validations";
 import { Controller, useForm } from "react-hook-form";
-import { exceptionHandler } from "@/services/api/exception";
-import { accountApi } from "@/services/api";
+import { exceptionHandler } from "@/apis/exception";
+import { accountApi } from "@/apis/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 // components
-import { Form } from "@heroui/form";
+import { Form } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
-import { Button } from "@heroui/button";
+import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { Checkbox } from "@heroui/checkbox";
+import { Checkbox } from "@heroui/react";
 import { Link } from "react-router-dom";
-import { Divider } from "@heroui/divider";
+import { Divider } from "@heroui/react";
 import GoogleButton from "@/components/auth/login/login-form/google-button";
 
 export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
   const { t } = useTranslation();
+  const msgs = useValidationMessages();
   const [isPassword, setIsPassword] = useState(true);
   const [isConfirmPassword, setIsConfirmPassword] = useState(true);
   const [acceptPolicy, setAcceptPolicy] = useState(false);
   const [progressing, setProgressing] = useState(false);
 
   const validationSchema = object({
-    userName: string().required(
-      useValidationMessages().required(t("auth.name"))
-    ),
+    userName: string().required(msgs.required(t("auth.name"))),
     email: string()
-      .email(useValidationMessages().email(t("auth.email")))
-      .required(useValidationMessages().required(t("auth.email"))),
+      .email(msgs.isNotValid(t("auth.email")))
+      .required(msgs.required(t("auth.email"))),
     phoneNumber: string()
-      .matches(
-        /(?:\+98|0098|0)?9\d{9}/,
-        useValidationMessages().phoneNumber(t("auth.mobile"))
-      )
-      .required(useValidationMessages().required(t("auth.mobile"))),
+      .matches(/(?:\+98|0098|0)?9\d{9}/, msgs.isNotValid(t("auth.mobile")))
+      .required(msgs.required(t("auth.mobile"))),
     password: string()
-      .min(6, useValidationMessages().min(t("auth.password"), 6))
-      .required(useValidationMessages().required(t("auth.password"))),
+      .min(6, msgs.min(t("auth.password"), 6))
+      .required(msgs.required(t("auth.password"))),
     confirmPassword: string()
-      .oneOf([ref("password")], useValidationMessages().confirmPassword())
-      .min(6, useValidationMessages().min(t("auth.confirmPassword"), 6))
-      .required(useValidationMessages().required(t("auth.confirmPassword"))),
+      .oneOf([ref("password")], msgs.confirmPassword())
+      .min(6, msgs.min(t("auth.confirmPassword"), 6))
+      .required(msgs.required(t("auth.confirmPassword"))),
   }).required();
 
   const { handleSubmit, control } = useForm<RegisterEntity>({
@@ -94,6 +90,7 @@ export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
         render={({ field, fieldState: { error } }) => (
           <AppInput
             label={t("auth.name")}
+            autoFocus
             {...field}
             error={error}
             variant="flat"

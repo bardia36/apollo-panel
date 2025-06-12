@@ -10,27 +10,28 @@ import { useTranslation } from "react-i18next";
 import { useValidationMessages } from "@/utils/rules";
 import { formOptions } from "@/utils/validations";
 import { Controller, useForm } from "react-hook-form";
-import { exceptionHandler } from "@/services/api/exception";
-import { accountApi } from "@/services/api";
+import { exceptionHandler } from "@/apis/exception";
+import { accountApi } from "@/apis/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 // components
-import { Form } from "@heroui/form";
+import { Form } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
-import { Button } from "@heroui/button";
+import { Button } from "@heroui/react";
 import { Link } from "react-router-dom";
-import { Divider } from "@heroui/divider";
+import { Divider } from "@heroui/react";
 import GoogleButton from "@/components/auth/login/login-form/google-button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
 export default function SignupForm({ setCurrentComponent, setEmail }: Props) {
   const { t } = useTranslation();
+  const msgs = useValidationMessages();
   const [progressing, setProgressing] = useState(false);
 
   const validationSchema = object({
     email: string()
-      .required(useValidationMessages().required(t("auth.email")))
-      .email(useValidationMessages().email(t("auth.email"))),
+      .required(msgs.required(t("auth.email")))
+      .email(msgs.isNotValid(t("auth.email"))),
   }).required();
 
   const { handleSubmit, control } = useForm<ForgetPasswordEntity>({

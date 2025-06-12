@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import ResetPasswordComponent from "@/components/auth/reset-password";
 import { useCookies } from "react-cookie";
+
 type CookieValues = {
   AUTH_EMAIL?: string;
   FORGET_PASS_TOKEN?: string;
@@ -12,7 +13,7 @@ export default function ResetPassword() {
     "AUTH_EMAIL",
   ]);
 
-  const [forgetPassCookies, setCookie, removeForgetPassCookie] = useCookies<
+  const [forgetPassCookies, __, removeForgetPassCookie] = useCookies<
     "FORGET_PASS_TOKEN",
     CookieValues
   >(["FORGET_PASS_TOKEN"]);

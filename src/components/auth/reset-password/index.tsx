@@ -10,16 +10,16 @@ import { useNavigate } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 
 import { toast } from "@/utils/toast";
-import { accountApi } from "@/services/api";
-import { exceptionHandler } from "@/services/api/exception";
+import { accountApi } from "@/apis/auth";
+import { exceptionHandler } from "@/apis/exception";
 import { useValidationMessages } from "@/utils/rules";
 import { formOptions } from "@/utils/validations";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 // components
-import { Form } from "@heroui/form";
-import { Button } from "@heroui/button";
-import { Card, CardBody } from "@heroui/card";
+import { Form } from "@heroui/react";
+import { Button } from "@heroui/react";
+import { Card, CardBody } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
 import { AppInput } from "@/components/shared/app-components/app-input";
@@ -28,6 +28,7 @@ import { FullLogo } from "@/components/shared/logo";
 export default function SignupForm({ email }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const msgs = useValidationMessages();
 
   const [isPassword, setIsPassword] = useState(true);
   const [progressing, setProgressing] = useState(false);
@@ -35,15 +36,15 @@ export default function SignupForm({ email }: Props) {
 
   const validationSchema = object({
     email: string()
-      .required(useValidationMessages().required(t("auth.email")))
-      .email(useValidationMessages().email(t("auth.email"))),
+      .required(msgs.required(t("auth.email")))
+      .email(msgs.isNotValid(t("auth.email"))),
     password: string()
-      .min(6, useValidationMessages().min(t("auth.password"), 6))
-      .required(useValidationMessages().required(t("auth.password"))),
+      .min(6, msgs.min(t("auth.password"), 6))
+      .required(msgs.required(t("auth.password"))),
     confirmPassword: string()
-      .oneOf([ref("password")], useValidationMessages().confirmPassword())
-      .min(6, useValidationMessages().min(t("auth.confirmPassword"), 6))
-      .required(useValidationMessages().required(t("auth.confirmPassword"))),
+      .oneOf([ref("password")], msgs.confirmPassword())
+      .min(6, msgs.min(t("auth.confirmPassword"), 6))
+      .required(msgs.required(t("auth.confirmPassword"))),
   }).required();
 
   const { handleSubmit, control } = useForm<ResetPasswordEntity>({
@@ -74,7 +75,7 @@ export default function SignupForm({ email }: Props) {
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
-      <FullLogo classNames={{ wrapper: "mb-6 mt-6 mt-md-0" }} />
+      <FullLogo classNames={{ wrapper: "w-40 mb-6 mt-6 mt-md-0" }} />
 
       <Card
         fullWidth

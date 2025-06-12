@@ -2,7 +2,7 @@ import { LogoIcon } from "@/components/shared/logo";
 import UserImage from "@/components/shared/user-image";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useTheme } from "@heroui/use-theme";
-import { Drawer, DrawerContent, DrawerBody } from "@heroui/drawer";
+import { Drawer, DrawerContent, DrawerBody } from "@heroui/react";
 import { useState } from "react";
 import { SidebarContent } from "../sidebar";
 
@@ -28,7 +28,7 @@ export default function MobileHeader() {
         <LogoIcon classNames={{ img: "h-[2.625rem]" }} />
 
         <button
-          className="p-[0.625rem] ms-2"
+          className="p-2.5 ms-2"
           aria-label="menu toggle"
           aria-haspopup="true"
           aria-expanded="false"

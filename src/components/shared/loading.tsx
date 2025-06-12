@@ -1,5 +1,7 @@
+import { Skeleton } from "@heroui/react";
+
 export default function Loading() {
-  return <div className="w-full h-screen bg-primary-200">
-    
-  </div>
+  return (
+    <Skeleton className="w-full h-screen rounded-lg" role="status" aria-live="polite" />
+  );
 }

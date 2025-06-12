@@ -1,11 +1,11 @@
-import { Image } from "@heroui/image";
-import { SlotsToClasses } from "@heroui/theme";
+import { Image } from "@heroui/react";
+import { SlotsToClasses } from "@heroui/react";
 import { useTheme } from "@heroui/use-theme";
 import { t } from "i18next";
-import logo from "@/assets/images/logo/logo.svg";
-import logoDark from "@/assets/images/logo/logo-dark.svg";
-import logoIcon from "@/assets/images/logo/logo-icon.svg";
-import logoIconDark from "@/assets/images/logo/logo-icon-dark.svg";
+import logo from "@/assets/images/logo/logo.webp";
+import logoDark from "@/assets/images/logo/logo-dark.webp";
+import logoIcon from "@/assets/images/logo/logo-icon.webp";
+import logoIconDark from "@/assets/images/logo/logo-icon-dark.webp";
 
 type Props = {
   classNames?:

@@ -1,3 +1,5 @@
+import { CommonListResponse } from "./common";
+
 export type User = {
   has_set_password: boolean;
   status: boolean;
@@ -93,7 +95,7 @@ export type LoginByOtpEntity = {
 export type ActhDto = {
   profile: Pick<
     Auth,
-    "firstName" | "lastName" | "phoneNumber" | "email" | "userName" | 'role'
+    "firstName" | "lastName" | "phoneNumber" | "email" | "userName" | "role"
   >;
   token: string;
   refreshToken: string;
@@ -102,3 +104,9 @@ export type ActhDto = {
 };
 
 export type UserExist = Pick<Auth, "userName">;
+
+export type CookieValues = {
+  AUTH?: ActhDto;
+};
+
+export type UsersInfo = CommonListResponse<{ key: string; label: string }>;

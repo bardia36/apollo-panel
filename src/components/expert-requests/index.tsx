@@ -1,22 +1,60 @@
-import TitleActions from "./title-actions";
-import TableTypeTabs from "./table-type-tabs";
-import { useState } from "react";
-import RequestsTable from "./requests-table";
+import { Key, useEffect, useState, lazy, Suspense } from "react";
+import {
+  ExpertRequestsProvider,
+  useExpertRequests,
+} from "./index-components/context/expert-requests-context";
+import Loading from "../shared/loading";
 
-export default function ExpertRequests() {
+const TitleActions = lazy(
+  () => import("./index-components/table-components/title-actions")
+);
+const TableTypeTabs = lazy(
+  () => import("./index-components/table-components/table-type-tabs")
+);
+const RequestsTable = lazy(
+  () => import("./index-components/table-components/requests-table")
+);
+
+function ExpertRequestsContent() {
   const [activeTab, setActiveTab] = useState("current");
+  const { requests, loading, refreshRequests } = useExpertRequests();
 
-  function onTabChange(tab: string) {
-    setActiveTab(tab);
+  useEffect(() => {
+    refreshRequests();
+  }, [refreshRequests]);
+
+  function onTabChange(key: Key | null) {
+    if (key === null) setActiveTab("current");
+    else setActiveTab(key as string);
+
+    // Reset pagination and refresh with new archive status
+    refreshRequests({
+      page: 1,
+      limit: 10,
+      is_archive: key === "archive",
+    });
   }
 
   return (
     <>
       <div className="lg:px-4">
-        <TitleActions />
-        <TableTypeTabs activeTab={activeTab} onChange={onTabChange} />
+        <Suspense fallback={<Loading />}>
+          <TitleActions requestsCount={requests.totalDocs} />
+          <TableTypeTabs activeTab={activeTab} onChange={onTabChange} />
+        </Suspense>
       </div>
-      <RequestsTable />
+
+      <Suspense fallback={<Loading />}>
+        <RequestsTable requests={requests} loading={loading} />
+      </Suspense>
     </>
+  );
+}
+
+export default function ExpertRequests() {
+  return (
+    <ExpertRequestsProvider>
+      <ExpertRequestsContent />
+    </ExpertRequestsProvider>
   );
 }
