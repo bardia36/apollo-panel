@@ -40,7 +40,7 @@ export const RenderInspectionDataCell = ({
   inspectionData: ExpertRequestInfo["inspection_data"];
 }) => (
   <>
-    <div className="text-default-foreground mb-1">
+    <div className="mb-1 text-default-foreground">
       {inspectionData.vehicle_model?.name_fa}
     </div>
     <div className="text-default-500">
@@ -82,7 +82,7 @@ export const RenderOwnerCell = ({
     description={
       <div className="text-content4-foreground">{owner.phoneNumber}</div>
     }
-    name={<div className="text-default-500 mb-1">{owner.userName}</div>}
+    name={<div className="mb-1 text-default-500">{owner.username}</div>}
   />
 );
 

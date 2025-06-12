@@ -191,7 +191,7 @@ export type RegisterRequestResponse = {
   updated_at: string;
   lead_specialist: {
     image?: string;
-    userName: string;
+    username: string;
     phoneNumber?: string;
     email?: string;
     _id?: string;

@@ -1,4 +1,4 @@
-import type { ActhDto, LoginEntity } from "@/types/auth";
+import type { LoginEntity } from "@/types/auth";
 
 type Props = {
   username: string;
