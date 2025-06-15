@@ -1,10 +1,13 @@
-import {
-  StatusesMap,
-  TableColumns,
-} from "@/types/expert-requests";
+import { StatusesMap, TableColumns } from "@/types/expert-requests";
 import { t } from "i18next";
 
 export const columns: TableColumns = [
+  {
+    name: "code",
+    uid: "code",
+    sortable: true,
+    label: t("expertRequests.code"),
+  },
   {
     name: "order_number",
     uid: "order_number",
@@ -30,6 +33,24 @@ export const columns: TableColumns = [
     uid: "unit",
     sortable: true,
     label: t("expertRequests.branch"),
+  },
+  {
+    name: "supervisor",
+    uid: "supervisor",
+    sortable: true,
+    label: t("expertRequests.supervisor"),
+  },
+  {
+    name: "vin",
+    uid: "vin",
+    sortable: true,
+    label: "VIN",
+  },
+  {
+    name: "tags",
+    uid: "tags",
+    sortable: true,
+    label: t("expertRequests.tag"),
   },
   { name: "actions", uid: "actions" },
 ];

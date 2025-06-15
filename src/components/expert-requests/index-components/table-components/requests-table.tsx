@@ -11,6 +11,7 @@ import {
   TableCell,
 } from "@heroui/react";
 import {
+  RenderCodeCell,
   RenderOrderNumberCell,
   RenderInspectionDataCell,
   RenderStatusCell,
@@ -18,6 +19,8 @@ import {
   RenderUnitCell,
   RenderCreatedAtCell,
   RenderActionsCell,
+  RenderVinCell,
+  RenderTagsCell,
 } from "./render-cell";
 
 // other
@@ -46,7 +49,15 @@ export default function RequestsTable({ requests, loading }: Props) {
   const [selectedKeys, setSelectedKeys] = useState<Set<string> | string>(
     new Set([])
   );
-  const [visibleColumns, setVisibleColumns] = useState<string | Key[]>("all");
+  const [visibleColumns, setVisibleColumns] = useState<string | Key[]>([
+    "order_number",
+    "inspection_data",
+    "status",
+    "owner",
+    "unit",
+    "createdAt",
+    "actions",
+  ]);
   const [statusFilter, setStatusFilter] = useState<string | Key[]>("all");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -196,13 +207,22 @@ export default function RequestsTable({ requests, loading }: Props) {
   const renderCell = useCallback(
     (
       request: ExpertRequestInfo,
-      columnKey: keyof AddOrReplaceKey<ExpertRequestInfo, "actions", string>
+      columnKey: keyof AddOrReplaceKey<
+        ExpertRequestInfo,
+        "actions" | "inspection_data.vin",
+        string
+      >
     ) => {
       let cellValue: React.ReactNode;
       if (columnKey === "actions") cellValue = "actions";
+      else if (columnKey === "inspection_data.vin")
+        cellValue = request.inspection_data?.vin;
       else cellValue = request[columnKey] as React.ReactNode;
 
       switch (columnKey) {
+        case "_id":
+          return <RenderCodeCell code={request._id} />;
+
         case "order_number":
           return (
             <>
@@ -236,6 +256,18 @@ export default function RequestsTable({ requests, loading }: Props) {
 
         case "createdAt":
           return <RenderCreatedAtCell createdAt={request.createdAt} />;
+
+        case "inspection_data.vin":
+          return (
+            <>
+              {!!request.inspection_data?.vin && (
+                <RenderVinCell vin={request.inspection_data.vin} />
+              )}
+            </>
+          );
+
+        case "tags":
+          return <RenderTagsCell tags={request.tags} />;
 
         case "actions":
           return <RenderActionsCell id={request._id} />;
