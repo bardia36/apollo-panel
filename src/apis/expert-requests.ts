@@ -53,7 +53,7 @@ export const expertRequestsApi = {
   },
 
   exportReport(params: ExportReportParams) {
-    return axiosHandler(BASE_URL, {
+    return axiosHandler<{ url: string }>(BASE_URL, {
       action: "export",
       method: RequestMethod.GET,
       params,
