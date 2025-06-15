@@ -14,14 +14,14 @@ import {
 import { t } from "i18next";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { ReactNode, useState, useEffect } from "react";
-// import { FieldChip } from "@/components/shared/field-chip";
-// import { TemplateField } from "@/types/templates";
+import { FieldChip } from "@/components/shared/templates/field-chip";
 import { expertRequestsApi } from "@/apis/expert-requests";
 import {
   RequestsSetting,
   SettingExpirationTime,
   SettingPhotoDeadline,
 } from "@/types/expert-requests";
+import { TemplateField } from "@/types/templates";
 
 const REQUEST_EXPIRY_OPTIONS = [
   {
@@ -42,25 +42,6 @@ const REQUEST_TIMEOUT_OPTIONS = [
   { label: `180 ${t("shared.seconds")}`, value: "180" },
 ];
 
-// const DEFAULT_FIELDS: TemplateField[] = [
-//   { _id: "1", title: "آدرس کاربر", type: "OTHER", active: true },
-//   { _id: "2", title: "تاریخ تولد", type: "OTHER", active: true },
-//   { _id: "3", title: "تلفن همراه", type: "OTHER", active: true },
-//   { _id: "4", title: "کد ملی", type: "OTHER", active: true },
-//   { _id: "5", title: "آدرس شرکت بیمه‌نامه", type: "OTHER", active: false },
-// ];
-
-// function filterValidFields(fields: TemplateField[]): {
-//   title: string;
-//   type: "INPUT" | "SELECT" | "CHECKBOX" | "RADIO" | "DATE" | "TIME";
-// }[] {
-//   return fields
-//     .filter((f) =>
-//       ["INPUT", "SELECT", "CHECKBOX", "RADIO", "DATE", "TIME"].includes(f.type)
-//     )
-//     .map((f) => ({ title: f.title, type: f.type }));
-// }
-
 type Props = {
   isOpen: boolean;
   onClose: () => void;
@@ -74,8 +55,8 @@ export const SettingsModal = ({ isOpen, onClose }: Props) => {
   const [randomPicture, setRandomPicture] = useState<boolean | undefined>(
     false
   );
-  // const [moreInfoEnabled, setMoreInfoEnabled] = useState(false);
-  // const [fields, setFields] = useState<RequestsSetting["more_fields"]>();
+  const [moreInfoEnabled, setMoreInfoEnabled] = useState(false);
+  const [fields, setFields] = useState<RequestsSetting["more_fields"]>([]);
   const [loading, setLoading] = useState(false);
   const [initLoading, setInitLoading] = useState(false);
 
@@ -92,8 +73,8 @@ export const SettingsModal = ({ isOpen, onClose }: Props) => {
         setExpiry(settings?.expiration_time || "24H");
         setTimeout(settings?.photo_deadline || "50");
         setRandomPicture(settings?.random_picture);
-        // setMoreInfoEnabled(!!settings?.more_fields?.length);
-        // if (settings?.more_fields) setFields(settings?.more_fields);
+        setMoreInfoEnabled(!!settings?.more_fields?.length);
+        if (settings?.more_fields) setFields(settings?.more_fields);
       })
       .finally(() => setInitLoading(false));
   };
@@ -105,7 +86,7 @@ export const SettingsModal = ({ isOpen, onClose }: Props) => {
         expiration_time: expiry,
         photo_deadline: timeout,
         random_picture: randomPicture,
-        // more_fields: moreInfoEnabled ? filterValidFields(fields) : [],
+        more_fields: moreInfoEnabled ? fields || [] : [],
         ...overwriteBody,
       });
       await getSettings();
@@ -129,15 +110,15 @@ export const SettingsModal = ({ isOpen, onClose }: Props) => {
     updateSetting({ random_picture: val });
   };
 
-  // const handleToggleField = (field: TemplateField) => {
-  //   setFields((prev) => {
-  //     const updated = prev.map((f) =>
-  //       f._id === field._id ? { ...f, active: !f.active } : f
-  //     );
-  //     updateSetting({ more_fields: updated });
-  //     return updated;
-  //   });
-  // };
+  const handleToggleField = (field: MoreField) => {
+    setFields((prev) => {
+      const updated = prev?.map((f) =>
+        f.title === field.title ? { ...f, active: !f.active } : f
+      );
+      updateSetting({ more_fields: updated });
+      return updated;
+    });
+  };
 
   const onModalClose = () => {
     setEditExpiry(false);
@@ -235,14 +216,14 @@ export const SettingsModal = ({ isOpen, onClose }: Props) => {
                 />
               </div>
 
-              {/* <MoreInfoSection
+              <MoreInfoSection
                 enabled={moreInfoEnabled}
                 fields={fields}
                 label={t("expertRequests.moreInfo")}
                 description={t("expertRequests.moreInfoDescription")}
                 onToggle={setMoreInfoEnabled}
                 onToggleField={handleToggleField}
-              /> */}
+              />
             </div>
           )}
         </ModalBody>
@@ -361,41 +342,49 @@ const SettingsDropdown = ({
   </Dropdown>
 );
 
-// MoreInfoSection: modular section for more info fields
-// const MoreInfoSection = ({
-//   enabled,
-//   fields,
-//   label,
-//   description,
-//   onToggle,
-//   onToggleField,
-// }: {
-//   enabled: boolean;
-//   fields: TemplateField[];
-//   label: string;
-//   description: string;
-//   onToggle: (v: boolean) => void;
-//   onToggleField: (field: TemplateField) => void;
-// }) => (
-//   <div className="p-4 bg-default-100 rounded-xl">
-//     <div className="flex items-center gap-4 ">
-//       <div className="flex-1">
-//         <div className="text-foreground-700">{label}</div>
-//         <div className="text-sm text-foreground-500">{description}</div>
-//       </div>
-//       <Switch checked={enabled} onChange={(e) => onToggle(e.target.checked)} />
-//     </div>
+type MoreField = NonNullable<RequestsSetting["more_fields"]>[number];
 
-//     {enabled && (
-//       <div className="flex flex-wrap gap-2 mt-4">
-//         {fields.map((field) => (
-//           <FieldChip
-//             key={field._id}
-//             field={field}
-//             onClick={() => onToggleField(field)}
-//           />
-//         ))}
-//       </div>
-//     )}
-//   </div>
-// );
+const convertToTemplateField = (field: MoreField): TemplateField => ({
+  _id: field.title, // Using title as a unique identifier
+  title: field.title,
+  type: "CUSTOM",
+  active: field.active,
+});
+
+const MoreInfoSection = ({
+  enabled,
+  fields,
+  label,
+  description,
+  onToggle,
+  onToggleField,
+}: {
+  enabled: boolean;
+  fields: RequestsSetting["more_fields"];
+  label: string;
+  description: string;
+  onToggle: (v: boolean) => void;
+  onToggleField: (field: MoreField) => void;
+}) => (
+  <div className="p-4 bg-default-100 rounded-xl">
+    <div className="flex items-center gap-4 ">
+      <div className="flex-1">
+        <div className="text-foreground-700">{label}</div>
+        <div className="text-sm text-foreground-500">{description}</div>
+      </div>
+      <Switch checked={enabled} onChange={(e) => onToggle(e.target.checked)} />
+    </div>
+
+    {enabled && fields && (
+      <div className="flex flex-wrap gap-2 mt-4">
+        {fields.map((field) => (
+          <FieldChip
+            key={field.title}
+            field={convertToTemplateField(field)}
+            onClick={() => onToggleField(field)}
+          />
+        ))}
+      </div>
+    )}
+  </div>
+);
