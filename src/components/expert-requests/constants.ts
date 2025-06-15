@@ -55,7 +55,6 @@ export const columns: TableColumns = [
   { name: "actions", uid: "actions" },
 ];
 
-// TODO: make it from statusesMap inside renderCell
 export const statusOptions = [
   { uid: "DRAFT", label: t("shared.draft") },
   { uid: "PENDING", label: t("shared.waitingToSend") },
