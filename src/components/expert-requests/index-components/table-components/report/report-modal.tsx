@@ -64,8 +64,6 @@ export const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
     const link = document.createElement("a");
     link.href = `${staticServerUrl}${fileUrl}`;
 
-    console.log(link);
-
     // This tells browser to download instead of open if possible
     link.setAttribute("download", filename);
 
