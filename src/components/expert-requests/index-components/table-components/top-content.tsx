@@ -82,6 +82,7 @@ export const TopContent = ({
             endContent={
               <Icon icon="solar:magnifer-linear" className="text-default-400" />
             }
+            debounce
             value={filterValue}
             onValueChange={onSearchChange}
           />
