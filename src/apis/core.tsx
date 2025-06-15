@@ -90,7 +90,10 @@ async function errorHandler(
     return axiosHandler(url, options);
   }
 
-  if (statusConfig.logout.includes(error.status)) {
+  if (
+    statusConfig.logout.includes(error.status) &&
+    !!useAuthStore.getState().auth
+  ) {
     handleLogout();
   }
 
