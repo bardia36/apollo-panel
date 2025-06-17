@@ -23,14 +23,14 @@ export const RenderCodeCell = ({
   code,
 }: {
   code: ExpertRequestInfo["_id"];
-}) => <span className="text-default-500 text-sm">{code}</span>;
+}) => <span className="text-default-500 text-sm ltr">{code}</span>;
 
 export const RenderOrderNumberCell = ({
   orderNumber,
 }: {
   orderNumber: ExpertRequestInfo["order_number"];
 }) => (
-  <div className="flex items-center gap-2">
+  <div className="flex items-center gap-2 ltr">
     <span className="text-default-500 text-sm">{orderNumber}</span>
     <CopyButton
       value={orderNumber}
@@ -46,14 +46,14 @@ export const RenderInspectionDataCell = ({
 }: {
   inspectionData: ExpertRequestInfo["inspection_data"];
 }) => (
-  <>
+  <button>
     <div className="mb-1 text-default-foreground">
       {inspectionData.vehicle_model?.name_fa}
     </div>
     <div className="text-default-500">
       {inspectionData.vehicle_brand?.name_fa}
     </div>
-  </>
+  </button>
 );
 
 export const RenderStatusCell = ({
@@ -189,6 +189,7 @@ export const RenderActionsCell = ({ id }: { id: ExpertRequestInfo["_id"] }) => {
         </DropdownTrigger>
 
         <DropdownMenu aria-label="Request item actions">
+          {/* TODO: Handle discard selection */}
           <DropdownItem
             key="discard-selection"
             startContent={
