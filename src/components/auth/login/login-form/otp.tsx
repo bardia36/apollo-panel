@@ -1,4 +1,4 @@
-import type { LoginByOtpEntity } from "@/types/auth";
+import type { LoginByOtpEntity, ActhDto, CookieValues } from "@/types/auth";
 
 type Props = {
   username: string;
@@ -18,6 +18,7 @@ import { accountApi } from "@/apis/auth";
 import useAuthStore from "@/stores/auth-store";
 import { useValidationMessages } from "@/utils/rules";
 import { exceptionHandler } from "@/apis/exception";
+import { useCookies } from "react-cookie";
 
 // components
 import { Form } from "@heroui/react";
@@ -33,6 +34,7 @@ export default function Otp({ username, setCurrentComponent }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { setAuth } = useAuthStore();
+  const [_, setCookie] = useCookies<"AUTH", CookieValues>(["AUTH"]);
   const [progressing, setProgressing] = useState(false);
 
   useEffect(() => {
@@ -80,8 +82,8 @@ export default function Otp({ username, setCurrentComponent }: Props) {
     try {
       setProgressing(true);
 
-      await accountApi.loginByOtp(data);
-      await getAccount();
+      const account = await accountApi.loginByOtp(data);
+      setAccount(account);
 
       toast({ title: t("auth.youLoginSuccessfully"), color: "success" });
     } catch (err) {
@@ -91,9 +93,21 @@ export default function Otp({ username, setCurrentComponent }: Props) {
     }
   }
 
-  async function getAccount() {
-    const account = await accountApi.getAccount();
-    setAuth(account);
+  async function setAccount(auth: ActhDto) {
+    const cookie = {
+      profile: {
+        username: auth.profile.username,
+        role: {
+          name: auth.profile.role.name,
+        },
+      },
+      token: auth.token,
+      refreshToken: auth.refreshToken,
+      tokenExpireTime: auth.tokenExpireTime,
+      refreshTokenExpireTime: auth.refreshTokenExpireTime,
+    };
+    setCookie("AUTH", cookie, { maxAge: auth.tokenExpireTime });
+    setAuth(auth);
     navigate("/dashboard");
   }
 
@@ -120,22 +134,7 @@ export default function Otp({ username, setCurrentComponent }: Props) {
         )}
       />
 
-      <Button
-        fullWidth
-        variant="light"
-        type="submit"
-        isLoading={progressing}
-        className="my-4"
-        startContent={
-          <Icon
-            icon="solar:password-linear"
-            className="text-foreground"
-            width="20"
-            height="20"
-          />
-        }
-        onPress={setComponent}
-      >
+      <Button fullWidth variant="light" type="submit" isLoading={progressing} className="my-4" startContent={<Icon icon="solar:password-linear" className="text-foreground" width="20" height="20" />} onPress={setComponent}>
         {t("auth.enterWithPassword")}
       </Button>
 

@@ -33,6 +33,12 @@ function requestConfig(
       stringify(params, { arrayFormat: "repeat" }),
   };
 
+  if (useAuthStore.getState()?.auth?.token && !options.tokenLess)
+    axiosRequestConfig.headers = {
+      ...axiosRequestConfig.headers,
+      Authorization: `Bearer ${useAuthStore.getState()?.auth?.token}`,
+    };
+
   return axiosRequestConfig;
 }
 
@@ -90,7 +96,10 @@ async function errorHandler(
     return axiosHandler(url, options);
   }
 
-  if (statusConfig.logout.includes(error.status)) {
+  if (
+    statusConfig.logout.includes(error.status) &&
+    !!useAuthStore.getState().auth
+  ) {
     handleLogout();
   }
 

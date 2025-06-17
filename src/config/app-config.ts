@@ -15,5 +15,9 @@ export default function useAppConfig() {
     get fileServerUrl(): string {
       return `${this.protocol}${import.meta.env.VITE_APP_FILE_SERVER || "localhost:8080"}/unsafe`;
     },
+
+    get staticServerUrl(): string {
+      return `${this.protocol}${import.meta.env.VITE_APP_STATIC_SERVER || "localhost:8080"}`;
+    },
   };
 }

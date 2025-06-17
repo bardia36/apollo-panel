@@ -45,7 +45,6 @@ export default function Slider({
               <LazyImage
                 src={image.path}
                 alt={image.title || `Thumb ${index + 1}`}
-                externalImg
                 fit="cover"
                 placeholder={carPlaceholder}
                 height={60}

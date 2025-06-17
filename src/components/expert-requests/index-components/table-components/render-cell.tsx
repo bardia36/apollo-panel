@@ -17,6 +17,13 @@ import { expertRequestsApi } from "@/apis/expert-requests";
 import { useExpertRequests } from "../context/expert-requests-context";
 import { exceptionHandler } from "@/apis/exception";
 import CopyButton from "@/components/shared/copy-button";
+import { truncateString } from "@/utils/base";
+
+export const RenderCodeCell = ({
+  code,
+}: {
+  code: ExpertRequestInfo["_id"];
+}) => <span className="text-default-500 text-sm">{code}</span>;
 
 export const RenderOrderNumberCell = ({
   orderNumber,
@@ -24,7 +31,7 @@ export const RenderOrderNumberCell = ({
   orderNumber: ExpertRequestInfo["order_number"];
 }) => (
   <div className="flex items-center gap-2">
-    <span className="text-default-500">{orderNumber}</span>
+    <span className="text-default-500 text-sm">{orderNumber}</span>
     <CopyButton
       value={orderNumber}
       size="6"
@@ -86,6 +93,12 @@ export const RenderOwnerCell = ({
   />
 );
 
+export const RenderCreatedAtCell = ({
+  createdAt,
+}: {
+  createdAt: ExpertRequestInfo["createdAt"];
+}) => <TwoLineDateDisplay isoDate={createdAt} />;
+
 export const RenderUnitCell = ({
   unit,
 }: {
@@ -102,11 +115,52 @@ export const RenderUnitCell = ({
   </div>
 );
 
-export const RenderCreatedAtCell = ({
-  createdAt,
+// TODO: supervisor-cell,
+
+export const RenderVinCell = ({ vin }: { vin: string }) => (
+  <span className="text-default-foreground text-sm">{vin}</span>
+);
+
+export const RenderTagsCell = ({
+  tags,
 }: {
-  createdAt: ExpertRequestInfo["createdAt"];
-}) => <TwoLineDateDisplay isoDate={createdAt} />;
+  tags: ExpertRequestInfo["tags"];
+}) => (
+  <>
+    {!!tags?.length && (
+      <div className="flex items-center gap-1">
+        <Chip
+          classNames={{
+            base: "text-default-800 bg-default-100",
+          }}
+        >
+          {truncateString(tags[0], 20)}
+        </Chip>
+
+        {tags.length > 1 && (
+          <Chip
+            classNames={{
+              base: "text-default-800 bg-default-100",
+            }}
+          >
+            {truncateString(tags[1], 20)}
+          </Chip>
+        )}
+
+        {tags.length > 2 && (
+          <Chip
+            classNames={{
+              base: "text-default-500 bg-default-100",
+            }}
+            radius="full"
+          >
+            +{tags.length - 1}
+          </Chip>
+        )}
+      </div>
+    )}
+  </>
+);
 
 export const RenderActionsCell = ({ id }: { id: ExpertRequestInfo["_id"] }) => {
   const { refreshRequests } = useExpertRequests();

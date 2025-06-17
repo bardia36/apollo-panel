@@ -1,4 +1,5 @@
 import { LazyImage } from "@/components/shared/lazy-image";
+import { LazyVideo } from "@/components/shared/lazy-video";
 import Slider from "@/components/shared/slider";
 import { ExpertRequestDetail } from "@/types/expert-requests";
 import { Button, Checkbox, CheckboxGroup, Chip, cn } from "@heroui/react";
@@ -129,13 +130,11 @@ export default function RequestContent({ requestData }: RequestContentProps) {
               </div>
             )}
 
-            {/*  TODO: load video lazy */}
             {!!requestData.video?.length && (
-              <video
-                src={`${fileServerUrl}/${requestData.video[requestData.video.length - 1]}`}
-                controls
+              <LazyVideo
+                src={requestData.video[requestData.video.length - 1]}
                 className="flex-1 max-h-[200px] md:max-h-[360px] rounded-large border-4 border-content1 shadow-md shadow-neutral"
-              ></video>
+              />
             )}
           </div>
         </div>
@@ -168,7 +167,6 @@ export default function RequestContent({ requestData }: RequestContentProps) {
                             : ""
                         }
                         alt={img.title}
-                        externalImg
                         placeholder={carPlaceholder}
                         fit="cover"
                         imgClassName="w-full"
@@ -207,7 +205,6 @@ export default function RequestContent({ requestData }: RequestContentProps) {
                             : ""
                         }
                         alt={img.title}
-                        externalImg
                         placeholder={carPlaceholder}
                         fit="cover"
                         imgClassName="w-full"
