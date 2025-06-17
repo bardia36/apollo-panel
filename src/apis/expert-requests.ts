@@ -53,7 +53,7 @@ export const expertRequestsApi = {
   },
 
   exportReport(params: ExportReportParams) {
-    return axiosHandler(BASE_URL, {
+    return axiosHandler<{ url: string }>(BASE_URL, {
       action: "export",
       method: RequestMethod.GET,
       params,
@@ -68,7 +68,7 @@ export const expertRequestsApi = {
   },
 
   updateRequestsSetting(body: RequestsSetting) {
-    return axiosHandler<RequestsSetting>(BASE_URL, {
+    return axiosHandler(BASE_URL, {
       action: "settings",
       method: RequestMethod.PUT,
       body,
@@ -76,7 +76,7 @@ export const expertRequestsApi = {
   },
 
   accept(id: string, body: AcceptRequestBody) {
-    return axiosHandler<RequestsSetting>(BASE_URL, {
+    return axiosHandler(BASE_URL, {
       action: `${id}/accept`,
       method: RequestMethod.PATCH,
       body,
@@ -84,7 +84,7 @@ export const expertRequestsApi = {
   },
 
   changeStatus(id: string, body: ChangeStatusRequestBody) {
-    return axiosHandler<RequestsSetting>(BASE_URL, {
+    return axiosHandler(BASE_URL, {
       action: `${id}/change-status`,
       method: RequestMethod.PATCH,
       body,
@@ -92,7 +92,7 @@ export const expertRequestsApi = {
   },
 
   sendExportLink(id: string, body: SendExportLinkBody) {
-    return axiosHandler<RequestsSetting>(BASE_URL, {
+    return axiosHandler(BASE_URL, {
       action: `${id}/send-export-link`,
       method: RequestMethod.PATCH,
       body,
@@ -100,7 +100,7 @@ export const expertRequestsApi = {
   },
 
   reject(id: string, body: RejectRequestBody) {
-    return axiosHandler<RequestsSetting>(BASE_URL, {
+    return axiosHandler(BASE_URL, {
       action: `${id}/reject`,
       method: RequestMethod.PATCH,
       body,
@@ -108,7 +108,7 @@ export const expertRequestsApi = {
   },
 
   retrieve(id: string, body: RetrieveRequestBody) {
-    return axiosHandler<RequestsSetting>(BASE_URL, {
+    return axiosHandler(BASE_URL, {
       action: `${id}/retrieval`,
       method: RequestMethod.PATCH,
       body,
@@ -116,7 +116,7 @@ export const expertRequestsApi = {
   },
 
   requestEvidenceLack(id: string, body: RequestEvidenceLackBody) {
-    return axiosHandler<RequestsSetting>(BASE_URL, {
+    return axiosHandler(BASE_URL, {
       action: `${id}/more-info`,
       method: RequestMethod.PATCH,
       body,
@@ -124,7 +124,7 @@ export const expertRequestsApi = {
   },
 
   reminder(id: string, body: ReminderBody) {
-    return axiosHandler<RequestsSetting>(BASE_URL, {
+    return axiosHandler(BASE_URL, {
       action: `${id}/reminder`,
       method: RequestMethod.POST,
       body,

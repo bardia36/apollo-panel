@@ -17,6 +17,7 @@ export type ExpertRequestInfo = {
     vehicle_brand?: NameEnFa;
     vehicle_model?: NameEnFa;
     vehicle_company?: NameEnFa;
+    vin?: string;
   };
   inspection_format: {
     name: string;
@@ -414,6 +415,7 @@ export type RequestsSetting = {
   more_fields?: {
     title: string;
     type: "INPUT" | "SELECT" | "CHECKBOX" | "RADIO" | "DATE" | "TIME";
+    active?: boolean;
   }[];
 };
 
