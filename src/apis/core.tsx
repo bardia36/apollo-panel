@@ -33,6 +33,12 @@ function requestConfig(
       stringify(params, { arrayFormat: "repeat" }),
   };
 
+  if (useAuthStore.getState()?.auth?.token && !options.tokenLess)
+    axiosRequestConfig.headers = {
+      ...axiosRequestConfig.headers,
+      Authorization: `Bearer ${useAuthStore.getState()?.auth?.token}`,
+    };
+
   return axiosRequestConfig;
 }
 

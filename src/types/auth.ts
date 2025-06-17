@@ -16,21 +16,7 @@ export type Permissions = {
 
 export type Role = {
   name: string;
-  type:
-    | "UNDEFINED"
-    | "BROKERAGE"
-    | "COUNTER"
-    | "EMPLOYEE"
-    | "AGENCY"
-    | "BRANCH"
-    | "SUPERVISOR"
-    | "REGION"
-    | "ACCOUNTANT"
-    | "SUPPORT"
-    | "ADMIN"
-    | "BOSS"
-    | "DEVELOPER"
-    | "SUPER_USER";
+  type: "UNDEFINED" | "BROKERAGE" | "COUNTER" | "EMPLOYEE" | "AGENCY" | "BRANCH" | "SUPERVISOR" | "REGION" | "ACCOUNTANT" | "SUPPORT" | "ADMIN" | "BOSS" | "DEVELOPER" | "SUPER_USER";
   description: string;
   permissions: Permissions[];
 };
@@ -87,10 +73,7 @@ export type LoginByOtpEntity = {
 };
 
 export type ActhDto = {
-  profile: Pick<
-    Auth,
-    "firstName" | "lastName" | "phoneNumber" | "email" | "username" | "role"
-  >;
+  profile: Pick<Auth, "_id" | "firstName" | "lastName" | "phoneNumber" | "email" | "username" | "role" | "image">;
   token: string;
   refreshToken: string;
   tokenExpireTime: number;

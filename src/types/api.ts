@@ -28,6 +28,7 @@ export type RequestOptions = {
   body?: unknown;
   signal?: GenericAbortSignal;
   serverType?: ServerType;
+  tokenLess?: boolean;
 };
 
 export interface RequestError {

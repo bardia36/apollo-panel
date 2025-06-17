@@ -7,15 +7,17 @@ import useAuthStore from "@/stores/auth-store";
 
 // Components
 import Loading from "@/components/shared/loading";
+import { useCookies } from "react-cookie";
 import { RouterProvider, RouteTitleHandler } from "@/routes/RouterProvider";
 
 // Contexts
 import { BreadcrumbProvider } from "@/contexts/breadcrumbContext";
 import { useLocalizedDigits } from "@/hooks/useLocalizedDigits";
-import { accountApi } from "./apis/auth";
+import { CookieValues } from "./types/auth";
 
 function App() {
   const [initializing, setInitializing] = useState(true);
+  const [cookie] = useCookies<"AUTH", CookieValues>(["AUTH"]);
   const { setTheme } = useTheme();
   const { setAuth } = useAuthStore();
 
@@ -27,8 +29,7 @@ function App() {
   }, []);
 
   async function setAccount() {
-    const account = await accountApi.getAccount();
-    setAuth(account);
+    setAuth(cookie.AUTH);
     setInitializing(false);
   }
 
