@@ -5,6 +5,7 @@ import useAuthStore from "@/stores/auth-store";
 import { ErrorException } from "@/types/api";
 import useAppConfig from "@/config/app-config";
 import { accountApi } from "./auth";
+import { useCookies } from "react-cookie";
 
 const tryWithoutToken = [425];
 const statusConfig = {
@@ -112,6 +113,8 @@ async function handleLogout() {
   } catch (error) {
     console.error("Logout API call failed:", error);
   } finally {
+    const [, , removeCookie] = useCookies(["token"]);
+    removeCookie("token");
     useAuthStore.getState().removeAuth();
     window.location.href = "/login";
   }
