@@ -2,19 +2,26 @@ import { axiosHandler } from "./core";
 import { RequestMethod } from "@/types/api";
 import {
   ExpertRequestDetail,
-  ExpertRequestResponse,
+  AllExpertRequestsResponse,
   ExportReportParams,
   GetRequestsParams,
   RegisterRequestBody,
   RegisterRequestResponse,
   RequestsSetting,
+  AcceptRequestBody,
+  ChangeStatusRequestBody,
+  SendExportLinkBody,
+  RejectRequestBody,
+  RetrieveRequestBody,
+  RequestEvidenceLackBody,
+  ReminderBody,
 } from "@/types/expert-requests";
 
 const BASE_URL = "panel/inspection-request";
 
 export const expertRequestsApi = {
   getRequests(params?: GetRequestsParams) {
-    return axiosHandler<ExpertRequestResponse>(BASE_URL, {
+    return axiosHandler<AllExpertRequestsResponse>(BASE_URL, {
       method: RequestMethod.GET,
       params: {
         ...params,
@@ -46,7 +53,7 @@ export const expertRequestsApi = {
   },
 
   exportReport(params: ExportReportParams) {
-    return axiosHandler(BASE_URL, {
+    return axiosHandler<{ url: string }>(BASE_URL, {
       action: "export",
       method: RequestMethod.GET,
       params,
@@ -61,9 +68,65 @@ export const expertRequestsApi = {
   },
 
   updateRequestsSetting(body: RequestsSetting) {
-    return axiosHandler<RequestsSetting>(BASE_URL, {
+    return axiosHandler(BASE_URL, {
       action: "settings",
       method: RequestMethod.PUT,
+      body,
+    });
+  },
+
+  accept(id: string, body: AcceptRequestBody) {
+    return axiosHandler(BASE_URL, {
+      action: `${id}/accept`,
+      method: RequestMethod.PATCH,
+      body,
+    });
+  },
+
+  changeStatus(id: string, body: ChangeStatusRequestBody) {
+    return axiosHandler(BASE_URL, {
+      action: `${id}/change-status`,
+      method: RequestMethod.PATCH,
+      body,
+    });
+  },
+
+  sendExportLink(id: string, body: SendExportLinkBody) {
+    return axiosHandler(BASE_URL, {
+      action: `${id}/send-export-link`,
+      method: RequestMethod.PATCH,
+      body,
+    });
+  },
+
+  reject(id: string, body: RejectRequestBody) {
+    return axiosHandler(BASE_URL, {
+      action: `${id}/reject`,
+      method: RequestMethod.PATCH,
+      body,
+    });
+  },
+
+  retrieve(id: string, body: RetrieveRequestBody) {
+    return axiosHandler(BASE_URL, {
+      action: `${id}/retrieval`,
+      method: RequestMethod.PATCH,
+      body,
+    });
+  },
+
+  requestEvidenceLack(id: string, body: RequestEvidenceLackBody) {
+    return axiosHandler(BASE_URL, {
+      action: `${id}/more-info`,
+      method: RequestMethod.PATCH,
+      body,
+    });
+  },
+
+  reminder(id: string, body: ReminderBody) {
+    return axiosHandler(BASE_URL, {
+      action: `${id}/reminder`,
+      method: RequestMethod.POST,
       body,
     });
   },

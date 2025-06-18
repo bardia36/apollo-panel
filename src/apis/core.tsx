@@ -96,7 +96,10 @@ async function errorHandler(
     return axiosHandler(url, options);
   }
 
-  if (statusConfig.logout.includes(error.status)) {
+  if (
+    statusConfig.logout.includes(error.status) &&
+    !!useAuthStore.getState().auth
+  ) {
     handleLogout();
   }
 
@@ -110,8 +113,6 @@ async function handleLogout() {
     console.error("Logout API call failed:", error);
   } finally {
     useAuthStore.getState().removeAuth();
-
-    document.cookie = "AUTH=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     window.location.href = "/login";
   }
 }

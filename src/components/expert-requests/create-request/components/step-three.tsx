@@ -1,23 +1,24 @@
 import { t } from "i18next";
-import { StepperButtons } from "../stepper-buttons";
-import { Icon } from "@iconify/react/dist/iconify.js";
 import { useEffect, useState } from "react";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import { Switch, Form } from "@heroui/react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Controller, useForm } from "react-hook-form";
+import { array, boolean, object, string } from "yup";
+import { StepperButtons } from "./stepper-buttons";
 import { expertRequestsApi } from "@/apis/expert-requests";
 import { exceptionHandler } from "@/apis/exception";
 import { UpdateRequestFinalBody } from "@/types/expert-requests";
-import { Switch, Form } from "@heroui/react";
 import { AppInput } from "@/components/shared/app-components/app-input";
-import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { array, boolean, object, string } from "yup";
 import { formOptions } from "@/utils/validations";
 import { accountApi } from "@/apis/auth";
 import { AppSelect } from "@/components/shared/app-components/app-select";
-import { StepThreeLoading } from "../loadings/step-three-loading";
-import { RequestSummary } from "./request-summary";
+import { StepThreeLoading } from "./loadings/step-three-loading";
+import { RequestSummary } from "@/components/shared/request-summary";
 import { TagInput } from "@/components/shared/tag-input";
-import { useCreateRequest } from "../../context/create-request-context";
+import { useCreateRequest } from "../context/create-request-context";
 import { useValidationMessages, validationRegex } from "@/utils/rules";
+import { dateOfNow } from "@/utils/base";
 
 type StepThreeProps = {
   onStepComplete: () => void;
@@ -84,25 +85,6 @@ export default function StepThree({
     if (stepThreeData) reset(stepThreeData);
   }, [stepThreeData, reset]);
 
-  const dateOfNow = () => {
-    const now = new Date();
-    const dateOptions: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    };
-    const timeOptions: Intl.DateTimeFormatOptions = {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    };
-
-    const datePart = now.toLocaleDateString("fa-IR", dateOptions);
-    const timePart = now.toLocaleTimeString("fa-IR", timeOptions);
-
-    return `${datePart} - ${timePart}`;
-  };
-
   const submit = async () => {
     if (!requestId) return;
 
@@ -129,7 +111,7 @@ export default function StepThree({
     <div className="flex flex-col h-full">
       <RequestSummary requestData={requestData} />
 
-      <div className="bg-default-50 px-4 py-3.5 flex items-center rounded-medium mb-2">
+      <div className="flex items-center bg-default-50 mb-2 px-4 py-3.5 rounded-medium">
         <Icon
           icon="solar:chat-line-outline"
           width={20}
@@ -156,7 +138,7 @@ export default function StepThree({
         />
       </div>
 
-      <div className="bg-default-50 px-4 py-3.5 flex items-center rounded-medium">
+      <div className="flex items-center bg-default-50 px-4 py-3.5 rounded-medium">
         <Icon
           icon="solar:letter-outline"
           width={20}
@@ -185,7 +167,7 @@ export default function StepThree({
 
       <Form onSubmit={handleSubmit(submit)} className="gap-0">
         {(!!smsEnabled || !!emailEnabled) && (
-          <div className="grid md:grid-cols-2 max-md:flex-col w-full gap-4 py-2 mt-4">
+          <div className="max-md:flex-col gap-4 grid md:grid-cols-2 mt-4 py-2 w-full">
             {!!smsEnabled && (
               <Controller
                 control={control}
@@ -254,7 +236,7 @@ export default function StepThree({
           </div>
         )}
 
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 w-full mb-4">
+        <div className="gap-4 grid grid-cols-1 md:grid-cols-2 mt-6 mb-4 w-full">
           <Controller
             control={control}
             name="lead_specialist"
@@ -269,10 +251,10 @@ export default function StepThree({
                 itemLabel="label"
                 defaultSelection={
                   requestData?.lead_specialist._id &&
-                  requestData?.lead_specialist.userName
+                  requestData?.lead_specialist.username
                     ? {
                         key: requestData?.lead_specialist._id,
-                        label: requestData?.lead_specialist.userName,
+                        label: requestData?.lead_specialist.username,
                       }
                     : undefined
                 }

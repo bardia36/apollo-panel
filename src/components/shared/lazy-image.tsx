@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Image } from "@heroui/react";
 import useAppConfig from "@/config/app-config";
+import noImage from "@/assets/images/base/image-thumbnail.svg";
 
 type LazyImageProps = {
   src?: string;
@@ -8,8 +9,10 @@ type LazyImageProps = {
   width?: number | string;
   height?: number | string;
   className?: string;
+  externalImg?: boolean;
   fit?: "cover" | "contain";
   placeholder?: string;
+  imgClassName?: string;
 };
 
 export const LazyImage = ({
@@ -18,8 +21,10 @@ export const LazyImage = ({
   width,
   height,
   className,
+  externalImg,
   fit = "contain",
   placeholder,
+  imgClassName,
 }: LazyImageProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const imageRef = useRef<HTMLDivElement | null>(null);
@@ -41,17 +46,24 @@ export const LazyImage = ({
     };
   }, []);
 
-  const imageSrc = src ? `${fileServerUrl}/${src}` : placeholder;
+  const imageSrc = src
+    ? externalImg
+      ? src
+      : `${fileServerUrl}/${src}`
+    : placeholder;
 
   return (
     <div ref={imageRef} className={className}>
       {isVisible && imageSrc && (
         <Image
           src={imageSrc}
+          fallbackSrc={noImage}
+          removeWrapper
           alt={alt}
           width={width}
           height={height}
-          classNames={{ img: `object-${fit}`, wrapper: "h-full" }}
+          classNames={{ img: `object-${fit} h-full`, wrapper: "h-full" }}
+          className={imgClassName}
         />
       )}
     </div>

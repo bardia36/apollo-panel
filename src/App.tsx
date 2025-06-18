@@ -1,6 +1,5 @@
 // Modules
 import { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
 import { useTheme } from "@heroui/use-theme";
 
 // Stores
@@ -8,16 +7,17 @@ import useAuthStore from "@/stores/auth-store";
 
 // Components
 import Loading from "@/components/shared/loading";
+import { useCookies } from "react-cookie";
 import { RouterProvider, RouteTitleHandler } from "@/routes/RouterProvider";
 
 // Contexts
 import { BreadcrumbProvider } from "@/contexts/breadcrumbContext";
-import { CookieValues } from "./types/auth";
 import { useLocalizedDigits } from "@/hooks/useLocalizedDigits";
+import { CookieValues } from "./types/auth";
 
 function App() {
-  const [cookie] = useCookies<"AUTH", CookieValues>(["AUTH"]);
   const [initializing, setInitializing] = useState(true);
+  const [cookie] = useCookies<"AUTH", CookieValues>(["AUTH"]);
   const { setTheme } = useTheme();
   const { setAuth } = useAuthStore();
 
@@ -25,12 +25,16 @@ function App() {
 
   useEffect(() => {
     setAccount();
+    setBrowserTheme();
   }, []);
 
   async function setAccount() {
-    detectBrowserTheme();
     setAuth(cookie.AUTH);
     setInitializing(false);
+  }
+
+  async function setBrowserTheme() {
+    detectBrowserTheme();
   }
 
   function detectBrowserTheme() {
@@ -49,7 +53,7 @@ function App() {
       {initializing ? (
         <Loading />
       ) : (
-        <div className="text-foreground bg-background">
+        <div className="bg-background text-foreground">
           <BreadcrumbProvider>
             <RouteTitleHandler />
             <RouterProvider />

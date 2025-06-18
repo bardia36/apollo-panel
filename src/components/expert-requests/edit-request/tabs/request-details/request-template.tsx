@@ -1,9 +1,10 @@
 import { Avatar, Button, NumberInput } from "@heroui/react";
 import { t } from "i18next";
-import carVector from "@/assets/images/expert-requests/car-vector.svg";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import carVector from "@/assets/images/expert-requests/car-vector.svg";
 import { ExpertRequestDetail } from "@/types/expert-requests";
 import CopyButton from "@/components/shared/copy-button";
+import IranLicensePlate from "@/components/shared/iran-license-plate";
 
 type RequestTemplateProps = {
   template: ExpertRequestDetail["template_id"];
@@ -82,8 +83,8 @@ export default function RequestTemplate({
                   {t("expertRequests.vehicleModel")}
                 </h6>
                 <p className="font-semibold text-foreground">
-                  {!!inspectionData?.vehicle_company?.name_fa && (
-                    <>{inspectionData.vehicle_company?.name_fa} - </>
+                  {!!inspectionData?.vehicle_category?.name && (
+                    <>{inspectionData.vehicle_category?.name} - </>
                   )}{" "}
                   {!!inspectionData?.vehicle_brand?.name_fa && (
                     <>{inspectionData.vehicle_brand.name_fa} - </>
@@ -95,10 +96,11 @@ export default function RequestTemplate({
               </div>
             )}
 
-            {/* TODO: get plate from backend */}
-            {/* <Suspense fallback={<Skeleton className="w-full h-16" />}>
-          <LicensePlate plate="IR15-546T55" />
-        </Suspense> */}
+            {!!inspectionData.license_plate_number && (
+              <IranLicensePlate
+                licensePlate={inspectionData.license_plate_number}
+              />
+            )}
 
             {(!!inspectionData.color || !!inspectionData.vin) && (
               <div className="flex items-center justify-between flex-wrap gap-2 text-content2-foreground text-sm">

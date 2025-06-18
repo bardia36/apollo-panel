@@ -14,30 +14,46 @@ const RequestLocation = lazy(() => import("./request-location"));
 const RequestTemplate = lazy(() => import("./request-template"));
 const RequestContent = lazy(() => import("./request-content"));
 
-interface RequestDetailsProps {
+type RequestDetailsProps = {
   requestData: ExpertRequestDetail;
-}
+};
 
 export default function RequestDetails({ requestData }: RequestDetailsProps) {
+  const isRequestStatusVisible =
+    !!requestData.status_history?.length ||
+    (!!requestData.order_number &&
+      ["COMPLETED", "REVIEWED"].includes(requestData.status));
+
   return (
     <div className="grid lg:grid-cols-12 gap-4">
       <div className="col-span-12 grid lg:grid-cols-12 gap-12 bg-default-50 p-4 rounded-large">
         <Suspense fallback={<ImagesStatusAlertSkeleton />}>
-          <ImagesStatusAlert
-            documents={requestData.documents}
-            status={requestData.status}
-            createdAt={requestData.createdAt}
-          />
+          <div
+            className={
+              isRequestStatusVisible
+                ? "lg:col-span-5 xl:col-span-8"
+                : "lg:col-span-12"
+            }
+          >
+            <ImagesStatusAlert
+              gallery={requestData.gallery}
+              status={requestData.status}
+              updatedAt={requestData.previous_inspections?.[0]?.updatedAt}
+            />
+          </div>
         </Suspense>
 
-        <div className="lg:col-span-4">
-          <Suspense fallback={<RequestStatusSkeleton />}>
-            <RequestStatus
-              orderNumber={requestData.order_number}
-              status={requestData.status}
-            />
-          </Suspense>
-        </div>
+        {isRequestStatusVisible && (
+          <div className="lg:col-span-5 xl:col-span-4">
+            <Suspense fallback={<RequestStatusSkeleton />}>
+              <RequestStatus
+                orderNumber={requestData.order_number}
+                status={requestData.status}
+                statusHistory={requestData.status_history}
+              />
+            </Suspense>
+          </div>
+        )}
       </div>
 
       <div className="col-span-12 grid lg:grid-cols-12 gap-4">
@@ -55,14 +71,17 @@ export default function RequestDetails({ requestData }: RequestDetailsProps) {
         {!!requestData.locations?.length && (
           <div className="lg:col-span-4">
             <Suspense fallback={<RequestLocationSkeleton />}>
-              <RequestLocation locations={requestData.locations} />
+              <RequestLocation
+                locations={requestData.locations}
+                lastLocation={requestData.last_location}
+              />
             </Suspense>
           </div>
         )}
       </div>
 
-      <div className="col-span-12 grid lg:grid-cols-12 gap-4 lg:col-span-8 bg-default-50 rounded-large p-4">
-        <div className="lg:col-span-5">
+      <div className="col-span-12 grid xl:grid-cols-12 gap-4 xl:col-span-8 bg-default-50 rounded-large p-4">
+        <div className="xl:col-span-5">
           <Suspense fallback={<RequestTemplateSkeleton />}>
             <RequestTemplate
               template={requestData.template_id}
@@ -73,11 +92,13 @@ export default function RequestDetails({ requestData }: RequestDetailsProps) {
           </Suspense>
         </div>
 
-        <div className="lg:col-span-7">
-          <Suspense fallback={<RequestContentSkeleton />}>
-            <RequestContent fields={requestData.required_fields}  />
-          </Suspense>
-        </div>
+        {!!requestData.gallery?.length && (
+          <div className="xl:col-span-7">
+            <Suspense fallback={<RequestContentSkeleton />}>
+              <RequestContent fields={requestData.gallery} />
+            </Suspense>
+          </div>
+        )}
       </div>
     </div>
   );

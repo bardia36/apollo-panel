@@ -58,20 +58,23 @@ export function TagInput({
         classNames={classNames}
       />
 
-      <div className="flex flex-wrap gap-2 mt-2">
-        {value.map((tag) => (
-          <Chip
-            key={tag}
-            onClose={() => handleTagRemove(tag)}
-            variant="flat"
-            endContent={
-              <Icon icon="solar:close-circle-bold" width={16} height={16} />
-            }
-          >
-            {tag}
-          </Chip>
-        ))}
-      </div>
+      {/* TODO: render them inside the input */}
+      {!!value.length && (
+        <div className="flex flex-wrap gap-2 mt-2">
+          {value.map((tag) => (
+            <Chip
+              key={tag}
+              onClose={() => handleTagRemove(tag)}
+              variant="flat"
+              endContent={
+                <Icon icon="solar:close-circle-bold" width={16} height={16} />
+              }
+            >
+              {tag}
+            </Chip>
+          ))}
+        </div>
+      )}
 
       {isInvalid && errorMessage && (
         <div className="text-danger text-xs mt-1">{errorMessage}</div>

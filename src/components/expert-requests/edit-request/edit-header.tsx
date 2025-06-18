@@ -15,6 +15,12 @@ import { formatDate, truncateString } from "@/utils/base";
 import { t } from "i18next";
 import { NeutralChip } from "@/components/shared/request-status-chip";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
+import { RetrieveRequestModal } from "./actions/retrieve";
+import { ChangeStatusModal } from "./actions/change-status";
+import { SendInspectionLinkModal } from "./actions/send-inspection-link";
+import { AcceptRequestModal } from "./actions/accept";
+import { LackOfEvidenceModal } from "./actions/lack-of-evidence";
+import { RejectRequestModal } from "./actions/reject";
 
 export const EditHeader = ({
   requestData,
@@ -26,19 +32,17 @@ export const EditHeader = ({
   onTabChange: (key: string) => void;
 }) => {
   const statusMap = statusesMap[requestData.status];
-  const { formattedTime, formattedDate } = formatDate(
-    requestData.createdAt
-  );
+  const { formattedTime, formattedDate } = formatDate(requestData.createdAt);
   const { isMdAndUp } = useBreakpoint();
 
   return (
     // TODO: FIX TABLET AND SMALL DESKTOPS RESPONSIVENESS
     <div className="flex flex-col gap-4 pt-3 md:px-4">
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-4 order-1 md:order-none">
           <div
             className={cn(
-              "hidden md:flex items-center justify-center w-16 h-16 rounded-large",
+              "hidden md:flex items-center justify-center min-w-16 h-16 rounded-large",
               `bg-${statusMap.fadedBg}`
             )}
           >
@@ -64,9 +68,7 @@ export const EditHeader = ({
                 </span>
               </span>
 
-              <NeutralChip
-                status={{ uid: requestData.status, label: statusMap.label }}
-              />
+              <NeutralChip status={requestData.status} />
             </div>
 
             <span className="text-sm">
@@ -80,7 +82,7 @@ export const EditHeader = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5 w-full md:w-auto">
+        <div className="flex items-center gap-2.5 w-full md:w-auto ms-auto">
           {["COMPLETED", "REVIEWED"].includes(requestData.status) &&
             !isMdAndUp && (
               <Dropdown>
@@ -98,150 +100,67 @@ export const EditHeader = ({
                 <DropdownMenu aria-label="More Actions">
                   <DropdownItem key="rejectRequest">
                     {requestData.status === "REVIEWED" && (
-                      <Button
-                        variant="light"
-                        size="sm"
-                        className="hidden md:flex text-default-foreground"
-                      >
-                        <Icon
-                          icon="solar:clipboard-remove-bold"
-                          width={20}
-                          height={20}
-                          className="text-foreground min-w-5"
-                        />
-
-                        {t("expertRequests.rejectRequest")}
-                      </Button>
+                      <RejectRequestModal
+                        code={requestData.req_id}
+                        tags={requestData.tags || []}
+                      />
                     )}
                   </DropdownItem>
 
                   <DropdownItem key="lackOfEvidence">
-                    <Button
-                      variant="flat"
-                      size="sm"
-                      className="hidden md:flex text-default-foreground"
-                    >
-                      <Icon
-                        icon="mdi:plus-circle"
-                        width={20}
-                        height={20}
-                        className="text-foreground min-w-5"
-                      />
-
-                      {t("expertRequests.lackOfEvidence")}
-                    </Button>
+                    <LackOfEvidenceModal
+                      code={requestData.req_id}
+                      tags={requestData.tags || []}
+                      fields={requestData.gallery || []}
+                      activatorVariant="flat"
+                      activatorSize="sm"
+                      activatorClassName="hidden md:flex text-default-foreground"
+                      activatorIconClassName="text-foreground"
+                    />
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             )}
 
           {requestData.status === "ARCHIVED" && (
-            <Button
-              variant="flat"
-              size="sm"
-              className="text-default-foreground"
-            >
-              <Icon
-                icon="solar:undo-left-round-bold"
-                width={20}
-                height={20}
-                className="text-foreground min-w-5"
-              />
-
-              {t("expertRequests.retrieveRequest")}
-            </Button>
+            <RetrieveRequestModal
+              status={requestData.status}
+              code={requestData.req_id}
+            />
           )}
 
-          {[
-            "CANCELED",
-            "EXPIRED",
-            "FAILED",
-            "REJECTED",
-            "ACCEPTED",
-            "COMPLETED",
-            "REVIEWED",
-            "IN_PROGRESS",
-            "PENDING",
-            "DRAFT",
-          ].includes(requestData.status) && (
-            <Button
-              variant="flat"
-              size="sm"
-              className="text-default-foreground"
-            >
-              <Icon
-                icon="bx:sort"
-                width={20}
-                height={20}
-                className="text-foreground min-w-5"
-              />
-
-              {t("shared.changeStatus")}
-            </Button>
+          {requestData.status !== "ARCHIVED" && (
+            <ChangeStatusModal
+              status={requestData.status}
+              code={requestData.req_id}
+              tags={requestData.tags || []}
+            />
           )}
 
           {requestData.status === "REVIEWED" && (
-            <Button
-              variant="light"
-              size="sm"
-              className="hidden md:flex text-default-foreground"
-            >
-              <Icon
-                icon="solar:clipboard-remove-bold"
-                width={20}
-                height={20}
-                className="text-foreground min-w-5"
-              />
-
-              {t("expertRequests.rejectRequest")}
-            </Button>
+            <RejectRequestModal
+              code={requestData.req_id}
+              tags={requestData.tags || []}
+            />
           )}
 
           {["COMPLETED", "REVIEWED"].includes(requestData.status) && (
-            <Button
-              variant="flat"
-              size="sm"
-              className="hidden md:flex text-default-foreground"
-            >
-              <Icon
-                icon="mdi:plus-circle"
-                width={20}
-                height={20}
-                className="text-foreground min-w-5"
-              />
-
-              {t("expertRequests.lackOfEvidence")}
-            </Button>
+            <LackOfEvidenceModal
+              code={requestData.req_id}
+              tags={requestData.tags || []}
+              fields={requestData.gallery || []}
+              activatorVariant="shadow"
+              activatorClassName="bg-foreground-900 text-foreground-50 ms-1"
+              activatorIconClassName="text-foreground-50"
+            />
           )}
 
           {["COMPLETED", "REVIEWED"].includes(requestData.status) && (
-            <Button
-              variant="shadow"
-              className="bg-foreground-900 text-foreground-50 ms-1"
-            >
-              <Icon
-                icon="solar:check-circle-bold"
-                width={20}
-                height={20}
-                className="text-foreground-50 min-w-5"
-              />
-              {t("expertRequests.confirmRequest")}
-            </Button>
+            <AcceptRequestModal requestData={requestData} />
           )}
 
           {requestData.status === "DRAFT" && (
-            <Button
-              variant="shadow"
-              className="bg-foreground-900 text-foreground-50 ms-1"
-            >
-              <Icon
-                icon="solar:check-circle-bold"
-                width={20}
-                height={20}
-                className="text-foreground-50 min-w-5"
-              />
-              {t("expertRequests.sendInspectionLink")}
-            </Button>
+            <SendInspectionLinkModal requestData={requestData} />
           )}
         </div>
       </div>
@@ -275,6 +194,7 @@ export const EditHeader = ({
             </div>
           }
         />
+
         <Tab
           key="content"
           title={
@@ -297,6 +217,7 @@ export const EditHeader = ({
             </div>
           }
         />
+
         <Tab
           key="history"
           title={
