@@ -66,7 +66,7 @@ export const TopContent = ({
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 sticky top-0 start-0">
       <div className="flex justify-between">
         <div className="flex gap-4">
           <AppInput
