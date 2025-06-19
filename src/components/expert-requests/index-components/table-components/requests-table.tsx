@@ -13,10 +13,10 @@ import {
 import {
   RenderCodeCell,
   RenderOrderNumberCell,
-  RenderInspectionDataCell,
+  RenderVehicleModelCell,
   RenderStatusCell,
   RenderOwnerCell,
-  RenderUnitCell,
+  RenderLeadSpecialistCell,
   RenderCreatedAtCell,
   RenderActionsCell,
   RenderVinCell,
@@ -53,7 +53,7 @@ export default function RequestsTable({ requests, loading }: Props) {
     "inspection_data",
     "status",
     "owner",
-    "unit",
+    "lead_specialist",
     "createdAt",
     "actions",
   ]);
@@ -235,7 +235,8 @@ export default function RequestsTable({ requests, loading }: Props) {
           return (
             <>
               {request.inspection_data && (
-                <RenderInspectionDataCell
+                <RenderVehicleModelCell
+                  id={request._id}
                   inspectionData={request.inspection_data}
                 />
               )}
@@ -243,14 +244,20 @@ export default function RequestsTable({ requests, loading }: Props) {
           );
 
         case "status":
-          return <RenderStatusCell status={request.status} />;
+          return <RenderStatusCell id={request._id} status={request.status} />;
 
         case "owner":
           return <RenderOwnerCell owner={request.owner} />;
 
-        case "unit":
+        case "lead_specialist":
           return (
-            <>{!!request.unit && <RenderUnitCell unit={request.unit} />}</>
+            <>
+              {!!request.lead_specialist && (
+                <RenderLeadSpecialistCell
+                  leadSpecialist={request.lead_specialist}
+                />
+              )}
+            </>
           );
 
         case "createdAt":

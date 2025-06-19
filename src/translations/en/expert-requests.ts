@@ -108,6 +108,7 @@ export default {
   statusChangeWarning: "This Change is Not Reversible!",
   statusChangeWarningDescription:
     "Note that after changing the status, there is no possibility to return to the previous status.",
+  superiorUnit: "Superior unit",
   step1: "Step One",
   step2: "Step Two",
   step3: "Step Three",
