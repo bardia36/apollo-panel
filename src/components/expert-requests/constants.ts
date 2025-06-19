@@ -3,8 +3,8 @@ import { t } from "i18next";
 
 export const columns: TableColumns = [
   {
-    name: "code",
-    uid: "code",
+    name: "_id",
+    uid: "_id",
     sortable: true,
     label: t("expertRequests.code"),
   },
@@ -29,20 +29,20 @@ export const columns: TableColumns = [
     label: t("shared.createdAt"),
   },
   {
-    name: "unit",
-    uid: "unit",
+    name: "lead_specialist",
+    uid: "lead_specialist",
     sortable: true,
-    label: t("expertRequests.branch"),
+    label: t("expertRequests.responsibleSpecialist"),
   },
+  // {
+  //   name: "superiorUnit",
+  //   uid: "superiorUnit",
+  //   sortable: true,
+  //   label: t("expertRequests.superiorUnit"),
+  // },
   {
-    name: "supervisor",
-    uid: "supervisor",
-    sortable: true,
-    label: t("expertRequests.supervisor"),
-  },
-  {
-    name: "vin",
-    uid: "vin",
+    name: "inspection_data.vin",
+    uid: "inspection_data.vin",
     sortable: true,
     label: "VIN",
   },

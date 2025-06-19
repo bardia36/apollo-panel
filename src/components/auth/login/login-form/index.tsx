@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 
 // Components
-import { Card, CardBody } from "@heroui/react";
+import { Button, Card, CardBody } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
 import OtpComponent from "./otp";
@@ -39,10 +39,7 @@ export default function LoginForm() {
 
         {(currentComponent as keyof typeof components) === "otp" ||
         (currentComponent as keyof typeof components) === "password" ? (
-          <div
-            className="justify-between items-center grid grid-cols-12 mt-4 px-3 border border-default-200 rounded-large h-[66px] cursor-pointer"
-            onClick={() => setCurrentComponent("username")}
-          >
+          <div className="justify-between items-center grid grid-cols-12 mt-4 px-3 border border-default-200 rounded-large h-[66px]">
             <div className="col-span-2"></div>
 
             <div className="flex items-center col-span-8 w-full">
@@ -55,14 +52,19 @@ export default function LoginForm() {
             </div>
 
             <div className="flex justify-end items-center col-span-2">
-              <div className="flex justify-normal items-center bg-default-50 p-1 rounded-lg min-w-min max-w-5 h-5">
+              <Button
+                isIconOnly
+                variant="flat"
+                className="bg-default-50 p-1 rounded-lg min-w-min max-w-5 h-5"
+                onPress={() => setCurrentComponent("username")}
+              >
                 <Icon
                   icon="solar:undo-right-round-linear"
                   className="text-content1-foreground"
                   width="16"
                   height="16"
                 />
-              </div>
+              </Button>
             </div>
           </div>
         ) : null}

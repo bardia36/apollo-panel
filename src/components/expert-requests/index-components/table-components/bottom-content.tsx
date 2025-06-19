@@ -29,7 +29,7 @@ export const BottomContent = ({
   }, [page]);
 
   return (
-    <div className="py-2 px-2 flex justify-between items-center">
+    <div className="py-2 px-2 flex justify-between items-center sticky bottom-0 start-0">
       <span className="w-[30%] text-small text-default-400">
         {selectedKeys === "all"
           ? t("shared.allItemsSelected")

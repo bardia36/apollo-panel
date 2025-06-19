@@ -134,17 +134,6 @@ export default ({ requestsCount }: Props) => {
       <div className="hidden xl:flex items-end">
         <Settings className="text-default-foreground me-2.5" />
 
-        <Button variant="flat" className="text-default-foreground me-2.5">
-          <Icon
-            icon="bx:sort"
-            width={20}
-            height={20}
-            className="text-default-500"
-          />
-
-          {t("shared.changeStatus")}
-        </Button>
-
         <TemplatesModal
           activator={
             <Button variant="flat" className="text-default-foreground me-4">
