@@ -23,14 +23,14 @@ export const RenderCodeCell = ({
   code,
 }: {
   code: ExpertRequestInfo["_id"];
-}) => <span className="text-default-500 text-sm">{code}</span>;
+}) => <div className="text-default-500 text-sm text-end">{code}</div>;
 
 export const RenderOrderNumberCell = ({
   orderNumber,
 }: {
   orderNumber: ExpertRequestInfo["order_number"];
 }) => (
-  <div className="flex items-center gap-2">
+  <div className="flex items-center justify-end gap-2">
     <span className="text-default-500 text-sm">{orderNumber}</span>
     <CopyButton
       value={orderNumber}
@@ -41,37 +41,44 @@ export const RenderOrderNumberCell = ({
   </div>
 );
 
-export const RenderInspectionDataCell = ({
+export const RenderVehicleModelCell = ({
   inspectionData,
+  id,
 }: {
   inspectionData: ExpertRequestInfo["inspection_data"];
+  id: ExpertRequestInfo["_id"];
 }) => (
-  <>
+  <Link to={id}>
     <div className="mb-1 text-default-foreground">
       {inspectionData.vehicle_model?.name_fa}
     </div>
     <div className="text-default-500">
       {inspectionData.vehicle_brand?.name_fa}
     </div>
-  </>
+  </Link>
 );
 
 export const RenderStatusCell = ({
+  id,
   status,
 }: {
+  id: ExpertRequestInfo["_id"];
   status: ExpertRequestInfo["status"];
 }) => {
   const statusMap = statusesMap[status];
 
   return (
-    <Chip
-      className={`bg-${statusMap.bg} text-${statusMap.text} h-8 gap-1`}
-      size="sm"
-      variant="flat"
-      startContent={<Icon icon={statusMap.icon} width={20} height={20} />}
-    >
-      <span className="font-semibold text-sm">{statusMap.label}</span>
-    </Chip>
+    <Link to={id}>
+      <Chip
+        size="sm"
+        variant="flat"
+        radius="md"
+        startContent={<Icon icon={statusMap.icon} width={20} height={20} />}
+        className={`bg-${statusMap.bg} text-${statusMap.text} h-8 gap-1 ps-2 pe-3`}
+      >
+        <span className="font-semibold text-sm">{statusMap.label}</span>
+      </Chip>
+    </Link>
   );
 };
 
@@ -84,7 +91,7 @@ export const RenderOwnerCell = ({
     avatarProps={{
       radius: "md",
       src: owner.image,
-      className: "bg-default-100 text-default-200",
+      className: "bg-default-100 text-default-200 min-w-10",
     }}
     description={
       <div className="text-content4-foreground">{owner.phoneNumber}</div>
@@ -99,23 +106,21 @@ export const RenderCreatedAtCell = ({
   createdAt: ExpertRequestInfo["createdAt"];
 }) => <TwoLineDateDisplay isoDate={createdAt} />;
 
-export const RenderUnitCell = ({
-  unit,
+export const RenderLeadSpecialistCell = ({
+  leadSpecialist,
 }: {
-  unit: ExpertRequestInfo["unit"];
+  leadSpecialist: ExpertRequestInfo["lead_specialist"];
 }) => (
-  <div className="flex gap-1 text-default-foreground">
+  <div className="flex items-center gap-1 text-default-foreground">
     <Icon
       icon="solar:users-group-rounded-bold"
-      width={20}
-      height={20}
-      className="text-default-200"
+      className="text-default-200 min-w-5 h-5"
     />
-    {unit?.title}
+    {leadSpecialist?.username}
   </div>
 );
 
-// TODO: supervisor-cell,
+// TODO: superiorUnit-cell,
 
 export const RenderVinCell = ({ vin }: { vin: string }) => (
   <span className="text-default-foreground text-sm">{vin}</span>
@@ -189,6 +194,7 @@ export const RenderActionsCell = ({ id }: { id: ExpertRequestInfo["_id"] }) => {
         </DropdownTrigger>
 
         <DropdownMenu aria-label="Request item actions">
+          {/* TODO: Handle discard selection */}
           <DropdownItem
             key="discard-selection"
             startContent={

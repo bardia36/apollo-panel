@@ -109,6 +109,7 @@ export default {
   statusChangeWarning: "این تغییر برگشت‌پذیر نیست!",
   statusChangeWarningDescription:
     "توجه کنید که با تغییر وضعیت درخواست، امکان بازگشت به وضعیت قبلی وجود ندارد!",
+  superiorUnit: "واحد بالادستی",
   step1: "مرحله اول",
   step2: "مرحله دوم",
   step3: "مرحله سوم",
