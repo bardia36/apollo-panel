@@ -1,4 +1,5 @@
 import type { LoginByOtpEntity, ActhDto, CookieValues } from "@/types/auth";
+import type { WorkspaceCookieValues } from "@/types/workspace";
 
 type Props = {
   username: string;
@@ -16,6 +17,7 @@ import { formOptions } from "@/utils/validations";
 import { toast } from "@/utils/toast";
 import { accountApi } from "@/apis/auth";
 import useAuthStore from "@/stores/auth-store";
+import useWorkspaceStore from "@/stores/workspace-store";
 import { useValidationMessages } from "@/utils/rules";
 import { exceptionHandler } from "@/apis/exception";
 import { useCookies } from "react-cookie";
@@ -34,7 +36,9 @@ export default function Otp({ username, setCurrentComponent }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { setAuth } = useAuthStore();
-  const [_, setCookie] = useCookies<"AUTH", CookieValues>(["AUTH"]);
+  const { setWorkspaceSlug } = useWorkspaceStore();
+  const [, setCookie] = useCookies<"AUTH", CookieValues>(["AUTH"]);
+  const [, setWorkspaceCookie] = useCookies<"WORKSPACE", WorkspaceCookieValues>(["WORKSPACE"]);
   const [progressing, setProgressing] = useState(false);
 
   useEffect(() => {
@@ -106,9 +110,11 @@ export default function Otp({ username, setCurrentComponent }: Props) {
       tokenExpireTime: auth.tokenExpireTime,
       refreshTokenExpireTime: auth.refreshTokenExpireTime,
     };
-    setCookie("AUTH", cookie, { maxAge: auth.tokenExpireTime });
     setAuth(auth);
-    navigate("/dashboard");
+    setWorkspaceSlug(auth.workspaceSlug);
+    navigate(`/${auth.workspaceSlug}/dashboard`);
+    setCookie("AUTH", cookie, { path: "/", maxAge: auth.tokenExpireTime });
+    setWorkspaceCookie("WORKSPACE", auth.workspaceSlug, { path: "/", maxAge: auth.tokenExpireTime });
   }
 
   return (

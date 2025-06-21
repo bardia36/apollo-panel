@@ -1,4 +1,5 @@
 import type { LoginEntity, ActhDto, CookieValues } from "@/types/auth";
+import type { WorkspaceCookieValues } from "@/types/workspace";
 
 type Props = {
   username: string;
@@ -17,6 +18,7 @@ import { useValidationMessages } from "@/utils/rules";
 import { toast } from "@/utils/toast";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useAuthStore from "@/stores/auth-store";
+import useWorkspaceStore from "@/stores/workspace-store";
 import { useCookies } from "react-cookie";
 
 // components
@@ -33,7 +35,9 @@ import { accountApi } from "@/apis/auth";
 export default function Password({ username, setCurrentComponent }: Props) {
   const { t } = useTranslation();
   const { setAuth } = useAuthStore();
+  const { setWorkspaceSlug } = useWorkspaceStore();
   const [_, setCookie] = useCookies<"AUTH", CookieValues>(["AUTH"]);
+  const [, setWorkspaceCookie] = useCookies<"WORKSPACE", WorkspaceCookieValues>(["WORKSPACE"]);
   const navigate = useNavigate();
   const [progressing, setProgressing] = useState(false);
 
@@ -85,9 +89,11 @@ export default function Password({ username, setCurrentComponent }: Props) {
       tokenExpireTime: auth.tokenExpireTime,
       refreshTokenExpireTime: auth.refreshTokenExpireTime,
     };
-    setCookie("AUTH", cookie, { maxAge: auth.tokenExpireTime });
     setAuth(auth);
-    navigate("/dashboard");
+    setWorkspaceSlug(auth.workspaceSlug);
+    navigate(`/${auth.workspaceSlug}/dashboard`);
+    setCookie("AUTH", cookie, { path: "/", maxAge: auth.tokenExpireTime });
+    setWorkspaceCookie("WORKSPACE", auth.workspaceSlug, { path: "/", maxAge: auth.tokenExpireTime });
   }
 
   function setComponent() {

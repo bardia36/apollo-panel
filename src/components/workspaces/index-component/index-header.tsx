@@ -21,14 +21,16 @@ const IndexHeader = ({
     <div className="flex justify-between mt-3">
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2">
-          <h1 className="font-bold text-3xl">{workspaceData?.name}</h1>
+          <h1 className="font-bold text-3xl">{workspaceData?.name_fa}</h1>
 
-          <NeutralChip
-            status={{
-              uid: workspaceData?.status!,
-              label: statusesMap[workspaceData?.status!]?.label,
-            }}
-          />
+          {!!workspaceData?.status && (
+            <NeutralChip
+              status={{
+                uid: workspaceData?.status!,
+                label: statusesMap[workspaceData?.status!]?.label,
+              }}
+            />
+          )}
         </div>
 
         <div className="flex items-center gap-2">
@@ -36,10 +38,12 @@ const IndexHeader = ({
             {t("workspaces.active_at")}:{" "}
           </p>
 
-          <JustDateDisplay
-            isoDate={workspaceData?.active_at!}
-            className="text-default-600"
-          />
+          {!!workspaceData?.active_at && (
+            <JustDateDisplay
+              isoDate={workspaceData?.active_at!}
+              className="text-default-600"
+            />
+          )}
         </div>
       </div>
 

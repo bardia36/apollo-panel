@@ -35,7 +35,7 @@ function WorkspacesContent() {
 
         <WorkspaceTabs activeTab={activeTab} onChange={onTabChange} />
 
-        <WorkspaceTabContent activeTab={activeTab} />
+        <WorkspaceTabContent activeTab={activeTab} workspaceData={workspace} />
       </div>
     )
   );

@@ -5,6 +5,7 @@ import useAuthStore from "@/stores/auth-store";
 import { accountApi } from "@/apis/auth";
 import { exceptionHandler } from "@/apis/exception";
 import { CookieValues } from "@/types/auth";
+import { WorkspaceCookieValues } from "@/types/workspace";
 
 // components
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/react";
@@ -17,6 +18,7 @@ export default function Account() {
   const { t } = useTranslation();
   const { auth, removeAuth } = useAuthStore();
   const [cookie, _, removeCookie] = useCookies<"AUTH", CookieValues>(["AUTH"]);
+  const [workspaceCookie, , removeWorkspaceCookie] = useCookies<"WORKSPACE", WorkspaceCookieValues>(["WORKSPACE"]);
   const navigate = useNavigate();
 
   async function logout() {
@@ -25,7 +27,8 @@ export default function Account() {
 
       removeAuth();
       navigate("/login");
-      if (cookie.AUTH) removeCookie("AUTH");
+      if (cookie.AUTH) removeCookie("AUTH", { path: "/" });
+      if (workspaceCookie.WORKSPACE) removeWorkspaceCookie("WORKSPACE", { path: "/" });
       toast({ color: "success", title: t("auth.logoutSuccessfully") });
     } catch (err) {
       exceptionHandler(err);

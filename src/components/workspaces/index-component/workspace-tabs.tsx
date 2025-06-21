@@ -45,10 +45,10 @@ const WorkspaceTab = ({
         <Tab
           key="settings"
           title={
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 px-8">
               <Icon
                 icon={
-                  isInfoTab ? "solar:settings-linear" : "solar:settings-bold"
+                  isInfoTab ? "solar:users-group-rounded-outline" : "solar:users-group-rounded-bold"
                 }
                 width={20}
                 height={20}
@@ -57,7 +57,7 @@ const WorkspaceTab = ({
                 }
               />
 
-              {t("workspaces.settings")}
+              {t("workspaces.users")}
             </div>
           }
         />

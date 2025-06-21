@@ -14,12 +14,16 @@ import { RouterProvider, RouteTitleHandler } from "@/routes/RouterProvider";
 import { BreadcrumbProvider } from "@/contexts/breadcrumbContext";
 import { useLocalizedDigits } from "@/hooks/useLocalizedDigits";
 import { CookieValues } from "./types/auth";
+import { WorkspaceCookieValues } from "./types/workspace";
+import useWorkspaceStore from "./stores/workspace-store";
 
 function App() {
   const [initializing, setInitializing] = useState(true);
   const [cookie] = useCookies<"AUTH", CookieValues>(["AUTH"]);
+  const [workspaceCookie] = useCookies<"WORKSPACE", WorkspaceCookieValues>(["WORKSPACE"]);
   const { setTheme } = useTheme();
   const { setAuth } = useAuthStore();
+  const { setWorkspaceSlug } = useWorkspaceStore();
 
   useLocalizedDigits();
 
@@ -30,6 +34,7 @@ function App() {
 
   async function setAccount() {
     setAuth(cookie.AUTH);
+    setWorkspaceSlug(workspaceCookie.WORKSPACE ?? "");
     setInitializing(false);
   }
 

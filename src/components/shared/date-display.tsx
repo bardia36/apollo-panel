@@ -40,3 +40,9 @@ export const JustDateDisplay: FC<Props> = ({ isoDate, className }) => {
 
   return <span className={className}>{formattedDate}</span>;
 };
+
+export const OneLineDateAndWeekDayDisplay: FC<Props> = ({ isoDate, className }) => {
+  const { formattedDate, formattedWeekDay } = formatDate(isoDate);
+
+  return <span className={className}>{formattedWeekDay} {formattedDate}</span>;
+};

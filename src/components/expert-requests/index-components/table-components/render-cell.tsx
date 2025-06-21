@@ -18,6 +18,7 @@ import { useExpertRequests } from "../context/expert-requests-context";
 import { exceptionHandler } from "@/apis/exception";
 import CopyButton from "@/components/shared/copy-button";
 import { truncateString } from "@/utils/base";
+import useWorkspaceStore from "@/stores/workspace-store";
 
 export const RenderCodeCell = ({
   code,
@@ -30,7 +31,7 @@ export const RenderOrderNumberCell = ({
 }: {
   orderNumber: ExpertRequestInfo["order_number"];
 }) => (
-  <div className="flex items-center justify-end gap-2">
+  <div className="flex justify-end items-center gap-2">
     <span className="text-default-500 text-sm">{orderNumber}</span>
     <CopyButton
       value={orderNumber}
@@ -114,7 +115,7 @@ export const RenderLeadSpecialistCell = ({
   <div className="flex items-center gap-1 text-default-foreground">
     <Icon
       icon="solar:users-group-rounded-bold"
-      className="text-default-200 min-w-5 h-5"
+      className="min-w-5 h-5 text-default-200"
     />
     {leadSpecialist?.username}
   </div>
@@ -169,7 +170,7 @@ export const RenderTagsCell = ({
 
 export const RenderActionsCell = ({ id }: { id: ExpertRequestInfo["_id"] }) => {
   const { refreshRequests } = useExpertRequests();
-
+  const { workspaceSlug } = useWorkspaceStore();
   const handleSendToArchive = async () => {
     try {
       await expertRequestsApi.deleteRequestById(id);
@@ -231,7 +232,7 @@ export const RenderActionsCell = ({ id }: { id: ExpertRequestInfo["_id"] }) => {
 
       <Button
         as={Link}
-        to={`/expert-requests/${id}`}
+        to={`/${workspaceSlug}/expert-requests/${id}`}
         isIconOnly
         size="sm"
         variant="solid"

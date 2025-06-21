@@ -78,6 +78,7 @@ export type ActhDto = {
   refreshToken: string;
   tokenExpireTime: number;
   refreshTokenExpireTime: number;
+  workspaceSlug: string;
 };
 
 export type UserExist = Pick<Auth, "username">;

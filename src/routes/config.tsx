@@ -8,6 +8,7 @@ import DefaultLayout from "@/layouts/default";
 import AuthLayout from "@/layouts/auth";
 import EmptyLayout from "@/layouts/empty";
 import { t } from "i18next";
+import useWorkspaceStore from "@/stores/workspace-store";
 
 // Guards
 const AuthGuard = () => {
@@ -17,7 +18,9 @@ const AuthGuard = () => {
 
 const GuestGuard = () => {
   const { auth } = useAuthStore();
-  return auth ? <Navigate to="/dashboard" replace /> : <Outlet />;
+  const { workspaceSlug } = useWorkspaceStore();
+
+  return auth ? <Navigate to={`/${workspaceSlug}/dashboard`} replace /> : <Outlet />;
 };
 
 const LoginPage = lazy(() => import("@/pages/login"));
