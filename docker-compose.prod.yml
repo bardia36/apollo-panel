@@ -11,6 +11,11 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=production
+      - VITE_APP_API_SERVER=apollo.raintech.it:3000
+      - VITE_APP_AUTHENTICATION_API_SERVER=apollo.raintech.it:3000
+      - VITE_APP_FILE_SERVER=apollo.raintech.it:3000
+      - VITE_APP_STATIC_SERVER=apollo.raintech.it:3000
+      - VITE_APP_SSL=false
     networks:
       - apollo-network
     # Production optimizations
