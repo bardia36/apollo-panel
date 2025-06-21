@@ -28,6 +28,7 @@ error() {
 # Check if running as root (recommended for server deployment)
 if [[ $EUID -ne 0 ]]; then
    warn "This script is not running as root. Some operations may fail."
+   log "For best results, run with sudo: sudo ./deploy.sh"
    read -p "Continue anyway? (y/N): " -n 1 -r
    echo
    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -40,8 +41,12 @@ if ! command -v docker &> /dev/null; then
     error "Docker is not installed. Please install Docker first."
 fi
 
-if ! systemctl is-active --quiet docker; then
-    error "Docker service is not running. Please start Docker: sudo systemctl start docker"
+if ! docker info > /dev/null 2>&1; then
+    if [[ $EUID -ne 0 ]]; then
+        error "Docker service is not running or you don't have permission. Try: sudo systemctl start docker && sudo usermod -aG docker $USER"
+    else
+        error "Docker service is not running. Please start Docker: sudo systemctl start docker"
+    fi
 fi
 
 # Check if Docker Compose is available
@@ -75,13 +80,18 @@ fi
 
 # Step 3: Security audit
 log "3/8 - Running security audit..."
-if ! npm audit --audit-level=moderate; then
-    warn "Security vulnerabilities found. Please review and fix before deployment."
-    read -p "Continue with deployment? (y/N): " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        error "Deployment cancelled due to security concerns"
+if command -v npm &> /dev/null; then
+    if ! npm audit --audit-level=moderate; then
+        warn "Security vulnerabilities found. Please review and fix before deployment."
+        read -p "Continue with deployment? (y/N): " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            error "Deployment cancelled due to security concerns"
+        fi
     fi
+else
+    warn "npm not found. Skipping security audit."
+    log "To enable security audits, install Node.js and npm first."
 fi
 
 # Step 4: Create backup
