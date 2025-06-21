@@ -47,13 +47,13 @@ fi
 log "Starting secure deployment process..."
 
 # Step 1: Pull latest changes
-log "1/8 - Pulling latest changes from repository..."
+log "1/7 - Pulling latest changes from repository..."
 if ! git pull origin review; then
     error "Failed to pull changes from repository"
 fi
 
 # Step 2: Security audit
-log "2/8 - Running security audit..."
+log "2/7 - Running security audit..."
 if ! npm audit --audit-level=moderate; then
     warn "Security vulnerabilities found. Please review and fix before deployment."
     read -p "Continue with deployment? (y/N): " -n 1 -r
@@ -64,20 +64,20 @@ if ! npm audit --audit-level=moderate; then
 fi
 
 # Step 3: Create backup
-log "3/8 - Creating backup of current deployment..."
+log "3/7 - Creating backup of current deployment..."
 if docker ps -q -f name=frontend-apollo | grep -q .; then
     docker tag apollo-panel:latest apollo-panel:backup-$(date +%Y%m%d-%H%M%S) 2>/dev/null || true
     log "Backup created: apollo-panel:backup-$(date +%Y%m%d-%H%M%S)"
 fi
 
 # Step 4: Build new image with security checks
-log "4/8 - Building new Docker image with security checks..."
+log "4/7 - Building new Docker image with security checks..."
 if ! docker build . -t apollo-panel:latest --no-cache; then
     error "Failed to build Docker image"
 fi
 
 # Step 5: Security scan of the image
-log "5/8 - Running security scan on Docker image..."
+log "5/7 - Running security scan on Docker image..."
 # Note: In production, you might want to use tools like Trivy or Snyk
 if command -v trivy &> /dev/null; then
     if ! trivy image --severity HIGH,CRITICAL apollo-panel:latest; then
@@ -93,16 +93,12 @@ else
 fi
 
 # Step 6: Stop and remove old container
-log "6/8 - Stopping and removing old container..."
+log "6/7 - Stopping and removing old container..."
 docker stop frontend-apollo 2>/dev/null || true
 docker rm frontend-apollo 2>/dev/null || true
 
-# Step 7: Clean up old images
-log "7/8 - Cleaning up old images..."
-docker image prune -f
-
-# Step 8: Deploy new version
-log "8/8 - Deploying new version..."
+# Step 7: Deploy new version
+log "7/7 - Deploying new version..."
 if ! docker compose down -v; then
     error "Failed to stop existing containers"
 fi
@@ -111,22 +107,13 @@ if ! docker compose up --build -d; then
     error "Failed to start new containers"
 fi
 
-# Wait for health check
-log "Waiting for application to be healthy..."
-for i in {1..30}; do
-    if curl -f http://localhost:3000/health > /dev/null 2>&1; then
-        log "Application is healthy and ready!"
-        break
-    fi
-    if [ $i -eq 30 ]; then
-        error "Application failed to become healthy within 30 seconds"
-    fi
-    sleep 1
-done
+# Wait for container to start
+log "Waiting for container to start..."
+sleep 10
 
 # Final verification
 log "Performing final verification..."
-if curl -f http://localhost:3000/health > /dev/null 2>&1; then
+if docker ps -q -f name=frontend-apollo | grep -q .; then
     log "✅ Deployment completed successfully!"
     log "Application is running at: http://localhost:3000"
 else

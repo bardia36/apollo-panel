@@ -37,7 +37,7 @@ This document outlines the security measures implemented in the Apollo Panel app
 ### 6. Network Security
 - **Custom Networks**: Isolated Docker networks for container communication
 - **Port Restrictions**: Only necessary ports are exposed
-- **Health Checks**: Regular health checks to ensure service availability
+- **Container Monitoring**: Docker container status monitoring
 
 ## 🔧 Security Configuration
 
@@ -100,10 +100,10 @@ Content-Security-Policy:
 
 ## 🔍 Security Monitoring
 
-### Health Checks
-- Application health endpoint: `/health`
-- Docker health checks with automatic restart
+### Container Monitoring
+- Docker container status monitoring
 - Resource usage monitoring
+- Log monitoring and analysis
 
 ### Logging
 - Structured logging with security events
@@ -141,7 +141,7 @@ Content-Security-Policy:
 - [ ] HTTPS configured for production
 
 ### Post-Deployment
-- [ ] Health checks passing
+- [ ] Container status verified
 - [ ] Security headers verified
 - [ ] SSL certificate valid
 - [ ] Monitoring alerts configured

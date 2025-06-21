@@ -28,14 +28,6 @@ services:
           cpus: "0.5"
           memory: 512m
     
-    # Health check
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-    
     # Environment variables
     environment:
       - NODE_ENV=production

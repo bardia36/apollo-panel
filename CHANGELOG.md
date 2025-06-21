@@ -18,7 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Enhanced Dockerfile** with multi-stage builds and security best practices
 - **Added non-root user execution** for improved container security
 - **Implemented security scanning** during Docker build process
-- **Added health checks** to Docker containers
 - **Enhanced docker-compose.yml** with security configurations and resource limits
 
 ### 🌐 Nginx Security Enhancements
@@ -26,7 +25,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Improved Content Security Policy** (CSP) configuration
 - **Added file access restrictions** to prevent access to sensitive files
 - **Implemented HTTPS enforcement** with HSTS headers
-- **Added health check endpoint** (`/health`)
 - **Removed hardcoded IP addresses** from configuration
 
 ### 🚀 Deployment Security
@@ -34,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Added automated backup procedures** before deployment
 - **Implemented security audit integration** in deployment process
 - **Added error handling and logging** to deployment script
-- **Created post-deployment health verification**
+- **Created post-deployment verification**
 
 ### 📦 Package Management
 - **Added security audit scripts**:
