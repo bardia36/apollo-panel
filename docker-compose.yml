@@ -3,12 +3,50 @@ version: "3.8"
 services:
   frontend-apollo:
     container_name: frontend-apollo
-    restart: on-failure
+    restart: unless-stopped
     image: apollo-panel:latest
     ports:
       - "3000:80"
+    
+    # Security configurations
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx
+      - /var/log/nginx
+      - /var/run
+    
+    # Resource limits
     deploy:
       resources:
         limits:
           cpus: "1"
           memory: 1g
+        reservations:
+          cpus: "0.5"
+          memory: 512m
+    
+    # Environment variables
+    environment:
+      - NODE_ENV=production
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    # Network configuration
+    networks:
+      - apollo-network
+
+# Custom network for security
+networks:
+  apollo-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
