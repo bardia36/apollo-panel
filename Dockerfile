@@ -16,14 +16,6 @@ COPY package*.json ./
 # Install dependencies without running postinstall scripts to avoid security audit failure
 RUN npm install --ignore-scripts
 COPY . .
-
-# Set environment variables for build time
-ENV VITE_APP_API_SERVER=apollo.raintech.it:3000
-ENV VITE_APP_AUTHENTICATION_API_SERVER=apollo.raintech.it:3000
-ENV VITE_APP_FILE_SERVER=apollo.raintech.it:3000
-ENV VITE_APP_STATIC_SERVER=apollo.raintech.it:3000
-ENV VITE_APP_SSL=false
-
 RUN npm run build
 
 # Production stage
