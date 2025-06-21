@@ -28,9 +28,6 @@ RUN apk update && apk upgrade && \
 COPY --from=buildenv /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Security: Hide nginx version
-RUN echo "server_tokens off;" >> /etc/nginx/nginx.conf
-
 # Expose port
 EXPOSE 80
 
