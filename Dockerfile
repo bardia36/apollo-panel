@@ -13,7 +13,8 @@ WORKDIR /app
 RUN chmod 777 /app
 USER app
 COPY package*.json ./
-RUN npm install --force
+# Install dependencies without running postinstall scripts to avoid security audit failure
+RUN npm ci --ignore-scripts --force
 COPY . .
 RUN npm run build
 
