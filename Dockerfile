@@ -14,7 +14,7 @@ RUN chmod 777 /app
 USER app
 COPY package*.json ./
 # Install dependencies without running postinstall scripts to avoid security audit failure
-RUN npm ci --ignore-scripts --force
+RUN npm ci --ignore-scripts
 COPY . .
 RUN npm run build
 
