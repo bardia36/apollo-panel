@@ -491,6 +491,76 @@ docker build -t apollo-panel .
 docker-compose up -d
 ```
 
+### Ubuntu Server Deployment
+
+For production deployment on Ubuntu servers, we provide automated setup scripts:
+
+#### 1. Initial Server Setup
+```bash
+# Download and run the server setup script
+curl -fsSL https://raw.githubusercontent.com/your-username/apollo-panel/main/server-setup.sh | sudo bash
+
+# Or clone the repository and run locally
+git clone https://github.com/your-username/apollo-panel.git
+cd apollo-panel
+sudo ./server-setup.sh
+```
+
+The setup script will:
+- Update system packages
+- Install Node.js, Docker, and Docker Compose
+- Configure firewall (UFW)
+- Set up nginx reverse proxy
+- Create systemd service for auto-restart
+- Configure deployment directory
+
+#### 2. Deploy Application
+```bash
+# Navigate to deployment directory
+cd /opt/apollo-panel
+
+# Clone your repository (update URL)
+git clone https://github.com/your-username/apollo-panel.git .
+
+# Run deployment
+sudo ./deploy.sh
+```
+
+#### 3. Production Configuration
+For production deployment, use the production docker-compose file:
+```bash
+# Use production configuration
+docker-compose -f docker-compose.prod.yml up -d
+```
+
+#### 4. Server Management
+```bash
+# Check service status
+sudo systemctl status apollo-panel
+
+# View application logs
+docker logs frontend-apollo
+
+# Restart application
+sudo systemctl restart apollo-panel
+
+# Check firewall status
+sudo ufw status
+```
+
+#### 5. SSL/HTTPS Setup (Optional)
+```bash
+# Install Certbot for Let's Encrypt
+sudo apt install certbot python3-certbot-nginx
+
+# Get SSL certificate
+sudo certbot --nginx -d yourdomain.com
+
+# Auto-renewal
+sudo crontab -e
+# Add: 0 12 * * * /usr/bin/certbot renew --quiet
+```
+
 ### Environment Variables
 Configure the following environment variables for production:
 
@@ -506,6 +576,7 @@ VITE_APP_SSL=true
 ```
 
 ### Deployment Platforms
+- **Ubuntu Server**: Production-ready with Docker and nginx
 - **Vercel**: Zero-config deployment
 - **Netlify**: Static site hosting
 - **AWS S3 + CloudFront**: Scalable static hosting

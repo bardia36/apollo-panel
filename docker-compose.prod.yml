@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  frontend-apollo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: frontend-apollo
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    networks:
+      - apollo-network
+    # Production optimizations
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    # Resource limits for production
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+    # Health check for production monitoring
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  apollo-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16 
