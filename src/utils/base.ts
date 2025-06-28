@@ -70,32 +70,25 @@ export function copyToClipboard(text: string) {
   };
 }
 
-/**
- * Converts Persian/Arabic numbers to English numbers
- * @param input String containing Persian/Arabic numbers
- * @returns String with converted English numbers
- */
+// Converts Persian numbers to English numbers
 export function convertPersianToEnglishNumbers(input: string): string {
   if (!input) return input;
 
   const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-  const arabicDigits = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
-
   let result = input;
 
-  // Replace Persian digits
-  for (let i = 0; i < 10; i++) {
-    const regex = new RegExp(persianDigits[i], "g");
+  persianDigits.forEach((digit, i) => {
+    const regex = new RegExp(digit, "g");
     result = result.replace(regex, i.toString());
-  }
-
-  // Replace Arabic digits
-  for (let i = 0; i < 10; i++) {
-    const regex = new RegExp(arabicDigits[i], "g");
-    result = result.replace(regex, i.toString());
-  }
+  });
 
   return result;
+}
+
+// Converts English numbers to Persian numbers
+export function convertEnglishToPersianNumbers(str: string): string {
+  if (!str) return str;
+  return str.replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹".charAt(Number(d)));
 }
 
 export interface FormattedDateTime {
