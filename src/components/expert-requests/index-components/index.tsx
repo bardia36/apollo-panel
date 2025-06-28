@@ -1,7 +1,13 @@
-// modules
-import { useCallback, useMemo, useState, useEffect } from "react";
+import {
+  useCallback,
+  useMemo,
+  useState,
+  useEffect,
+  lazy,
+  Suspense,
+  Key as ReactKey,
+} from "react";
 import { t } from "i18next";
-// components
 import {
   Table,
   TableHeader,
@@ -10,6 +16,7 @@ import {
   TableRow,
   TableCell,
 } from "@heroui/react";
+import { Key, SortDescriptor } from "@react-types/shared";
 import {
   RenderCodeCell,
   RenderOrderNumberCell,
@@ -21,29 +28,27 @@ import {
   RenderActionsCell,
   RenderVinCell,
   RenderTagsCell,
-} from "./render-cell";
-
-// other
+} from "./table-components/render-cell";
 import {
-  ExpertRequestInfo,
-  AllExpertRequestsResponse,
-} from "@/types/expert-requests";
+  ExpertRequestsProvider,
+  useExpertRequests,
+} from "./context/expert-requests-context";
+import { ExpertRequestInfo } from "@/types/expert-requests";
 import { AddOrReplaceKey } from "@/utils/base";
-import { TopContent } from "./top-content";
-import { BottomContent } from "./bottom-content";
-import { columns, statusOptions } from "../../constants";
-import { Key, SortDescriptor } from "@react-types/shared";
-import { useExpertRequests } from "../context/expert-requests-context";
+import { columns, statusOptions } from "../constants";
 
-type Props = {
-  loading: boolean;
-  requests: AllExpertRequestsResponse;
-};
+import { TopContent } from "./table-components/top-content";
+import { BottomContent } from "./table-components/bottom-content";
+import Loading from "@/components/shared/loading";
+const TitleActions = lazy(() => import("./table-components/title-actions"));
+const TableTypeTabs = lazy(() => import("./table-components/table-type-tabs"));
+
+export type TableTab = "current" | "archive";
 
 // TODO:
 // Add archived requests needs to the table
-export default function RequestsTable({ requests, loading }: Props) {
-  // states -
+function ExpertRequestsContent() {
+  const [activeTab, setActiveTab] = useState<TableTab>("current");
   const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<Set<string> | string>(
     new Set([])
@@ -67,22 +72,8 @@ export default function RequestsTable({ requests, loading }: Props) {
     column: "order_number",
     direction: "ascending",
   });
-  // - states
 
-  const { refreshRequests } = useExpertRequests();
-
-  // Reset states when requests change (tab change)
-  useEffect(() => {
-    setPage(1);
-    setRowsPerPage(10);
-    setFilterValue("");
-    setSelectedKeys(new Set([]));
-    setStatusFilter("all");
-    setSortDescriptor({
-      column: "order_number",
-      direction: "ascending",
-    });
-  }, [requests.docs]);
+  const { requests, loading, refreshRequests } = useExpertRequests();
 
   const handlePageChange = useCallback(
     (newPage: number) => {
@@ -111,7 +102,27 @@ export default function RequestsTable({ requests, loading }: Props) {
     [refreshRequests, requests.docs]
   );
 
-  // variables -
+  function onTabChange(key: ReactKey | null) {
+    if (key === null) setActiveTab("current");
+    else setActiveTab(key as TableTab);
+
+    setPage(1);
+    setRowsPerPage(10);
+    setFilterValue("");
+    setSelectedKeys(new Set([]));
+    setStatusFilter("all");
+    setSortDescriptor({
+      column: "order_number",
+      direction: "ascending",
+    });
+
+    refreshRequests({
+      page: 1,
+      limit: 10,
+      is_archive: key === "archive",
+    });
+  }
+
   const headerColumns = useMemo(() => {
     if (visibleColumns === "all") return columns;
 
@@ -141,7 +152,10 @@ export default function RequestsTable({ requests, loading }: Props) {
 
     return filteredItems.slice(start, end);
   }, [page, filteredItems, rowsPerPage]);
-  // - variables
+
+  useEffect(() => {
+    refreshRequests();
+  }, [refreshRequests]);
 
   // top content -
   const onSearchChange = useCallback(
@@ -276,13 +290,13 @@ export default function RequestsTable({ requests, loading }: Props) {
           return <RenderTagsCell tags={request.tags} />;
 
         case "actions":
-          return <RenderActionsCell id={request._id} />;
+          return <RenderActionsCell id={request._id} activeTab={activeTab} />;
 
         default:
           return cellValue;
       }
     },
-    []
+    [activeTab]
   );
 
   const handleSortChange = useCallback(
@@ -303,45 +317,62 @@ export default function RequestsTable({ requests, loading }: Props) {
   );
 
   return (
-    <Table
-      isHeaderSticky
-      aria-label="Expert Requests Table"
-      selectionMode="multiple"
-      topContent={topContentWrapper}
-      bottomContent={bottomContentWrapper}
-      selectedKeys={selectedKeys}
-      sortDescriptor={sortDescriptor}
-      onSelectionChange={(keys) => setSelectedKeys(keys as Set<string>)}
-      onSortChange={handleSortChange}
-    >
-      <TableHeader columns={headerColumns}>
-        {(column) => (
-          <TableColumn
-            key={column.uid}
-            align={column.uid === "actions" ? "center" : "start"}
-            allowsSorting={column.sortable}
-          >
-            {column.label}
-          </TableColumn>
-        )}
-      </TableHeader>
+    <>
+      <div className="lg:px-4">
+        <Suspense fallback={<Loading />}>
+          <TitleActions requestsCount={requests.totalDocs} />
+          <TableTypeTabs activeTab={activeTab} onChange={onTabChange} />
+        </Suspense>
+      </div>
 
-      <TableBody
-        isLoading={loading}
-        emptyContent={t("expertRequests.noRequestFound")}
-        items={filteredItems}
+      <Table
+        isHeaderSticky
+        aria-label="Expert Requests Table"
+        selectionMode="multiple"
+        topContent={topContentWrapper}
+        bottomContent={bottomContentWrapper}
+        selectedKeys={selectedKeys}
+        sortDescriptor={sortDescriptor}
+        onSelectionChange={(keys) => setSelectedKeys(keys as Set<string>)}
+        onSortChange={handleSortChange}
       >
-        {(item) => (
-          <TableRow key={`${item.order_number} - ${item.createdAt}`}>
-            {(columnKey) => (
-              <TableCell>
-                {renderCell(item, columnKey as keyof ExpertRequestInfo)}
-              </TableCell>
-            )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+        <TableHeader columns={headerColumns}>
+          {(column) => (
+            <TableColumn
+              key={column.uid}
+              align={column.uid === "actions" ? "center" : "start"}
+              allowsSorting={column.sortable}
+            >
+              {column.label}
+            </TableColumn>
+          )}
+        </TableHeader>
+
+        <TableBody
+          isLoading={loading}
+          emptyContent={t("expertRequests.noRequestFound")}
+          items={filteredItems}
+        >
+          {(item) => (
+            <TableRow key={`${item.order_number} - ${item.createdAt}`}>
+              {(columnKey) => (
+                <TableCell>
+                  {renderCell(item, columnKey as keyof ExpertRequestInfo)}
+                </TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </>
   );
   // - table data
+}
+
+export default function ExpertRequests() {
+  return (
+    <ExpertRequestsProvider>
+      <ExpertRequestsContent />
+    </ExpertRequestsProvider>
+  );
 }

@@ -2,7 +2,7 @@ import { Tabs, Tab } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { t } from "i18next";
 import { Key } from "react";
-import { TableTab } from "../..";
+import { TableTab } from "../index";
 
 export default ({
   activeTab,

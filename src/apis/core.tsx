@@ -113,8 +113,8 @@ async function handleLogout() {
   } catch (error) {
     console.error("Logout API call failed:", error);
   } finally {
-    const [, , removeCookie] = useCookies(["token"]);
-    removeCookie("token");
+    const [, , removeCookie] = useCookies(["AUTH"]);
+    removeCookie("AUTH");
     useAuthStore.getState().removeAuth();
     window.location.href = "/login";
   }
