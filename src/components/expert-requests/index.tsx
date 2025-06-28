@@ -15,8 +15,10 @@ const RequestsTable = lazy(
   () => import("./index-components/table-components/requests-table")
 );
 
+export type TableTab = "current" | "archive";
+
 function ExpertRequestsContent() {
-  const [activeTab, setActiveTab] = useState("current");
+  const [activeTab, setActiveTab] = useState<TableTab>("current");
   const { requests, loading, refreshRequests } = useExpertRequests();
 
   useEffect(() => {
@@ -25,7 +27,7 @@ function ExpertRequestsContent() {
 
   function onTabChange(key: Key | null) {
     if (key === null) setActiveTab("current");
-    else setActiveTab(key as string);
+    else setActiveTab(key as TableTab);
 
     // Reset pagination and refresh with new archive status
     refreshRequests({

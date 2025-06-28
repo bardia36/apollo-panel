@@ -95,7 +95,6 @@ export default function RequestUserSpecialist({
         </div>
 
         <div className="flex flex-wrap justify-between items-center gap-2">
-          {/* TODO: make checkbox required to send reminder message */}
           <Button
             variant="flat"
             size="sm"
@@ -134,20 +133,20 @@ export default function RequestUserSpecialist({
           />
 
           <div className="flex-1">
-            <h6 className="font-semibold">{lead_specialist.username}</h6>
-            {!!lead_specialist.unit && (
-              <div className="flex flex-wrap items-center gap-2 md:gap-6 mt-2 text-content2-foreground text-sm">
-                {/* <div className="flex items-center gap-2">
+            <h6 className="font-semibold">{lead_specialist?.username}</h6>
+            <div className="flex flex-wrap items-center gap-2 md:gap-6 mt-2 text-content2-foreground text-sm">
+              <div className="flex items-center gap-2">
                 <Icon
                   icon="solar:user-id-linear"
                   className="min-w-[18px] h-[18px] text-content4-foreground"
                 />
                 <p>{t("expertRequests.responsibleSpecialist")}</p>
-              </div> */}
-
-                <p>{lead_specialist.unit?.title}</p>
               </div>
-            )}
+
+              {!!lead_specialist?.unit?.title && (
+                <p>{lead_specialist.unit.title}</p>
+              )}
+            </div>
           </div>
         </div>
 
@@ -181,7 +180,7 @@ export default function RequestUserSpecialist({
                   ))}
                 </AvatarGroup>
 
-                {owner.username !== lead_specialist.username && (
+                {owner.username !== lead_specialist?.username && (
                   <Tooltip content={owner.username}>
                     <Avatar
                       key={owner.email}
