@@ -13,6 +13,31 @@ type Color =
   | "warning"
   | "danger";
 
+type ToastClassNames =
+  | "title"
+  | "base"
+  | "wrapper"
+  | "description"
+  | "icon"
+  | "loadingIcon"
+  | "content"
+  | "progressTrack"
+  | "progressIndicator"
+  | "motionDiv"
+  | "closeButton"
+  | "closeIcon";
+
+type ToastVariant = "flat" | "solid" | "bordered";
+
+type Toast = {
+  title: string;
+  message?: string;
+  color: Color;
+  endContent?: ReactNode;
+  variant?: ToastVariant;
+  classNames?: SlotsToClasses<ToastClassNames> | undefined;
+};
+
 export function toast({
   title,
   message,
@@ -20,34 +45,12 @@ export function toast({
   endContent,
   variant,
   classNames,
-}: {
-  title: string;
-  message?: string;
-  color: Color;
-  endContent?: ReactNode;
-  variant?: "flat" | "solid" | "bordered";
-  classNames?:
-    | SlotsToClasses<
-        | "title"
-        | "base"
-        | "wrapper"
-        | "description"
-        | "icon"
-        | "loadingIcon"
-        | "content"
-        | "progressTrack"
-        | "progressIndicator"
-        | "motionDiv"
-        | "closeButton"
-        | "closeIcon"
-      >
-    | undefined;
-}) {
+}: Toast) {
   addToast({
     title,
     description: message,
     color,
-    timeout: 3000,
+    timeout: 8000,
     endContent: endContent,
     shouldShowTimeoutProgress: true,
     variant: variant,
