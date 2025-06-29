@@ -56,7 +56,17 @@ export const SettingsModal = ({ isOpen, onClose }: Props) => {
     false
   );
   const [moreInfoEnabled, setMoreInfoEnabled] = useState(false);
-  const [fields, setFields] = useState<RequestsSetting["more_fields"]>([]);
+  // static fields by default
+  const [fields, setFields] = useState<RequestsSetting["more_fields"]>([
+    { title: "نام کامل", type: "INPUT", active: false },
+    { title: "آدرس کاربر", type: "INPUT", active: false },
+    { title: "شماره موبایل", type: "INPUT", active: false },
+    { title: "تاریخ تولد", type: "INPUT", active: false },
+    { title: "کد ملی کاربر", type: "INPUT", active: false },
+    { title: "کد پستی", type: "INPUT", active: false },
+    { title: "ارزش مورد کارشناسی", type: "INPUT", active: false },
+    { title: "تاریخ انقضای بیمه‌نامه قبلی", type: "INPUT", active: false },
+  ]);
   const [loading, setLoading] = useState(false);
   const [initLoading, setInitLoading] = useState(false);
   const [originalExpiry, setOriginalExpiry] =
@@ -73,32 +83,52 @@ export const SettingsModal = ({ isOpen, onClose }: Props) => {
     setInitLoading(true);
     expertRequestsApi
       .getRequestsSetting()
-      .then((settings) => {
-        setExpiry(settings?.expiration_time || "24H");
-        setOriginalExpiry(settings?.expiration_time || "24H");
-        setTimeout(settings?.photo_deadline || "50");
-        setOriginalTimeout(settings?.photo_deadline || "50");
-        setRandomPicture(settings?.random_picture);
-        setMoreInfoEnabled(!!settings?.more_fields?.length);
-        if (settings?.more_fields) setFields(settings?.more_fields);
+      .then((res) => {
+        setExpiry(res?.expiration_time || "24H");
+        setOriginalExpiry(res?.expiration_time || "24H");
+        setTimeout(res?.photo_deadline || "50");
+        setOriginalTimeout(res?.photo_deadline || "50");
+        setRandomPicture(res?.random_picture);
+        setMoreInfoEnabled(!!res?.more_fields?.length);
+        setFields((prevFields) => {
+          const serverFieldTitles = (res?.more_fields || []).map(
+            (f) => f.title
+          );
+          return (prevFields || []).map((field) => ({
+            ...field,
+            active: serverFieldTitles.includes(field.title),
+          }));
+        });
       })
       .finally(() => setInitLoading(false));
   };
 
-  const updateSetting = async (overwriteBody: Partial<RequestsSetting>) => {
+  const updateSetting = async (body: Partial<RequestsSetting>) => {
     setLoading(true);
     try {
       await expertRequestsApi.updateRequestsSetting({
         expiration_time: expiry,
         photo_deadline: timeout,
         random_picture: randomPicture,
-        more_fields: moreInfoEnabled ? fields || [] : [],
-        ...overwriteBody,
+        ...body,
+        more_fields: prepareMoreFields(body),
       });
       await getSettings();
     } finally {
       setLoading(false);
     }
+  };
+
+  const prepareMoreFields = (body: Partial<RequestsSetting>) => {
+    // Determine which fields to use - either from body or current state
+    const fieldsToCheck = body.more_fields || fields || [];
+
+    // Only send active fields, and only if there are any active ones
+    const activeFields = fieldsToCheck
+      .filter((field) => field.active)
+      .map(({ title, type }) => ({ title, type }));
+
+    return activeFields;
   };
 
   const handleAcceptExpiry = () => {
@@ -111,11 +141,6 @@ export const SettingsModal = ({ isOpen, onClose }: Props) => {
     updateSetting({ photo_deadline: timeout });
   };
 
-  const handleRandomPicture = (val: boolean) => {
-    setRandomPicture(val);
-    updateSetting({ random_picture: val });
-  };
-
   const handleToggleField = (field: MoreField) => {
     setFields((prev) => {
       const updated = prev?.map((f) =>
@@ -124,6 +149,19 @@ export const SettingsModal = ({ isOpen, onClose }: Props) => {
       updateSetting({ more_fields: updated });
       return updated;
     });
+  };
+
+  const handleMoreInfoToggle = (enabled: boolean) => {
+    setMoreInfoEnabled(enabled);
+    if (!enabled) {
+      // When disabling more info, clear the more_fields on the server
+      updateSetting({ more_fields: [] });
+    }
+  };
+
+  const handleRandomPicture = (val: boolean) => {
+    setRandomPicture(val);
+    updateSetting({ random_picture: val });
   };
 
   const onModalClose = () => {
@@ -235,7 +273,7 @@ export const SettingsModal = ({ isOpen, onClose }: Props) => {
                 fields={fields}
                 label={t("expertRequests.moreInfo")}
                 description={t("expertRequests.moreInfoDescription")}
-                onToggle={setMoreInfoEnabled}
+                onToggle={handleMoreInfoToggle}
                 onToggleField={handleToggleField}
               />
             </div>
@@ -390,11 +428,14 @@ const MoreInfoSection = ({
         <div className="text-foreground-700">{label}</div>
         <div className="text-sm text-foreground-500">{description}</div>
       </div>
-      <Switch checked={enabled} onChange={(e) => onToggle(e.target.checked)} />
+      <Switch
+        isSelected={enabled}
+        onChange={(e) => onToggle(e.target.checked)}
+      />
     </div>
 
     {enabled && fields && (
-      <div className="flex flex-wrap gap-2 mt-4">
+      <div className="grid grid-cols-2 gap-2 mt-4">
         {fields.map((field) => (
           <FieldChip
             key={field.title}
