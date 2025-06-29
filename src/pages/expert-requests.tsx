@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { t } from "i18next";
 import { useBreadcrumb } from "@/contexts/breadcrumbContext";
-import ExpertRequests from "@/components/expert-requests";
+import ExpertRequests from "@/components/expert-requests/index-components";
 
 export default function ExpertRequestsPage() {
   const { setLinks } = useBreadcrumb();

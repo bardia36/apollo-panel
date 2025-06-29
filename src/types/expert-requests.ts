@@ -415,7 +415,7 @@ export type RequestsSetting = {
   more_fields?: {
     title: string;
     type: "INPUT" | "SELECT" | "CHECKBOX" | "RADIO" | "DATE" | "TIME";
-    active?: boolean;
+    active?: boolean; // for ui usages
   }[];
 };
 

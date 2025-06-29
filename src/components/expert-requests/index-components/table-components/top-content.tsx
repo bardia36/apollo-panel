@@ -15,7 +15,7 @@ import { AppInput } from "@/components/shared/app-components/app-input";
 import { exportToExcel } from "@/utils/excel";
 import { columns, statusesMap, statusOptions } from "../../constants";
 import { formatDate } from "@/utils/base";
-import { ReportModal } from "./report/report-modal";
+import { ReportModal } from "../report-modal";
 
 type TopContentProps = {
   filterValue: string;
@@ -29,6 +29,7 @@ type TopContentProps = {
   onRowsPerPageChange: (value: number) => void;
   setSelectedKeys: (value: Set<string>) => void;
   onSendToArchive: () => void;
+  activeTab: string;
 };
 
 export const TopContent = ({
@@ -43,6 +44,7 @@ export const TopContent = ({
   onRowsPerPageChange,
   setSelectedKeys,
   onSendToArchive,
+  activeTab,
 }: TopContentProps) => {
   const perPageNumbers = [5, 10, 15, 20];
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
@@ -194,21 +196,23 @@ export const TopContent = ({
                 {t("shared.discardSelections")}
               </DropdownItem>
 
-              <DropdownItem
-                key="send-to-archive"
-                startContent={
-                  <Icon
-                    icon="solar:bookmark-circle-bold"
-                    width={18}
-                    height={18}
-                    className="text-default-600"
-                  />
-                }
-                className="hover:bg-default-200 text-default-foreground"
-                onPress={() => onSendToArchive()}
-              >
-                {t("expertRequests.sendToArchive")}
-              </DropdownItem>
+              {activeTab !== "archive" ? (
+                <DropdownItem
+                  key="send-to-archive"
+                  startContent={
+                    <Icon
+                      icon="solar:bookmark-circle-bold"
+                      width={18}
+                      height={18}
+                      className="text-default-600"
+                    />
+                  }
+                  className="hover:bg-default-200 text-default-foreground"
+                  onPress={() => onSendToArchive()}
+                >
+                  {t("expertRequests.sendToArchive")}
+                </DropdownItem>
+              ) : null}
             </DropdownMenu>
           </Dropdown>
 

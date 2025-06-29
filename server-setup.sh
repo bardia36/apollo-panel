@@ -178,7 +178,7 @@ cd $DEPLOY_DIR
 if [[ ! -d ".git" ]]; then
     log "Cloning repository..."
     # Note: You'll need to update this with your actual repository URL
-    # git clone https://github.com/your-username/apollo-panel.git .
+    # git clone https://github.com/bardia36/apollo-panel.git .
     log "Please clone your repository to $DEPLOY_DIR"
 fi
 

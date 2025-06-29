@@ -1,10 +1,13 @@
-# 🚀 Apollo Panel - Insurance System Management
+# 🚀 Apollo Panel - Review Request Management
+
 
 <div align="center">
 
-![Apollo Logo](src/assets/images/logo/logo.webp)
+<br>
+<img src="src/assets/images/logo/apollo-coin.png" alt="Apollo Logo" width="400"/>
+<br>
 
-**We are Apollo, we help you to have a better insurance system management.**
+**We are Apollo — providing advanced, high-tech solutions to enhance review and inspection services in the insurance industry.**
 
 [![Vite](https://img.shields.io/badge/Vite-5.4.19-646CFF?style=for-the-badge&logo=vite)](https://vitejs.dev/)
 [![React](https://img.shields.io/badge/React-18.3.1-61DAFB?style=for-the-badge&logo=react)](https://reactjs.org/)
@@ -34,7 +37,7 @@
 - [🔒 Authentication & Security](#-authentication--security)
 - [📊 Expert Requests Management](#-expert-requests-management)
 - [🚀 Deployment](#-deployment)
-- [🤝 Contributing](#-contributing)
+- [🤝 Contributors](#-contributors)
 - [📄 License](#-license)
 
 ---
@@ -133,7 +136,7 @@ Apollo Panel is a modern, comprehensive insurance system management platform bui
 ## 📁 Project Structure
 
 ```
-apollo-panel-1/
+apollo-panel/
 ├── 📁 src/
 │   ├── 📁 apis/                    # API service layer
 │   │   ├── auth.ts                 # Authentication API
@@ -229,8 +232,8 @@ apollo-panel-1/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/apollo-panel-1.git
-   cd apollo-panel-1
+   git clone https://github.com/bardia36/apollo-panel.git
+   cd apollo-panel
    ```
 
 2. **Install dependencies**
@@ -244,7 +247,6 @@ apollo-panel-1/
    # Using pnpm
    pnpm install
    ```
-
 3. **Environment Setup**
    Create a `.env` file in the root directory:
    ```env
@@ -493,72 +495,70 @@ docker-compose up -d
 
 ### Ubuntu Server Deployment
 
-For production deployment on Ubuntu servers, we provide automated setup scripts:
+For production deployment on Ubuntu servers, we provide automated setup scripts.
 
-#### 1. Initial Server Setup
+#### 1. Clone Repository and Initial Setup
+
+First, clone the repository to your server:
 ```bash
-# Download and run the server setup script
-curl -fsSL https://raw.githubusercontent.com/your-username/apollo-panel/main/server-setup.sh | sudo bash
-
-# Or clone the repository and run locally
-git clone https://github.com/your-username/apollo-panel.git
+git clone https://github.com/bardia36/apollo-panel.git
 cd apollo-panel
+```
+
+#### 2. Configure Environment
+
+Create a `.env` file from the example and configure it with your production settings:
+```bash
+cp env.example .env
+nano .env  # Or your preferred editor
+```
+
+Make sure to set the correct values for your API servers, ports, and SSL configuration.
+
+#### 3. Run Initial Server Setup
+
+The `server-setup.sh` script prepares the server by installing Docker, Nginx, and other dependencies.
+```bash
 sudo ./server-setup.sh
 ```
 
-The setup script will:
-- Update system packages
-- Install Node.js, Docker, and Docker Compose
-- Configure firewall (UFW)
-- Set up nginx reverse proxy
-- Create systemd service for auto-restart
-- Configure deployment directory
+This script only needs to be run once on a new server.
 
-#### 2. Deploy Application
+#### 4. Deploy the Application
+
+The `deploy.sh` script will pull the latest code, build the Docker image, and start the services.
 ```bash
-# Navigate to deployment directory
-cd /opt/apollo-panel
-
-# Clone your repository (update URL)
-git clone https://github.com/your-username/apollo-panel.git .
-
-# Run deployment
 sudo ./deploy.sh
 ```
 
-#### 3. Production Configuration
-For production deployment, use the production docker-compose file:
-```bash
-# Use production configuration
-docker-compose -f docker-compose.prod.yml up -d
-```
+Use this script whenever you want to deploy new updates.
 
-#### 4. Server Management
+#### 5. Server Management and Logs
+
+After deployment, you can manage the application using standard Docker commands:
 ```bash
-# Check service status
-sudo systemctl status apollo-panel
+# View container status
+docker ps
 
 # View application logs
 docker logs frontend-apollo
 
-# Restart application
-sudo systemctl restart apollo-panel
-
-# Check firewall status
-sudo ufw status
+# Monitor resource usage
+docker stats
 ```
 
-#### 5. SSL/HTTPS Setup (Optional)
+For a complete server restart, you can use the systemd service:
 ```bash
-# Install Certbot for Let's Encrypt
-sudo apt install certbot python3-certbot-nginx
+sudo systemctl restart apollo-panel
+```
 
-# Get SSL certificate
-sudo certbot --nginx -d yourdomain.com
+#### 6. SSL/HTTPS Setup
 
-# Auto-renewal
-sudo crontab -e
-# Add: 0 12 * * * /usr/bin/certbot renew --quiet
+The `server-setup.sh` script will automatically handle the SSL setup with Let's Encrypt if you configure your domain.
+
+To manually renew SSL certificates:
+```bash
+sudo certbot renew
 ```
 
 ### Environment Variables
@@ -584,35 +584,40 @@ VITE_APP_SSL=true
 
 ---
 
-## 🤝 Contributing
+## 🤝 Contributors
 
-We welcome contributions! Please follow these guidelines:
-
-### Development Workflow
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
-
-### Code Standards
-- Follow TypeScript best practices
-- Write meaningful commit messages
-- Add tests for new features
-- Update documentation as needed
-- Follow the existing code style
-
-### Pull Request Guidelines
-- Provide a clear description of changes
-- Include screenshots for UI changes
-- Ensure all tests pass
-- Update relevant documentation
+<p align="center">
+  <a href="https://github.com/bardia36" style="display: inline-block; text-align: center; margin: 0 15px;">
+    <img src="https://github.com/bardia36.png?size=200" width="100" alt="Bardia Javadi" style="border-radius: 50%;" />
+    <br />
+    <sub style="font-size: 14px;"><b>Bardia Javadi</b></sub>
+  </a>
+  <a href="https://github.com/matinshamsaei" style="display: inline-block; text-align: center; margin: 0 15px;">
+    <img src="https://github.com/matinshamsaei.png?size=200" width="100" alt="Matin Shamsaei" style="border-radius: 50%;" />
+    <br />
+    <sub style="font-size: 14px;"><b>Matin Shamsaei</b></sub>
+  </a>
+  <a href="https://github.com/alirezaporyegane" style="display: inline-block; text-align: center; margin: 0 15px;">
+    <img src="https://github.com/alirezaporyegane.png?size=200" width="100" alt="Alireza Pouryegane" style="border-radius: 50%;" />
+    <br />
+    <sub style="font-size: 14px;"><b>Alireza Pouryegane</b></sub>
+  </a>
+  <a href="https://www.linkedin.com/in/niliyamkan/" style="display: inline-block; text-align: center; margin: 0 15px;">
+    <img src="https://www.gravatar.com/avatar/?d=mp&s=200" width="100" alt="Niloufar Yamkan" style="border-radius: 50%;" />
+    <br />
+    <sub style="font-size: 14px;"><b>Niloufar Yamkan</b></sub>
+  </a>
+</p>
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This software is **proprietary** and not open source. All rights are reserved.
+
+Apollo Panel is provided to clients under a commercial license agreement. If you are an enterprise customer or interested in using Apollo Panel, please contact us for licensing terms and deployment options.
+
+For more information, reach out to: [Bardia@Javadi.it]
 
 ---
 
@@ -629,7 +634,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Made with ❤️ by the Apollo Team**
 
-[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/your-username)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/your-profile)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/bardia36)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/apollogram)
 
 </div>
+
+

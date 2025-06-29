@@ -1,10 +1,8 @@
 import { Template } from "@/types/templates";
 import { Skeleton } from "@heroui/react";
 import { lazy, Suspense } from "react";
-import { ExistedTemplateHeader } from "./headers/existed-template-header.tsx";
-const NewTemplateHeader = lazy(
-  () => import("./headers/new-template-header.tsx")
-);
+import { ExistedTemplateHeader } from "./existed-template-header.tsx";
+const NewTemplateHeader = lazy(() => import("./new-template-header.tsx"));
 
 type TemplateDetailsHeaderProps = {
   isOnAddingTemplate: boolean;
@@ -32,9 +30,7 @@ export const TemplateDetailsHeader = ({
             </Skeleton>
           }
         >
-          <NewTemplateHeader
-            onPropertyChange={onNewTemplatePropertyChange}
-          />
+          <NewTemplateHeader onPropertyChange={onNewTemplatePropertyChange} />
         </Suspense>
       ) : (
         <>
