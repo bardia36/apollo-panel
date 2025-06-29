@@ -9,9 +9,9 @@ import { useCookies } from "react-cookie";
 
 const tryWithoutToken = [425];
 const statusConfig = {
-  loginRedirect: [406, 407, 401, 403],
+  // loginRedirect: [406, 407, 401, 403],
   logout: [406, 407, 401, 403, 425, 502],
-  failed: [500, 501, 502, 503, 504],
+  // failed: [500, 501, 502, 503, 504],
 };
 
 function requestConfig(
@@ -107,7 +107,11 @@ async function errorHandler(
   throw error.data;
 }
 
+let isLoggingOut = false;
+
 async function handleLogout() {
+  if (isLoggingOut) return;
+  isLoggingOut = true;
   try {
     await accountApi.logout();
   } catch (error) {
@@ -117,5 +121,6 @@ async function handleLogout() {
     removeCookie("AUTH");
     useAuthStore.getState().removeAuth();
     window.location.href = "/login";
+    isLoggingOut = false;
   }
 }
