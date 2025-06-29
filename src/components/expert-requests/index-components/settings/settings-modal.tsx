@@ -59,6 +59,10 @@ export const SettingsModal = ({ isOpen, onClose }: Props) => {
   const [fields, setFields] = useState<RequestsSetting["more_fields"]>([]);
   const [loading, setLoading] = useState(false);
   const [initLoading, setInitLoading] = useState(false);
+  const [originalExpiry, setOriginalExpiry] =
+    useState<SettingExpirationTime>("24H");
+  const [originalTimeout, setOriginalTimeout] =
+    useState<SettingPhotoDeadline>("50");
 
   useEffect(() => {
     getSettings();
@@ -71,7 +75,9 @@ export const SettingsModal = ({ isOpen, onClose }: Props) => {
       .getRequestsSetting()
       .then((settings) => {
         setExpiry(settings?.expiration_time || "24H");
+        setOriginalExpiry(settings?.expiration_time || "24H");
         setTimeout(settings?.photo_deadline || "50");
+        setOriginalTimeout(settings?.photo_deadline || "50");
         setRandomPicture(settings?.random_picture);
         setMoreInfoEnabled(!!settings?.more_fields?.length);
         if (settings?.more_fields) setFields(settings?.more_fields);
@@ -162,7 +168,10 @@ export const SettingsModal = ({ isOpen, onClose }: Props) => {
                 label={t("expertRequests.requestExpiry")}
                 description={t("expertRequests.requestExpiryDescription")}
                 editMode={editExpiry}
-                onEdit={() => setEditExpiry(true)}
+                onEdit={() => {
+                  setOriginalExpiry(expiry);
+                  setEditExpiry(true);
+                }}
                 onAccept={handleAcceptExpiry}
                 viewContent={
                   REQUEST_EXPIRY_OPTIONS.find((o) => o.value === expiry)?.label
@@ -175,13 +184,17 @@ export const SettingsModal = ({ isOpen, onClose }: Props) => {
                     onChange={(val) => setExpiry(val as SettingExpirationTime)}
                   />
                 }
+                showAccept={expiry !== originalExpiry}
               />
 
               <EditFieldRow
                 label={t("expertRequests.photoTimeout")}
                 description={t("expertRequests.photoTimeoutDescription")}
                 editMode={editTimeout}
-                onEdit={() => setEditTimeout(true)}
+                onEdit={() => {
+                  setOriginalTimeout(timeout);
+                  setEditTimeout(true);
+                }}
                 onAccept={handleAcceptTimeout}
                 viewContent={
                   <>
@@ -196,6 +209,7 @@ export const SettingsModal = ({ isOpen, onClose }: Props) => {
                     onChange={(val) => setTimeout(val as SettingPhotoDeadline)}
                   />
                 }
+                showAccept={timeout !== originalTimeout}
               />
 
               <div className="flex items-center gap-4 p-4 bg-default-100 rounded-xl">
@@ -241,6 +255,7 @@ const EditFieldRow = ({
   editContent,
   onEdit,
   onAccept,
+  showAccept = false,
 }: {
   label: string;
   description: string;
@@ -249,6 +264,7 @@ const EditFieldRow = ({
   editContent: ReactNode;
   onEdit: () => void;
   onAccept: () => void;
+  showAccept?: boolean;
 }) => (
   <div className="flex items-center gap-4 p-4 bg-default-100 rounded-xl">
     <div className="flex-1">
@@ -261,19 +277,21 @@ const EditFieldRow = ({
     {editMode ? (
       <div className="flex items-center gap-2">
         {editContent}
-        <Button
-          isIconOnly
-          radius="full"
-          className="bg-primary text-foreground-50 shadow-lg shadow-neutral"
-          onPress={onAccept}
-        >
-          <Icon
-            icon="material-symbols:check"
-            className="min-w-5"
-            width={20}
-            height={20}
-          />
-        </Button>
+        {showAccept && (
+          <Button
+            isIconOnly
+            radius="full"
+            className="bg-primary text-foreground-50 shadow-lg shadow-neutral"
+            onPress={onAccept}
+          >
+            <Icon
+              icon="material-symbols:check"
+              className="min-w-5"
+              width={20}
+              height={20}
+            />
+          </Button>
+        )}
       </div>
     ) : (
       <Button
