@@ -1,7 +1,10 @@
 import { forwardRef, ChangeEvent, useRef, useEffect, useState } from "react";
 import { Input, InputProps } from "@heroui/react";
 import { FieldError } from "react-hook-form";
-import { convertPersianToEnglishNumbers } from "@/utils/base";
+import {
+  convertPersianToEnglishNumbers,
+  convertEnglishToPersianNumbers,
+} from "@/utils/base";
 
 export interface Props extends InputProps {
   error?: FieldError;
@@ -45,10 +48,8 @@ export const AppInput = forwardRef<HTMLInputElement, Props>(
     };
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-      if (e.target.value) {
-        // Convert Persian/Arabic numbers to English numbers
+      if (e.target.value)
         e.target.value = convertPersianToEnglishNumbers(e.target.value);
-      }
 
       // Update internal value immediately for UI responsiveness
       setInternalValue(e.target.value);
@@ -67,7 +68,11 @@ export const AppInput = forwardRef<HTMLInputElement, Props>(
       <Input
         ref={ref}
         {...props}
-        value={internalValue}
+        value={
+          typeof internalValue === "string"
+            ? convertEnglishToPersianNumbers(internalValue)
+            : internalValue
+        }
         radius="md"
         isInvalid={isInvalid}
         errorMessage={errorMessage}
