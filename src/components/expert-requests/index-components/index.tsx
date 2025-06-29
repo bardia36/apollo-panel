@@ -320,7 +320,7 @@ function ExpertRequestsContent() {
     <>
       <div className="lg:px-4">
         <Suspense fallback={<Loading />}>
-          <TitleActions requestsCount={requests.totalDocs} />
+          <TitleActions />
           <TableTypeTabs activeTab={activeTab} onChange={onTabChange} />
         </Suspense>
       </div>

@@ -15,13 +15,16 @@ import {
 import { TemplatesModal } from "./templates";
 import { CreateRequestModal } from "../create-request";
 import { Settings } from "./settings";
+import { useQuery } from "@tanstack/react-query";
+import { expertRequestsApi } from "@/apis/expert-requests";
 
-type Props = {
-  requestsCount: number;
-};
-
-export default ({ requestsCount }: Props) => {
+export default () => {
   const { theme } = useTheme();
+
+  const { data: pendingRequestsCount } = useQuery({
+    queryKey: ["expert-requests-count"],
+    queryFn: () => expertRequestsApi.getRequestsCount({ status: "PENDING" }),
+  });
 
   return (
     <div className="pt-3 mb-4 flex justify-between">
@@ -43,11 +46,13 @@ export default ({ requestsCount }: Props) => {
               <strong>{t("expertRequests.requests")}</strong>
             </h1>
 
-            <Badge
-              content={requestsCount}
-              children
-              className="bg-default-foreground text-background"
-            />
+            {!!pendingRequestsCount && (
+              <Badge
+                content={pendingRequestsCount}
+                children
+                className="bg-default-foreground text-background"
+              />
+            )}
           </div>
 
           <p className="hidden lg:block text-foreground-500 mt-2.5">
