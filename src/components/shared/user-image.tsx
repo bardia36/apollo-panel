@@ -1,11 +1,16 @@
-import { Image } from "@heroui/react";
-import logoIcon from "@/assets/images/logo/logo-icon.webp";
+import { Avatar, SlotsToClasses } from "@heroui/react";
 
-export default function ({ imgClass }: { imgClass?: string }) {
+export default function ({
+  classNames,
+}: {
+  classNames?:
+    | SlotsToClasses<"base" | "img" | "name" | "icon" | "fallback">
+    | undefined;
+}) {
   return (
     // TODO: get user image and name from auth store
     <div className="p-2">
-      <Image src={logoIcon} alt="user's name" classNames={{ img: imgClass }} />
+      <Avatar alt="user's image" classNames={classNames} />
     </div>
   );
 }

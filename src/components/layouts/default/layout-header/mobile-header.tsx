@@ -13,7 +13,7 @@ export default function MobileHeader() {
   return (
     <div className="flex lg:hidden items-center justify-between w-full h-12 mb-4">
       <div className="flex items-center">
-        <UserImage imgClass="w-8 h-8" />
+        <UserImage classNames={{ base: "w-8 h-8" }} />
         <div className="p-2">
           <Icon
             icon="lineicons:gear-1"
@@ -25,7 +25,7 @@ export default function MobileHeader() {
       </div>
 
       <div className="flex items-center">
-        <LogoIcon classNames={{ img: "h-[2.625rem]" }} />
+        <LogoIcon classNames={{ img: "h-[2.625rem] rounded-full" }} />
 
         <button
           className="p-2.5 ms-2"
