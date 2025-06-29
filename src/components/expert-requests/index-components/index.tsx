@@ -187,6 +187,7 @@ function ExpertRequestsContent() {
           onRowsPerPageChange={handleRowsPerPageChange}
           setSelectedKeys={setSelectedKeys}
           onSendToArchive={onSendToArchive}
+          activeTab={activeTab}
         />
       </>
     );
@@ -197,6 +198,7 @@ function ExpertRequestsContent() {
     handleRowsPerPageChange,
     requests.docs,
     onSearchChange,
+    activeTab,
   ]);
   // - top content
 

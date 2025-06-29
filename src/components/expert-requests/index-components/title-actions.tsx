@@ -46,13 +46,11 @@ export default () => {
               <strong>{t("expertRequests.requests")}</strong>
             </h1>
 
-            {!!pendingRequestsCount && (
-              <Badge
-                content={pendingRequestsCount}
-                children
-                className="bg-default-foreground text-background"
-              />
-            )}
+            <Badge
+              content={pendingRequestsCount || 0}
+              children
+              className="bg-default-foreground text-background"
+            />
           </div>
 
           <p className="hidden lg:block text-foreground-500 mt-2.5">
