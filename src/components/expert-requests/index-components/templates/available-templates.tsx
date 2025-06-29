@@ -2,7 +2,7 @@ import { Template, Templates } from "@/types/templates";
 import { Avatar, Button, cn } from "@heroui/react";
 import { t } from "i18next";
 import { LazyImage } from "@/components/shared/lazy-image";
-import { AddTemplateButton } from "./components/add-template-button";
+import { AddTemplateButton } from "./add-template-button";
 
 type Props = {
   templates: Templates;

@@ -40,7 +40,7 @@ import { columns, statusOptions } from "../constants";
 import { TopContent } from "./table-components/top-content";
 import { BottomContent } from "./table-components/bottom-content";
 import Loading from "@/components/shared/loading";
-const TitleActions = lazy(() => import("./table-components/title-actions"));
+const TitleActions = lazy(() => import("./title-actions"));
 const TableTypeTabs = lazy(() => import("./table-components/table-type-tabs"));
 
 export type TableTab = "current" | "archive";

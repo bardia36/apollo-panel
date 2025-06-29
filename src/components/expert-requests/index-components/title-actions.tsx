@@ -12,9 +12,9 @@ import {
   Badge,
   Image,
 } from "@heroui/react";
-import { TemplatesModal } from "../templates";
-import { CreateRequestModal } from "../../create-request";
-import { Settings } from "../settings";
+import { TemplatesModal } from "./templates";
+import { CreateRequestModal } from "../create-request";
+import { Settings } from "./settings";
 
 type Props = {
   requestsCount: number;
