@@ -32,12 +32,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# Lock files (keep only one)
-pnpm-lock.yaml
-yarn.lock
-package-lock.json
-bun.lockb
-
 # Security and sensitive files
 *-mock.ts
 *.pem

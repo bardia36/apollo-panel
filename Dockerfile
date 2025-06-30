@@ -10,12 +10,17 @@ RUN npm install -g audit-ci
 FROM node:20.12.0-alpine3.19 AS buildenv
 RUN addgroup app && adduser -S -G app app
 WORKDIR /app
-RUN chmod 777 /app
-USER app
+
+# Copy package files first
 COPY package*.json ./
-# Install dependencies without running postinstall scripts to avoid security audit failure
-RUN npm install --ignore-scripts
-COPY . .
+RUN chown -R app:app /app
+
+# Switch to app user and install dependencies
+USER app
+RUN npm ci --ignore-scripts
+
+# Copy source code and build
+COPY --chown=app:app . .
 
 # Set environment variables for build time (Vite needs these at build time)
 ENV VITE_APP_SSL=false
