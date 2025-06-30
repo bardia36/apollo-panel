@@ -36,13 +36,37 @@ if ! command -v docker &> /dev/null; then
     error "Docker is not installed. Please install Docker first."
 fi
 
+# Check Docker permissions and try to fix if needed
 if ! docker info > /dev/null 2>&1; then
-    error "Docker service is not running or permission denied."
+    warn "Docker permission denied. Attempting to fix..."
+    
+    # Try to add current user to docker group if not already
+    if ! groups $USER | grep -q docker; then
+        warn "User $USER is not in docker group. This might require server setup."
+        log "Run this on the server: sudo usermod -aG docker $USER && newgrp docker"
+    fi
+    
+    # Try with sudo as fallback for this one command
+    if sudo docker info > /dev/null 2>&1; then
+        warn "Docker works with sudo. Using sudo for docker commands..."
+        DOCKER_CMD="sudo docker"
+        DOCKER_COMPOSE_CMD="sudo docker-compose"
+    else
+        error "Docker service is not running or permission denied."
+    fi
+else
+    DOCKER_CMD="docker"
+    DOCKER_COMPOSE_CMD="docker-compose"
 fi
 
 # Check if Docker Compose is available
 if ! command -v docker-compose &> /dev/null && ! docker compose version &> /dev/null; then
     error "Docker Compose is not available."
+fi
+
+# Use docker compose if docker-compose not available
+if ! command -v docker-compose &> /dev/null; then
+    DOCKER_COMPOSE_CMD="$DOCKER_CMD compose"
 fi
 
 # Check if required files exist
@@ -81,21 +105,21 @@ fi
 
 # Step 3: Create backup
 log "3/6 - Creating backup of current deployment..."
-if docker ps -q -f name=frontend-apollo | grep -q .; then
-    docker tag apollo-panel:latest apollo-panel:backup-$(date +%Y%m%d-%H%M%S) 2>/dev/null || true
+if $DOCKER_CMD ps -q -f name=frontend-apollo | grep -q .; then
+    $DOCKER_CMD tag apollo-panel:latest apollo-panel:backup-$(date +%Y%m%d-%H%M%S) 2>/dev/null || true
     log "Backup created successfully"
 fi
 
 # Step 4: Stop existing containers
 log "4/6 - Stopping existing containers..."
-docker-compose down -v 2>/dev/null || docker compose down -v 2>/dev/null || true
-docker stop frontend-apollo 2>/dev/null || true
-docker rm frontend-apollo 2>/dev/null || true
+$DOCKER_COMPOSE_CMD down -v 2>/dev/null || $DOCKER_CMD compose down -v 2>/dev/null || true
+$DOCKER_CMD stop frontend-apollo 2>/dev/null || true
+$DOCKER_CMD rm frontend-apollo 2>/dev/null || true
 
 # Step 5: Build and deploy
 log "5/6 - Building and deploying new version..."
-if ! docker-compose up --build -d 2>/dev/null; then
-    if ! docker compose up --build -d; then
+if ! $DOCKER_COMPOSE_CMD up --build -d 2>/dev/null; then
+    if ! $DOCKER_CMD compose up --build -d; then
         error "Failed to start new containers"
     fi
 fi
@@ -105,7 +129,7 @@ log "6/6 - Verifying deployment..."
 sleep 30  # Wait longer for container to fully start
 
 # Check if container is running
-if docker ps -q -f name=frontend-apollo | grep -q .; then
+if $DOCKER_CMD ps -q -f name=frontend-apollo | grep -q .; then
     log "✅ Container is running"
     
     # Check if service is responding
@@ -115,7 +139,7 @@ if docker ps -q -f name=frontend-apollo | grep -q .; then
             break
         elif [[ $i -eq 10 ]]; then
             warn "Service may not be responding correctly"
-            docker logs frontend-apollo --tail=20
+            $DOCKER_CMD logs frontend-apollo --tail=20
         else
             log "Waiting for service to respond... (attempt $i/10)"
             sleep 10
@@ -127,16 +151,16 @@ fi
 
 # Cleanup old images
 log "Cleaning up old images..."
-docker image prune -f || true
-docker container prune -f || true
+$DOCKER_CMD image prune -f || true
+$DOCKER_CMD container prune -f || true
 
 # Cleanup old backups (keep last 3)
-docker images apollo-panel:backup-* --format "table {{.Repository}}:{{.Tag}}\t{{.CreatedAt}}" | \
-    tail -n +4 | awk '{print $1}' | xargs -r docker rmi 2>/dev/null || true
+$DOCKER_CMD images apollo-panel:backup-* --format "table {{.Repository}}:{{.Tag}}\t{{.CreatedAt}}" | \
+    tail -n +4 | awk '{print $1}' | xargs -r $DOCKER_CMD rmi 2>/dev/null || true
 
 log "🎉 CI/CD deployment completed successfully!"
 log "Application is available at: http://$(hostname -I | awk '{print $1}'):3000"
 
 # Show final status
 log "Final container status:"
-docker ps --filter name=frontend-apollo --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" 
+$DOCKER_CMD ps --filter name=frontend-apollo --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" 
