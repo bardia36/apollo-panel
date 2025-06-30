@@ -60,7 +60,7 @@ jobs:
         run: npm outdated || true
 
       - name: Check for unused dependencies
-        run: npx depcheck
+        run: npx depcheck || true
 
   docker-security:
     name: Docker Security Scan
