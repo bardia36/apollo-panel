@@ -144,7 +144,12 @@ fi
 
 # Step 5: Build new image
 log "5/9 - Building new Docker image..."
-if ! docker build . -t apollo-panel:latest; then
+BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+GIT_COMMIT=$(git rev-parse HEAD)
+export BUILD_DATE
+export GIT_COMMIT
+
+if ! docker build . -t apollo-panel:latest --no-cache --build-arg BUILD_DATE="$BUILD_DATE" --build-arg GIT_COMMIT="$GIT_COMMIT"; then
     error "Failed to build Docker image"
 fi
 
@@ -164,8 +169,20 @@ if ! docker-compose down -v 2>/dev/null; then
     docker compose down -v 2>/dev/null || true
 fi
 
-if ! docker-compose up --build -d 2>/dev/null; then
-    if ! docker compose up --build -d; then
+# Force rebuild without cache using docker-compose
+BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+GIT_COMMIT=$(git rev-parse HEAD)
+export BUILD_DATE
+export GIT_COMMIT
+
+if ! BUILD_DATE="$BUILD_DATE" GIT_COMMIT="$GIT_COMMIT" docker-compose build --no-cache 2>/dev/null; then
+    if ! BUILD_DATE="$BUILD_DATE" GIT_COMMIT="$GIT_COMMIT" docker compose build --no-cache; then
+        error "Failed to build containers"
+    fi
+fi
+
+if ! docker-compose up -d 2>/dev/null; then
+    if ! docker compose up -d; then
         error "Failed to start new containers"
     fi
 fi

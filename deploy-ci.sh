@@ -110,16 +110,46 @@ if $DOCKER_CMD ps -q -f name=frontend-apollo | grep -q .; then
     log "Backup created successfully"
 fi
 
-# Step 4: Stop existing containers
-log "4/6 - Stopping existing containers..."
+# Step 4: Stop existing containers and cleanup
+log "4/6 - Stopping existing containers and cleaning up..."
 $DOCKER_COMPOSE_CMD down -v 2>/dev/null || $DOCKER_CMD compose down -v 2>/dev/null || true
 $DOCKER_CMD stop frontend-apollo 2>/dev/null || true
 $DOCKER_CMD rm frontend-apollo 2>/dev/null || true
 
+# Remove old images to force fresh build
+log "Removing old images to ensure fresh build..."
+$DOCKER_CMD rmi apollo-panel:latest 2>/dev/null || true
+$DOCKER_CMD rmi apollo-panel_frontend-apollo 2>/dev/null || true
+$DOCKER_CMD system prune -f || true
+
 # Step 5: Build and deploy
 log "5/6 - Building and deploying new version..."
-if ! $DOCKER_COMPOSE_CMD up --build -d 2>/dev/null; then
-    if ! $DOCKER_CMD compose up --build -d; then
+
+# Set build arguments for cache busting
+BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+GIT_COMMIT=$(git rev-parse HEAD)
+export BUILD_DATE
+export GIT_COMMIT
+
+# Export environment variables for build args
+export VITE_APP_SSL=${VITE_APP_SSL:-false}
+export VITE_APP_PORT=${VITE_APP_PORT:-9000}
+export VITE_APP_API_SERVER=${VITE_APP_API_SERVER:-91.107.181.185:8090}
+export VITE_APP_AUTHENTICATION_API_SERVER=${VITE_APP_AUTHENTICATION_API_SERVER:-91.107.181.185:8080}
+export VITE_APP_FILE_SERVER=${VITE_APP_FILE_SERVER:-91.107.181.185:8007}
+export VITE_APP_STATIC_SERVER=${VITE_APP_STATIC_SERVER:-91.107.181.185:8090}
+
+# Force rebuild without cache
+log "Building with no cache to ensure fresh deployment..."
+if ! BUILD_DATE="$BUILD_DATE" GIT_COMMIT="$GIT_COMMIT" $DOCKER_COMPOSE_CMD build --no-cache 2>/dev/null; then
+    if ! BUILD_DATE="$BUILD_DATE" GIT_COMMIT="$GIT_COMMIT" $DOCKER_CMD compose build --no-cache; then
+        error "Failed to build containers"
+    fi
+fi
+
+# Start the containers
+if ! $DOCKER_COMPOSE_CMD up -d 2>/dev/null; then
+    if ! $DOCKER_CMD compose up -d; then
         error "Failed to start new containers"
     fi
 fi
