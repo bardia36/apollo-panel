@@ -8,8 +8,18 @@ RUN npm install -g audit-ci
 
 # Build stage
 FROM node:20.12.0-alpine3.19 AS buildenv
+
+# Build arguments for cache busting
+ARG BUILD_DATE
+ARG GIT_COMMIT
+ARG BUILDKIT_INLINE_CACHE
+
 RUN addgroup app && adduser -S -G app app
 WORKDIR /app
+
+# Add labels for better tracking
+LABEL build_date=$BUILD_DATE
+LABEL git_commit=$GIT_COMMIT
 
 # Copy package files first
 COPY package*.json ./
@@ -23,12 +33,13 @@ RUN npm ci --ignore-scripts
 COPY --chown=app:app . .
 
 # Set environment variables for build time (Vite needs these at build time)
-ENV VITE_APP_SSL=false
-ENV VITE_APP_PORT=9000
-ENV VITE_APP_API_SERVER=91.107.181.185:8090
-ENV VITE_APP_AUTHENTICATION_API_SERVER=91.107.181.185:8080
-ENV VITE_APP_FILE_SERVER=91.107.181.185:8007
-ENV VITE_APP_STATIC_SERVER=91.107.181.185:8090
+# Use build arguments to allow customization
+ENV VITE_APP_SSL=$VITE_APP_SSL
+ENV VITE_APP_PORT=$VITE_APP_PORT
+ENV VITE_APP_API_SERVER=$VITE_APP_API_SERVER
+ENV VITE_APP_AUTHENTICATION_API_SERVER=$VITE_APP_AUTHENTICATION_API_SERVER
+ENV VITE_APP_FILE_SERVER=$VITE_APP_FILE_SERVER
+ENV VITE_APP_STATIC_SERVER=$VITE_APP_STATIC_SERVER
 
 RUN npm run build
 
