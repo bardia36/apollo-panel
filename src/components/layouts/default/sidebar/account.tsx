@@ -38,7 +38,7 @@ export default function Account() {
   return (
     <div className="flex flex-wrap justify-between items-center gap-4 mt-6">
       <div className="flex items-center">
-        <UserImage imgClass="min-w-10 w-10 min-h-10 h-10" />
+        <UserImage classNames={{ base: "min-w-10 w-10 min-h-10 h-10" }} />
 
         <div>
           {auth?.profile.username && <p className="text-foreground text-small">{truncateString(auth?.profile.username, 15)}</p>}

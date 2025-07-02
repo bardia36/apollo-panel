@@ -19,6 +19,7 @@ import { exceptionHandler } from "@/apis/exception";
 import CopyButton from "@/components/shared/copy-button";
 import { truncateString } from "@/utils/base";
 import useWorkspaceStore from "@/stores/workspace-store";
+import { TableTab } from "../index";
 
 export const RenderCodeCell = ({
   code,
@@ -168,7 +169,13 @@ export const RenderTagsCell = ({
   </>
 );
 
-export const RenderActionsCell = ({ id }: { id: ExpertRequestInfo["_id"] }) => {
+export const RenderActionsCell = ({
+  id,
+  activeTab,
+}: {
+  id: ExpertRequestInfo["_id"];
+  activeTab: TableTab;
+}) => {
   const { refreshRequests } = useExpertRequests();
   const { workspaceSlug } = useWorkspaceStore();
   const handleSendToArchive = async () => {
@@ -212,21 +219,23 @@ export const RenderActionsCell = ({ id }: { id: ExpertRequestInfo["_id"] }) => {
             {t("shared.discardSelection")}
           </DropdownItem>
 
-          <DropdownItem
-            key="send-to-archive"
-            startContent={
-              <Icon
-                icon="solar:bookmark-circle-bold"
-                width={18}
-                height={18}
-                className="text-default-600"
-              />
-            }
-            className="hover:bg-default-200 text-default-foreground"
-            onPress={handleSendToArchive}
-          >
-            {t("expertRequests.sendToArchive")}
-          </DropdownItem>
+          {activeTab !== "archive" ? (
+            <DropdownItem
+              key="send-to-archive"
+              startContent={
+                <Icon
+                  icon="solar:bookmark-circle-bold"
+                  width={18}
+                  height={18}
+                  className="text-default-600"
+                />
+              }
+              className="hover:bg-default-200 text-default-foreground"
+              onPress={handleSendToArchive}
+            >
+              {t("expertRequests.sendToArchive")}
+            </DropdownItem>
+          ) : null}
         </DropdownMenu>
       </Dropdown>
 

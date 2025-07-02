@@ -12,16 +12,19 @@ import {
   Badge,
   Image,
 } from "@heroui/react";
-import { TemplatesModal } from "../templates";
-import { CreateRequestModal } from "../../create-request";
-import { Settings } from "../settings";
+import { TemplatesModal } from "./templates";
+import { CreateRequestModal } from "../create-request";
+import { Settings } from "./settings";
+import { useQuery } from "@tanstack/react-query";
+import { expertRequestsApi } from "@/apis/expert-requests";
 
-type Props = {
-  requestsCount: number;
-};
-
-export default ({ requestsCount }: Props) => {
+export default () => {
   const { theme } = useTheme();
+
+  const { data: pendingRequestsCount } = useQuery({
+    queryKey: ["expert-requests-count"],
+    queryFn: () => expertRequestsApi.getRequestsCount({ status: "PENDING" }),
+  });
 
   return (
     <div className="pt-3 mb-4 flex justify-between">
@@ -44,7 +47,7 @@ export default ({ requestsCount }: Props) => {
             </h1>
 
             <Badge
-              content={requestsCount}
+              content={pendingRequestsCount || 0}
               children
               className="bg-default-foreground text-background"
             />

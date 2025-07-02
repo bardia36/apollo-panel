@@ -30,6 +30,14 @@ export const expertRequestsApi = {
     });
   },
 
+  getRequestsCount(params?: GetRequestsParams) {
+    return axiosHandler<number>(BASE_URL, {
+      action: "count",
+      method: RequestMethod.GET,
+      params,
+    });
+  },
+
   getRequestById(id: string) {
     return axiosHandler<ExpertRequestDetail>(BASE_URL, {
       action: id,

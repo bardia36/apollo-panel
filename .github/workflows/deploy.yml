@@ -2,24 +2,51 @@ name: Deploy to apollo server
 
 on:
   push:
-    branches: [ review ]
+    branches: [review]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up SSH
-      uses: webfactory/ssh-agent@v0.9.0
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-        
-    - name: Deploy Docker container
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
-          cd ./projects/apollo-panel
-          bash deploy.sh
-        EOF
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy Docker container
+        env:
+          CI: true
+          GITHUB_ACTIONS: true
+        run: |
+          # Copy the CI-friendly deployment script to the server
+          scp -o StrictHostKeyChecking=no deploy-ci.sh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:./projects/apollo-panel/
+
+          # Make it executable and run deployment
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+            cd ./projects/apollo-panel
+            export CI=true
+            export GITHUB_ACTIONS=true
+            
+            # Make the script executable
+            chmod +x deploy-ci.sh
+            
+            # Run the CI-friendly deployment script
+            echo "Using CI-friendly deployment script..."
+            bash deploy-ci.sh 2>&1 | tee deploy.log
+            
+            exit_code=${PIPESTATUS[0]}
+            if [ $exit_code -ne 0 ]; then
+              echo "Deployment failed with exit code $exit_code"
+              echo "Last 20 lines of deployment log:"
+              tail -n 20 deploy.log
+              echo "Docker container status:"
+              docker ps -a --filter name=frontend-apollo
+              echo "Docker logs (last 50 lines):"
+              docker logs frontend-apollo --tail=50 2>/dev/null || echo "No logs available"
+              exit $exit_code
+            fi
+          EOF
