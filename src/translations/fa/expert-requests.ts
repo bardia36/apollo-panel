@@ -102,6 +102,7 @@ export default {
   sendLinkToUser: "ارسال لینک به کاربر",
   sendReminderMessage: "ارسال پیام یادآوری",
   sendToArchive: "ارسال به بایگانی",
+  showContentAutomatically: "نمایش خودکار محتویات",
   specialist: "کارشناس",
   specifyContentAndSendLink:
     "لطفاً محتویات کارشناسی را مشخص و لینک آن را به کاربر ارسال کنید.",

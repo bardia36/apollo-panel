@@ -1,12 +1,14 @@
 import { Button } from "@heroui/react";
-import { getTimeDistance } from "@/utils/base";
-import CollapsableCards from "@/components/shared/collapsable-cards";
-import { NeutralChip } from "@/components/shared/request-status-chip";
-import { ExpertRequestStatus } from "@/types/expert-requests";
 import { Chip } from "@heroui/react";
 import { t } from "i18next";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { getTimeDistance } from "@/utils/base";
+import { ExpertRequestStatus } from "@/types/expert-requests";
 import { TemplateField } from "@/types/templates";
+import useAppConfig from "@/config/app-config";
+import CollapsableCards from "@/components/shared/collapsable-cards";
+import { NeutralChip } from "@/components/shared/request-status-chip";
+import GallerySliderModal from "../components/gallery-slider-modal";
 
 export default function ImagesStatusAlert({
   gallery,
@@ -27,6 +29,19 @@ export default function ImagesStatusAlert({
     title: item.title,
     path: item.path?.length ? item.path[item.path.length - 1] : "",
   }));
+
+  const { fileServerUrl } = useAppConfig();
+
+  // Prepare all gallery images for the slider
+  const allGalleryImages = gallery
+    .filter((item) => item.path && item.path.length)
+    .map((item) => ({
+      path:
+        item.path && item.path.length
+          ? `${fileServerUrl}/${item.path[item.path.length - 1]}`
+          : "",
+      title: item.title,
+    }));
 
   return (
     <div className="flex flex-col items-center justify-center bg-content1 shadow-md rounded-3xl p-6">
@@ -94,26 +109,37 @@ export default function ImagesStatusAlert({
             </>
           )}
 
-          {["COMPLETED", "REVIEWED", "ACCEPTED"].includes(status) && (
-            <div className="flex items-center flex-wrap gap-2 mt-2">
-              <Button
-                variant="light"
-                radius="lg"
-                className="text-default-foreground"
-              >
-                {t("expertRequests.download")}
-                <Icon
-                  icon="solar:archive-down-minimlistic-bold-duotone"
-                  className="min-w-5 h-5"
-                />
-              </Button>
+          {["COMPLETED", "REVIEWED", "ACCEPTED"].includes(status) &&
+            !!allGalleryImages.length && (
+              <div className="flex items-center flex-wrap gap-2 mt-2">
+                <Button
+                  variant="light"
+                  radius="lg"
+                  className="text-default-foreground"
+                >
+                  {t("expertRequests.download")}
+                  <Icon
+                    icon="solar:archive-down-minimlistic-bold-duotone"
+                    className="min-w-5 h-5"
+                  />
+                </Button>
 
-              <Button variant="shadow" radius="lg" size="lg" color="primary">
-                {t("expertRequests.viewContent")}
-                <Icon icon="solar:play-bold" className="min-w-5 h-5" />
-              </Button>
-            </div>
-          )}
+                <GallerySliderModal
+                  images={allGalleryImages}
+                  activator={
+                    <Button
+                      variant="shadow"
+                      radius="lg"
+                      size="lg"
+                      color="primary"
+                    >
+                      {t("expertRequests.viewContent")}
+                      <Icon icon="solar:play-bold" className="min-w-5 h-5" />
+                    </Button>
+                  }
+                />
+              </div>
+            )}
         </div>
       </div>
     </div>

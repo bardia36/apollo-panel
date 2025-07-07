@@ -1,7 +1,6 @@
 import { Avatar, Button, NumberInput } from "@heroui/react";
 import { t } from "i18next";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import carVector from "@/assets/images/expert-requests/car-vector.svg";
 import { ExpertRequestDetail } from "@/types/expert-requests";
 import CopyButton from "@/components/shared/copy-button";
 import IranLicensePlate from "@/components/shared/iran-license-plate";
@@ -29,7 +28,7 @@ export default function RequestTemplate({
           <Avatar
             className="bg-foreground-200 rounded-large"
             size="lg"
-            src={carVector}
+            src="/src/assets/images/expert-requests/car-vector.svg"
             classNames={{ img: "max-w-10 h-10 object-contain" }}
           />
 

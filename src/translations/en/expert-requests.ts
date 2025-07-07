@@ -101,6 +101,7 @@ export default {
   sendLinkToUser: "Send Link to User",
   sendReminderMessage: "Send Reminder Message",
   sendToArchive: "Send to Archive",
+  showContentAutomatically: "Show Content Automatically",
   specialist: "Specialist",
   specifyContentAndSendLink:
     "Please specify the expert content and send the link to the user.",

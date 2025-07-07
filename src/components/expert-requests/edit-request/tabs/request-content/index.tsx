@@ -9,9 +9,7 @@ import { t } from "i18next";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
 import useAppConfig from "@/config/app-config";
 import { FileCollectionChart } from "./file-type-chart";
-import carPlaceholder from "@/assets/images/expert-requests/car-img-placeholder.webp";
-
-// Import slider styles
+import GallerySliderModal from "../components/gallery-slider-modal";
 import "@/styles/slider.css";
 
 type RequestContentProps = {
@@ -56,6 +54,21 @@ export default function RequestContent({ requestData }: RequestContentProps) {
     },
   ].filter((file) => !!file.count);
 
+  // Prepare all gallery images for the modal
+  const allGalleryImages = [
+    ...(aroundCarImages || []),
+    ...(inspectionImages || []),
+    ...(documents || []),
+  ]
+    .filter((item) => item.path && item.path.length)
+    .map((item) => ({
+      path:
+        item.path && item.path.length
+          ? `${fileServerUrl}/${item.path[item.path.length - 1]}`
+          : "",
+      title: item.title,
+    }));
+
   return (
     <div className="flex flex-col gap-4">
       <div className="bg-default-50 rounded-large p-4">
@@ -73,6 +86,8 @@ export default function RequestContent({ requestData }: RequestContentProps) {
                     : "",
                   title: img.title,
                 }))}
+                showThumbs={true}
+                height="h-[200px] lg:h-[360px]"
               />
             </div>
           )}
@@ -85,15 +100,23 @@ export default function RequestContent({ requestData }: RequestContentProps) {
           >
             <div className="flex items-center md:justify-end flex-wrap gap-2">
               {/* TODO: Handle responsive ui */}
-              <Button
-                variant="light"
-                size="sm"
-                startContent={
-                  <Icon icon="solar:play-circle-bold" className="min-w-5 h-5" />
+              <GallerySliderModal
+                images={allGalleryImages}
+                activator={
+                  <Button
+                    variant="light"
+                    size="sm"
+                    startContent={
+                      <Icon
+                        icon="solar:play-circle-bold"
+                        className="min-w-5 h-5"
+                      />
+                    }
+                  >
+                    {t("expertRequests.viewContent")}
+                  </Button>
                 }
-              >
-                {t("expertRequests.viewContent")}
-              </Button>
+              />
 
               <Button
                 variant="flat"
@@ -167,7 +190,7 @@ export default function RequestContent({ requestData }: RequestContentProps) {
                             : ""
                         }
                         alt={img.title}
-                        placeholder={carPlaceholder}
+                        placeholder="/src/assets/images/expert-requests/car-img-placeholder.webp"
                         fit="cover"
                         imgClassName="w-full"
                         className="h-24 md:h-44 w-full rounded-large border-2 border-content1 shadow-md shadow-neutral"
@@ -205,7 +228,7 @@ export default function RequestContent({ requestData }: RequestContentProps) {
                             : ""
                         }
                         alt={img.title}
-                        placeholder={carPlaceholder}
+                        placeholder="/src/assets/images/expert-requests/car-img-placeholder.webp"
                         fit="cover"
                         imgClassName="w-full"
                         className="h-24 md:h-44 w-full rounded-large border-2 border-content1 shadow-md shadow-neutral"
