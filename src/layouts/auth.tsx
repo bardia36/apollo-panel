@@ -3,8 +3,6 @@ import { useTheme } from "@heroui/use-theme";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { Image } from "@heroui/react";
 import NewRelease from "@/components/layouts/auth/new-release";
-import authLightImg from "@/assets/images/auth/auth-light.webp";
-import authDarkImg from "@/assets/images/auth/auth-dark.webp";
 
 export default function AuthLayout() {
   const { isMdAndDown } = useBreakpoint();
@@ -17,7 +15,11 @@ export default function AuthLayout() {
           <div className="col-span-4 xl:col-span-3">
             <div className="relative p-4 h-dvh">
               <Image
-                src={theme === "dark" ? authDarkImg : authLightImg}
+                src={
+                  theme === "dark"
+                    ? "/src/assets/images/auth/auth-dark.webp"
+                    : "/src/assets/images/auth/auth-light.webp"
+                }
                 alt="Auth side background"
                 removeWrapper
                 classNames={{ img: "h-full object-cover w-full rounded-large" }}

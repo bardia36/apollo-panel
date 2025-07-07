@@ -1,6 +1,5 @@
 import { Image } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import asiaInsuranceImg from "@/assets/images/layout/asia-insurance.webp";
 
 // TODO: Change UI. Add logic
 export default function Workspace() {
@@ -8,7 +7,7 @@ export default function Workspace() {
     <div className="mb-6 border border-default-100 rounded-[18px] shadow-sm p-3 flex items-center justify-between">
       <div className="flex items-center gap-2">
         <Image
-          src={asiaInsuranceImg}
+          src="/src/assets/images/layout/asia-insurance.webp"
           alt="Asia Insurance"
           width={64}
           height={64}

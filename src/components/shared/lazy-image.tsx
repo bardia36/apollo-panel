@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Image } from "@heroui/react";
 import useAppConfig from "@/config/app-config";
-import noImage from "@/assets/images/base/image-thumbnail.svg";
 
 type LazyImageProps = {
   src?: string;
@@ -57,7 +56,7 @@ export const LazyImage = ({
       {isVisible && imageSrc && (
         <Image
           src={imageSrc}
-          fallbackSrc={noImage}
+          fallbackSrc="/src/assets/images/base/image-thumbnail.svg"
           removeWrapper
           alt={alt}
           width={width}

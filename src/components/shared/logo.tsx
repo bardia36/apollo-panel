@@ -2,10 +2,6 @@ import { Image } from "@heroui/react";
 import { SlotsToClasses } from "@heroui/react";
 import { useTheme } from "@heroui/use-theme";
 import { t } from "i18next";
-import logo from "@/assets/images/logo/logo.webp";
-import logoDark from "@/assets/images/logo/logo-dark.webp";
-import logoIcon from "@/assets/images/logo/logo-icon.webp";
-import logoIconDark from "@/assets/images/logo/logo-icon-dark.webp";
 
 type Props = {
   classNames?:
@@ -18,7 +14,7 @@ export const FullLogo = ({ classNames }: Props) => {
 
   return (
     <Image
-      src={theme === "dark" ? logoDark : logo}
+      src={theme === "dark" ? "/src/assets/images/logo/logo-dark.webp" : "/src/assets/images/logo/logo.webp"}
       alt={t("shared.apolloLogo")}
       classNames={classNames}
     />
@@ -30,7 +26,11 @@ export const LogoIcon = ({ classNames }: Props) => {
 
   return (
     <Image
-      src={theme === "dark" ? logoIconDark : logoIcon}
+      src={
+        theme === "dark"
+          ? "/src/assets/images/logo/logo-icon-dark.webp"
+          : "/src/assets/images/logo/logo-icon.webp"
+      }
       alt={t("shared.apolloLogo")}
       classNames={classNames}
     />

@@ -3,8 +3,6 @@ import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { Accordion, AccordionItem } from "@heroui/react";
 import { Image } from "@heroui/react";
 import { Link } from "@heroui/react";
-import newReleaseImg from "@/assets/images/auth/new-release.webp";
-import corporateImg from "@/assets/images/auth/corporate.webp";
 
 export default function NewRelease() {
   const { t } = useTranslation();
@@ -24,7 +22,7 @@ export default function NewRelease() {
         >
           <div className="grid grid-cols-12 gap-3">
             <Image
-              src={newReleaseImg}
+              src="/src/assets/images/auth/new-release.webp"
               alt={t("auth.releaseTitle")}
               width={115}
               removeWrapper
@@ -65,7 +63,7 @@ export default function NewRelease() {
       {!isMdAndDown && (
         <div className="flex items-center justify-center w-full">
           <Image
-            src={corporateImg}
+            src="/src/assets/images/auth/corporate.webp"
             alt={t("auth.releaseCopyRight")}
             width={18}
             height={12}

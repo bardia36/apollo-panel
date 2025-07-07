@@ -2,7 +2,6 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useState } from "react";
 import { Input, Select, SelectItem, Button, cn } from "@heroui/react";
 import { LazyImage } from "./lazy-image";
-import IranFlag from "@/assets/images/expert-requests/iran-flag.svg";
 import { LicensePlateNumber } from "@/types/expert-requests";
 
 const persianLetters = [
@@ -66,7 +65,7 @@ export default function IranLicensePlate({
     >
       <div className="bg-blue-600 text-white p-2 h-full flex flex-col items-center justify-center">
         <LazyImage
-          src={IranFlag}
+          src="/src/assets/images/expert-requests/iran-flag.svg"
           alt="Iran Flag"
           width={20}
           height={10}

@@ -1,7 +1,6 @@
 import { useRef, useEffect, FC, ChangeEvent } from "react";
 import { Avatar } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import imageThumbnail from "@/assets/images/base/image-thumbnail.svg";
 import { Image } from "@heroui/react";
 import { filesApi } from "@/apis/files";
 import { exceptionHandler } from "@/apis/exception";
@@ -74,7 +73,7 @@ export const ImageUploader: FC<ImageUploaderProps> = ({ value, onChange }) => {
             style={{ width: "56px", height: "56px" }}
             fallback={
               <Image
-                src={imageThumbnail}
+                src="/src/assets/images/base/image-thumbnail.svg"
                 alt="Upload thumbnail"
                 radius="none"
                 className="w-[30px] h-[30px]"

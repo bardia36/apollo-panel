@@ -1,7 +1,5 @@
 import { t } from "i18next";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import requestsHeaderIcon from "@/assets/images/expert-requests/requests-header-icon.webp";
-import requestsHeaderIconDark from "@/assets/images/expert-requests/requests-header-icon-dark.webp";
 import { useTheme } from "@heroui/use-theme";
 import {
   Dropdown,
@@ -30,7 +28,11 @@ export default () => {
     <div className="pt-3 mb-4 flex justify-between">
       <div className="flex flex-wrap gap-4 items-center w-full xl:py-1.5">
         <Image
-          src={theme === "dark" ? requestsHeaderIconDark : requestsHeaderIcon}
+          src={
+            theme === "dark"
+              ? "/src/assets/images/expert-requests/requests-header-icon-dark.webp"
+              : "/src/assets/images/expert-requests/requests-header-icon.webp"
+          }
           alt={t("expertRequests.requestsManagement")}
           width={64}
           height={64}
