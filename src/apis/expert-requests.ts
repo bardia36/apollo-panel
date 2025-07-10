@@ -46,9 +46,17 @@ export const expertRequestsApi = {
   },
 
   deleteRequestById(id: string) {
-    return axiosHandler<ExpertRequestDetail>(BASE_URL, {
+    return axiosHandler(BASE_URL, {
       action: id,
       method: RequestMethod.DELETE,
+    });
+  },
+
+  deleteRequests(body: { ids: string[] }) {
+    return axiosHandler(BASE_URL, {
+      action: "bulk",
+      method: RequestMethod.DELETE,
+      body,
     });
   },
 

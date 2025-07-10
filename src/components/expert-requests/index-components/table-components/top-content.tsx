@@ -23,13 +23,13 @@ type TopContentProps = {
   visibleColumns: string | Key[];
   requestDocs: ExpertRequestInfo[];
   rowsPerPage: number;
+  activeTab: string;
   onSearchChange: (value: string) => void;
   setStatusFilter: (value: SetStateAction<string | Key[]>) => void;
   setVisibleColumns: (value: SetStateAction<string | Key[]>) => void;
   onRowsPerPageChange: (value: number) => void;
-  setSelectedKeys: (value: Set<string>) => void;
-  onSendToArchive: () => void;
-  activeTab: string;
+  setSelectedKeys: (value: Set<string> | string) => void;
+  onSendToArchiveBulk: () => void;
 };
 
 export const TopContent = ({
@@ -43,7 +43,7 @@ export const TopContent = ({
   setVisibleColumns,
   onRowsPerPageChange,
   setSelectedKeys,
-  onSendToArchive,
+  onSendToArchiveBulk,
   activeTab,
 }: TopContentProps) => {
   const perPageNumbers = [5, 10, 15, 20];
@@ -208,7 +208,7 @@ export const TopContent = ({
                     />
                   }
                   className="hover:bg-default-200 text-default-foreground"
-                  onPress={() => onSendToArchive()}
+                  onPress={() => onSendToArchiveBulk()}
                 >
                   {t("expertRequests.sendToArchive")}
                 </DropdownItem>

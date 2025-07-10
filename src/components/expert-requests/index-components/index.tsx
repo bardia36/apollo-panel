@@ -40,6 +40,8 @@ import { columns, statusOptions } from "../constants";
 import { TopContent } from "./table-components/top-content";
 import { BottomContent } from "./table-components/bottom-content";
 import Loading from "@/components/shared/loading";
+import { expertRequestsApi } from "@/apis/expert-requests";
+import { exceptionHandler } from "@/apis/exception";
 const TitleActions = lazy(() => import("./title-actions"));
 const TableTypeTabs = lazy(() => import("./table-components/table-type-tabs"));
 
@@ -167,10 +169,20 @@ function ExpertRequestsContent() {
     [refreshRequests, rowsPerPage]
   );
 
-  const onSendToArchive = () => {
-    // TODO: Send request to backend
-    console.log(selectedKeys);
-  };
+  const onSendToArchiveBulk = useCallback(async () => {
+    try {
+      const ids =
+        selectedKeys === "all"
+          ? filteredItems.map((item) => item._id)
+          : Array.from(selectedKeys);
+
+      await expertRequestsApi.deleteRequests({ ids });
+      await refreshRequests();
+      setSelectedKeys(new Set([]));
+    } catch (err) {
+      exceptionHandler(err);
+    }
+  }, [selectedKeys, filteredItems, refreshRequests]);
 
   const topContentWrapper = useMemo(() => {
     return (
@@ -186,7 +198,7 @@ function ExpertRequestsContent() {
           setVisibleColumns={setVisibleColumns}
           onRowsPerPageChange={handleRowsPerPageChange}
           setSelectedKeys={setSelectedKeys}
-          onSendToArchive={onSendToArchive}
+          onSendToArchiveBulk={onSendToArchiveBulk}
           activeTab={activeTab}
         />
       </>
@@ -195,10 +207,12 @@ function ExpertRequestsContent() {
     filterValue,
     statusFilter,
     visibleColumns,
-    handleRowsPerPageChange,
     requests.docs,
-    onSearchChange,
     activeTab,
+    selectedKeys,
+    handleRowsPerPageChange,
+    onSearchChange,
+    onSendToArchiveBulk,
   ]);
   // - top content
 
@@ -353,10 +367,10 @@ function ExpertRequestsContent() {
         <TableBody
           isLoading={loading}
           emptyContent={t("expertRequests.noRequestFound")}
-          items={filteredItems}
+          items={items}
         >
           {(item) => (
-            <TableRow key={`${item.order_number} - ${item.createdAt}`}>
+            <TableRow key={item._id}>
               {(columnKey) => (
                 <TableCell>
                   {renderCell(item, columnKey as keyof ExpertRequestInfo)}
